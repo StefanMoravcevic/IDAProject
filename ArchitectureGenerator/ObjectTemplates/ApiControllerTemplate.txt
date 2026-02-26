@@ -1,0 +1,48 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using DeclarationFactory.Web.Api.Models.Interfaces.Managers;
+using DeclarationFactory.Web.Models.Dto.<<EntityName>>;
+using DeclarationFactory.Web.Models.General;
+using DeclarationFactory.Web.Models.RequestModels.<<EntityName>>;
+
+namespace DeclarationFactory.Web.Api.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class <<EntityName>>Controller : ControllerBase
+    {
+        private readonly I<<EntityName>>Manager _<<EntityName>>Manager;
+
+        public <<EntityName>>Controller(I<<EntityName>>Manager <<EntityName>>Manager)
+        {
+            _<<EntityName>>Manager = <<EntityName>>Manager;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ResponseModel<<<EntityNameSingular>>Dto>> Get<<EntityNameSingular>>ByIdAsync(int id)
+        {
+            var response = await _<<EntityName>>Manager.Get<<EntityNameSingular>>ByIdAsync(id);
+            return response;
+        }
+
+        [HttpDelete("delete/{id}/{userId}")]
+        public async Task<ResponseModelBase> Delete<<EntityNameSingular>>Async(int id, int? userId)
+        {
+            var response = await _<<EntityName>>Manager.Delete<<EntityNameSingular>>Async(id,userId);
+            return response;
+        }
+
+        [HttpPost("search")]
+        public async Task<ResponseModelList<<<EntityNameSingular>>Dto>> Search<<EntityName>>Async(Search<<EntityName>>Params searchParams)
+        {
+            var response = await _<<EntityName>>Manager.Search<<EntityName>>Async(searchParams);
+            return response;
+        }
+
+        [HttpPost]
+        public async Task<ResponseModel<int>> Save<<EntityNameSingular>>Async(Save<<EntityNameSingular>>RequestModel requestModel)
+        {
+            var response = await _<<EntityName>>Manager.Save<<EntityNameSingular>>Async(requestModel);
+            return response;
+        }
+    }
+}

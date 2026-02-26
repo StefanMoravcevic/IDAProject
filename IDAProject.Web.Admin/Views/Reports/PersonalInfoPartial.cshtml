@@ -1,0 +1,74 @@
+﻿@*@model IDAProject.Web.Admin.Models.ViewModels.Reports.DriversCardsViewModel*@
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Helpers;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+@{
+    var generalSettings = Model.GeneralSettings;
+    var dCard = Model.DriversCard;
+}
+
+<div class="card-body">
+    <div class="row border-bottom">
+        <div class="col-sm-6 col-md-6">
+            <tms-input type="Text" name="Name" id="dcName" label="Name:" value="@dCard.Name" />
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <tms-input type="Text" name="Surname" id="dcSurname" label="Surname:" value="@dCard.Surname" />
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <tms-input type="Text" name="BirthDate" id="dcBirthDate" label="Birth date:" value="@dCard.BirthDateFormatted!" />
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <tms-input type="Text" name="InsuranceNumber" id="dcInsuranceNumber" label="SSN # (insurance #):" value="@dCard.InsuranceNumber!" />
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <tms-input type="Text" name="HomePhone" id="dcHomePhone" label="Home phone:" value="@dCard.HousePhoneNumber!" />
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <tms-input type="Text" name="CellPhone" id="dcCellPhone" label="Cell phone:" value="@dCard.CellPhoneNumber!" />
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <tms-input type="Text" name="Email" id="dcEmail" label="E-mail:" value="@dCard.Email!" />
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <tms-input type="Text" name="BankAccount" id="dcBankAccount" label="Bank account #:" value="@dCard.BankAccount!" />
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <tms-input type="Text" name="RoutingNumber" id="dcRoutingNumber" label="Bank routing #:" value="@dCard.RoutingNumber!" />
+        </div>
+    </div>
+</div>
+<h4 class="pt-4">CDL info</h4>
+<section>
+    <div class="row border-bottom">
+        <div class="col-sm-6 col-md-6">
+            <tms-input type="Text" name="CDLNumber" value="@dCard.CDLNumber!" label="CDL #:" />
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <tms-input type="Text" name="CDLState" value="@dCard.CDLState!" label="CDL state:" />
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <tms-input type="Text" name="CDLClasses" value="@dCard.CDLClasses!" label="CDL classes:" />
+        </div>
+        <div class="col-md-6 col-lg-6 col-xl-6">
+            <tms-input type="Text" name="CDLExpirationDate" value="@dCard.CDLExpirationDateFormatted!" label="CDL expiration date:" />
+        </div>
+    </div>
+</section>
+<h4 class="pt-4">Pre-employment tests info</h4>
+<section>
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-xl-6">
+            <tms-input type="Text" name="PreEmploymentClearingDate" value="@dCard.PreEmploymentClearingDateFormatted!" label="Pre-employment clearing date:" />
+        </div>
+        <div class="col-md-12 col-lg-12 col-xl-6">
+            <tms-input type="Text" name="PreEmploymentMVRDate" value="@dCard.PreEmploymentMVRDateFormatted!" label="Pre-employment MVR date:" />
+        </div>
+        <div class="col-md-12 col-lg-12 col-xl-6">
+            <tms-input type="Text" name="PreEmploymentDrugTestDate" value="@dCard.PreEmploymentDrugTestDateFormatted!" label="Pre-employment drug test date:" />
+        </div>
+    </div>
+</section>

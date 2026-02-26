@@ -1,0 +1,97 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.DocumentSeries.DocumentSerieViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@{
+    ViewData["Title"] = "Edit document serie";
+    var docS = Model.DocumentSerie;
+    var urlListDocumentSeries = Url.RouteUrl(RouteNames.DocumentSeries_List);
+}
+<div class="card">
+    <div class="card-body">
+        <div class="panel panel-primary">
+            <div class="row" id="dsContainer">
+                <div class="col-lg-12 col-md-12">
+                    <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">Document series data</h4>
+                            <tms-input type="Hidden" name="Id" value="@docS.Id!" />
+                        </div>
+                        <div class="card-body p-0 task-edit-main">
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-4 searchContainer">
+                                    <tms-select name="DocumentSerieTypeId" id="dsDocumentSerieTypeId" options="@Model.DocumentSerieTypes" selected-option="@docS.DocumentSerieTypeId" label="Document type:" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Number" name="Year" id="dsYear" value="@docS.Year!" label="Year:" placeholder="Enter year..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Number" name="NextNumber" id="dsNextNumber" value="@docS.NextNumber!" label="Next number:" placeholder="Enter number..." />
+                                </div>
+                            </div>
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-4">
+                                    <tms-input type="Number" name="IncrementSeed" id="dsIncrementSeed" value="@docS.IncrementSeed!" label="Increment seed:" placeholder="Enter increment seed number..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-8">
+                                    <tms-input type="Text" name="Pattern" id="dsPattern" value="@docS.Pattern!" label="Pattern:" placeholder="Enter pattern with any special character (#, $, %, *) for placing document number..."/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="row p-5">
+                            <div class="btn-list text-end">
+                                <button class="btn btn-outline-danger" id="buttonCancel">Cancel</button>
+                                <button class="btn btn-primary" id="buttonSave">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+        }
+    @section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            if (@Model.ReadOnly == 1) {
+                $("#dsContainer :input").prop("disabled", true);
+                $("#buttonSave").prop("disabled", true);
+            }
+
+            $("#buttonSave").click(function () {
+                var $inputsContainer = $("#dsContainer");
+                var jsonData = serializeJSON($inputsContainer);
+
+                $.ajax({
+                    url: "@Url.RouteUrl(RouteNames.DocumentSeries_Save)",
+                    method: "POST",
+                    data: jsonData,
+                    success: function (response) {
+                        handleActionResponseMessage(response, function () {
+                            location = response.message;
+                        }, '@localizer["Error"]', '@localizer["SavedMsg"]');
+                    }
+                });
+            });
+            $("#buttonCancel").click(function () {
+                document.location = '@urlListDocumentSeries';
+            });
+
+        });
+    </script>
+        }

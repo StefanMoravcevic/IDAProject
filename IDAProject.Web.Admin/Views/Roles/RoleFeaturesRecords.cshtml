@@ -1,0 +1,33 @@
+﻿@model List<IDAProject.Web.Models.Dto.Roles.RoleFeatureDto>
+@using IDAProject.Web.Helpers;
+@using IDAProject.Web.Admin.Models.Common;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+<table id="tableRoleFeatures" style="width:100%;" class="table table-striped dataTable no-footer">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Feature</th>
+            <th style="display:none;">Note</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var record in Model)
+        {
+            <tr>
+                <td>@record.Id</td>
+                <td>@record.FeatureName</td>
+                <td style="display:none;">@record.FeatureName</td>
+                <td style="text-align:center;">
+@*                    <button type="button" name="side-details" class="align-items-center justify-content-center">
+                        <i class="fa fa-info-circle" style="color:blue;"></i>
+                    </button>
+*@                    <button type="button" name="delete" data-id="@record.Id" class="align-items-center justify-content-center" value="@record.Id">
+                        <i class="fa fa-trash-o" style="color:red;"></i>
+                    </button>                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

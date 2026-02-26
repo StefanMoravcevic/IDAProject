@@ -1,0 +1,491 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Employees.EmployeeViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@{
+	var employee = Model.Employee;
+	var templateParams = new { id = "111" };
+	if (employee.Id == 0)
+	{
+		ViewData["Title"] = "New employee";
+	}
+	else
+	{
+		ViewData["Title"] = employee.Name + " " + employee.Surname;
+	}
+
+	var urlSearchByZipCode = Url.RouteUrl(RouteNames.GeoLocation_ZipCode_Get, new { zipCode = "111" });
+	var urlCitiesByState = Url.RouteUrl(RouteNames.GeoLocation_CitiesByState_Get, new { stateId = "111" });
+	var urlZipCodesByCity = Url.RouteUrl(RouteNames.GeoLocation_ZipCodesByCity_Get, new { cityId = "111" });
+	var urlOrgUnitsByCompany = Url.RouteUrl(RouteNames.Employees_OrgUnitsByCompany, templateParams);
+	var urlNextEmployee = Url.RouteUrl(RouteNames.Employees_NextRow, new { currentId = 111 });
+	var urlPreviousEmployee = Url.RouteUrl(RouteNames.Employees_PreviousRow, new { currentId = 111 });
+
+}
+<style>
+	.slika {
+		max-width: 240px;
+		max-height: 240px;
+	}
+</style>
+<div class="row">
+	<div class="col-md-12">
+		<partial name="EmployeeContextOptionsPartial" />
+	</div>
+</div>
+<div class="card">
+	<div class="card-body">
+		<div class="panel panel-primary">
+			<div class="row">
+				<div class="col-lg-12 col-md-12" id="tabGeneral">
+					<div class="row">
+						<div class="col-sm-12 col-md-9">
+							<div class="card">
+								<div class="card-header border-bottom">
+									<h4 class="mb-0">@localizer["Employee Basic Info"]</h4>
+									<tms-input type="Hidden" name="Id" id="empId" value="@employee.Id" />
+								</div>
+								<div class="card-body p-0 task-edit-main">
+									<div class="row p-5 border-bottom">
+										<div class="col-sm-12 col-md-6 col-xl-3">
+											<tms-input type="Text" name="EmployeeNumber" id="empEmployeeNumber" value="@employee.EmployeeNumber" label="@localizer["EmployeeNumber"]:" required="true" placeholder="@localizer["Enter EmployeeNumber"]..." />
+										</div>
+										<div class="col-sm-12 col-md-6 col-xl-3">
+											<tms-input type="Text" name="Name" id="empName" value="@employee.Name" label="@localizer["First name"]:" required="true" placeholder="@localizer["Enter first name"]..." />
+										</div>
+										<div class="col-sm-12 col-md-6 col-xl-3">
+											<tms-input type="Text" name="MiddleName" id="empMiddleName" value="@employee.MiddleName!" label="@localizer["Middle name"]:" placeholder="@localizer["Enter middle name"]..." />
+										</div>
+										<div class="col-sm-12 col-md-6 col-xl-3">
+											<tms-input type="Text" name="Surname" id="empSurname" value="@employee.Surname" required="true" label="@localizer["Surname"]:" placeholder="@localizer["Enter last name"]..." />
+										</div>
+@* 										<div class="col-sm-12 col-md-6 col-xl-3">
+											<tms-select name="GenderId" id="empGenderId" options="@Model.Genders" selected-option="@employee.GenderId" label="@localizer["Gender"]:" empty-option-text="@localizer["Select gender"]..." />
+										</div> *@
+										<div class="col-sm-12 col-md-6 col-xl-3">
+											<tms-select name="JobTypeId" id="empJobTypeId" options="@Model.JobTypes" selected-option="@employee.JobTypeId" label="@localizer["JobType"]:" empty-option-text="@localizer["Select job type"]..." />
+										</div>
+										<div class="col-sm-12 col-md-12 col-xl-6">
+											<tms-input type="Email" name="Email" id="empEmail" value="@employee.Email" label="@localizer["E-mail"]:" placeholder="@localizer["Enter e-mail address"]..." />
+										</div>
+@* 										<div class="col-sm-12 col-md-6 col-xl-3">
+											<tms-input type="Text" name="HousePhoneNumber" id="empHousePhoneNumber" value="@employee.HousePhoneNumber!" label="@localizer["HousePhone"]:" placeholder="@localizer["Enter house phone number"]..." />
+										</div> *@
+										<div class="col-sm-12 col-md-6 col-xl-3">
+											<tms-input type="Tel" name="CellPhoneNumber" id="empCellPhoneNumber" value="@employee.CellPhoneNumber!" label="@localizer["MobilePhone"]:" placeholder="@localizer["Enter mobile number"]..." />
+										</div>
+
+@* 										<div class="col-sm-12 col-md-6 col-xl-3">
+											<tms-select name="NoticeTypeId" id="empNoticeTypeId" options="@Model.NoticeTypes" selected-option="@employee.NoticeTypeId" label="@localizer["Notice Type"]:" />
+										</div> *@
+										<div class="col-sm-12 col-md-6 col-xl-3">
+											<div class="form-group">
+												<label class="form-label text-muted">@localizer["Blocked"]?</label>
+												<div class="d-flex align-items-center mt-3">
+													<tms-input type="Radio" name="Blocked" id="empBlockedYes" value="true" label="@localizer["Yes"]" checked="!@employee.Blocked" classes="me-5" />
+													<tms-input type="Radio" name="Blocked" id="empBlockedNo" value="false" label="@localizer["No"]" checked="!@employee.Blocked == false" />
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-12 col-md-3">
+							<div class="card">
+								<div class="card-header border-bottom">
+									<h4 class="mb-0">@localizer["Photo"]</h4>
+								</div>
+								<div class="card-body p-0 task-edit-main">
+									<div class="row p-5 border-botto">
+										<div class="d-flex flex-column align-items-center">
+											<img id="Photo" src="@employee.Photo" alt="@localizer["Photo"]" class="slika" />
+											<button class="btn btn-primary mt-3" id="buttonChooseFile" onclick="document.getElementById('fileInput').click()" style="width: 100%;">
+												@localizer["Choose photo"]...
+											</button>
+											<input type="file" id="fileInput" accept="image/jpeg, image/png, image/gif" style="display:none" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					@* <div class="card">
+						<div class="card-header border-bottom">
+							<h4 class="mb-0">@localizer["Company Details"]</h4>
+						</div>
+						<div class="card-body p-0 task-edit-main">
+							<div class="row p-5 border-bottom">
+								<div class="col-sm-12 col-md-12 col-xl-3">
+									<tms-select name="CompanyId" id="empCompanyId" options="@Model.Companies" selected-option="@employee.CompanyId" label="@localizer["Company"]:" />
+								</div>
+								<div class="col-sm-12 col-md-12 col-xl-3">
+									<tms-select name="OrgUnitId" id="empOrgUnitId" options="@Model.OrgUnits" selected-option="@employee.OrgUnitId" label="@localizer["OrgUnit"]:" empty-option-text="@localizer["Select org unit"]..." />
+								</div>
+								                               <div class="col-sm-12 col-md-12 col-xl-4">
+								<tms-select name="PartnerId" id="empPartnerId" options="@Model.Partners" selected-option="@employee.PartnerId" label="Subcontractor:" empty-option-text="Select subcontractor ..." />
+								</div>
+								<div class="col-sm-12 col-md-4 col-xl-2">
+								<tms-input type="CheckBox" name="OwnPartnerCompany" id="vehOwnPartnerCompany" value="true" checked="@employee.OwnPartnerCompany" label="Own company" />
+								</div>
+								
+							</div>
+						</div>
+					</div> *@
+
+					<div class="row" style="margin-top: 15px">
+						<!-- First Card (Contract Information) -->
+						<div class="col-sm-12 col-md-5">
+							<div class="card">
+								<div class="card-header border-bottom">
+									<h4 class="mb-0 headerTitle">@localizer["Personal data"]</h4>
+								</div>
+								<div class="card-body p-0 task-edit-main">
+									<div class="row p-5 border-bottom ">
+										<div class="col-sm-12">
+											<div class="row">
+												<div class="col-sm-12 col-md-6 col-xl-4">
+													<tms-input type="Text" name="BankAccount" id="empBankAccount" value="@employee.BankAccount!" label="@localizer["PersonalBankAccount"]:" placeholder="@localizer["Enter personal bank account number"]..." />
+												</div>
+												<div class="col-sm-12 col-md-6 col-xl-4">
+													<tms-select name="CompanyId" id="empCompanyId" options="@Model.Companies" selected-option="@employee.CompanyId" label="@localizer["Company"]:" empty-option-text="@localizer["Select company"]..." />
+												</div>
+												<div class="col-sm-12 col-md-6 col-xl-4">
+													<tms-select name="OrgUnitId" id="empOrgUnitId" options="@Model.OrgUnits" selected-option="@employee.OrgUnitId" label="@localizer["OrgUnit"]:" empty-option-text="@localizer["Select org unit"]..." />
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-sm-12 col-md-7">
+							<div class="card">
+								<div class="card-header border-bottom">
+									<h4 class="mb-0">@localizer["Optional Details"]</h4>
+								</div>
+								<div class="card-body p-0 task-edit-main">
+									<div class="row p-5 border-bottom">
+										<div class="col-sm-12 col-md-12 col-xl-3">
+											<tms-input type="Date" name="BirthDate" id="empBirthDate" value="@employee.BirthDate!" label="@localizer["Date of birth"]:" placeholder="@localizer["Enter birth date"]..." />
+										</div>
+										<div class="col-sm-12 col-md-12 col-xl-3">
+											<tms-input type="Text" name="BirthPlace" id="empBirthPlace" value="@employee.BirthPlace!" label="@localizer["BirthPlace"]:" placeholder="@localizer["Enter birth place"]..." />
+										</div>
+@* 										<div class="col-sm-12 col-md-12 col-xl-3">
+											<tms-input type="Text" name="Citizenship" id="empCitizenship" value="@employee.Citizenship!" label="@localizer["Citizenship"]:" placeholder="@localizer["Enter citizenship"]..." />
+										</div>
+										<div class="col-sm-12 col-md-6 col-xl-3">
+											<tms-input type="Text" name="ShoeSize" id="empShoeSize" value="@employee.ShoeSize!" label="@localizer["Shoe size"]:" placeholder="@localizer["Enter shoe size"]..." />
+										</div>
+										<div class="col-sm-12 col-md-6 col-xl-3">
+											<tms-input type="Text" name="SuiteSize" id="empSuiteSize" value="@employee.SuiteSize!" label="@localizer["Suite size"]:" placeholder="@localizer["Enter suite size"]..." />
+										</div> *@
+									</div>
+								</div>
+
+								<div class="row p-5">
+									<div class="btn-list text-end">
+										<button class="btn btn-outline-danger" id="buttonCancel">@localizer["Cancel"]</button>
+										<button class="btn btn-primary" id="buttonSave">@localizer["Save"]</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					@* <div class="card">
+						<div class="card-header border-bottom">
+							<h4 class="mb-0">@localizer["Optional Details"]</h4>
+						</div>
+						<div class="card-body p-0 task-edit-main">
+							<div class="row p-5 border-bottom">
+								<div class="col-sm-12 col-md-12 col-xl-2">
+									<tms-input type="Date" name="BirthDate" id="empBirthDate" value="@employee.BirthDate!" label="@localizer["Date of birth"]:" placeholder="@localizer["Enter birth date"]..." />
+								</div>
+								<div class="col-sm-12 col-md-12 col-xl-3">
+									<tms-input type="Text" name="BirthPlace" id="empBirthPlace" value="@employee.BirthPlace!" label="@localizer["BirthPlace"]:" placeholder="@localizer["Enter birth place"]..." />
+								</div>
+								<div class="col-sm-12 col-md-12 col-xl-3">
+									<tms-input type="Text" name="Citizenship" id="empCitizenship" value="@employee.Citizenship!" label="@localizer["Citizenship"]:" placeholder="@localizer["Enter citizenship"]..." />
+								</div>
+								<div class="col-sm-12 col-md-6 col-xl-2">
+									<tms-input type="Text" name="ShoeSize" id="empShoeSize" value="@employee.ShoeSize!" label="@localizer["Shoe size"]:" placeholder="@localizer["Enter shoe size"]..." />
+								</div>
+								<div class="col-sm-12 col-md-6 col-xl-2">
+									<tms-input type="Text" name="SuiteSize" id="empSuiteSize" value="@employee.SuiteSize!" label="@localizer["Suite size"]:" placeholder="@localizer["Enter suite size"]..." />
+								</div>
+							</div>
+						</div>
+
+						<div class="row p-5">
+							<div class="btn-list text-end">
+								<button class="btn btn-outline-danger" id="buttonCancel">@localizer["Cancel"]</button>
+								<button class="btn btn-primary" id="buttonSave">@localizer["Save"]</button>
+							</div>
+						</div>
+					</div> *@
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+@section Styles {
+	<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+	<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+	<script type="text/javascript">
+
+		function loadCitiesAndSelectById(stateId, cityId) {
+
+			$.ajax({
+				url: '@urlCitiesByState'.replace("111", stateId),
+				method: 'GET',
+				success: function (cities) {
+
+					$("#empCityId :not(option:first)").remove();
+
+					$(cities).each(function (_, city) {
+						$('#empCityId').append(`<option value="${city.id}">${city.name}</option>`);
+					});
+
+					if (cityId != 0) {
+						$("#empCityId").val(cityId);
+					}
+				}
+			});
+		}
+
+
+		function loadOrgUnits() {
+
+			var selectedCompanyId = $("#empCompanyId").val();
+
+			if (selectedCompanyId == "") {
+				$("#empOrgUnitId :not(option:first)").remove();
+				return;
+			}
+
+			$.ajax({
+				url: '@urlOrgUnitsByCompany'.replace("111", selectedCompanyId),
+				method: 'GET',
+				success: function (items) {
+
+					$("#empOrgUnitId :not(option:first)").remove();
+
+					$(items).each(function (_, item) {
+						$('#empOrgUnitId').append(`<option value="${item.value}">${item.description}</option>`);
+					});
+				}
+			});
+		}
+
+		function loadAddressByZipCode() {
+			var zipCode = $("#empZipCode").val();
+
+			if (zipCode != "") {
+
+				$.ajax({
+					url: '@urlSearchByZipCode'.replace("111", zipCode),
+					method: 'GET',
+					success: function (response) {
+						if (response.valid) {
+							var zipInfo = response.payload;
+
+							$("#empZipCodeId").val(zipInfo.zipCodeId);
+							$("#empStateId").val(zipInfo.state.id);
+							loadCitiesAndSelectById(zipInfo.state.id, zipInfo.city.id);
+						}
+					}
+				});
+			}
+		}
+
+
+		var fileInput = document.getElementById("fileInput");
+		var imageElement = document.getElementById("Photo");
+		fileInput.addEventListener("change", function (event) {
+			var file = event.target.files[0];
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				imageElement.src = e.target.result;
+			};
+			reader.readAsDataURL(file);
+		});
+
+
+
+		$(document).ready(function () {
+
+			let currentId = $("#empId").val();
+
+			$("#EmployeePrevious").click(function () {
+				$.ajax({
+					url: `@urlPreviousEmployee`.replace('111', currentId),
+					method: "GET",
+					success: function (response) {
+						if (response.valid) {
+							currentId = response.payload.id;
+							$("#empName").val(response.payload.name);
+							$("#empMiddleName").val(response.payload.middleName);
+							$("#empSurname").val(response.payload.surName);
+							$("#empGenderId").val(response.payload.genderId);
+							$("#empJobTypeId").val(response.payload.jobTypeId);
+							$("#empEmail").val(response.payload.email);
+							$("#empHousePhoneNumber").val(response.payload.housePhoneNumber);
+							$("#empCellPhoneNumber").val(response.payload.cellPhoneNumber);
+							$("#empNoticeTypeId").val(response.payload.noticeTypeId);
+							$("#empCompanyId").val(response.payload.companyId);
+							$("#empOrgUnitId").val(response.payload.orgUnitId);
+							$("#empPersonalID").val(response.payload.personalId);
+							$("#empPassportID").val(response.payload.passportId);
+							$("#empInsuranceNumber").val(response.payload.insuranceNumber);
+							$("#empBankAccount").val(response.payload.bankAccount);
+							$("#empBankAccountAddition").val(response.payload.bankAccount);
+							$("#empBankAccount").val(response.payload.bankAccountAddition);
+							$("#empBankAccount").val(response.payload.bankAccountAddition);
+							$("#empBirthDate").val(response.payload.birthDate);
+							$("#empBirthPlace").val(response.payload.birthPlace);
+							$("#empCitizenship").val(response.payload.citizenship);
+
+							let newUrl = window.location.protocol + "//" + window.location.host + '/Employees/edit/' + currentId;
+							history.pushState({ path: newUrl }, '', newUrl);
+
+							location.reload();
+
+						}
+					},
+					error: function (xhr, status, error) {
+						alert("An error occurred while fetching the next order: " + error);
+					}
+				});
+			});
+
+
+			$("#EmployeeNext").click(function () {
+				$.ajax({
+					url: `@urlNextEmployee`.replace('111', currentId),
+					method: "GET",
+					success: function (response) {
+						if (response.valid) {
+							currentId = response.payload.id;
+							$("#empName").val(response.payload.name);
+							$("#empMiddleName").val(response.payload.middleName);
+							$("#empSurname").val(response.payload.surName);
+							$("#empGenderId").val(response.payload.genderId);
+							$("#empJobTypeId").val(response.payload.jobTypeId);
+							$("#empEmail").val(response.payload.email);
+							$("#empHousePhoneNumber").val(response.payload.housePhoneNumber);
+							$("#empCellPhoneNumber").val(response.payload.cellPhoneNumber);
+							$("#empNoticeTypeId").val(response.payload.noticeTypeId);
+							$("#empCompanyId").val(response.payload.companyId);
+							$("#empOrgUnitId").val(response.payload.orgUnitId);
+							$("#empPersonalID").val(response.payload.personalId);
+							$("#empPassportID").val(response.payload.passportId);
+							$("#empInsuranceNumber").val(response.payload.insuranceNumber);
+							$("#empBankAccount").val(response.payload.bankAccount);
+							$("#empBankAccountAddition").val(response.payload.bankAccount);
+							$("#empBankAccount").val(response.payload.bankAccountAddition);
+							$("#empBankAccount").val(response.payload.bankAccountAddition);
+							$("#empBirthDate").val(response.payload.birthDate);
+							$("#empBirthPlace").val(response.payload.birthPlace);
+							$("#empCitizenship").val(response.payload.citizenship);
+
+							let newUrl = window.location.protocol + "//" + window.location.host + '/Employees/edit/' + currentId;
+							history.pushState({ path: newUrl }, '', newUrl);
+
+							location.reload();
+
+						}
+					},
+					error: function (xhr, status, error) {
+						alert("An error occurred while fetching the next order: " + error);
+					}
+				});
+			});
+
+			if (@Model.ReadOnly == 1) {
+				$("#tabGeneral :input").prop("disabled", true);
+				$("#buttonCancel").prop("disabled", false);
+			}
+
+			$("#empZipCode").blur(loadAddressByZipCode);
+
+			$("#empZipCode").keypress(function (event) {
+				var zipCode = $("#empZipCode").val();
+				if (event.which == 13 || zipCode.length == 5) {
+					event.preventDefault();
+					loadAddressByZipCode();
+				}
+			});
+
+			$("#empStateId").change(function () {
+				var stateId = $("#empStateId").val();
+				loadCitiesAndSelectById(stateId, 0);
+			});
+
+			$("#buttonSave").click(function () {
+				var $inputsContainer = $("#tabGeneral");
+
+				if (validateRequiredFields($inputsContainer)) {
+
+					var jsonData = serializeJSON($inputsContainer);
+					var imageElement = document.getElementById("Photo");
+					var base64Image = imageElement.src
+					jsonData.Photo = base64Image;
+					$.ajax({
+						url: "@Url.RouteUrl(RouteNames.Employees_Save)",
+						method: "POST",
+						data: jsonData,
+						success: function (response) {
+							handleActionResponseMessage(response, function () {
+								location = response.message;
+							}, '@localizer["Error"]', '@localizer["SavedMsg"]');
+						}
+					});
+				}
+			});
+
+			$("#empCompanyId").change(loadOrgUnits);
+			$("#empGenderId").select2({
+
+			});
+
+			$("#empGenderId").select2({
+			});
+			$("#empJobTypeId").select2({
+			});
+			$("#empNoticeTypeId").select2({
+			});
+			$("#empCompanyId").select2({
+			});
+			$("#empOrgUnitId").select2({
+			});
+			$("#StateId").select2({
+			});
+			$("#CityId").select2({
+			});
+			$("#ZipCodeId").select2({
+			});
+
+
+			$("#buttonCancel").click(function () {
+				var jobTypeId = $("#empJobTypeId").val();
+				document.location = '@Url.RouteUrl(RouteNames.Employees_List)';
+			});
+
+		});
+	</script>
+}

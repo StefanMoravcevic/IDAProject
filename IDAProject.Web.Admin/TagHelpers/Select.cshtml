@@ -1,0 +1,25 @@
+﻿@using IDAProject.Web.Admin.Models.TagHelpers
+@using IDAProject.Web.Models.Interfaces.Html
+@model SelectViewModel
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+<div class="form-group">
+    <label class="form-label text-muted" for="@Model.Id">@Model.Label</label>
+    <select class="form-control form-select text-dark" id="@Model.Id" name="@Model.Name" data-tag="@Model.Tag" @Model.DisabledAttribute @Model.AdditionalAttributes>
+        @foreach (var option in Model.Options)
+        {
+            if(!option.Value.HasValue)
+            {
+                <option value="">@option.Description</option>
+            }
+            else if (Model.SelectedValue.HasValue && option.Value == Model.SelectedValue)
+            {
+                <option value="@option.Value" selected="selected">@option.Description</option>
+            }
+            else
+            {
+                <option value="@option.Value">@option.Description</option>
+            }
+        }
+    </select>
+</div>

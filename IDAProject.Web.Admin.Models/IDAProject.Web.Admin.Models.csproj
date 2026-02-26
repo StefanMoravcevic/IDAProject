@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Interfaces\Managers\IFebiItemsManager.cs" />
+    <Compile Remove="Interfaces\Managers\IOrderHeaderArchivesManager.cs" />
+    <Compile Remove="Interfaces\Managers\IOrderHeadersManager.cs" />
+    <Compile Remove="Interfaces\Managers\IOrderLineArchivesManager.cs" />
+    <Compile Remove="Interfaces\Managers\IOrderLinesManager.cs" />
+    <Compile Remove="Interfaces\Managers\IPeriodsManager.cs" />
+    <Compile Remove="Interfaces\Managers\IPrintersManager.cs" />
+    <Compile Remove="Interfaces\Managers\IScannedLinesManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IDAProject.Web.Models\IDAProject.Web.Models.csproj" />
+  </ItemGroup>
+
+</Project>

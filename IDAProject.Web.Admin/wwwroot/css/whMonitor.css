@@ -1,0 +1,203 @@
+@charset "UTF-8";
+/*@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap');*/
+@import url('googlefonts.css');
+
+:root {
+    --slide-distance: 0px;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+.full-height {
+    height: 100vh; /* Use vh (viewport height) to prevent scrolling */
+}
+
+.flex-nowrap {
+    flex-wrap: nowrap;
+}
+
+.banner {
+    background-color: white; /* Bootstrap's default grey */
+    width: 17vw;
+    overflow: hidden;
+    position: relative;
+}
+
+    .banner img {
+        height: 100%;
+        width: auto; /* Maintains aspect ratio */
+        object-fit: cover; /* Prevents stretching */
+        /* The animation will be set by JavaScript if needed */
+    }
+
+.left-img {
+    right: 0;
+}
+
+.right-img {
+    left: 0;
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(var(--slide-distance));
+    }
+    /* Use a CSS variable for dynamic adjustment */
+}
+
+.orders-list {
+    height: 100%; /* Full height of their container */
+    overflow-y: auto; /* Allow for internal scrolling */
+}
+
+.no-flex-wrap {
+    flex-wrap: nowrap;
+}
+
+.orders {
+    height: 90%;
+}
+
+.chiron {
+    height: 10%;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+@-webkit-keyframes ticker {
+    0% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        visibility: visible;
+    }
+
+    100% {
+        -webkit-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0);
+    }
+}
+
+@keyframes ticker {
+    0% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        visibility: visible;
+    }
+
+    100% {
+        -webkit-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0);
+    }
+}
+
+.ticker-wrap {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    overflow: hidden;
+    height: 10%;
+    background-color: #35bfee;
+    padding-left: 100%;
+    box-sizing: content-box;
+}
+
+    .ticker-wrap .ticker {
+        display: inline-block;
+        height: 4rem;
+        white-space: nowrap;
+        padding-right: 100%;
+        box-sizing: content-box;
+        -webkit-animation-iteration-count: infinite;
+        animation-iteration-count: infinite;
+        -webkit-animation-timing-function: linear;
+        animation-timing-function: linear;
+        -webkit-animation-name: ticker;
+        animation-name: ticker;
+        -webkit-animation-duration: 30s;
+        animation-duration: 30s;
+    }
+
+    .ticker-wrap .ticker__item {
+        display: inline-block;
+        font-size: 4rem;
+        color: white;
+    }
+
+body {
+    padding-bottom: 5rem;
+}
+
+h1,
+h2,
+p {
+    color: #343434;
+    padding: 0 5%;
+}
+
+.order-table {
+    table-layout: fixed;
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px; /* This creates the gap between rows */
+}
+
+    .order-table tr {
+        background-color: whitesmoke;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        margin-bottom: 10px; /* Adds space between rows */
+    }
+
+    .order-table td {
+        border: 1px solid black; /* Just for visualizing the cells, can be removed */
+        color: #343434;
+        padding: 10px;
+        border: none; /* Removes borders between cells */
+    }
+
+    .order-table.completed tr {
+        background-color: lightgreen;
+    }
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Set a specific height and width or make it responsive */
+    height: 70px; /* Example height */
+    width: 200px; /* Example width */
+}
+
+    .logo-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+/*h2::first-letter {
+    color: #2ec5f3;
+}*/
+
+h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+    border: 5px #2ec5f3;
+    border-style: solid;
+    border-radius: 20px;
+    background: black;
+    color: white;
+    padding: 5px;
+}

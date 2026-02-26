@@ -1,0 +1,144 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Periods.PeriodViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@inject IStringLocalizer<SharedResources> localizer
+@{
+    var period = Model.Period;
+    var urlList = Url.RouteUrl(RouteNames.Periods_List);
+}
+<div class="card">
+    <div class="card-body">
+        <div class="panel panel-primary">
+            <div class="row">
+                <div class="col-lg-12 col-md-12" id="periodDataContainer">
+                    <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">@localizer["Period info"]</h4>
+                            <tms-input type="Hidden" name="Id" id="periodId" value="@period.Id" />
+                        </div>
+                        <div class="card-body p-0 task-edit-main">
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="Code" id="periodCodeId" value="@period.Code" label="@localizer["Code"]" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="Name" id="periodNameId" value="@period.Name" label="@localizer["Name"]" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-6">
+                                    <tms-input type="Text" name="DateFromForFormat" id="DateFromId" label="@localizer["Time from"]:" value="@period.DateFromFormatted!" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-6">
+                                    <tms-input type="Text" name="DateToForFormat" id="DateToId" label="@localizer["Time to"]:" value="@period.DateToFormatted!" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="row p-5">
+                    <div class="btn-list text-end">
+                        <button class="btn btn-outline-danger" id="buttonCancel">@localizer["Cancel"]</button>
+                        <button class="btn btn-primary" id="buttonSave">@localizer["Save"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+}
+@section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script type="text/javascript">
+
+            function dateFromPicker() {
+            flatpickr("#DateFromId", {
+                enableTime: true,
+                dateFormat: "d.m.Y H:i",
+                time_24hr: true,
+                minuteIncrement: 1,
+                defaultHour: 12,
+                defaultMinute: 0,
+                onChange: function (selectedDates, dateStr, instance) {
+                    if (selectedDates.length > 0) {
+                        let selectedDate = selectedDates[0];
+                        $("#DateFromId").val(instance.formatDate(selectedDate, "d.m.Y H:i"));
+                    }
+                },
+                onOpen: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length > 0) {
+                        $("#DateFromId").val(instance.formatDate(selectedDates[0], "d.m.Y H:i"));
+                        console.log($("#DateFromId").val());
+                    }
+                },
+            });
+        }
+        function dateToPicker() {
+            flatpickr("#DateToId", {
+                enableTime: true,
+                dateFormat: "d.m.Y H:i",
+                time_24hr: true,
+                minuteIncrement: 1,
+                defaultHour: 12,
+                defaultMinute: 0,
+                onChange: function (selectedDates, dateStr, instance) {
+                    if (selectedDates.length > 0) {
+                        let selectedDate = selectedDates[0];
+                        $("#DateToId").val(instance.formatDate(selectedDate, "d.m.Y H:i"));
+                    }
+                },
+                onOpen: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length > 0) {
+                        $("#DateToId").val(instance.formatDate(selectedDates[0], "d.m.Y H:i"));
+                        console.log($("#DateToId").val());
+                    }
+                },
+            });
+        }
+
+
+        $(document).ready(function () {
+
+            dateToPicker();
+            dateFromPicker();
+            if (@Model.ReadOnly == 1) {
+                $("#periodDataContainer :input").prop("disabled", true);
+                $("#buttonSave").prop("disabled", true);
+            }
+            $("#buttonSave").click(function () {
+                var $inputsContainer = $("#periodDataContainer");
+
+                if (validateRequiredFields($inputsContainer, '@localizer["ValidationMsg"]')) {
+                    var jsonData = serializeJSON($inputsContainer);
+
+                    $.ajax({
+                        url: "@Url.RouteUrl(RouteNames.Periods_Save)",
+                        method: "POST",
+                        data: jsonData,
+                        success: function (response) {
+                            handleActionResponseMessage(response, function () {
+                                location = response.message;
+                            }, '@localizer["Error"]', '@localizer["SavedMsg"]');
+                        }
+                    });
+                }
+            });
+            $("#buttonCancel").click(function () {
+                document.location = '@urlList';
+            });
+
+        });
+    </script>
+}

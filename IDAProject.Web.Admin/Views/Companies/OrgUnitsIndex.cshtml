@@ -1,0 +1,104 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Companies.OrgUnitsViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+@{
+    ViewData["Title"] = Model.Company + " org units";
+    var urlDeleteOrgUnit = Url.RouteUrl(RouteNames.OrgUnits_Delete, new { id = 111 });
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <partial name="OrgUnitsContextOptionsPartial" model="@Model" />
+    </div>
+</div>
+<tms-input type="Hidden" name="CompanyId" id="CompanyId" value="@Model.CompanyId" />
+<div class="row row-sm">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body" style="overflow-x:auto">
+                <tms-ajax-table id="tableOrgUnits" view-model="@Model" table-settings-reference-table="OrgUnits" />
+            </div>
+        </div>
+    </div>
+</div>
+<tms-modal id="editOrgUnit" title="Edit" save-button="true" modal-size="@ModalSize.Large" />
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+    @section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+    <script type="text/javascript">
+
+        function searchOrgUnits() {
+
+            $.ajax({
+                url: "@Url.RouteUrl(RouteNames.OrgUnits_Search)",
+                method: "POST",
+                data: {
+                    //keyword: $("#empSearchKeyword").val(),
+                    companyId: $("#CompanyId").val(),
+                },
+                success: function (response) {
+                    loadJson("tableOrgUnits", response);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+
+            $("#orgEdit").click(function () {
+                var selectedId = getSelectedItemId("tableOrgUnits");
+                if (selectedId !== undefined) {
+                    document.location = '@Url.RouteUrl(RouteNames.OrgUnits_Edit, new { id = "111" })'.replace("111", selectedId);
+                }
+            });
+            $("#orgAdd").click(function () {
+                var companyId = $("#CompanyId").val();
+                if (companyId > 0) {
+                    document.location = '@Url.RouteUrl(RouteNames.OrgUnits_New, new { companyId = "111" })'.replace("111", companyId);
+                }
+            });
+            $("#orgView").click(function () {
+                var selectedId = getSelectedItemId("tableOrgUnits");
+                if (selectedId !== undefined) {
+                    document.location = '@Url.RouteUrl(RouteNames.OrgUnits_View, new { id = "111" })'.replace("111", selectedId);
+                }
+            });
+            $("#orgDelete").click(function () {
+                var selectedId = getSelectedItemId("tableOrgUnits");
+                if (selectedId !== undefined) {
+                    Swal.fire({
+                        title: '@localizer["DeleteQuestion"]',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        //confirmButtonColor: '#3085d6',
+                        //cancelButtonColor: '#d33',
+                        confirmButtonText: '@localizer["DeleteConfirmation"]'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var companyId = $("#CompanyId").val();
+                            $.ajax({
+                                url: '@urlDeleteOrgUnit'.replace("111", selectedId),
+                                method: "DELETE",
+                                success: function (response) {
+                                    location = response.message.replace("111", companyId);
+                                }
+                            });
+                        }
+                    })
+                }
+            });
+            searchOrgUnits();
+        });
+    </script>
+}

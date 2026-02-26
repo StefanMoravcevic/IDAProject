@@ -1,0 +1,56 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Roles.RoleViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Helpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@{
+    var role = Model.Role;
+
+    var templateParams = new { id = "111" };
+
+    var urlListRoles = Url.RouteUrl(RouteNames.Roles_List);
+}
+<div class="card">
+    <div class="panel panel-primary">
+        <div class="row">
+            <div class="col-lg-12 col-md-12" id="roleDataContainer">
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <h4 class="mb-0">@localizer["Role info"]</h4>
+                        <tms-input type="Hidden" name="Id" id="roleId" value="@role.Id" />
+                    </div>
+                    <div class="card-body p-0 task-edit-main">
+                        <div class="row p-5 border-bottom">
+                            <div class="col-sm-12 col-md-12 col-xl-12">
+                                <tms-input type="Text" name="Name" id="roleName" value="@role.Name!" label="@localizer["Role name"]" placeholder="@localizer["Enter role name"]..." />
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-xl-12">
+                                <label>@localizer["Company"]</label>
+                                <tms-select name="CompanyId" options="@Model.Companies" id="Companies" empty-option-text="@localizer["Select company"]..." />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+    @section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+        });
+    </script>
+}

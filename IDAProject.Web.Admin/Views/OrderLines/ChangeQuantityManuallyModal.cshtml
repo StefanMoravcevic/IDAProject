@@ -1,0 +1,31 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Printers.PrinterViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@inject IStringLocalizer<SharedResources> localizer
+@{
+	var printer = Model.Printer;
+	var urlList = Url.RouteUrl(RouteNames.Printers_List);
+}
+<div class="card">
+	<div class="card-body">
+		<div class="panel panel-primary">
+			<div class="row">
+				<div class="col-lg-12 col-md-12" id="printerDataContainer">
+					<div class="card">
+						<div class="card-body p-0 task-edit-main">
+							<div class="row p-5 border-bottom">
+								<tms-input type="Hidden" name="LineId" id="LineId" />
+								<div class="col-sm-12 col-md-4 col-xl-4">
+									<tms-input type="Number" name="Quantity" id="QuantityId" label="@localizer["Quantity"]" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

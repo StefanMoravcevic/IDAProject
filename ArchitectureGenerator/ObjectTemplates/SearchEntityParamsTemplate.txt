@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DeclarationFactory.Web.Models.RequestModels.<<EntityName>>
+{
+    public class Search<<EntityName>>Params
+    {
+        public int? Id { get; set; }
+        //<<SearchParams>>
+    }
+}

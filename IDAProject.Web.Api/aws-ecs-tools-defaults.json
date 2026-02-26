@@ -1,0 +1,24 @@
+
+{
+    "region" : "us-east-1",
+    "profile" : "DotNetAdministratorAccess",
+    "configuration" : "Debug",
+    "image-tag"     : "tmswebapi:latest",
+    "docker-build-working-dir" : "",
+    "cluster"                  : "web-api-cluster",
+    "launch-type"              : "EC2",
+    "task-definition-name"     : "TmsWebApi",
+    "task-definition-network-mode" : "bridge",
+    "task-definition-task-role"    : "arn:aws:iam::055752961223:role/ecs_execution_TmsWebApi-0",
+    "container-name"               : "TmsWebApi",
+    "container-memory-hard-limit"  : 512,
+    "container-port-mapping"       : "80:80",
+    "container-environment-variables" : "\"ASPNETCORE_ENVIRONMENT\"=\"Production\"",
+    "skip-image-push"                 : false,
+    "cluster-service"                 : "TmsWebApi",
+    "desired-count"                   : 1,
+    "deployment-minimum-healthy-percent" : 50,
+    "deployment-maximum-percent"         : 200,
+    "placement-strategy"                 : "spread=attribute:ecs.availability-zone,spread=instanceId",
+    "vstoolkit-deployment-mode"          : "DeployService"
+}

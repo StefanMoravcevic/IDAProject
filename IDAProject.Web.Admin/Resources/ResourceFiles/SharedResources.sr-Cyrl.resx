@@ -1,0 +1,942 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddNew" xml:space="preserve">
+    <value>Додај</value>
+  </data>
+  <data name="AddressEditPageTitle" xml:space="preserve">
+    <value>Основне информације</value>
+  </data>
+  <data name="Administration" xml:space="preserve">
+    <value>Администрација</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Износ</value>
+  </data>
+  <data name="AmountFormatted" xml:space="preserve">
+    <value>Износ</value>
+  </data>
+  <data name="AplicationSettings" xml:space="preserve">
+    <value>Подешавања програма</value>
+  </data>
+  <data name="ApprovalDate" xml:space="preserve">
+    <value>Датум одобрења</value>
+  </data>
+  <data name="ApprovalNumber" xml:space="preserve">
+    <value>Број одобрења</value>
+  </data>
+  <data name="BenefitUser" xml:space="preserve">
+    <value>Корисник</value>
+  </data>
+  <data name="BenefitUserName" xml:space="preserve">
+    <value>Име корисника</value>
+  </data>
+  <data name="BenefitUsers" xml:space="preserve">
+    <value>Корисници права</value>
+  </data>
+  <data name="BenefitUserSurname" xml:space="preserve">
+    <value>Презиме корисника</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Одустани</value>
+  </data>
+  <data name="Case" xml:space="preserve">
+    <value>Предмет</value>
+  </data>
+  <data name="CaseNumber" xml:space="preserve">
+    <value>Број предмета</value>
+  </data>
+  <data name="Cases" xml:space="preserve">
+    <value>Предмети</value>
+  </data>
+  <data name="CompanyInfo" xml:space="preserve">
+    <value>Подаци о компанији</value>
+  </data>
+  <data name="Contacts" xml:space="preserve">
+    <value>Контакти</value>
+  </data>
+  <data name="CreateInstallment" xml:space="preserve">
+    <value>Креирај рату</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Главни панел</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Обриши</value>
+  </data>
+  <data name="DeleteConfirmation" xml:space="preserve">
+    <value>Да, обриши</value>
+  </data>
+  <data name="DeleteQuestion" xml:space="preserve">
+    <value>Да ли сте сигурни да желите да обришете?</value>
+  </data>
+  <data name="DeleteSigurnost" xml:space="preserve">
+    <value>Да ли сте сигурни да желите да обришете?</value>
+  </data>
+  <data name="DocumentsSeries" xml:space="preserve">
+    <value>Серије докумената</value>
+  </data>
+  <data name="DueDate" xml:space="preserve">
+    <value>Рок уплате</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Уреди</value>
+  </data>
+  <data name="EnterAmount" xml:space="preserve">
+    <value>Унеси износ</value>
+  </data>
+  <data name="EnterApprovalDate" xml:space="preserve">
+    <value>Унеси датум одобрења</value>
+  </data>
+  <data name="EnterApprovalNumber" xml:space="preserve">
+    <value>Унеси број одобрења</value>
+  </data>
+  <data name="EnterDueDate" xml:space="preserve">
+    <value>Унеси рок уплате</value>
+  </data>
+  <data name="EnterFromDate" xml:space="preserve">
+    <value>Унеси датум</value>
+  </data>
+  <data name="EnterInstallmentNumber" xml:space="preserve">
+    <value>Унеси број рате</value>
+  </data>
+  <data name="EnterMessage" xml:space="preserve">
+    <value>Унесите текст поруке...</value>
+  </data>
+  <data name="EnterNotes" xml:space="preserve">
+    <value>Унеси белешке</value>
+  </data>
+  <data name="EnterNumberOfInstallments" xml:space="preserve">
+    <value>Унеси број рата</value>
+  </data>
+  <data name="EnterTotalAmount" xml:space="preserve">
+    <value>Унеси укупан износ</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Грешка</value>
+  </data>
+  <data name="ForgotPassword" xml:space="preserve">
+    <value>Заборављена шифра?</value>
+  </data>
+  <data name="FromDate" xml:space="preserve">
+    <value>Од датума</value>
+  </data>
+  <data name="FromDateFormatted" xml:space="preserve">
+    <value>Од датума</value>
+  </data>
+  <data name="FullPageAdButton" xml:space="preserve">
+    <value>Одаберите слику преко целе странице</value>
+  </data>
+  <data name="Installment" xml:space="preserve">
+    <value>Рате</value>
+  </data>
+  <data name="InstallmentApprovalBasicInfo" xml:space="preserve">
+    <value>Основне информације о одобрењу</value>
+  </data>
+  <data name="InstallmentApprovalNumber" xml:space="preserve">
+    <value>Број одобрења</value>
+  </data>
+  <data name="InstallmentApprovals" xml:space="preserve">
+    <value>Одобрења рата</value>
+  </data>
+  <data name="InstallmentApprovaltDateFormatted" xml:space="preserve">
+    <value>Датум одобрења</value>
+  </data>
+  <data name="InstallmentBasicInfo" xml:space="preserve">
+    <value>Основне информације о рати</value>
+  </data>
+  <data name="InstallmentDateFormatted" xml:space="preserve">
+    <value>Датум уплате</value>
+  </data>
+  <data name="InstallmentNumber" xml:space="preserve">
+    <value>Број рате</value>
+  </data>
+  <data name="Installments" xml:space="preserve">
+    <value>Рате</value>
+  </data>
+  <data name="LeftBannerButton" xml:space="preserve">
+    <value>Одаберите леви банер</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Улогуј ме</value>
+  </data>
+  <data name="LoginPasswordValidation" xml:space="preserve">
+    <value>Неопходно је унети шифру.</value>
+  </data>
+  <data name="LoginTitle" xml:space="preserve">
+    <value>Логовање</value>
+  </data>
+  <data name="LoginUserNameValidation" xml:space="preserve">
+    <value>Неопходно је унети исправно корисничко име.</value>
+  </data>
+  <data name="MasterData" xml:space="preserve">
+    <value>Шифарници</value>
+  </data>
+  <data name="Menu" xml:space="preserve">
+    <value>Mени</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Белешке</value>
+  </data>
+  <data name="NumberOfInstallments" xml:space="preserve">
+    <value>Број рата</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Опције</value>
+  </data>
+  <data name="OrderStatus" xml:space="preserve">
+    <value>Статус пошиљки</value>
+  </data>
+  <data name="PackageStatuses" xml:space="preserve">
+    <value>Статус пошиљки</value>
+  </data>
+  <data name="PackageStatusesSettings" xml:space="preserve">
+    <value>Подешавања</value>
+  </data>
+  <data name="PackagingOrder" xml:space="preserve">
+    <value>Контрола одвајања</value>
+  </data>
+  <data name="Partners" xml:space="preserve">
+    <value>Партнери</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Шифра</value>
+  </data>
+  <data name="Process" xml:space="preserve">
+    <value>Обрада</value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>Извештаји</value>
+  </data>
+  <data name="ResetSearch" xml:space="preserve">
+    <value>Ресетуј претрагу</value>
+  </data>
+  <data name="RightBannerButton" xml:space="preserve">
+    <value>Одаберите десни банер</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Роле</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Сачувај</value>
+  </data>
+  <data name="SavedMsg" xml:space="preserve">
+    <value>Промене су успешно снимљене</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Претражи</value>
+  </data>
+  <data name="SelectBenefitUser" xml:space="preserve">
+    <value>Изабери корисника</value>
+  </data>
+  <data name="SelectCase" xml:space="preserve">
+    <value>Изабери предмет</value>
+  </data>
+  <data name="SelectInstallmentApprovalNumber" xml:space="preserve">
+    <value>Изабери број одобрења рате</value>
+  </data>
+  <data name="ShippingControllDashboard" xml:space="preserve">
+    <value>Статус отпреме</value>
+  </data>
+  <data name="Staff" xml:space="preserve">
+    <value>Запослени</value>
+  </data>
+  <data name="TickerMessage" xml:space="preserve">
+    <value>Порука за слајдер</value>
+  </data>
+  <data name="TotalAmount" xml:space="preserve">
+    <value>Укупан износ</value>
+  </data>
+  <data name="TotalAmountFormatted" xml:space="preserve">
+    <value>Укупан износ</value>
+  </data>
+  <data name="UserAccounts" xml:space="preserve">
+    <value>Кориснички налози</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Корисничко име</value>
+  </data>
+  <data name="ValidationMsg" xml:space="preserve">
+    <value>Попуните обавезна поља.</value>
+  </data>
+  <data name="WhMonitor" xml:space="preserve">
+    <value>Монитор пошиљки</value>
+  </data>
+  <data name="RegisterAccount" xml:space="preserve">
+    <value>Ако немате налог можете послати захтев за регистрацију</value>
+  </data>
+  <data name="EnterUserName" xml:space="preserve">
+    <value>Унесите корисничко име</value>
+  </data>
+  <data name="EnterUserNameAndEmail" xml:space="preserve">
+    <value>Унесите корисничко име и адресу електронске поште</value>
+  </data>
+  <data name="EnterUserNameOrEmail" xml:space="preserve">
+    <value>Унесите корисничко име или адресу електронске поште</value>
+  </data>
+  <data name="registerAccountModal" xml:space="preserve">
+    <value>Регистрација новог налога</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Ресетуј</value>
+  </data>
+  <data name="resetPasswordModal" xml:space="preserve">
+    <value>Ресетовање корисничке шифре</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Промени</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Промени шифру</value>
+  </data>
+  <data name="changePasswordModal" xml:space="preserve">
+    <value>Променa шифрe</value>
+  </data>
+  <data name="EnterPasswordAndNewPassword" xml:space="preserve">
+    <value>Унесите стару и нову шифру</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Нова шифра</value>
+  </data>
+  <data name="OldPassword" xml:space="preserve">
+    <value>Стара шифра</value>
+  </data>
+  <data name="RepeatPassword" xml:space="preserve">
+    <value>Нова шифра поново</value>
+  </data>
+  <data name="PasswordChangeSuccessfull" xml:space="preserve">
+    <value>Успешна промена шифре</value>
+  </data>
+  <data name="PasswordResetSuccessfull" xml:space="preserve">
+    <value>Успешно ресетовање шифре. Нова шифра биће послата на вашу адресу електронске поште.</value>
+  </data>
+  <data name="YouHaveToEnterAtLeastOneField" xml:space="preserve">
+    <value>Морате унети податак у бар једно поље</value>
+  </data>
+  <data name="YouHaveToEnterBothFields" xml:space="preserve">
+    <value>Морате унети податак у оба поља</value>
+  </data>
+  <data name="YouHaveToEnterOldAndNewPasswords" xml:space="preserve">
+    <value>Морате унети стару, нову и поновити нову шифру</value>
+  </data>
+  <data name="PasswordRequirements" xml:space="preserve">
+    <value>Шифра мора бити минимум 6 карактера дугачка, мора садржати бар једно велико слово, бар једно мало слово, бар један број и бар један специјални карактер</value>
+  </data>
+  <data name="PackagingOrderPallete" xml:space="preserve">
+    <value>Контрола одвајања - палете</value>
+  </data>
+  <data name="BirthPlace" xml:space="preserve">
+    <value>Место рођења</value>
+  </data>
+  <data name="Blocked" xml:space="preserve">
+    <value>Блокиран</value>
+  </data>
+  <data name="Company" xml:space="preserve">
+    <value>Компанија</value>
+  </data>
+  <data name="Date of birth" xml:space="preserve">
+    <value>Датум рођења</value>
+  </data>
+  <data name="Emloyee basic info" xml:space="preserve">
+    <value>Основне информације о запосленом</value>
+  </data>
+  <data name="EmployeeNumber" xml:space="preserve">
+    <value>Шифра запосленог</value>
+  </data>
+  <data name="Enter birth date" xml:space="preserve">
+    <value>Унесите датум рођења</value>
+  </data>
+  <data name="Enter birth place" xml:space="preserve">
+    <value>Унесите место рођења</value>
+  </data>
+  <data name="Enter e-mail address" xml:space="preserve">
+    <value>Унесите е-маил адресу</value>
+  </data>
+  <data name="Enter EmployeeNumber" xml:space="preserve">
+    <value>Унесите шифру запосленог</value>
+  </data>
+  <data name="Enter first name" xml:space="preserve">
+    <value>Унесите име</value>
+  </data>
+  <data name="Enter last name" xml:space="preserve">
+    <value>Унесите презиме</value>
+  </data>
+  <data name="Enter middle name" xml:space="preserve">
+    <value>Унесите име оца</value>
+  </data>
+  <data name="Enter mobile number" xml:space="preserve">
+    <value>Унесите број телефона</value>
+  </data>
+  <data name="Enter personal bank account number" xml:space="preserve">
+    <value>Унесите број текућег рачуна</value>
+  </data>
+  <data name="First name" xml:space="preserve">
+    <value>Име</value>
+  </data>
+  <data name="Gender" xml:space="preserve">
+    <value>Пол</value>
+  </data>
+  <data name="JobType" xml:space="preserve">
+    <value>Врста посла</value>
+  </data>
+  <data name="Master data" xml:space="preserve">
+    <value>Матични подаци</value>
+  </data>
+  <data name="Middle name" xml:space="preserve">
+    <value>Име оца</value>
+  </data>
+  <data name="MobilePhone" xml:space="preserve">
+    <value>Број телефона</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Не</value>
+  </data>
+  <data name="OrgUnit" xml:space="preserve">
+    <value>Организациона јединица</value>
+  </data>
+  <data name="Personal data" xml:space="preserve">
+    <value>Лични подаци</value>
+  </data>
+  <data name="PersonalBankAccount" xml:space="preserve">
+    <value>Број текућег рачуна</value>
+  </data>
+  <data name="Select gender" xml:space="preserve">
+    <value>Изаберите пол</value>
+  </data>
+  <data name="Select job type" xml:space="preserve">
+    <value>Изаберите врсту посла</value>
+  </data>
+  <data name="Select org unit" xml:space="preserve">
+    <value>Изаберите организациону јединицу</value>
+  </data>
+  <data name="Stuff" xml:space="preserve">
+    <value>Запослени</value>
+  </data>
+  <data name="Surname" xml:space="preserve">
+    <value>Презиме</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="Оptional details" xml:space="preserve">
+    <value>Додатне информације</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Активан</value>
+  </data>
+  <data name="Addresses" xml:space="preserve">
+    <value>Адресе</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Град</value>
+  </data>
+  <data name="Documents" xml:space="preserve">
+    <value>Документа</value>
+  </data>
+  <data name="DownloadFileName" xml:space="preserve">
+    <value>Име фајла</value>
+  </data>
+  <data name="E-mailConfirmed" xml:space="preserve">
+    <value>Потврђен маил</value>
+  </data>
+  <data name="Employee" xml:space="preserve">
+    <value>Радник</value>
+  </data>
+  <data name="Enter name" xml:space="preserve">
+    <value>Унесите улицу</value>
+  </data>
+  <data name="Enter number" xml:space="preserve">
+    <value>Унесите број улице</value>
+  </data>
+  <data name="Enter role name" xml:space="preserve">
+    <value>Унесите име роле</value>
+  </data>
+  <data name="Family members" xml:space="preserve">
+    <value>Чланови породице</value>
+  </data>
+  <data name="Keyword" xml:space="preserve">
+    <value>Кључна реч</value>
+  </data>
+  <data name="Manage features" xml:space="preserve">
+    <value>Управљање својствима</value>
+  </data>
+  <data name="Manage roles" xml:space="preserve">
+    <value>Управљање улогама</value>
+  </data>
+  <data name="Org" xml:space="preserve">
+    <value>Организациона јединица</value>
+  </data>
+  <data name="Partner" xml:space="preserve">
+    <value>Партнер</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Број телефона</value>
+  </data>
+  <data name="PhoneConfirmed" xml:space="preserve">
+    <value>Потврђен број телефона</value>
+  </data>
+  <data name="Photo" xml:space="preserve">
+    <value>Слика</value>
+  </data>
+  <data name="Repeat password" xml:space="preserve">
+    <value>Поновљена шифра</value>
+  </data>
+  <data name="Role info" xml:space="preserve">
+    <value>Основне информације о роли</value>
+  </data>
+  <data name="Role name" xml:space="preserve">
+    <value>Име роле</value>
+  </data>
+  <data name="Select city" xml:space="preserve">
+    <value>Унесите град</value>
+  </data>
+  <data name="Select company" xml:space="preserve">
+    <value>Изаберите компанију</value>
+  </data>
+  <data name="Select employee" xml:space="preserve">
+    <value>Изаберите радника</value>
+  </data>
+  <data name="Select language culture" xml:space="preserve">
+    <value>Изаберите језик</value>
+  </data>
+  <data name="Select partner" xml:space="preserve">
+    <value>Изаберите партнера</value>
+  </data>
+  <data name="Select state" xml:space="preserve">
+    <value>Изаберите државу</value>
+  </data>
+  <data name="Select zip code" xml:space="preserve">
+    <value>Изаберите поштански број</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>Држава</value>
+  </data>
+  <data name="Street name" xml:space="preserve">
+    <value>Улица</value>
+  </data>
+  <data name="Street no" xml:space="preserve">
+    <value>Број улице</value>
+  </data>
+  <data name="UICulture" xml:space="preserve">
+    <value>Језик</value>
+  </data>
+  <data name="Uploaded by" xml:space="preserve">
+    <value>Поставио корисник</value>
+  </data>
+  <data name="Uploaded date" xml:space="preserve">
+    <value>Датум постављања</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Прикажи</value>
+  </data>
+  <data name="ZipCode" xml:space="preserve">
+    <value>Поштански број</value>
+  </data>
+  <data name="Assign" xml:space="preserve">
+    <value>Додели</value>
+  </data>
+  <data name="Assigned features" xml:space="preserve">
+    <value>Додељена својства</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Шифра</value>
+  </data>
+  <data name="Company basic info" xml:space="preserve">
+    <value>Основне информације о компанији</value>
+  </data>
+  <data name="Company name" xml:space="preserve">
+    <value>Име компаније</value>
+  </data>
+  <data name="Enter company name" xml:space="preserve">
+    <value>Унесите име компаније</value>
+  </data>
+  <data name="Enter e-mail" xml:space="preserve">
+    <value>Унесите е-маил</value>
+  </data>
+  <data name="Enter phone" xml:space="preserve">
+    <value>Унесите телефон</value>
+  </data>
+  <data name="Enter PIB" xml:space="preserve">
+    <value>Унесите ПИБ</value>
+  </data>
+  <data name="Enter responsible person" xml:space="preserve">
+    <value>Унесите одговорну особу</value>
+  </data>
+  <data name="Enter web address" xml:space="preserve">
+    <value>Унесите веб страницу</value>
+  </data>
+  <data name="Features" xml:space="preserve">
+    <value>Својства</value>
+  </data>
+  <data name="Org units" xml:space="preserve">
+    <value>Организационе јединице</value>
+  </data>
+  <data name="Parent org unit" xml:space="preserve">
+    <value>Надређена организациона јединица</value>
+  </data>
+  <data name="Responsible person" xml:space="preserve">
+    <value>Одговорна особа</value>
+  </data>
+  <data name="Select feature" xml:space="preserve">
+    <value>Изаберите својство</value>
+  </data>
+  <data name="Web address" xml:space="preserve">
+    <value>Веб страница</value>
+  </data>
+  <data name="Аddresses" xml:space="preserve">
+    <value>Адресе</value>
+  </data>
+  <data name="Add/Edit default printer" xml:space="preserve">
+    <value>Додај/Измени подразумевани штампач</value>
+  </data>
+  <data name="BarCode" xml:space="preserve">
+    <value>Бар код</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Затвори</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Име</value>
+  </data>
+  <data name="Organization unit info" xml:space="preserve">
+    <value>Основне информације о организационој јединици</value>
+  </data>
+  <data name="Printer" xml:space="preserve">
+    <value>Штампач</value>
+  </data>
+  <data name="Printer info" xml:space="preserve">
+    <value>Основне информације о штампачу</value>
+  </data>
+  <data name="Printers" xml:space="preserve">
+    <value>Штампачи</value>
+  </data>
+  <data name="Select parent org" xml:space="preserve">
+    <value>Изаберите надређену организациону јединицу</value>
+  </data>
+  <data name="Select printer" xml:space="preserve">
+    <value>Изаберите штампач</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Опште</value>
+  </data>
+  <data name="Optional Details" xml:space="preserve">
+    <value>Додатни подаци</value>
+  </data>
+  <data name="Choose logo" xml:space="preserve">
+    <value>Изаберите лого</value>
+  </data>
+  <data name="Choose photo" xml:space="preserve">
+    <value>Изаберите слику</value>
+  </data>
+  <data name="Period" xml:space="preserve">
+    <value>Период</value>
+  </data>
+  <data name="Period info" xml:space="preserve">
+    <value>Основне информације о периоду</value>
+  </data>
+  <data name="Time from" xml:space="preserve">
+    <value>Време од </value>
+  </data>
+  <data name="Time to" xml:space="preserve">
+    <value>Време до</value>
+  </data>
+  <data name="Checked quantity" xml:space="preserve">
+    <value>Чекирана количина</value>
+  </data>
+  <data name="Created date" xml:space="preserve">
+    <value>Датум креирања</value>
+  </data>
+  <data name="Customer order number" xml:space="preserve">
+    <value>Број поруџбине</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>Дан</value>
+  </data>
+  <data name="Delivery route code" xml:space="preserve">
+    <value>Шифра руте развоза</value>
+  </data>
+  <data name="Febi article name" xml:space="preserve">
+    <value>Билстеингроуп опис артикла</value>
+  </data>
+  <data name="Febi article no" xml:space="preserve">
+    <value>Билстеингроуп број артикла</value>
+  </data>
+  <data name="Febi article packaging unit" xml:space="preserve">
+    <value>Билстеингроуп фактор поруџбине</value>
+  </data>
+  <data name="Headers" xml:space="preserve">
+    <value>Заглавља</value>
+  </data>
+  <data name="Line no" xml:space="preserve">
+    <value>Број реда</value>
+  </data>
+  <data name="Lines" xml:space="preserve">
+    <value>Линије</value>
+  </data>
+  <data name="Order date" xml:space="preserve">
+    <value>Датум</value>
+  </data>
+  <data name="Orders" xml:space="preserve">
+    <value>Поруџбине</value>
+  </data>
+  <data name="Requested quantity" xml:space="preserve">
+    <value>Тражена количина</value>
+  </data>
+  <data name="Segment" xml:space="preserve">
+    <value>Сегмент</value>
+  </data>
+  <data name="Timе" xml:space="preserve">
+    <value>Време</value>
+  </data>
+  <data name="FebiArticleName" xml:space="preserve">
+    <value>ФЕБИ назив артикла</value>
+  </data>
+  <data name="FebiArticleNo" xml:space="preserve">
+    <value>ФЕБИ шифра артикла</value>
+  </data>
+  <data name="FebiPackingUnit" xml:space="preserve">
+    <value>ФЕБИ јединица мере</value>
+  </data>
+  <data name="Items" xml:space="preserve">
+    <value>Артикли</value>
+  </data>
+  <data name="First" xml:space="preserve">
+    <value>Прва</value>
+  </data>
+  <data name="Last" xml:space="preserve">
+    <value>Последња</value>
+  </data>
+  <data name="of" xml:space="preserve">
+    <value>од</value>
+  </data>
+  <data name="Partner code" xml:space="preserve">
+    <value>Шифра партнера</value>
+  </data>
+  <data name="rows" xml:space="preserve">
+    <value>редова</value>
+  </data>
+  <data name="rows1" xml:space="preserve">
+    <value>ред</value>
+  </data>
+  <data name="rows234" xml:space="preserve">
+    <value>реда</value>
+  </data>
+  <data name="Showing" xml:space="preserve">
+    <value>Приказано</value>
+  </data>
+  <data name="to" xml:space="preserve">
+    <value>до</value>
+  </data>
+  <data name="Columns" xml:space="preserve">
+    <value>Колоне</value>
+  </data>
+  <data name="Display columns" xml:space="preserve">
+    <value>Прикажи колоне</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Датум</value>
+  </data>
+  <data name="Date from" xml:space="preserve">
+    <value>Датум од</value>
+  </data>
+  <data name="Date to" xml:space="preserve">
+    <value>Датум до</value>
+  </data>
+  <data name="Enter date from" xml:space="preserve">
+    <value>Унесите датум од</value>
+  </data>
+  <data name="Enter date to" xml:space="preserve">
+    <value>Унесите датум до</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Штампај</value>
+  </data>
+  <data name="Scanned lines" xml:space="preserve">
+    <value>Историја линије</value>
+  </data>
+  <data name="Scanned quantity" xml:space="preserve">
+    <value>Скенирана количина</value>
+  </data>
+  <data name="Select customer order number" xml:space="preserve">
+    <value>Изаберите број поруџбине</value>
+  </data>
+  <data name="Select febi article no" xml:space="preserve">
+    <value>Изаберите билстеин број артикла</value>
+  </data>
+  <data name="Select partner code" xml:space="preserve">
+    <value>Изаберите шифру партнера</value>
+  </data>
+  <data name="Select segment" xml:space="preserve">
+    <value>Изаберите сегмент</value>
+  </data>
+  <data name="ExportToExcel" xml:space="preserve">
+    <value>Извези у Excel</value>
+  </data>
+  <data name="Scanned lines history" xml:space="preserve">
+    <value>Историја скенираних линија</value>
+  </data>
+  <data name="Search for customer order number, febi article number" xml:space="preserve">
+    <value>Претражите по броју поруџбине, шифри артикла</value>
+  </data>
+  <data name="Headers archive" xml:space="preserve">
+    <value>Архива заглавља</value>
+  </data>
+  <data name="Lines archive" xml:space="preserve">
+    <value>Архива линија</value>
+  </data>
+  <data name="Orders archive" xml:space="preserve">
+    <value>Архива поруџбина</value>
+  </data>
+  <data name="IP address" xml:space="preserve">
+    <value>ИП адреса</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Порт</value>
+  </data>
+  <data name="Wint article no" xml:space="preserve">
+    <value>WINT шифра артикла</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Уклони</value>
+  </data>
+  <data name="ResetConfirmation" xml:space="preserve">
+    <value>Да, ресетуј</value>
+  </data>
+  <data name="ResetPasswordQuestion" xml:space="preserve">
+    <value>Да ли сте сигурни да желите да ресетујете шифру за </value>
+  </data>
+  <data name="ResetPasswordSuccessful" xml:space="preserve">
+    <value>Шифра успешно ресетована</value>
+  </data>
+  <data name="Change quantity manually" xml:space="preserve">
+    <value>Измените количину ручно</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Количина</value>
+  </data>
+  <data name="Select date" xml:space="preserve">
+    <value>Изаберите датум</value>
+  </data>
+  <data name="Filters" xml:space="preserve">
+    <value>Филтери</value>
+  </data>
+  <data name="Selected filters" xml:space="preserve">
+    <value>Селектовани филтери</value>
+  </data>
+</root>

@@ -1,0 +1,16 @@
+﻿using DeclarationFactory.Web.Models.Dto.<<EntityName>>;
+using DeclarationFactory.Web.Models.General;
+using DeclarationFactory.Web.Models.Interfaces.Html;
+
+namespace DeclarationFactory.Web.Admin.Models.ViewModels.<<EntityName>>
+{
+    public class <<EntityNameSingular>>ViewModel : NavigationBaseViewModel
+    {
+        public <<EntityNameSingular>>ViewModel()
+        {
+            <<EntityNameSingular>> = new <<EntityNameSingular>>Dto();
+        }
+        public <<EntityNameSingular>>Dto <<EntityNameSingular>> { get; set; }
+
+    }
+}

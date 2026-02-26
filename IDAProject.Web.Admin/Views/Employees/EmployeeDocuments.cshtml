@@ -1,0 +1,112 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Employees.EmployeeDocumentsViewModel
+@using IDAProject.Web.Admin.Models.ViewModels.Documents
+@using IDAProject.Web.Helpers;
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.Dto.Documents
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+@{
+    ViewData["Title"] = Model.EmployeeName + " - documents";
+    var documentsViewModel = new UploadedDocumentsViewModel(localizer);
+    var listDocumentsUrl = Url.RouteUrl(RouteNames.Documents_List, new { documentType = DocumentTypeConstants.Employee_Document, referenceId = Model.EmployeeId });
+    var deleteDocumentUrl = Url.RouteUrl(RouteNames.Documents_Delete, new { id = 111 });
+}
+<h3 class="mt-3"><b>@localizer["Employee"]:</b> @Model.EmployeeName</h3>
+<div>
+    <div class="card">
+        <div class="card-body">
+            <div class="panel panel-primary" id="newDocumentsData">
+                <input type="hidden" name="EmployeeId" value="@Model.EmployeeId" />
+                <div class="row">
+                    @* <div class="col-md-2" style="display:block">
+                        <tms-select name="DocumentTypeId" id="DocumentTypeId" options="Model.DocumentTypes" label="@localizer["Document type"]:" empty-option-text="---" />
+                    </div> *@
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="form-label text-muted">@localizer["Upload file"]:</label>
+                            <div class="input-group">
+                                <input id="employeeDocumentsFile" type="file" name="file" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="panel panel-primary">
+                    <div class="row">
+                        <tms-ajax-table id="tableUploadedDocuments" view-model="documentsViewModel" table-settings-reference-table="UploadedDocuments" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var documentTypeId = @DocumentTypeConstants.Employee_Document;
+    
+    function getDocumentDownloadLink($col, data) {
+        var cName = $col.data('name');
+        var downloadUrl = `@Model.DocumentsDownloadUrl/${data.id}`;
+        var content = `<a href="${downloadUrl}">${data.downloadFileName}</a>`;
+        return content;
+    }
+
+    function loadUploadedDocumentsTable() {
+
+        $.ajax({
+            url: "@listDocumentsUrl",
+            method: "GET",
+            success: function (response) {
+                loadJson("tableUploadedDocuments", response);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#DocumentTypeId").on('change', function () {
+            documentTypeId = $(this).val();
+        });
+        $("#employeeDocumentsFile").pekeUpload({
+            dragMode: true,
+            dragText: '@localizer["Drag and Drop your files here"]',
+            bootstrap: true,
+            showPreview: false,
+            url: '@Url.RouteUrl(RouteNames.Documents_Upload)',
+            data: {
+                DocumentTypeId: documentTypeId,
+                ReferenceId: @Model.EmployeeId
+            },
+            onFileSuccess: loadUploadedDocumentsTable
+        });
+
+        $("#tableUploadedDocuments").on('click', "button[name='delete']", function () {
+            var $parentRow = $(this).closest('tr');
+            var id = $parentRow.data("id");
+            if (id !== undefined) {
+                Swal.fire({
+                    title: '@localizer["DeleteQuestion"]',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '@localizer["DeleteConfirmation"]'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "@deleteDocumentUrl".replace("111", id),
+                            method: "DELETE",
+                            success: loadUploadedDocumentsTable
+                        });
+                    }
+                })
+            }
+        });
+        loadUploadedDocumentsTable();
+    });
+</script>

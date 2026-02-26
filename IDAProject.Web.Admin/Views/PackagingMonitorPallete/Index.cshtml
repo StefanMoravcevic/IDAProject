@@ -1,0 +1,293 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.PackagingMonitor.PackagingMonitorViewModel
+@using Microsoft.Extensions.Localization
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@inject IStringLocalizer<SharedResources> localizer
+
+@{
+    ViewData["Title"] = "Packaging monitor";
+    Layout = "~/Views/Shared/_LayoutNoSidebar.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+<script type="text/javascript" src="~/js/packagingOrder.js"></script>
+
+<style type="text/css">
+    /*     .table-container {
+                                                height: 100%;
+                                                padding: 10px;
+                                                box-sizing: border-box;
+                                            }
+
+                                            .table {
+                                                width: 100%;
+
+                                                margin: 0;
+                                                table-layout: fixed;
+                                            }
+
+                                            thead th {
+                                                background-color: #333 !important;
+                                                color: white;
+                                            }
+
+                                            thead td {
+                                                background-color: #333 !important;
+                                                color: white;
+                                            }
+
+                                            tbody td {
+                                                border: 1px solid #ddd;
+                                                text-align: left;
+                                            } */
+    body {
+        background: url('/images/wintlogo.png') no-repeat center center fixed;
+        height: 100%;
+        margin: 0;
+        box-sizing: border-box; /* Include padding in the element's total width and height */
+        background-size: 50%;
+    }
+
+    .table-container {
+        height: 100%;
+        padding: 10px; /* Adjust the padding as needed */
+        box-sizing: border-box;
+        background-color: rgba(255, 255, 255, 0.9); /* Solid background with slight transparency */
+    }
+
+    .tablePackage {
+        width: 100%;
+        margin: 0;
+        table-layout: fixed;
+        border-collapse: collapse; /* Make table borders look cleaner */
+        overflow-y: auto;
+    }
+
+    thead tr {
+        background-color: #00adef; /* Bright blue from the logo */
+        color: white;
+        padding: 10px; /* Add padding for better readability */
+        font-size: 1.2em; /* Slightly larger font for headers */
+        font-weight: bold; /* Bold font for headers */
+    }
+
+    tbody td {
+        border: 1px solid #ddd;
+        text-align: left;
+        padding: 8px; /* Add padding for better readability */
+        background-color: #ffffff; /* White background for rows */
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9; /* Light grey for alternating rows */
+    }
+
+    .table-container h1 {
+        color: #00adef; /* Bright blue from the logo */
+        text-align: center; /* Center the header text */
+        font-size: 2em; /* Increase the font size of the header */
+    }
+
+    tfoot td {
+        background-color: #333; /* Dark footer for contrast */
+        color: white;
+        padding: 10px;
+    }
+
+    #top {
+        height: 70vh;
+        overflow-y: auto;
+    }
+
+    #bottom {
+        height: 30vh;
+        overflow-y: auto;
+    }
+
+</style>
+
+<tms-input type="Hidden" name="ApiUrl" id="ApiUrl" value="@Model.ApiUrl" />
+
+<div class="container-fluid vh-100 p-3">
+    <div class="row h-70">
+        <div class="col-12 p-2 table-container" id="top">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Header 1</th>
+                        <th>Header 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Data 1</td>
+                        <td>Data 2</td>
+                    </tr>
+                    <tr>
+                        <td>Data 3</td>
+                        <td>Data 4</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Header 1</th>
+                        <th>Header 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Data 1</td>
+                        <td>Data 2</td>
+                    </tr>
+                    <tr>
+                        <td>Data 3</td>
+                        <td>Data 4</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row h-30">
+        <div class="col-12 p-2 table-container" id="bottom">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Header 1</th>
+                        <th>Header 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Data 1</td>
+                        <td>Data 2</td>
+                    </tr>
+                    <tr>
+                        <td>Data 3</td>
+                        <td>Data 4</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    let apiUrl = $("#ApiUrl").val();
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl(apiUrl + "/packageStatusHub", {
+            skipNegotiation: true,
+            transport: signalR.HttpTransportType.WebSockets
+        })
+        .build();
+
+    connection.start().catch(err => console.error(err.toString()));
+
+    connection.on("ReceivePackagingOrderPalleteUpdate", (newPackageStatuses) => {
+
+        let salesOrders = newPackageStatuses.salesPackagingOrder;
+        let personalOrders = newPackageStatuses.personalPackagingOrder;
+
+        let tableContainer = document.getElementById('top');
+        tableContainer.innerHTML = createSalesOrderTables(salesOrders);
+        tableContainer = document.getElementById('bottom');
+        tableContainer.innerHTML = createPrivateOrderTables(personalOrders);
+
+    });
+
+        function createSalesOrderTables(salesData) {
+            const container = document.createElement('div');
+            const table = document.createElement('table');
+            table.classList.add('tablePackage');
+            // Create table header
+            const header = table.createTHead();
+            const headerRow = header.insertRow(0);
+
+            // Insert header names based on the provided values
+            const headers = [
+                { name: "Opis rute razvoza", width: "5%" },
+                { name: "Vreme preseka", width: "5%" },
+                { name: "Vreme rute", width: "5%" },
+                { name: "Br čantre", width: "10%" },
+                { name: "Nalog za odvajanje", width: "10%" },
+                { name: "Status", width: "10%" },
+                { name: "Kataloški broj", width: "15%" },
+                { name: "Naziv artikla", width: "40%" }
+            ];
+
+            headers.forEach(header => {
+                const headerCell = document.createElement('th');
+                headerCell.innerText = header.name;
+                headerCell.style.width = header.width;
+                headerRow.appendChild(headerCell);
+            });
+            const body = table.createTBody();
+
+            salesData.forEach(order => {
+                // Create table body
+                    const row = body.insertRow();
+                    row.insertCell(0).innerHTML = order.tourCode;
+                    row.insertCell(1).innerHTML = getTimeFromDateTime(order.cutoffDate);
+                    row.insertCell(2).innerHTML = getTimeFromDateTime(order.startDate);
+                    row.insertCell(3).innerHTML = order.pickingBinCode;
+                    row.insertCell(4).innerHTML = order.pickingNo;
+                    row.insertCell(5).innerHTML = order.processingStatus;
+                    row.insertCell(6).innerHTML = order.itemNo;
+                    row.insertCell(7).innerHTML = order.itemDescription;
+                });
+
+                container.appendChild(table);
+
+            return container.innerHTML;
+
+        }
+
+        function createPrivateOrderTables(privateData) {
+            const container = document.createElement('div');
+
+                const table = document.createElement('table');
+                table.classList.add('tablePackage');
+
+                // Create table header
+                const header = table.createTHead();
+                const headerRow = header.insertRow(0);
+
+                // Insert header names based on the provided values
+                const headers = [
+                    { name: "Šifra kupca", width: "5%" },
+                    { name: "Naziv kupca", width: "10%" },
+                    { name: "Br čantre", width: "10%" },
+                    { name: "Nalog za odvajanje", width: "10%" },
+                    { name: "Status", width: "10%" },
+                    { name: "Kataloški broj", width: "15%" },
+                    { name: "Naziv artikla", width: "40%" }
+                ];
+
+                headers.forEach(header => {
+                    const headerCell = document.createElement('th');
+                    headerCell.innerText = header.name;
+                    headerCell.style.width = header.width;
+                    headerRow.appendChild(headerCell);
+                });
+
+
+                // Create table body
+                const body = table.createTBody();
+            privateData.forEach(order => {
+                    const row = body.insertRow();
+                    row.insertCell(0).innerHTML = order.customerNo;
+                    row.insertCell(1).innerHTML = order.customerName;
+                    row.insertCell(2).innerHTML = order.pickingBinCode;
+                    row.insertCell(3).innerHTML = order.pickingNo;
+                    row.insertCell(4).innerHTML = order.processingStatus;
+                    row.insertCell(5).innerHTML = order.itemNo;
+                    row.insertCell(6).innerHTML = order.itemDescription;
+                });
+
+                container.appendChild(table);
+            return container.innerHTML;
+
+        }
+
+</script>

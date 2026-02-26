@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ReportViewerCore.NETCore" Version="15.1.19" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IDAProject.Web.Api.Models\IDAProject.Web.Api.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Generators\" />
+    <Folder Include="Schemas\" />
+    <Folder Include="Templates\" />
+  </ItemGroup>
+
+</Project>

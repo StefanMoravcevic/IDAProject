@@ -1,0 +1,42 @@
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using DeclarationFactory.Web.Admin.Models.Interfaces.Managers;
+using DeclarationFactory.Web.Models.Dto.<<EntityName>>;
+using DeclarationFactory.Web.Models.General;
+using DeclarationFactory.Web.Models.RequestModels.<<EntityName>>;
+
+namespace DeclarationFactory.Web.Admin.Managers
+{
+    public class <<EntityName>>Manager : BaseManager, I<<EntityName>>Manager
+    {
+        public <<EntityName>>Manager(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<<<EntityName>>Manager> logger) :
+            base(httpClientFactory, configuration, logger)
+        {
+        }
+        public async Task<ResponseModelList<<<EntityNameSingular>>Dto>> Search<<EntityName>>Async(Search<<EntityName>>Params searchParams)
+        {
+            var result =
+                await PostAsync<Search<<EntityName>>Params, ResponseModelList<<<EntityNameSingular>>Dto>>($"api/<<EntityName>>/search",
+                    searchParams);
+            return result;
+        }
+
+        public async Task<ResponseModel<<<EntityNameSingular>>Dto>> Get<<EntityNameSingular>>ByIdAsync(int id)
+        {
+            var result = await GetAsync<ResponseModel<<<EntityNameSingular>>Dto>>($"api/<<EntityName>>/{id}");
+            return result;
+        }
+
+        public async Task<ResponseModelBase> Delete<<EntityNameSingular>>Async(int id, int? userId)
+        {
+            var result = await DeleteAsync<ResponseModelBase>($"api/<<EntityName>>/delete/{id}/{userId}");
+            return result;
+        }
+
+        public async Task<ResponseModel<int>> Save<<EntityNameSingular>>Async(Save<<EntityNameSingular>>RequestModel requestModel)
+        {
+            var result = await PostAsync<Save<<EntityNameSingular>>RequestModel, ResponseModel<int>>($"api/<<EntityName>>", requestModel);
+            return result;
+        }
+    }
+}

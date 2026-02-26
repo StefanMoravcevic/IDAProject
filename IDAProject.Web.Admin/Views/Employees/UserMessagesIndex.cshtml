@@ -1,0 +1,253 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Messages.MessagesViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+
+@{
+    ViewData["Title"] = Model.EmployeeName + " conversations";
+    var localizedPagination = @Html.Raw(Json.Serialize(new PaginationLocalizerModel(localizer)));
+}
+<style>
+    .highlight {
+        background-color: yellow !important;
+        font-weight: bold;
+    }
+
+    .File {
+        color: blue;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    .Attachment {
+        color: blue;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+</style>
+
+<div class="row row-sm">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body" style="overflow-x:auto">
+                <div class="panel panel-primary">
+                    <div class="tab-menu-heading border-bottom-0">
+                        <div class="tabs-menu4 border-bottomo-sm">
+                            <nav class="nav d-sm-flex">
+                                <a class="nav-link border border-bottom-0 br-sm-5 me-2 active" data-bs-toggle="tab" href="#tab25" id="tab25Tab"> User messages </a>
+                                <a class="nav-link border border-bottom-0 br-sm-5 me-2" data-bs-toggle="tab" href="#tab26" id="tab26Tab"> E-mail notifications </a>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="panel-body tabs-menu-body">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab25">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <partial name="UserMessagesContextOptionsPartial" model="@Model" />
+                                    </div>
+                                </div>
+                                <div class="row row-sm">
+                                    <div class="col-lg-12">
+                                        <div class="card">
+                                            <div class="card-body" style="overflow-x:auto">
+                                                <tms-ajax-table id="tableUserMessages" view-model="@Model.UserMessagesViewModel" table-settings-reference-table="UserMessages" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab26">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <partial name="EmailsContextOptionsPartial" model="@Model" />
+                                    </div>
+                                </div>
+                                <div class="row row-sm">
+                                    <div class="col-lg-12">
+                                        <div class="card">
+                                            <div class="card-body" style="overflow-x:auto">
+                                                <tms-ajax-table id="tableEmails" view-model="@Model.EmailsViewModel" table-settings-reference-table="EmailQueue" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+    <script type="text/javascript">
+
+        function searchUserMessages() {
+            var $inputsContainer = $("#searchParams");
+            var jsonData = serializeJSON($inputsContainer);
+            $.ajax({
+                url: "@Url.RouteUrl(RouteNames.Employees_Messages_Search)",
+                method: "POST",
+                data: jsonData,
+                success: function (response) {
+                    loadJson("tableUserMessages", response, @localizedPagination);
+                }
+            });
+        }
+        function searchEmails() {
+            var $inputsContainer = $("#searchParamsEmail");
+            var jsonData = serializeJSON($inputsContainer);
+            $.ajax({
+                url: "@Url.RouteUrl(RouteNames.Employees_Emails_Search)",
+                method: "POST",
+                data: jsonData,
+                success: function (response) {
+                    loadJson("tableEmails", response);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+
+            $("#buttonSearchMessages").click(searchUserMessages);
+            $("#buttonSearchEmails").click(searchEmails);
+
+            $("#buttonResetSearchMessages").click(function () {
+                $("#umSearchKeyword").val(null);
+                $("#umDriverWithId").val(null);
+                $("#umLastXDays").val(null);
+                $("#umFromDate").val(null);
+                $("#umToDate").val(null);
+                $.ajax({
+                    url: "@Url.RouteUrl(RouteNames.Employees_Messages_Search)",
+                    method: "POST",
+                    data: {
+                        keyword: null,
+                        dispatcherId: $("#DispatcherId").val(),
+                    },
+                    success: function (response) {
+                        loadJson("tableUserMessages", response);
+                    }
+                });
+            });
+            $("#buttonResetSearchEmails").click(function () {
+                $("#emSearchKeyword").val(null);
+                $("#emLastXDays").val(null);
+                $("#emFromDate").val(null);
+                $("#emToDate").val(null);
+                $.ajax({
+                    url: "@Url.RouteUrl(RouteNames.Employees_Emails_Search)",
+                    method: "POST",
+                    data: {
+                        keyword: null,
+                        dispatcherId: $("#DispatcherId").val(),
+                    },
+                    success: function (response) {
+                        loadJson("tableEmails", response);
+                    }
+                });
+            });
+            $("#umExportExcel").click(function () {
+                exportToExcel("tableUserMessages", "UserMessages.xlsx");
+            });
+            $("#emExportExcel").click(function () {
+                exportToExcel("tableEmails", "Emails.xlsx");
+            });
+            $("#umSearchKeyword").on('input', function () {
+                var keyword = $(this).val().trim();
+
+                if (keyword !== '') {
+                    // Remove existing highlighting
+                    $('.highlight').each(function () {
+                        $(this).replaceWith($(this).text());
+                    });
+
+                    // Highlight cells containing the keyword
+                    $('table td').each(function () {
+                        var cellText = $(this).text();
+                        var highlightedText = cellText.replace(new RegExp(keyword, 'gi'), '<span class="highlight">$&</span>');
+                        $(this).html(highlightedText);
+                    });
+                } else {
+                    // Clear highlighting when the search input is empty
+                    $('.highlight').each(function () {
+                        $(this).replaceWith($(this).text());
+                    });
+                }
+            });
+            $("#emSearchKeyword").on('input', function () {
+                var keyword = $(this).val().trim();
+
+                if (keyword !== '') {
+                    // Remove existing highlighting
+                    $('.highlight').each(function () {
+                        $(this).replaceWith($(this).text());
+                    });
+
+                    // Highlight cells containing the keyword
+                    $('table td').each(function () {
+                        var cellText = $(this).text();
+                        var highlightedText = cellText.replace(new RegExp(keyword, 'gi'), '<span class="highlight">$&</span>');
+                        $(this).html(highlightedText);
+                    });
+                } else {
+                    // Clear highlighting when the search input is empty
+                    $('.highlight').each(function () {
+                        $(this).replaceWith($(this).text());
+                    });
+                }
+            });
+            $("#umLastXDays").on('input', function () {
+                $("#umFromDate").val(null);
+                $("#umToDate").val(null);
+            });
+            $("#umFromDate").on('click', function () {
+                $("#umLastXDays").val(null);
+            });
+            $("#emLastXDays").on('input', function () {
+                $("#emFromDate").val(null);
+                $("#emToDate").val(null);
+            });
+            $("#emFromDate").on('click', function () {
+                $("#emLastXDays").val(null);
+            });
+            document.addEventListener('click', function (e) {
+                if (e.target.classList.contains('File')) {
+                    var clickedTd = e.target;
+                    if (clickedTd.innerText !== '') {
+                        var selectedId = getSelectedItemId("tableUserMessages");
+                        console.log("clicked on " + clickedTd.innerText);
+                    }
+                }
+                if (e.target.classList.contains('Attachment')) {
+                    var clickedTd = e.target;
+                    if (clickedTd.innerText !== '') {
+                        var selectedId = getSelectedItemId("tableEmails");
+                        console.log("clicked on " + clickedTd.innerText);
+                    }
+                }
+                if (e.target.classList.contains('Message')) {
+                    window.open(
+                        e.value,
+                        '_blank'
+                    );
+                }
+            });
+            searchUserMessages();
+            searchEmails();
+
+        });
+    </script>
+}

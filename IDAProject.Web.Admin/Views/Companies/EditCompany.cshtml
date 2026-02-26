@@ -1,0 +1,204 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Companies.CompanyViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Helpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@{
+    var company = Model.Company;
+    ViewData["Title"] = company.Name;
+
+    var urlSearchByZipCode = Url.RouteUrl(RouteNames.GeoLocation_ZipCode_Get, new { zipCode = "111" });
+    var urlCitiesByState = Url.RouteUrl(RouteNames.GeoLocation_CitiesByState_Get, new { stateId = "111" });
+    var urlZipCodesByCity = Url.RouteUrl(RouteNames.GeoLocation_ZipCodesByCity_Get, new { cityId = "111" });
+    var urlListCompanies = Url.RouteUrl(RouteNames.Companies_List);
+}
+<style>
+    .slika {
+        max-width: 300px;
+        max-height: 300px;
+    }
+</style>
+<div class="card">
+    <div class="card-body">
+        <div class="panel panel-primary">
+            <div class="row">
+                <div class="col-lg-12 col-md-12" id="companyDataContainer">
+                    <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">@localizer["Company basic info"]</h4>
+                            <tms-input type="Hidden" name="Id" id="companyId" value="@company.Id" />
+                        </div>
+                        <div class="card-body p-0 task-edit-main" >
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-4">
+                                    <tms-input type="Text" name="Name" id="companyName" value="@company.Name" required="true" label="@localizer["Company name"]" placeholder="@localizer["Enter company name"]..." />
+                                </div>
+@*                                 <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="Text" name="Code" id="companyCode" value="@company.Code!" label="Code:" placeholder="Enter code..." />
+                                </div> *@
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="ResponsiblePerson" id="companyResponsiblePerson" value="@company.ResponsiblePerson!" label="@localizer["Responsible person"]" placeholder="@localizer["Enter responsible person"]..." />
+                                </div>
+                            </div>
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="WebAddress" id="companyWebAddress" value="@company.WebAddress!" label="@localizer["Web address"]" placeholder="@localizer["Enter web address"]..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="EMail" id="companyEmail" value="@company.Email!" label="@localizer["E-mail"]" placeholder="@localizer["Enter e-mail"]..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="Phone" id="companyPhone" value="@company.Phone!" label="@localizer["Phone"]:" placeholder="@localizer["Enter phone"]..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="Fax" id="companyFax" value="@company.Fax!" label="@localizer["PIB"]" placeholder="@localizer["Enter PIB"]..." />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">Logo</h4>
+                        </div>
+                        <div class="card-body p-0 task-edit-main">
+                            <div class="row p-5 border-bottom">
+                                <div>
+                                    <img id="Logo" src="@company.Logo" alt="Logo" class="slika" />
+                                    <button class="btn btn-primary" id="buttonChooseFile" onclick="document.getElementById('fileInput').click()">@localizer["Choose logo"]...</button>
+                                    <input type="file" id="fileInput" accept="image/jpeg, image/png, image/gif" style="display:none" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="row p-5">
+                    <div class="btn-list text-end">
+                        <button class="btn btn-outline-danger" id="buttonCancel">@localizer["Cancel"]</button>
+                        <button class="btn btn-primary" id="buttonSave">@localizer["Save"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+    @section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+    <script type="text/javascript">
+        function loadCitiesAndSelectById(stateId, cityId) {
+
+            $.ajax({
+                url: '@urlCitiesByState'.replace("111", stateId),
+                method: 'GET',
+                success: function (cities) {
+
+                    $("#companyCityId :not(option:first)").remove();
+
+                    $(cities).each(function (_, city) {
+                        $('#companyCityId').append(`<option value="${city.id}">${city.name}</option>`);
+                    });
+
+                    if (cityId != 0) {
+                        $("#companyCityId").val(cityId);
+                    }
+                }
+            });
+        }
+
+        function loadAddressByZipCode() {
+            var zipCode = $("#companyZipCode").val();
+
+            if (zipCode != "") {
+
+                $.ajax({
+                    url: '@urlSearchByZipCode'.replace("111", zipCode),
+                    method: 'GET',
+                    success: function (response) {
+                        if (response.valid) {
+
+                            var zipInfo = response.payload;
+
+                            $("#companyZipCodeId").val(zipInfo.zipCodeId);
+                            $("#companyStateId").val(zipInfo.state.id);
+                            loadCitiesAndSelectById(zipInfo.state.id, zipInfo.city.id);
+                        }
+                    }
+                });
+            }
+        }
+
+        var fileInput = document.getElementById("fileInput");
+        var imageElement = document.getElementById("Logo");
+        fileInput.addEventListener("change", function (event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                imageElement.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        $(document).ready(function () {
+            if (@Model.ReadOnly == 1) {
+                $("#companyDataContainer :input").prop("disabled", true);
+                $("#buttonSave").prop("disabled", true);
+            }
+
+            $("#buttonSave").click(function () {
+                var $inputsContainer = $("#companyDataContainer");
+
+                if (validateRequiredFields($inputsContainer)) {
+
+                    var jsonData = serializeJSON($inputsContainer);
+                    var imageElement = document.getElementById("Logo");
+                    // Retrieve the base64 string from the image src
+                    var base64Image = imageElement.src/*.split(",")[1]*/;
+                    jsonData.Logo = base64Image;
+
+                    $.ajax({
+                        url: "@Url.RouteUrl(RouteNames.Companies_Save)",
+                        method: "POST",
+                        data: jsonData,
+                        success: function (response) {
+                            handleActionResponseMessage(response, function () {
+                                location = response.message;
+                            }, '@localizer["Error"]', '@localizer["SavedMsg"]');
+                        }
+                    });
+                }
+            });
+
+            $("#buttonCancel").click(function () {
+                document.location = '@urlListCompanies';
+            });
+
+            $("#companyZipCode").blur(loadAddressByZipCode);
+
+            $("#companyZipCode").keypress(function (event) {
+                var zipCode = $("#companyZipCode").val();
+                if (event.which == 13 || zipCode.length == 5) {
+                    event.preventDefault();
+                    loadAddressByZipCode();
+                }
+            });
+
+            $("#companyStateId").change(function () {
+                var stateId = $("#companyStateId").val();
+                loadCitiesAndSelectById(stateId, 0);
+            });
+
+        });
+    </script>
+}

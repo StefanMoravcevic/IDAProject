@@ -1,0 +1,9 @@
+﻿.is-invalid .select2-selection {
+    background: linear-gradient(90deg, rgba(251, 217, 217, 1) 0%, rgba(251, 203, 203, 1) 100%) !important;
+    box-shadow: 0 0 0 1px rgba(255, 0, 0, 0.7);
+    border-radius: 4px;
+}
+
+.is-invalid .select2-selection__placeholder {
+    color: white;
+}

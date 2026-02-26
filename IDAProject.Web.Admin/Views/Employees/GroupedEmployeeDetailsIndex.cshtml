@@ -1,0 +1,132 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Employees.EmployeeViewModel;
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+@{
+    ViewData["Title"] = Model.Employee.Name + " " + Model.Employee.Surname;
+}
+
+<div class="card">
+    <div class="card-body p-6">
+        <div class="panel panel-primary">
+            <div class="tab-menu-heading border-bottom-0">
+                <div class="tabs-menu4 border-bottomo-sm">
+                    <nav class="nav d-sm-flex">
+                        <a class="nav-link border border-bottom-0 br-sm-5 me-2 active" data-bs-toggle="tab" href="#tab25"> General </a>
+                        <a class="nav-link border border-bottom-0 br-sm-5 me-2" data-bs-toggle="tab" href="#tab26"> Finances </a>
+                        <a class="nav-link border border-bottom-lg-0 br-sm-5 me-2" data-bs-toggle="tab" href="#tab27"> Personal data </a>
+                    </nav>
+                </div>
+            </div>
+            <div class="panel-body tabs-menu-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab25">
+                        <div class="col-md-12 row">
+                            <div class="col-md-5">
+                                <div class="card">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <partial name="EditEmployee" model="@Model" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header border-bottom">
+                                                <div class="card-title">Family members</div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div>
+                                                        @* <partial name="FamilyMembersIndex" model="@Model.FamilyMembersViewModel" /> *@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab26">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card" style="margin-bottom:auto;">
+                                    <div class="card-body tab-option-container" style="overflow-x:auto">
+                                        @*                                        @if (Model.JobTypeId == JobTypes.Company_driver || Model.JobTypeId == JobTypes.External_driver)
+                                        {
+                                        <button id="empWaitings">
+                                        <i class="fa fa-flag" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                        <div>Waitings</div>
+                                        </button>
+                                        <button id="empBonuses">
+                                        <i class="fa fa-diamond" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                        <div>Waiting bonuses</div>
+                                        </button>
+                                        <button id="empStopBonuses">
+                                        <i class="fa fa-diamond" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                        <div>Stop bonuses</div>
+                                        </button>
+                                        <button id="empEscrow">
+                                        <i class="fa fa-money" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                        <div>ESCROW</div>
+                                        </button>
+                                        <button id="empFees">
+                                        <i class="fa fa-list-alt" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                        <div>Fees</div>
+                                        </button>
+                                        <button id="empCards">
+                                        <i class="fa fa-credit-card" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                        <div>Cards</div>
+                                        </button>
+                                        }
+                                        <button id="empLoanRequests">
+                                        <i class="fa fa-handshake-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                        <div>Loan requests</div>
+                                        </button>
+                                        *@
+                                        <div class="col-md-12 row">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab27">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card" style="margin-bottom:auto;">
+                                    <div class="card-body tab-option-container" style="overflow-x:auto">
+                                        <div class="col-md-12 row">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="card">
+                                                        <div class="card-header border-bottom">
+                                                            <div class="card-title">Documents</div>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div>
+                                                                    <partial name="EmployeeDocuments" model="@Model.EmployeeDocumentsViewModel" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

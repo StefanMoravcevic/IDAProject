@@ -1,0 +1,79 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.OrderHeaderArchives.OrderHeaderArchivesViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@{
+    var localizedPagination = @Html.Raw(Json.Serialize(new PaginationLocalizerModel(localizer)));
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <partial name="ContextOptionsPartial" model="@Model" />
+    </div>
+</div>
+<div class="row row-sm">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body" style="overflow-x:auto">
+                <tms-ajax-table id="tableOrderHeaderArchives" view-model="@Model" table-settings-reference-table="OrderHeaderArchives" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+    <script type="text/javascript">
+
+        function searchOrderHeaderArchives() {
+
+            $.ajax({
+                url: "@Url.RouteUrl(RouteNames.OrderHeaderArchives_Search)",
+                method: "POST",
+                data: 
+                {
+                    keyword : $("#SearchKeyword").val()
+                },
+                success: function (response) {
+                    loadJson("tableOrderHeaderArchives", response, @localizedPagination);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+
+            $('#orderLines').click(function () {
+                var selectedId = getSelectedItemId("tableOrderHeaderArchives");
+                window.open(
+                    '@Url.RouteUrl(RouteNames.OrderLineArchives_List, new { orderHeaderArchiveId = "111" })'.replace("111", selectedId),
+                    '_blank'
+                );
+            });
+
+            $("#buttonSearch").click(searchOrderHeaderArchives);
+
+            $("#SearchKeyword").on('keypress', function (e) {
+                if (e.which === 13) {
+                    searchOrderHeaderArchives();
+                }
+            });
+
+            $("#buttonResetSearch").click(function () {
+                $("#SearchKeyword").val(null);
+                searchOrderHeaderArchives();
+            });
+
+            searchOrderHeaderArchives();
+        });
+    </script>
+}

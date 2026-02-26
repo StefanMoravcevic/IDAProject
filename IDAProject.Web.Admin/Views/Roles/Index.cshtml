@@ -1,0 +1,162 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Roles.RolesViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using System.ComponentModel;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+@{
+    ViewData["Title"] = "Roles";
+    var urlDeleteRole = Url.RouteUrl(RouteNames.Role_Delete, new { id = 111 });
+}
+<tms-modal id="editRoleModal" title="@localizer["Edit"]" save-button="true" save-button-text="@localizer["Save"]" />
+<tms-modal id="editRoleFeaturesModal" title="@localizer["Manage features"]" save-button="false" />
+
+<div class="row">
+    <div class="col-md-12">
+        <partial name="ContextOptionsPartial" model="@Model" />
+    </div>
+</div>
+<div class="row row-sm">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <tms-ajax-table id="tableRoles" view-model="@Model" table-settings-reference-table="AspNetRoles" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+    @section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+    <script type="text/javascript">
+
+        function searchRoles() {
+
+            $.ajax({
+                url: "@Url.RouteUrl(RouteNames.Roles_Search)",
+                method: "POST",
+                data: {
+                    keyword: $("#roleKeyword").val(),
+                },
+                success: function (response) {
+                    loadJson("tableRoles", response);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $("#roleEdit").click(function () {
+                var selectedId = getSelectedItemId("tableRoles");
+                if (selectedId != null && selectedId > 0) {
+                    $.ajax({
+                        url: '@Url.RouteUrl(RouteNames.Role_Edit, new { id = "111" })'.replace("111", selectedId),
+                        method: 'GET',
+                        success: function (response) {
+                            $("#editRoleModal .modal-body").html(response);
+                            var editModal = new bootstrap.Modal(document.getElementById('editRoleModal'));
+                            editModal.show();
+                        }
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: 'info',
+                        //title: 'Info',
+                        text: "You must select role from the list."
+                    });
+                }
+            });
+            $('#roleAdd').click(function () {
+                $.ajax({
+                    url: '@Url.RouteUrl(RouteNames.Role_New)',
+                    method: 'GET',
+                    success: function (response) {
+                        $("#editRoleModal .modal-body").html(response);
+                        var editModal = new bootstrap.Modal(document.getElementById('editRoleModal'));
+                        editModal.show();
+                    }
+                });
+            });
+            $("#roleFeatures").click(function () {
+                var selectedId = getSelectedItemId("tableRoles");
+                if (selectedId != null && selectedId > 0) {
+                    $.ajax({
+                        url: '@Url.RouteUrl(RouteNames.Role_ManageFeatures, new { id = "111" })'.replace("111", selectedId),
+                        method: 'GET',
+                        success: function (response) {
+                            $("#editRoleFeaturesModal .modal-body").html(response);
+                            var editModal = new bootstrap.Modal(document.getElementById('editRoleFeaturesModal'));
+                            editModal.show();
+                        }
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: 'info',
+                        //title: 'Info',
+                        text: "You must select role from the list."
+                    });
+                }
+            });
+            $("#editRoleModal-confirm").click(function () {
+                var $inputsContainer = $("#roleDataContainer");
+                var jsonData = serializeJSON($inputsContainer);
+                $.ajax({
+                    url: "@Url.RouteUrl(RouteNames.Role_Save)",
+                    method: "POST",
+                    data: jsonData,
+                    success: function (response) {
+                        handleActionResponseMessage(response, function () {
+                            location = response.message;
+                        }, '@localizer["Error"]', '@localizer["SavedMsg"]');
+                    }
+                });
+            });
+            $("#roleDelete").click(function () {
+                Swal.fire({
+                    title: '@localizer["DeleteQuestion"]',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '@localizer["DeleteConfirmation"]'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var selectedId = getSelectedItemId("tableRoles");
+                        $.ajax({
+                            url: '@urlDeleteRole'.replace("111", selectedId),
+                            method: "POST",
+                            success: function (response) {
+                                location = response.message;
+                            }
+                        });
+                    }
+                })
+            });
+
+            $("#buttonResetSearchRoles").click(function () {
+                $("#roleKeyword").val(null);
+                $.ajax({
+                    url: "@Url.RouteUrl(RouteNames.Roles_Search)",
+                    method: "POST",
+                    data: {
+                        keyword: null,
+                    },
+                    success: function (response) {
+                        loadJson("tableRoles", response);
+                    }
+                });
+            });
+
+            $("#buttonSearchRoles").click(searchRoles);
+            searchRoles();
+        });
+    </script>
+}

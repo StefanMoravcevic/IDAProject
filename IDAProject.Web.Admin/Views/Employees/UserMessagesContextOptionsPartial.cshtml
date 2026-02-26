@@ -1,0 +1,55 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Messages.MessagesViewModel;
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+<div class="card">
+    <div class="card-body">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="context-panel">
+                            <div class="card-body tab-option-container" style="overflow-x:auto">
+                                <button id="umExportExcel">
+                                    <i class="fa fa-file-excel-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                    <div>Export to excel</div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="searchParams">
+                    <div class="row border-bottom search-params-wrapper">
+                        <div class="col-sm-12 col-md-6 col-xl-4">
+                            <tms-input type="Text" name="Keyword" id="umSearchKeyword" label="Keyword:" placeholder="Message text" />
+                            <tms-input type="Hidden" name="DispatcherId" id="DispatcherId" value="@Model.EmployeeId" />
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-xl-4">
+                            <tms-select name="DriverWithId" id="umDriverWithId" options="@Model.Drivers" label="With dispatcher/driver:" empty-option-text=" " />
+                        </div>
+                    </div>
+                    <div class="row search-params-wrapper">
+
+                        <div class="col-sm-12 col-md-4 col-xl-2 row">
+                            <tms-input type="Date" name="FromDate" id="umFromDate" label="From date:" />
+                        </div>
+                        <div class="col-sm-12 col-md-4 col-xl-2">
+                            <tms-input type="Date" name="ToDate" id="umToDate" label="To date:" />
+                        </div>
+                        <div class="col-sm-12 col-md-4 col-xl-2">
+                            <tms-select name="LastXDays" id="umLastXDays" options="@Model.Days" label="Last:" empty-option-text=" " />
+                        </div>
+                        <div class="btn-list text-end search-button-wrapper">
+                            <div class="form-group">
+                                <button class="btn btn-primary" id="buttonSearchMessages">Search</button>
+                                <button class="btn btn-primary" id="buttonResetSearchMessages">Reset search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

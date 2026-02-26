@@ -1,0 +1,830 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.OrderLines.OrderLinesViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@using IDAProject.Web.Admin.Models.Interfaces.Managers;
+@using IDAProject.Web.Models.General;
+@inject IStringLocalizer<SharedResources> localizer
+@inject IAccountManager accountManager
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@{
+	var localizedPagination = @Html.Raw(Json.Serialize(new PaginationLocalizerModel(localizer)));
+	var printLine = Url.RouteUrl(RouteNames.ScannedLine_Print);
+	var token = Context.Request.HttpContext.Request.Cookies[Constants.AdminCookieToken];
+	var user = accountManager.GetUserFromJwt(token!);
+}
+<style>
+	#searchInput {
+		height: 120px;
+		text-align: center;
+		font-size: 50px;
+	}
+
+	#tableOrderLines td:first-child,
+	#tableOrderLines th:first-child {
+		display: none;
+	}
+
+	#tableOrderLines {
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+		#tableOrderLines th,
+		#tableOrderLines td {
+			border: 1px solid #ccc; 
+			padding: 8px;
+			text-align: left;
+		}
+
+	#tableOrderLines thead tr th {
+		font-size: 15px !important;
+		background-color: #d12c47 !important;
+		color: white !important;
+	}
+
+	.selected-filters-list {
+		font-size: 1.1rem; 
+		line-height: 1.5;
+		padding-left: 1rem;
+		font-weight:bold;
+	}
+
+	.selected-filters-list li {
+		margin-bottom: 0.3rem;
+	}
+
+	.selected-filters-list li strong {
+		font-weight: bold;
+	}
+
+	#articleInfo {
+		font-size: 30px;
+	}
+
+	#tableOrderLines tbody tr.selected {
+		background-color: #cce5ff !important;
+	}
+	.red {
+		background-color: #d12c47 !important;
+	}
+
+	.selected-has-segment {
+		background-color: #007bff !important;
+		color: white !important;
+		border-radius: 50%;
+	}
+
+	.side-panel {
+		display: flex;
+		flex-direction: column;
+		gap: 1.2rem;
+		padding: 0.5rem;
+		background-color: #f8f9fa;
+		border-left: 2px solid #e3e3e3;
+		height: 100%;
+	}
+
+	.barcode-box {
+		background: white;
+		border-radius: 12px;
+		box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+		padding: 1rem;
+	}
+
+	.filters-box {
+		background: white;
+		border-radius: 12px;
+		box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+		padding: 1rem;
+		flex: 1;
+	}
+
+	.details-box {
+		background: white;
+		border-radius: 12px;
+		box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+		padding: 1rem;
+	}
+
+	.section-title {
+		font-weight: 600;
+		margin-bottom: 0.75rem;
+		color: #495057;
+		border-bottom: 1px solid #dee2e6;
+		padding-bottom: 0.3rem;
+	}
+
+	.table-scroll-wrapper {
+		max-height: 400px;
+		overflow-y: auto;
+	}
+
+	.table-scroll-wrapper {
+		max-height: 80vh;
+		overflow-y: auto;
+	}
+
+	.table-scroll-wrapper table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	.table-scroll-wrapper table th,
+	.table-scroll-wrapper table td {
+			border: 1px solid #ccc;
+			padding: 6px 10px;
+	}
+
+	.table-scroll-wrapper table thead th {
+		background-color: #d12c47;
+		color: white;
+		position: sticky;
+		top: 0;
+		z-index: 10;
+	}
+
+	.table-scroll-wrapper table tbody tr.selected {
+			background-color: #d4edda;
+	}
+
+	.table-scroll-wrapper table th.d-none,
+	.table-scroll-wrapper table td.d-none {
+			display: none;
+	}
+
+	.side-panel {
+		display: flex;
+		flex-direction: column;
+	}
+
+</style>
+
+<tms-input type="Hidden" name="ApiUrl" id="ApiUrl" value="@Model.ApiUrl" />
+<div class="row row-sm">
+
+	<div class="col-lg-8">
+		<div class="card">
+			<div class="card-body">
+				<div class="table-scroll-wrapper">
+					<table class="table table-striped" id="tableOrderLines">
+						<thead>
+							<tr>
+								<th>@localizer["Id"]</th>
+								<th>@localizer["Customer order number"]</th>
+								<th>@localizer["Line no"]</th>
+								<th>@localizer["Febi article no"]</th>
+								<th>@localizer["Febi article name"]</th>
+								<th>@localizer["Febi article packaging unit"]</th>
+								<th>@localizer["Requested quantity"]</th>
+								<th>@localizer["Checked quantity"]</th>
+								<th>@localizer["Partner code"]</th>
+								<th>@localizer["Order date"]</th>
+								<th>@localizer["Day"]</th>
+								<th>@localizer["Segment"]</th>
+								<th>@localizer["Options"]</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-12 col-md-6 col-lg-4 pe-0">
+		<div class="side-panel d-flex flex-column p-2">
+
+			<div class="barcode-box mb-2">
+				<input type="text" id="searchInput"
+					   class="form-control text-center"
+					   placeholder="@localizer["BarCode"]" />
+			</div>
+
+			<!-- Filteri -->
+			<div class="filters-box mb-2">
+				<h6 class="section-title">@localizer["Filters"]</h6>
+				<partial name="ContextOptionsPartial" model="@Model" />
+
+				<div class="selected-filters-box mt-2">
+					<h6 style="font-weight:bold; font-size:20px;">@localizer["Selected filters"]:</h6>
+					<ul id="selectedFiltersList" class="selected-filters-list"></ul>
+				</div>
+			</div>
+
+			<!-- Detalji artikla -->
+			<div class="details-box mb-2">
+				<h6 class="section-title">@localizer["Detalji artikla"]</h6>
+				<div id="articleInfo">
+					<p><strong>@localizer["Febi article no"]:</strong> <span id="itemCode"></span></p>
+					<p><strong>@localizer["Febi article name"]:</strong> <span id="itemName"></span></p>
+					<p><strong>@localizer["BarCode"]:</strong> <span id="itemBarCode"></span></p>
+					<p><strong>@localizer["Febi article packaging unit"]:</strong> <span id="itemPackingUnit"></span></p>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="changeQuantityModal" tabindex="-1" aria-labelledby="changeQuantityModal" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h5 class="modal-title" id="changeQuantityModalTitle">@localizer["Change quantity manually"]</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zatvori"></button>
+			</div>
+
+			<div class="modal-body">
+				<form id="userForm">
+					<input type="hidden" name="LineId" id="LineId">
+
+					<div class="mb-3">
+						<label class="form-label">@localizer["Quantity"]</label>
+						<input type="number" class="form-control" id="QuantityId" name="Quantity">
+					</div>
+				</form>
+			</div>
+
+			<!-- Footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@localizer["Close"]</button>
+				<button type="button" class="btn btn-primary" id="saveQuantity">@localizer["Save"]</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<tms-modal id="scannedLinesModal" title="@localizer["Scanned lines"]" save-button=false />
+<tms-input type="Hidden" id="OrderHeaderId" value="@Model.OrderHeaderId" />
+
+@section Styles {
+	<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+	<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+	<script type="text/javascript">
+		var highlightOrderLineId = null;
+		function getSelectedItemFromTableId(tableId) {
+			var selectedRow = $('#' + tableId + ' tbody tr.selected');
+			if (selectedRow.length === 0) return null;
+			var firstCell = selectedRow.find('td').first();
+			return firstCell.text().trim();
+		}
+
+		const myJwtToken = '@token';
+		let apiUrl = $("#ApiUrl").val();
+
+		const connection = new signalR.HubConnectionBuilder()
+			.withUrl(apiUrl + "/orderLineHub", {
+				accessTokenFactory: () => myJwtToken
+			})
+			.withAutomaticReconnect()
+			.configureLogging(signalR.LogLevel.Warning)
+			.build();
+
+		connection.start()
+			.then(() => console.log("SignalR connected"))
+			.catch(err => console.error("SignalR error: ", err.toString()));
+
+		connection.on("SearchOrderLines", (payload) => {
+			searchOrderLines();
+		});
+
+		function getSelectedSegment() {
+			const segmentElement = document.getElementById('SegmentId');
+			return Array.from(segmentElement.selectedOptions).map(o => o.value);
+		}
+
+		function addFilter(date, segments) {
+			if (!segments || segments.length === 0) return;
+
+			const dateString = formatDateToBackend(date);
+			const convertSegmentToRoman = (segment) => {
+				const map = { "1": "I", "2": "II", "3": "III" };
+				return map[segment] || segment;
+			};
+
+			segments.forEach(segment => {
+				const romanSegment = convertSegmentToRoman(segment);
+				const exists = selectedFilters.some(f => f.date === dateString && f.segment === romanSegment);
+				if (!exists) {
+					selectedFilters.push({ date: dateString, segment: romanSegment });
+				}
+			});
+		}
+
+		function formatDateToDisplay(dateString) {
+			if (!dateString) return '';
+			const parts = dateString.split('-');
+			if (parts.length !== 3) return dateString;
+			return `${parts[2]}.${parts[1]}.${parts[0]}`;
+		}
+
+		function romanToValue(segment) {
+			switch(segment) {
+				case "I": return "1";
+				case "II": return "2";
+				case "III": return "3";
+				default: return segment;
+			}
+		}
+
+		function formatDateToBackend(date) {
+			if (!date) return null;
+			const day = ('0' + date.getDate()).slice(-2);
+			const month = ('0' + (date.getMonth() + 1)).slice(-2);
+			const year = date.getFullYear();
+			return `${year}-${month}-${day}`;
+		}
+
+		function disableOrderNumberInput() {
+			if(@Json.Serialize(Model.OrderHeaderId.HasValue))
+			{
+				$("#ContextOrderHeaderId").prop("disabled",true);
+			}
+			else
+			{
+				$("#ContextOrderHeaderId").prop("disabled",false);
+			}
+		}
+		const localeSr = {
+			days: ['@localizer["Sunday"]', '@localizer["Monday"]', '@localizer["Tuesday"]', '@localizer["Wednesday"]', '@localizer["Thursday"]', '@localizer["Friday"]', '@localizer["Saturday"]'],
+			daysShort: ['@localizer["Sun"]', '@localizer["Mon"]', '@localizer["Tue"]', '@localizer["Wed"]', '@localizer["Thu"]', '@localizer["Fri"]', '@localizer["Sat"]'],
+			daysMin: ['@localizer["Su"]', '@localizer["Mo"]', '@localizer["Tu"]', '@localizer["We"]', '@localizer["Th"]', '@localizer["Fr"]', '@localizer["Sa"]'],
+			months: ['@localizer["January"]','@localizer["February"]','@localizer["March"]','@localizer["April"]','@localizer["May"]','@localizer["June"]', '@localizer["July"]','@localizer["August"]','@localizer["September"]','@localizer["October"]','@localizer["November"]','@localizer["December"]'],
+			monthsShort: ['@localizer["Jan"]', '@localizer["Feb"]', '@localizer["Mar"]', '@localizer["Apr"]', '@localizer["May"]', '@localizer["Jun"]', '@localizer["Jul"]', '@localizer["Aug"]', '@localizer["Sep"]', '@localizer["Oct"]', '@localizer["Nov"]', '@localizer["Dec"]'],
+			today: '@localizer["Today"]',
+			clear: '@localizer["Clear"]',
+			dateFormat: 'dd.MM.yyyy',
+			timeFormat: 'hh:ii',
+			firstDay: 1
+		};
+
+		let selectedFilters = [];
+
+		function runSignalR() {
+			$.ajax({
+				url: "@Url.RouteUrl(RouteNames.OrderLines_RunSignalR)",
+				method: "GET",
+				success: function (response) {
+
+				},
+				error: function (xhr, status, error) {
+					alert("An error occurred while fetching monitor: " + error);
+				}
+			});
+		};
+
+		function searchOrderLines() {
+			var orderHeaderId = $("#OrderHeaderId").val();
+			var $inputsContainer = $("#searchForm");
+			var jsonData = serializeJSON($inputsContainer);
+
+			jsonData.orderHeaderId = orderHeaderId;
+			jsonData.selectedFilters = selectedFilters.map(f => {
+				let dateString = null;
+				if (typeof f.date === "string") {
+					const parts = f.date.split('-');
+					dateString = `${parts[0]}-${parts[1]}-${parts[2]}`;
+				} else if (f.date instanceof Date) {
+					dateString = f.date.toISOString().split('T')[0];
+				}
+				return {
+					date: dateString,
+					segment: f.segment
+				};
+			});
+
+			$.ajax({
+				url: "@Url.RouteUrl(RouteNames.OrderLines_Search)",
+				method: "POST",
+				data: jsonData,
+				success: function(response) {
+					const tbody = $("#tableOrderLines tbody");
+					tbody.empty();
+
+					response.forEach(row => {
+						const isHighlighted = highlightOrderLineId && row.id === highlightOrderLineId;
+
+						const tr = $(`
+							<tr class="order-line-row" data-id="${row.id}">
+								<td>${row.id || ""}</td>
+								<td>${row.customerOrderNumber || ""}</td>
+								<td>${row.lineNo || ""}</td>
+								<td>${row.febiArticleNo || ""}</td>
+								<td>${row.febiArticleName || ""}</td>
+								<td>${row.febiArticlePackingUnit || ""}</td>
+								<td>${row.requestedQuantity || ""}</td>
+								<td>${row.checkedQuantity != null ? row.checkedQuantity : ""}</td>
+								<td>${row.partnerCode || ""}</td>
+								<td>${row.orderDateFormatted || ""}</td>
+								<td>${row.dayOfWeek || ""}</td>
+								<td>${row.segment || ""}</td>
+								<td><button class="btn btn-sm btn-primary print-btn"><i class="fa fa-print"></i></button></td>
+							</tr>
+						`);
+
+						if (row.statusColor) {
+							if (row.statusColor === "gray") tr.css("background-color", "#d3d3d3");
+							else if (row.statusColor === "red") tr.css("background-color", "#f8d7da");
+							else if (row.statusColor === "green") tr.css("background-color", "#d4edda");
+						}
+
+						if (isHighlighted) {
+							tr.css("font-weight", "bold");
+						}
+
+						tbody.append(tr);
+					});
+
+					if (typeof highlightOrderLineId !== "undefined" && highlightOrderLineId) {
+						const $row = $(`.order-line-row[data-id="${highlightOrderLineId}"]`);
+						if ($row.length) {
+							const $wrapper = $('.table-scroll-wrapper');
+
+							const wrapperTop = $wrapper.offset().top;
+							const wrapperBottom = wrapperTop + $wrapper.height();
+
+							const rowTop = $row.offset().top;
+							const rowBottom = rowTop + $row.outerHeight();
+							if (rowTop < wrapperTop || rowBottom > wrapperBottom) {
+								const newScroll = $wrapper.scrollTop() + (rowTop - wrapperTop) - ($wrapper.height() / 2) + ($row.outerHeight() / 2);
+								$wrapper.scrollTop(newScroll);
+							}
+						}
+
+						highlightOrderLineId = null;
+					}
+				}
+			});
+		}
+
+		function searchFebiItems()
+		{
+			$.ajax({
+				url: "@Url.RouteUrl(RouteNames.FebiItems_Search)",
+				method: "POST",
+				data: {
+					barCode: $("#searchInput").val(),
+					articleNo : $("#searchInput").val()
+				},
+				success: function (response) {
+					$("#itemCode").text(response[0].febiArticleNo);
+					$("#itemName").text(response[0].febiArticleName);
+					$("#itemBarCode").text(response[0].barCode);
+					$("#itemPackingUnit").text(response[0].febiPackingUnit);
+				}
+			});
+		}
+
+		function highlightDates() {
+			$('.air-datepicker-cell.-day-').each(function() {
+				const cellDate = $(this).data('date');
+				if (!cellDate) return;
+
+				const dateString = formatDateToBackend(new Date(cellDate));
+				const hasSegment = selectedFilters.some(f => f.date === dateString);
+
+				if (hasSegment) {
+					$(this).addClass('highlighted-date');
+				} else {
+					$(this).removeClass('highlighted-date');
+				}
+			});
+		}
+
+		function renderSelectedFilters() {
+			const $list = $("#selectedFiltersList");
+			$list.empty();
+
+			if (selectedFilters.length > 0) {
+				selectedFilters.forEach(f => {
+					const displayDate = formatDateToDisplay(f.date);
+					$list.append(`<li>Datum: ${displayDate} - Segment ${f.segment}</li>`);
+				});
+			}
+
+			const selectedOrders = $("#ContextOrderHeaderId").select2('data');
+			if (selectedOrders && selectedOrders.length > 0) {
+				selectedOrders.forEach(order => {
+					$list.append(`<li>Broj porudžbine: ${order.text}</li>`);
+				});
+			}
+
+			const selectedItems = $("#FebiItemId").select2('data');
+			if (selectedItems && selectedItems.length > 0) {
+				selectedItems.forEach(item => {
+					$list.append(`<li>Broj artikla: ${item.text}</li>`);
+				});
+			}
+
+			const selectedPartners = $("#PartnerCodeId").select2('data');
+			if (selectedPartners && selectedPartners.length > 0) {
+				selectedPartners.forEach(partner => {
+					$list.append(`<li>Partner: ${partner.text}</li>`);
+				});
+			}
+
+			if ($list.children().length === 0) {
+				$list.append("<li>Nema selektovanih filtera</li>");
+			}
+		}
+
+		const successSound = new Audio('/sounds/succes.mp3');
+		const errorSound = new Audio('/sounds/error.mp3');
+
+		$(document).ready(function () {
+			$('#tableOrderLines tbody').on('click', 'tr', function () {
+				$('#tableOrderLines tbody tr').removeClass('selected');
+				$(this).addClass('selected');
+			});
+			const datePicker = new AirDatepicker('#DateId', {
+				inline: true,
+				locale: localeSr,
+				multipleDates: false,
+				onRenderCell({ date }) {
+					const dateString = formatDateToBackend(date);
+					const hasSegment = selectedFilters.some(f => f.date === dateString);
+					if (hasSegment) {
+						return {
+							classes: 'selected-has-segment'
+						};
+					}
+				},
+						onSelect({ date }) {
+			if (!date) return;
+
+			const dateString = formatDateToBackend(date);
+			currentSelectedDate = dateString;
+
+			const existingSegments = selectedFilters
+				.filter(f => f.date === dateString)
+				.map(f => {
+					switch(f.segment) {
+						case "I": return "1";
+						case "II": return "2";
+						case "III": return "3";
+						default: return f.segment;
+					}
+				});
+
+			$('#SegmentId').val(existingSegments).trigger('change');
+
+			$('.air-datepicker-cell.-day-').each(function() {
+				const $cell = $(this);
+				const year = $cell.data('year');
+				const month = $cell.data('month');
+				const day = $cell.data('date');
+				if (year == null || month == null || day == null) return;
+
+				const cellDate = new Date(year, month, day);
+				const cellDateString = formatDateToBackend(cellDate);
+				const hasSegment = selectedFilters.some(f => f.date === cellDateString);
+				if (hasSegment) {
+					$cell.addClass('selected-has-segment');
+				} else {
+					$cell.removeClass('selected-has-segment');
+				}
+				});
+				}
+			});
+
+			let currentSelectedDate = null;
+
+
+			$('#SegmentId').on('change', function() {
+				if (!currentSelectedDate) return;
+
+				const segments = getSelectedSegment();
+				selectedFilters = selectedFilters.filter(f => f.date !== currentSelectedDate);
+				if (segments && segments.length > 0) {
+					segments.forEach(s => {
+						const roman = { "1":"I","2":"II","3":"III" }[s] || s;
+						selectedFilters.push({ date: currentSelectedDate, segment: roman });
+					});
+				}
+
+				$('.air-datepicker-cell.-day-').each(function() {
+					const $cell = $(this);
+					const year = $cell.data('year');
+					const month = $cell.data('month');
+					const day = $cell.data('date');
+					if (year == null || month == null || day == null) return;
+
+					const cellDate = new Date(year, month, day);
+					const cellDateString = formatDateToBackend(cellDate);
+					const hasSegment = selectedFilters.some(f => f.date === cellDateString);
+					if (hasSegment) {
+						$cell.addClass('selected-has-segment');
+					} else {
+						$cell.removeClass('selected-has-segment');
+					}
+				});
+				renderSelectedFilters();
+			});
+
+
+
+			disableOrderNumberInput();
+			$('#searchInput').trigger('focus');
+
+			$('#searchInput').on('keypress', function(e) {
+				if (e.which === 13) {
+					e.preventDefault();
+					var barcode = $(this).val();
+
+					if (barcode) {
+						var $inputsContainer = $("#searchParameters");
+						var jsonData = serializeJSON($inputsContainer);
+						jsonData.BarCode = barcode;
+						jsonData.selectedFilters = selectedFilters;
+
+						$.ajax({
+							url: '@Url.RouteUrl(RouteNames.OrderLines_IncrementQuantity)',
+							method: 'POST',
+							data: jsonData,
+							success: function(response) {
+								if (!response.valid) {
+									errorSound.play();
+									handleActionResponseMessage(response, function () { },
+										'@localizer["Error"]', '@localizer["SavedMsg"]');
+								} else {
+									successSound.play();
+
+									highlightOrderLineId = response.payload;
+								}
+
+								searchFebiItems();
+								$('#searchInput').val('').focus();
+								searchOrderLines();
+							},
+							error: function(xhr, status, error) {
+								console.error("AJAX error:", status, error);
+								alert("AJAX error: " + error);
+								errorSound.play();
+							}
+						});
+					}
+				}
+			});
+
+			$('#tableOrderLines').on('click', '.print-btn, .print-btn i', function(event) {
+				event.stopPropagation();
+				var selectedId = getSelectedItemFromTableId("tableOrderLines");
+				openScannedLinesModal(selectedId);
+			});
+
+
+			function openScannedLinesModal(orderLineId) {
+				$.ajax({
+					url: '@Url.RouteUrl(RouteNames.ScannedLine_ListByOrderLine, new { orderLineId = "__ID__" })'.replace("__ID__", orderLineId),
+					method: 'GET',
+					success: function (partialViewHtml) {
+						$("#scannedLinesModal .modal-body").html(partialViewHtml);
+						$("#scannedLinesModal").modal("show");
+					},
+					error: function(xhr, status, error) {
+						console.error("Error loading scanned lines:", error);
+						alert("Ne mogu da učitam skenirane linije.");
+					}
+				});
+			}
+
+			$("#ContextOrderHeaderId").select2({
+				multiple: true,
+				allowClear: true,
+				placeholder: '@Html.Raw(localizer["Select customer order number"])'
+			});
+			$("#FebiItemId").select2({
+				multiple: true,
+				allowClear: true,
+				placeholder: '@Html.Raw(localizer["Select febi article no"])'
+			});
+
+			$("#SegmentId").select2({
+				multiple: true,
+				allowClear: true,
+				placeholder: '@Html.Raw(localizer["Select segment"])'
+			});
+			$("#PartnerCodeId").select2({
+				multiple: true,
+				allowClear: true,
+				placeholder: '@Html.Raw(localizer["Select partner code"])'
+			});
+
+
+			$("#buttonSearch").click(searchOrderLines);
+
+			$("#buttonResetSearch").click(function () {
+				selectedFilters =[];
+				$("#ContextOrderHeaderId").val(null).trigger("change");
+				$("#FebiItemId").val(null).trigger("change");
+				$("#SegmentId").val(null).trigger("change");
+				$("#PartnerCodeId").val(null).trigger("change");
+				$("#DateFromId").val(null);
+				$("#DateToId").val(null);
+				$("#empSearchKeyword").val(null);
+
+				
+				searchOrderLines();
+			});
+
+			$(document).on('click', '.print-btn-modal', function () {
+				var selectedId = $(this).data('id');
+
+				if (!selectedId) {
+					console.error("Nije pronađen ID za red.");
+					return;
+				}
+
+				$.ajax({
+					url: "@printLine",
+					method: "GET",
+					data: { scannedLineId: selectedId },
+					success: function (response) {
+						if(response.valid){
+						   successSound.play();
+						}
+						else
+						{
+							errorSound.play();
+						}
+					}
+				});
+			});
+
+			$(document).on('click', '#buttonOpenModal', function () {
+				var selectedId = getSelectedItemFromTableId("tableOrderLines");
+
+				if (!selectedId) {
+					Swal.fire({
+						icon: 'warning',
+						title: 'Pažnja!',
+						text: 'Morate selektovati red pre ručne promene količine.',
+						confirmButtonText: 'OK'
+					});
+					return;
+				}
+
+				$('#LineId').val(selectedId);
+
+				var modalEl = document.getElementById('changeQuantityModal');
+				var modal = new bootstrap.Modal(modalEl);
+				modal.show();
+			});
+
+			 $("#saveQuantity").click(function () {
+				var $inputsContainer = $("#userForm");
+
+				if (validateRequiredFields($inputsContainer, '@localizer["ValidationMsg"]')) {
+					var jsonData = serializeJSON($inputsContainer);
+
+					$.ajax({
+						url: "@Url.RouteUrl(RouteNames.OrderLines_ChangeQuantityManually)",
+						method: "POST",
+						data: jsonData,
+						success: function (response) {
+							handleActionResponseMessage(response, function () {
+								location = response.message;
+								$("#QuantityId").val(null);
+							}, '@localizer["Error"]', '@localizer["SavedMsg"]');
+						}
+					});
+				}
+			});
+
+			$('#SegmentId').on('change', function() {
+				searchOrderLines();
+			});
+
+			$('#ContextOrderHeaderId').on('change', function() {
+				searchOrderLines();
+				renderSelectedFilters();
+			});
+
+			$('#FebiItemId').on('change', function() {
+				searchOrderLines();
+				renderSelectedFilters();
+			});
+
+			$('#PartnerCodeId').on('change', function() {
+				searchOrderLines();
+				renderSelectedFilters();
+			});
+
+
+			searchOrderLines();
+		});
+
+	</script>
+}

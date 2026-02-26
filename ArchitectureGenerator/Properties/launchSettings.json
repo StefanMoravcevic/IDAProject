@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ArchitectureGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "ScannedLine"
+    }
+  }
+}

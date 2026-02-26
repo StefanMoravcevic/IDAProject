@@ -1,0 +1,83 @@
+﻿@model IDAProject.Web.Models.Dto.MasterData.MasterEntity
+@using IDAProject.Web.Helpers;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@{
+    var index = 0;
+}
+
+<input type="hidden" value="@Model.TableName" name="TableName" />
+
+@if(Model.Records.Any())
+{
+    var record = Model.Records.First();
+    foreach(var field in Model.Fields)
+    {
+        var fieldValue = record.Values[index];
+
+        <div class="row">
+            <div class="col-md-10">
+                @if (field.Options.Any())
+                {
+                    if (field.Type == typeof(int).ToString())
+                    {
+                        var selectValue = (int)MasterDataConverter.GetRawValue(fieldValue, field.Type)!;
+                        <tms-select name="@field.Name" options="@field.Options" selected-option="@selectValue" label="@field.DisplayName" />
+                    }
+                    else if (field.Type == typeof(int?).ToString())
+                    {
+                        var selectValue = (int?)MasterDataConverter.GetRawValue(fieldValue, field.Type)!;
+                        <tms-select name="@field.Name" options="@field.Options" selected-option="@selectValue" label="@field.DisplayName" />
+                    }                
+                }
+                else if(field.Type == typeof(bool).ToString())
+                {
+                    var isChecked = (bool)MasterDataConverter.GetRawValue(fieldValue, field.Type)!;
+                    <tms-input name="@field.Name" type="CheckBox" label="@field.DisplayName" value="true" checked="@isChecked" />
+                }
+                else if (field.Type == typeof(bool?).ToString())
+                {
+                    var rawValue = (bool?)MasterDataConverter.GetRawValue(fieldValue, field.Type);
+                    var isChecked = rawValue.HasValue && rawValue.Value;
+                    <tms-input name="@field.Name" type="CheckBox" label="@field.DisplayName" value="true" checked="@isChecked" />
+                }
+                else
+                {
+                    <tms-input name="@field.Name" type="Text" label="@field.DisplayName" value="@fieldValue" />
+                }
+            </div>
+        </div>
+        index++;
+    }
+    <input type="hidden" value="@record.Id" name="Id" />
+}
+else
+{
+    foreach (var field in Model.Fields)
+    {
+        <div class="row">
+            <div class="col-md-10">
+                @if (field.Options.Any())
+                {
+                    <tms-select name="@field.Name" options="@field.Options" label="@field.DisplayName" />
+                }
+                else if (field.Type == typeof(bool).ToString())
+                {
+                    <tms-input name="@field.Name" type="CheckBox" label="@field.DisplayName" value="true" checked="false" />
+                }
+                else
+                {
+                    <tms-input name="@field.Name" type="Text" label="@field.DisplayName" />
+                }
+            </div>
+        </div>
+        index++;
+    }
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#editRecordModal select").select2({
+            dropdownParent: $('#editRecordModal')
+        });
+    });
+</script>

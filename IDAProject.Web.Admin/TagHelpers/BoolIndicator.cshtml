@@ -1,0 +1,19 @@
+﻿@using System;
+@using IDAProject.Web.Admin.Models.TagHelpers
+@model IDAProject.Web.Admin.Models.TagHelpers.BoolIndicatorViewModel
+
+@if(Model.Value.HasValue)
+{
+    if(Model.Value == true)
+    {
+        <i class="fa fa-times-circle" style="color:red;" aria-hidden="true"></i>
+    }
+    else
+    {
+        <i class="fa fa-check-circle" style="color:green;" aria-hidden="true"></i>
+    }
+}
+else
+{
+    <text>-</text>
+}

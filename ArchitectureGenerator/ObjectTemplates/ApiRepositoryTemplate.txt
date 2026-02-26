@@ -1,0 +1,84 @@
+﻿using Microsoft.EntityFrameworkCore;
+using DeclarationFactory.Web.Api.Models.Interfaces.Repositories;
+using DeclarationFactory.Web.Db.MainDatabase;
+using DeclarationFactory.Web.Helpers;
+using DeclarationFactory.Web.Models.Dto.<<EntityName>>;
+using DeclarationFactory.Web.Models.RequestModels.<<EntityName>>;
+
+namespace DeclarationFactory.Web.Api.Repositories
+{
+    public class <<EntityName>>Repository : I<<EntityName>>Repository
+    {
+        private readonly DeclarationFactoryContext _dbContext;
+
+        public <<EntityName>>Repository(DeclarationFactoryContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public async Task<<<EntityNameSingular>>Dto> Get<<EntityNameSingular>>ByIdAsync(int id)
+        {
+            var searchParams = new Search<<EntityName>>Params
+            {
+                Id = id
+            };
+            var result = await Search<<EntityName>>Async(searchParams);
+            return result.FirstOrDefault();
+        }
+
+        public async Task<List<<<EntityNameSingular>>Dto>> Search<<EntityName>>Async(Search<<EntityName>>Params searchParams)
+        {
+
+            var result = new List<<<EntityNameSingular>>Dto>();
+            IQueryable<<<EntityNameSingular>>> query = _dbContext.<<EntityName>>.Where(x => x.IsDeleted == false);
+            if (searchParams.Id.HasValue)
+            {
+                query = query.Where(x => x.Id == searchParams.Id);
+            }
+            else
+            {
+                //implement actual search params here
+                throw new System.NotImplementedException();     
+            }
+
+            result = await query.Select(a => new <<EntityNameSingular>>Dto
+            {
+                //implement assignment of properties here, only id is implemented as default
+                Id = a.Id
+
+            }).ToListAsync();
+            return result;
+
+        }
+
+        public async Task<int> Save<<EntityNameSingular>>Async(Save<<EntityNameSingular>>RequestModel requestModel)
+        {
+            <<EntityNameSingular>>? dbRecord;
+            if (requestModel.Id > 0)
+            {
+                dbRecord = await _dbContext.<<EntityName>>.SingleAsync(x => x.Id == requestModel.Id);
+                DataHelpers.CopyObjectWithIL(requestModel, dbRecord);
+
+            }
+            else
+            {
+                dbRecord = DataHelpers.CloneObjectWithIL<Save<<EntityNameSingular>>RequestModel,<<EntityNameSingular>>>(requestModel);
+                _dbContext.<<EntityName>>.Add(dbRecord!);
+            }
+            await _dbContext.SaveChangesAsync();
+            return dbRecord!.Id;
+        }
+
+        public async Task Delete<<EntityNameSingular>>Async(int id, int? userId)
+        {
+            var dbRecord = await _dbContext.<<EntityName>>.SingleAsync(x => x.Id == id);
+            dbRecord.IsDeleted = true;
+            dbRecord.DeletedBy = userId;
+            dbRecord.DeletedDate = DateTime.Now;
+            _dbContext.<<EntityName>>.Update(dbRecord);
+            await _dbContext.SaveChangesAsync();
+        }
+
+    }
+}
+    

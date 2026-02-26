@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer;
+
+@if (@ViewBag.UserMessage != null)
+{
+    <div class="modal fade" tabindex="-1" id="modal3"
+         data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="font-size:28px; color:red">
+                </div>
+                <div class="modal-body" style="text-align: center; font-size:20px">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnHideModal" class="btn btn-primary button button4">
+                        @localizer["Close"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+
+    <script type="text/javascript">
+
+        const modal = document.getElementById("modal3")
+        $(window).on('load', function () {
+            console.log(modal);
+
+            modal.style.display = "block";
+            $("#modal3").find(".modal-header").html('@localizer["Error"]!');
+                $("#modal3").find(".modal-body").html('@localizer[ViewBag.UserMessage]');
+                $("#modal3").modal('show');
+            });
+            function closeModal() {
+                modal.style.display = "none";
+            }
+            $("#btnHideModal").click(function () {
+                $("#modal3").modal('hide');
+                history.back();
+            });
+        </script>
+
+    }
+}

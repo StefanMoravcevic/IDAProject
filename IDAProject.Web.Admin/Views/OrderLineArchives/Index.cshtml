@@ -1,0 +1,104 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.OrderLineArchives.OrderLineArchivesViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@{
+    var localizedPagination = @Html.Raw(Json.Serialize(new PaginationLocalizerModel(localizer)));
+    var printLine = Url.RouteUrl(RouteNames.ScannedLine_Print);
+}
+<style>
+    #searchInput {
+        height: 120px;
+        text-align: center;
+        font-size: 50px;
+    }
+
+    #articleInfo {
+        font-size: 30px;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <partial name="ContextOptionsPartial" model="@Model" />
+    </div>
+</div>
+<div class="row row-sm">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body" style="overflow-x:auto">
+                <tms-ajax-table id="tableOrderLineArchives" view-model="@Model" table-settings-reference-table="OrderLineArchives" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<tms-modal id="scannedLinesModal" title="@localizer["Scanned lines"]" save-button=false />
+<tms-input type="Hidden" id="OrderHeaderArchiveId" value="@Model.OrderHeaderArchiveId" />
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+    <script type="text/javascript">
+
+        function searchOrderLineArchives() {
+            var orderHeaderArchiveId = $("#OrderHeaderArchiveId").val();
+            var $inputsContainer = $("#searchParameters");
+            var jsonData = serializeJSON($inputsContainer);
+            jsonData.OrderHeaderArchiveId = orderHeaderArchiveId;
+            $.ajax({
+                url: "@Url.RouteUrl(RouteNames.OrderLineArchives_Search)",
+                method: "POST",
+                data: jsonData,
+                success: function (response) {
+                    loadJson("tableOrderLineArchives", response, @localizedPagination);
+                }
+            });
+        }
+
+        const successSound = new Audio('/sounds/succes.mp3');
+        const errorSound = new Audio('/sounds/error.mp3');
+
+        $(document).ready(function () {
+
+            $("#ContextOrderHeaderId").select2({
+                multiple: true,
+                allowClear: true,
+                placeholder: '@Html.Raw(localizer["Select customer order number"])'
+            });
+            $("#FebiItemId").select2({
+                multiple: true,
+                allowClear: true,
+                placeholder: '@Html.Raw(localizer["Select febi article no"])'
+            });
+
+
+            $("#buttonSearch").click(searchOrderLineArchives);
+
+            $("#buttonResetSearch").click(function () {
+                $("#ContextOrderHeaderId").val(null).trigger("change");
+                $("#FebiItemId").val(null).trigger("change");
+                $("#SegmentId").val(null).trigger("change");
+                $("#PartnerCodeId").val(null).trigger("change");
+                $("#DateFromId").val(null);
+                $("#DateToId").val(null);
+                $("#empSearchKeyword").val(null);
+                searchOrderLineArchives();
+            });
+
+            searchOrderLineArchives();
+        });
+
+    </script>
+}

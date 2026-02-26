@@ -1,0 +1,46 @@
+﻿@using IDAProject.Web.Admin.Models.Common;
+@model IDAProject.Web.Admin.Models.ViewModels.NavigationBaseViewModel
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_LayoutLogin";
+    var r = Url.RouteUrl(RouteNames.Accounts_DoLogin);
+}
+
+<tms-notification model="@Model.Notification" />
+<div class="container-login100">
+    <div class="wrap-login100 p-0">
+        <div class="card-body">
+            <form method="post" class="login100-form validate-form" asp-route="@RouteNames.Accounts_DoLogin" enctype="application/x-www-form-urlencoded">
+                <span class="login100-form-title"> @localizer["LoginTitle"] </span>
+                <div class="wrap-input100 validate-input" data-bs-validate="@localizer["LoginUserNameValidation"]">
+                    <input class="input100" type="text" name="Username" placeholder="@localizer["Username"]">
+                    <span class="focus-input100"></span>
+                    <span class="symbol-input100">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <div class="wrap-input100 validate-input" data-bs-validate="@localizer["LoginPasswordValidation"]">
+                    <input class="input100" type="password" name="Password" placeholder="@localizer["Password"]">
+                    <span class="focus-input100"></span>
+                    <span class="symbol-input100">
+                        <i class="fa fa-key" aria-hidden="true"></i>
+                    </span>
+                </div>
+                @* <div class="text-end pt-1">
+                    <p class="mb-0"><a href="forgot-password.html" class="text-primary ms-1">@localizer["ForgotPassword"]</a></p>
+                </div> *@
+                <div class="container-login100-form-btn">
+                    <input type="submit" value="@localizer["Login"]" class="login100-form-btn" style="background-color: red;" />
+                </div>
+            </form>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-center my-3">
+            </div>
+        </div>
+    </div>
+</div>

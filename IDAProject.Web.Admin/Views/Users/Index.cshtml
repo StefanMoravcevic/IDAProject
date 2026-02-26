@@ -1,0 +1,336 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Users.UsersViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@using IDAProject.Web.Models.General;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.AspNetCore.Http;
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+
+@{
+    ViewData["Title"] = "User accounts";
+    var urlManageRoles = Url.RouteUrl(RouteNames.User_ManageRoles, new { id = 111 });
+    var urlManageOrgUnits = Url.RouteUrl(RouteNames.User_ManageOrgUnits, new { id = 111 });
+    var urlEditRecord = Url.RouteUrl(RouteNames.User_Edit, new { id = 111 });
+    var urlCreate = Url.RouteUrl(RouteNames.User_Create);
+    var urlSave = Url.RouteUrl(RouteNames.User_Save);
+    var urlNew = Url.RouteUrl(RouteNames.User_New);
+    var urlResetPassword = Url.RouteUrl(RouteNames.Accounts_AdminResetPassword, new { userId = 111 });
+    var options = new List<GenericSelectOption>();
+    options.Add(new GenericSelectOption(-1, "All"));
+    options.Add(new GenericSelectOption(1, "Active"));
+    options.Add(new GenericSelectOption(0, "Deactivated"));
+
+    Layout = "_Layout";
+
+}
+
+<style>
+    .fixtopmargin {
+        margin-top: -5px !important;
+    }
+
+</style>
+
+<tms-modal id="editUserModal" title="@localizer["Users personal informations"]" save-button="true" save-button-text="@localizer["Save"]" />
+<tms-modal id="manageUserRoles" title="@localizer["Manage user roles"]" save-button="false" />
+<tms-modal id="manageUserOrgUnis" title="@localizer["Manage org units"]" save-button="false" />
+<tms-modal id="add/editDefaultPrinter" title="@localizer["Add/Edit default printer"]" save-button="false" />
+
+<div class="row">
+    <div class="col-md-12">
+        <partial name="ContextOptionsPartial" model="@Model" />
+    </div>
+</div>
+
+<div class="row row-sm">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <partial name="UsersList" model="@Model" id="usrList" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="defaultPrinterModal" tabindex="-1" aria-labelledby="defaultPrinterModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="defaultPrinterModal">@localizer["Add/Edit default printer"]</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zatvori"></button>
+      </div>
+
+      <!-- Telo modala -->
+      <div class="modal-body">
+        <form id="userForm">
+          <!-- Hidden user ID -->
+          <input type="hidden" name="UserId" id="UserId">
+          
+          <!-- Tekstualno polje -->
+          <div class="mb-3">
+            <label for="userInput" class="form-label">@localizer["BarCode"]</label>
+            <input type="text" class="form-control" id="BarCodeId" name="BarCode">
+          </div>
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zatvori</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/lib/datatables/jquery.dataTables.min.css" />
+    @* <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css" type="text/css" media="all"> *@
+    <link rel="stylesheet" type="text/css" href="~/lib/datatables.net-buttons/css/buttons.datatables.min.css" rel="stylesheet" media="all" />
+
+}
+@section Scripts {
+    @* <script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script> *@
+    <script type="text/javascript" src="~/lib/datatables.net/jquery.datatables.min.js"></script>
+
+    @* <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script> *@
+    <script type="text/javascript" src="~/lib/datatables.net-buttons/js/datatables.buttons.min.js"></script>
+
+    @* <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script> *@
+    <script type="text/javascript" src="~/lib/jszip/jszip.min.js"></script>
+
+    @* <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script> *@
+    <script src="~/lib/pdfmake/pdfmake.min.js"></script>
+    @* <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script> *@
+    <script type="text/javascript" src="~/lib/pdfmake/vfs_fonts.js"></script>
+
+    @* <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js"></script> *@
+    <script type="text/javascript" src="~/lib/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    @* <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.print.min.js"></script> *@
+    <script type="text/javascript" src="~/lib/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+    <script type="text/javascript" src="~/lib/datatables/dataTables.select.min.js"></script>
+
+    <script type="text/javascript">
+
+        var table;
+
+        function initTable() {
+            if ($.fn.DataTable.isDataTable('#tableUsers')) {
+                $('#tableUsers').DataTable().clear().destroy();
+            }
+
+            table = $('#tableUsers').DataTable({
+                select: { style: 'single' },
+                searching: false,
+                dom: 'Blfrtip',
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+                language: {
+                    sEmptyTable: "Nema podataka u tabeli",
+                    sInfo: "Prikazano _START_ do _END_ od _TOTAL_ unosa",
+                    sInfoEmpty: "Prikazano 0 do 0 od 0 unosa",
+                    sInfoFiltered: "(filtrirano od _MAX_ unosa)",
+                    sLengthMenu: "Prikazivanje _MENU_ unosa",
+                    oPaginate: {
+                        sFirst: "Prva",
+                        sPrevious: "Prethodna",
+                        sNext: "Sledeća",
+                        sLast: "Poslednja"
+                    }
+                }
+            });
+
+            var $target = $("#tableUsers_wrapper .option-rows-count");
+            $target.parent().addClass("justify-content-between");
+        }
+
+        $(document).ready(function () {
+
+            initTable();
+
+            $(document).on('click', '#btnEdit', function () {
+                var selectedRows = table.rows({ selected: true });
+                if (selectedRows.any()) {
+                    var id = selectedRows.data()[0][0];
+                    $.ajax({
+                        url: '@urlEditRecord'.replace("111", id),
+                        method: 'GET',
+                        success: function (response) {
+                            $("#editUserModal .modal-body").html(response);
+                            var editModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+                            editModal.show();
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'info',
+                        title: '@localizer["You must select user from the list."]',
+                    });
+                }
+            });
+
+
+            $(document).on('click', '#btnRoles', function () {
+                var selectedRows = table.rows({ selected: true });
+                if (selectedRows.any()) {
+                    var id = selectedRows.data()[0][0];
+                    $.ajax({
+                        url: '@urlManageRoles'.replace("111", id),
+                        method: 'GET',
+                        success: function (response) {
+                            $("#manageUserRoles .modal-body").html(response);
+                            var editModal = new bootstrap.Modal(document.getElementById('manageUserRoles'));
+                            editModal.show();
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'info',
+                        title: '@localizer["You must select user from the list."]',
+                    });
+                }
+            });
+
+
+            $(document).on('click', '#btnOrgUnits', function () {
+                var selectedRows = table.rows({ selected: true });
+                if (selectedRows.any()) {
+                    var id = selectedRows.data()[0][0];
+                    $.ajax({
+                        url: '@urlManageOrgUnits'.replace("111", id),
+                        method: 'GET',
+                        success: function (response) {
+                            $("#manageUserOrgUnis .modal-body").html(response);
+                            var editModal = new bootstrap.Modal(document.getElementById('manageUserOrgUnis'));
+                            editModal.show();
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'info',
+                        title: '@localizer["You must select user from the list."]',
+                    });
+                }
+            });
+
+            $(document).on('click', '#btnAddNew', function () {
+                $.ajax({
+                    url: '@urlNew',
+                    method: 'GET',
+                    success: function (response) {
+                        $("#editUserModal .modal-body").html(response);
+                        var editModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+                        editModal.show();
+                    }
+                });
+            });
+
+            $("#searchButton").click(function () {
+                $.ajax({
+                    url: "@Url.RouteUrl(RouteNames.Users_Search)",
+                    method: "POST",
+                    data: {
+                        active: $("#filterActive").val(),
+                        keyword: $("#filterKeyword").val(),
+                    },
+                    success: function (response) {
+                        $("#tableUsers").html(response);
+                        initTable();
+                    }
+                });
+            });
+
+            $("#resetFiltersButton").click(function () {
+                $("#filterActive").val(-1);
+                $("#filterKeyword").val(null);
+                $.ajax({
+                    url: "@Url.RouteUrl(RouteNames.Users_Search)",
+                    method: "POST",
+                    success: function (response) {
+                        $("#tableUsers").html(response);
+                        initTable();
+                    }
+                });
+            });
+
+            $(document).on('click', '#btnResetPassword', function () {
+                var selectedRows = table.rows({ selected: true });
+                if (selectedRows.any()) {
+                    var id = selectedRows.data()[0][0];
+                    var email = selectedRows.data()[0][2];
+                    Swal.fire({
+                        title: '@localizer["ResetPasswordQuestion"] ' + email + '?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: '@localizer["ResetConfirmation"]'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: '@urlResetPassword'.replace("111", id),
+                                method: 'GET',
+                                success: function (response) {
+                                    handleActionResponseMessage(response, function () { }, '@localizer["Error"]', '@localizer["ResetPasswordSuccessful"] ' + email + '.');
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'info',
+                        title: '@localizer["You must select user from the list."]',
+                    });
+                }
+            });
+
+
+            $(document).on('click', '#btnAddEditDefaultPrinter', function () {
+                var selectedRows = table.rows({ selected: true });
+
+                if (!selectedRows.any()) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Pažnja',
+                        text: 'Morate izabrati korisnika iz liste!',
+                        confirmButtonText: 'U redu'
+                    });
+                    return;
+                }
+
+                var id = selectedRows.data()[0][0];
+                $('#UserId').val(id);
+
+                var modalEl = document.getElementById('defaultPrinterModal');
+                var modal = new bootstrap.Modal(modalEl);
+                modal.show();
+
+                $(modalEl).one('shown.bs.modal', function () {
+                    $('#BarCodeId').trigger('focus');
+                });
+            });
+            // Collapse event handlers - nema promene
+            $('#tabUsers').on('show.bs.collapse', function () {
+                $("#showContext").removeClass("fa-expand").addClass("fa-compress");
+            });
+
+            $('#tabUsers').on('hide.bs.collapse', function () {
+                $("#showContext").removeClass("fa-compress").addClass("fa-expand");
+            });
+
+            $('#searchContext').on('show.bs.collapse', function (e) {
+                e.stopPropagation();
+                $("#showSearch").removeClass("fa-angle-down").addClass("fa-angle-up");
+            });
+
+            $('#searchContext').on('hide.bs.collapse', function (e) {
+                e.stopPropagation();
+                $("#showSearch").removeClass("fa-angle-up").addClass("fa-angle-down");
+            });
+
+
+        });
+    </script>
+}

@@ -1,0 +1,287 @@
+﻿@model IDAProject.Web.Admin.Models.TagHelpers.AjaxServerPagedTableViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Admin
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@inject IStringLocalizer<SharedResources> localizer
+
+@{
+    var visibilityInputsSelector = $"#{Model.TableWrapperId} div[data-visibility-options='{Model.Id}'] input[type='checkbox']";
+    var tableBodySelector = $"#{Model.Id} tbody";
+    var localizedPagination = @Html.Raw(Json.Serialize(new PaginationLocalizerModel(localizer)));
+}
+
+<div id="@Model.TableWrapperId" class="dataTables_wrapper no-footer">
+
+    @if (Model.ShowOptions)
+    {
+        <div class="row justify-content-between">
+            <div class="col-sm-4 col-md-4 option-rows-count">
+                <div class="dataTables_length">
+                    <label>
+                        <select class="form-select form-select-sm" id="rows-count-@Model.Id">
+                            <option value="10">10</option>
+                            <option value="20" selected>20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="200">200</option>
+                            <option value="1000">@localizer["Max (1000 rows)"]</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+            <div data-visibility-options="@Model.Id" class="btn-group col-sm-4 col-md-2 table-columns">
+                <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" style="position:absolute; right:20px;">
+                    @localizer["Columns"]
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="dropdown-plus-title">@localizer["Display columns"] <b class="fa fa-angle-up" aria-hidden="true"></b> </li>
+                    @foreach (var column in Model.TableDefinition.Columns)
+                    {
+                        var id = Model.Id + "-dc-" + column.Name;
+                        <li><tms-input type="CheckBox" label="@column.HeaderText" id="@id" name="@column.Name" checked='!column.IsHidden' /></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table id="@Model.Id" data-last-sorted-column="-1" data-sort-direction="asc" class="table table-striped dataTable no-footer" style="width: 100%;">
+                <thead>
+                    <tr>
+                        @foreach (var column in Model.TableDefinition.Columns)
+                        {
+                            if (column.IsOptionsColumn)
+                            {
+                                var names = string.Join(",", column.Options.Select(x => x.Name));
+                                var icons = string.Join(",", column.Options.Select(x => x.FontIconClass));
+                                var colors = string.Join(",", column.Options.Select(x => x.Color));
+                                <th data-name="_options_" style="@column.HeaderStyle" data-options="@names" data-icons="@icons" data-colors="@colors" data-cell-style="text-align:center;" data-prepare="@column.OnPrepareCellContent">@localizer["Options"]</th>
+                            }
+                            else if (column.IsHidden)
+                            {
+                                <th data-name="@column.Name" datafield-name="@column.DataFieldName" style="@column.HeaderStyle" data-cell-style="@column.CellStyle" class="sorting hidden-column" data-prepare="@column.OnPrepareCellContent">@column.HeaderText</th>
+                            }
+                            else
+                            {
+                                <th data-name="@column.Name" datafield-name="@column.DataFieldName" style="@column.HeaderStyle" data-cell-style="@column.CellStyle" class="sorting" data-prepare="@column.OnPrepareCellContent">
+                                    <div class="table-handle"></div>
+                                    <div class="sort">@column.HeaderText</div>
+                                </th>
+                            }
+                        }
+                    </tr>
+
+                    <!-- FILTER ROW: dodajemo dropdownove za filtriranje -->
+                    <tr class="column-filters">
+                        @foreach (var column in Model.TableDefinition.Columns)
+                        {
+                            if (column.IsOptionsColumn)
+                            {
+                                <th></th>
+                            }
+                            else if (column.IsHidden)
+                            {
+                                <th class="hidden-column"></th>
+                            }
+                            else
+                            {
+                                <th>
+                                    <select class="form-select form-select-sm column-filter" data-column="@column.Name">
+                                        <option value="">@localizer["All"]</option>
+                                    </select>
+                                </th>
+                            }
+                        }
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+
+                <tfoot style="display:none;">
+                    <tr>
+                        @foreach (var column in Model.TableDefinition.Columns)
+                        {
+                            if (column.IsOptionsColumn)
+                            {
+                                <td></td>
+                            }
+                            else if (column.IsHidden)
+                            {
+                                <td data-name="@column.Name" class="footer-sum hidden-column"></td>
+                            }
+                            else
+                            {
+                                <td data-name="@column.Name" class="footer-sum"></td>
+                            }
+                        }
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-5">
+            <div class="dataTables_info" role="status">@localizer["No entries"]</div>
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <div class="dataTables_paginate">
+                <ul class="pagination" id="paging-@Model.Id"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var filterCriteria;
+    var pageIndexKey = 'pageIndex-@Model.Id';
+    
+    setPageIndex(1);
+
+    function setPageIndex(pageIndex) {
+        sessionStorage.setItem(pageIndexKey,pageIndex);
+    }
+
+    function getPageIndex() {
+        return Number(sessionStorage.getItem(pageIndexKey));
+    }
+
+    function collectFiltersAndSearch(tableId, searchUrl, localizedPagination) {
+        var filters = {};
+
+        $(`#${tableId} thead tr.column-filters select.column-filter`).each(function () {
+            var colName = $(this).data('column');
+            var val = $(this).val();
+
+            if (val && val !== '') {
+                filters[colName] = val;
+            }
+        });
+
+        filterCriteria = filters;
+        debugger
+        // Dodaj pagination info
+        filters.PageNumber = 1;
+        filters.PageSize = getPageSize(tableId);
+
+        console.log('Sending filters:', filters);
+
+        searchPagedTable(tableId, searchUrl, filters, localizedPagination);
+    }
+
+    $(document).ready(function () {
+        $(document).on('change', `#@Model.Id thead tr.column-filters select.column-filter`, function () {
+            collectFiltersAndSearch('@Model.Id', '@Model.SearchUrl', @localizedPagination);
+        });
+        $("@Html.Raw(visibilityInputsSelector)").change(function () {
+
+            var $this = $(this);
+            var reqModel = {
+                tableName: '@Model.TableSettingsReferenceTable',
+                columnName: $this.attr("name"),
+                isVisible: $this.is(":checked")
+            };
+
+            $.ajax({
+                url: '@Url.RouteUrl(RouteNames.MasterDataTableColumn_Update)',
+                method: 'PUT',
+                data: reqModel,
+                success: function (response) {
+
+                    // n is 1-indexed, meaning that the counting starts at 1
+                    var colIndex = getColumnIndexByName('@Model.Id', reqModel.columnName);
+                    if (colIndex != -1) {
+                        colIndex = colIndex + 1;
+                        if (reqModel.isVisible) {
+                            $(`#@Model.Id td:nth-child(${colIndex}),th:nth-child(${colIndex})`).removeClass('hidden-column');
+                        }
+                        else {
+                            $(`#@Model.Id td:nth-child(${colIndex}),th:nth-child(${colIndex})`).addClass('hidden-column');
+                        }
+                    }
+                }
+            });
+        });
+
+        $('@Html.Raw(tableBodySelector)').on('click', 'tr', function () {
+            $('@Html.Raw(tableBodySelector) tr').removeClass('selected');
+            $(this).addClass('selected');
+        });
+
+        $('#rows-count-@Model.Id').change(function () {
+
+            var pageSize = getPageSize('@Model.Id');
+            searchPagedTable('@Model.Id', '@Model.SearchUrl', filterCriteria, @localizedPagination);
+
+
+            // $('@Html.Raw(tableBodySelector) tr').addClass("hidden-row");
+            // $('@Html.Raw(tableBodySelector) tr').slice(0, pageSize).removeClass("hidden-row");
+            // var tableElement = document.getElementById('@Model.Id');
+            // var tbody = tableElement.querySelector('tbody');
+            // var rows = Array.from(tbody.getElementsByTagName("TR")).slice(1);
+            // var totalsRow = rows.pop();
+            // var rowNumber = 1;
+            // rows.forEach(function (row) {
+            //     if (rowNumber <= pageSize) {
+            //         row.classList.remove("hidden-row");
+            //     }
+            //     else {
+            //         row.classList.add("hidden-row");
+            //     }
+            //     rowNumber++;
+            //     tbody.appendChild(row);
+            // });
+            // tbody.appendChild(totalsRow);
+        });
+
+        $('#@Model.Id').on('click', 'thead th .sort', function () {
+            var tableElement = document.getElementById('@Model.Id');
+            var columnIndex = $(this).closest("th").index();
+            // var columnName = $(this).closest("th").data("name");
+
+            sortAjaxPagedTable(columnIndex, tableElement, '@Model.Id');
+            // var pageSize = getPageSize('@Model.Id');
+            // renderPagingPanel('@Model.Id', pageSize, 1, @localizedPagination);
+            // $('#rows-count-@Model.Id').click();
+            searchPagedTable('@Model.Id', '@Model.SearchUrl', filterCriteria, @localizedPagination);
+
+        });
+
+    $('#paging-@Model.Id').on('click', 'a[data-index]', function () {
+        var pageSize = getPageSize('@Model.Id');
+        var pageIndex = parseInt($(this).data('index'), 10);
+
+        sessionStorage.setItem('pageIndex-@Model.Id', pageIndex);
+
+        var requestData = Object.assign({}, filterCriteria);
+        requestData.PageNumber = pageIndex;
+        requestData.PageSize = pageSize;
+
+        searchPagedTable('@Model.Id', '@Model.SearchUrl', requestData, @localizedPagination);
+    });
+
+        $('#@Model.Id').dragtable({
+            persistState: function () {
+
+                var reqModel = {
+                    tableName: '@Model.TableSettingsReferenceTable',
+                    columns: []
+                };
+
+                reqModel.columns = getColumnNamesByCurrentOrder('@Model.Id');
+
+                $.ajax({
+                    url: '@Url.RouteUrl(RouteNames.MasterDataTableColumnOrder_Update)',
+                    method: 'PUT',
+                    data: reqModel
+                });
+            }
+        });
+    });
+</script>

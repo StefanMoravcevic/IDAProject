@@ -1,0 +1,72 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.OrderLineArchives.OrderLineArchivesViewModel
+@using IDAProject.Web.Admin.Models.Common
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Admin.Models.TagHelpers
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+<div class="card">
+    <div class="card-body">
+        <div class="panel panel-primary collapse show">
+            <div class="row g-3 search-params-wrapper" id="searchParameters">
+                <!-- Customer order number -->
+                <div class="col-12 col-md-6 col-xl-2">
+                    <tms-select-multi name="ContextOrderHeaderId" id="ContextOrderHeaderId"
+                                      options="@Model.OrderHeaders"
+                                      label="@localizer["Customer order number"]:"
+                                      empty-option-text="@localizer["Select customer order number"]..." />
+                </div>
+
+                <!-- Febi article no -->
+                <div class="col-12 col-md-6 col-xl-2">
+                    <tms-select-multi name="FebiItemId" id="FebiItemId"
+                                      options="@Model.FebiItems"
+                                      label="@localizer["Febi article no"]:"
+                                      empty-option-text="@localizer["Select febi article no"]..." />
+                </div>
+
+                <!-- Date From -->
+                <div class="col-12 col-md-6 col-xl-2">
+                    <tms-input type="Date" name="DateFrom" id="DateFromId"
+                               label="@localizer["Date from"]:"
+                               placeholder="@localizer["Enter date from"]..." />
+                </div>
+
+                <!-- Date To -->
+                <div class="col-12 col-md-6 col-xl-2">
+                    <tms-input type="Date" name="DateTo" id="DateToId"
+                               label="@localizer["Date to"]:"
+                               placeholder="@localizer["Enter date to"]..." />
+                </div>
+
+                <!-- Segment -->
+                <div class="col-12 col-md-6 col-xl-2">
+                    <tms-select name="Segment" id="SegmentId"
+                                options="@Model.Segments"
+                                label="@localizer["Segment"]:"
+                                empty-option-text="@localizer["Select segment"]..." />
+                </div>
+
+
+                <div class="col-12 col-md-6 col-xl-2">
+                    <tms-select name="PartnerCode" id="PartnerCodeId"
+                                options="@Model.PartnerCodes"
+                                label="@localizer["Partner code"]:"
+                                empty-option-text="@localizer["Select partner code"]..." />
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="row mt-3">
+                <div class="col-12 text-end search-button-wrapper">
+                    <div class="form-group">
+                        <button class="btn btn-primary" id="buttonSearch">@localizer["Search"]</button>
+                        <button class="btn btn-primary" id="buttonResetSearch">@localizer["ResetSearch"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

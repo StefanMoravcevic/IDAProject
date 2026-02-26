@@ -1,0 +1,38 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.ScannedLines.ScannedLinesViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+
+<div class="card">
+	<div class="card-body">
+		<div class="panel panel-primary collapse show" id="itemsCollapse">
+			<div class="panel-body tabs-menu-body">
+				<div class="row search-params-wrapper">
+					<div class="col-md-12">
+
+						<div class="collapse show" id="searchContext">
+							<div class="col-md-12">
+								<div class="d-flex">
+									<div class="col-sm-6 col-md-6 col-lg-3">
+										<tms-input type="Text" name="Keyword" id="iSearchKeyword" label="@localizer["Keyword"]" placeholder="@localizer["Search for customer order number, febi article number"]"/>
+									</div>
+								</div>
+								<div class="btn-list text-end search-button-wrapper">
+									<div class="form-group">
+										<button class="btn btn-primary" id="buttonSearchItems">@localizer["Search"]</button>
+										<button class="btn btn-primary" id="buttonResetSearchItems">@localizer["ResetSearch"]</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="FebiItemsRepository.cs" />
+    <Compile Remove="MessagesRepository.cs" />
+    <Compile Remove="OrderHeaderArchivesRepository.cs" />
+    <Compile Remove="OrderHeadersRepository.cs" />
+    <Compile Remove="OrderLineArchivesRepository.cs" />
+    <Compile Remove="OrderLinesRepository.cs" />
+    <Compile Remove="PeriodsRepository.cs" />
+    <Compile Remove="PrintersRepository.cs" />
+    <Compile Remove="ScannedLinesRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IDAProject.Web.Api.Models\IDAProject.Web.Api.Models.csproj" />
+    <ProjectReference Include="..\IDAProject.Web.Db\IDAProject.Web.Db.csproj" />
+    <ProjectReference Include="..\IDAProject.Web.Helpers\IDAProject.Web.Helpers.csproj" />
+    <ProjectReference Include="..\IDAProject.Web.Models\IDAProject.Web.Models.csproj" />
+  </ItemGroup>
+
+</Project>
