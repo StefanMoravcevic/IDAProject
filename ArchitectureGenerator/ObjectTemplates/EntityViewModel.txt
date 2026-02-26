@@ -1,0 +1,20 @@
+﻿using DeclarationFactory.Web.Admin.Models.Html.AjaxTable;
+
+namespace DeclarationFactory.Web.Admin.Models.ViewModels.<<EntityName>>
+{
+    public class <<EntityName>>ViewModel : NavigationWithAjaxTableViewModel
+    {
+        public <<EntityName>>ViewModel()
+        {
+            
+            Columns = new List<ColumnDefinition>()
+            {
+                //check before use
+                <<ColumnDefinitions>>
+            };
+        }
+
+        //add view model properties here
+
+    }
+}

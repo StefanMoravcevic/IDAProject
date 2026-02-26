@@ -1,0 +1,113 @@
+﻿@using IDAProject.Web.Admin.Models.Common
+@using IDAProject.Web.Models.General.Enums
+@model IDAProject.Web.Admin.Models.ViewModels.Addresses.AddressViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+@{
+    var add = Model.Address;
+    ViewData["Title"] = "Edit address";
+
+    var urlListAddresses = Url.RouteUrl(RouteNames.Addresses_List, new { addressTypeId = "111", id = "111" });
+}
+<div class="card">
+    <div class="card-body">
+        <div class="panel panel-primary">
+            <div class="row">
+                <div class="col-lg-12 col-md-12" id="addDataContainer">
+                    <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">@localizer["AddressEditPageTitle"]</h4>
+                            <tms-input type="Hidden" name="Id" id="Id" value="Model.Address.Id" />
+                            <tms-input type="Hidden" name="CompanyId" id="CompanyId" value="Model.Address.CompanyId" />
+                            <tms-input type="Hidden" name="PartnerId" id="PartnerId" value="Model.Address.PartnerId" />
+                            <tms-input type="Hidden" name="BenefitUserId" id="BenefitUserId" value="Model.Address.BenefitUserId" />
+                        </div>
+                        <div class="card-body p-0 task-edit-main">
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="StreetName" id="addStreetName" value="@add.StreetName" label="@localizer["Street name"]:" placeholder="@localizer["Enter name"]..."  />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="StreetNumber" id="addStreetNumber" value="@add.StreetNumber!" label="@localizer["Street no"]:" placeholder="@localizer["Enter number"]..." />
+                                </div>
+                            </div>
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-select name="CityId" id="addCityId" options="@Model.Cities" selected-option="@add.CityId" label="@localizer["City"]:" empty-option-text="@localizer["Select city"]..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-select name="StateId" id="addStateId" options="@Model.States" selected-option="@add.StateId" label="@localizer["State"]:" empty-option-text="@localizer["Select state"]..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-select name="ZipCodeId" id="addZipCodeId" options="@Model.ZipCodes" selected-option="@add.ZipCodeId" label="@localizer["ZipCode"]:" empty-option-text="@localizer["Select zip code"]..." />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="row p-5">
+                    <div class="btn-list text-end">
+                        <button class="btn btn-outline-danger" id="buttonCancel">@localizer["Cancel"]</button>
+                        <button class="btn btn-primary" id="buttonSave">@localizer["Save"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section scripts {
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function getAddressParams() {
+                var companyId = $("#CompanyId").val();
+                var partnerId = $("#PartnerId").val();
+                var benefitUserId = $("#BenefitUserId").val();
+                var addressTypeId;
+                var id;
+                if (companyId) {
+                    addressTypeId = @AddressTypes.CompanyAddress;
+                    id = companyId;
+                }
+                else if (partnerId) {
+                    addressTypeId = @AddressTypes.PartnerAddress;
+                    id = partnerId;
+                }
+                else if (benefitUserId) {
+                    addressTypeId = @AddressTypes.BenefitUserAddress;
+                    id = benefitUserId;
+                }
+                return { addressTypeId: addressTypeId, id: id };
+            }
+
+            $("#buttonCancel").click(function () {
+                var params = getAddressParams();
+                document.location = '@Url.RouteUrl(RouteNames.Addresses_List, new { addressTypeId = "111", id = "999" })'.replace("111", params.addressTypeId).replace("999", params.id);
+            });
+            $("#buttonSave").click(function () {
+                var $inputsContainer = $("#addDataContainer");
+                var jsonData = serializeJSON($inputsContainer);
+                var params = getAddressParams();
+                $.ajax({
+                    url: '@Url.RouteUrl(RouteNames.Addresses_Save)',
+                    method: 'POST',
+                    data: jsonData,
+                    success: function (response) {
+                        handleActionResponseMessage(response, function () {
+                            location = response.message.replace("xxx", params.addressTypeId).replace("yyy", params.id);
+                        }, '@localizer["Error"]', '@localizer["SavedMsg"]');
+                    }
+                });
+            });
+        });
+    </script>
+}

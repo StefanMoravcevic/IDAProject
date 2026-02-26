@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DeclarationFactory.Web.Models.Dto.<<EntityName>>
+{
+    public class <<EntityNameSingular>>Dto : Save<<EntityNameSingular>>RequestModel
+    {
+        public <<EntityNameSingular>>Dto()
+        {
+        }
+        #region Basic data
+
+        
+
+        #endregion
+    }
+}

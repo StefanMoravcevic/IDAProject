@@ -1,0 +1,42 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Printers.PrintersViewModel;
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+<div class="card">
+    <div class="card-body">
+        <div class="panel panel-primary">
+            <div class="panel-body tabs-menu-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab25">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="context-panel">
+                                    <div class="card-body tab-option-container">
+                                        <button id="printerAdd">
+                                            <i class="fa fa-plus" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                            <div>@localizer["AddNew"]</div>
+                                        </button>
+                                        <button id="printerEdit">
+                                            <i class="fa fa-pencil-square-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                            <div>@localizer["Edit"]</div>
+                                        </button>
+                                        <button id="printerView">
+                                            <i class="fa fa-eye" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                             <div>@localizer["View"]</div>
+                                        </button>
+                                        <button id="printerDelete">
+                                            <i class="fa fa-trash-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                            <div>@localizer["Delete"]</div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

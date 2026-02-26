@@ -1,0 +1,91 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using DeclarationFactory.Web.Admin.Models.Common;
+using DeclarationFactory.Web.Admin.Models.Interfaces.Managers;
+using DeclarationFactory.Web.Admin.Models.ViewModels.<<EntityName>>;
+using DeclarationFactory.Web.Models.Dto.<<EntityName>>;
+using DeclarationFactory.Web.Models.General.Enums;
+using DeclarationFactory.Web.Models.RequestModels.<<EntityName>>;
+
+namespace DeclarationFactory.Web.Admin.Controllers
+{
+    [Route("[controller]")]
+    public class <<EntityName>>Controller : BaseController
+    {
+        private readonly I<<EntityName>>Manager _<<EntityName>>Manager;
+        private readonly IMasterDataManager _masterDataManager;
+
+        public <<EntityName>>Controller(
+            ILogger<<<EntityName>>Controller> logger,
+            IAccountManager accountManager,
+            I<<EntityName>>Manager <<EntityName>>Manager,
+            IMasterDataManager masterDataManager)
+            : base(accountManager, logger)
+        {
+            _<<EntityName>>Manager = <<EntityName>>Manager;
+            _masterDataManager = masterDataManager;
+        }
+        [HttpGet("<<EntityName>>List", Name = RouteNames.<<EntityName>>_List)]
+        public async Task<IActionResult> Index()
+        {
+            var viewModel = new <<EntityName>>ViewModel();
+            await UpdateNavigationWithAjaxTableViewModel(viewModel, _masterDataManager, "<<EntityName>>");
+            //var responseModel = await _<<EntityName>>Manager.Search<<EntityName>>Async();
+            //viewModel = <<EntityName>>.Payload;
+            //return Json(responseModel.Payload);
+            return View(viewModel);
+        }
+
+        [HttpPost("search", Name = RouteNames.<<EntityName>>_Search)]
+        public async Task<IActionResult> Search<<EntityName>>(Search<<EntityName>>Params searchParams)
+        {
+            var responseModel = await _<<EntityName>>Manager.Search<<EntityName>>Async(searchParams);
+            return Json(responseModel.Payload);
+        }
+
+        [HttpGet("new/{Id}", Name = RouteNames.<<EntityName>>_New)]
+        public async Task<IActionResult> New<<EntityNameSingular>>Async(int Id)
+        {
+            var viewModel = new <<EntityNameSingular>>ViewModel();
+
+            viewModel.User = GetCurrentUser();
+            return View("Edit<<EntityNameSingular>>", viewModel);
+        }
+
+        [HttpGet("edit/{id}", Name = RouteNames.<<EntityName>>_Edit)]
+        public async Task<IActionResult> Edit<<EntityNameSingular>>Async(int id)
+        {
+            var viewModel = new <<EntityNameSingular>>ViewModel();
+
+            var <<EntityNameSingular>>Response = await _<<EntityName>>Manager.Get<<EntityNameSingular>>ByIdAsync(id);
+
+            viewModel.<<EntityNameSingular>> = <<EntityNameSingular>>Response.Payload!;
+            viewModel.User = GetCurrentUser();
+
+            return View("Edit<<EntityNameSingular>>", viewModel);
+        }
+
+        //controller method for saving <<EntityNameSingular>>
+        [HttpPost("save", Name = RouteNames.<<EntityName>>_Save)]
+        public async Task<IActionResult> Save<<EntityNameSingular>>Async(Save<<EntityNameSingular>>RequestModel requestModel)
+        {
+            var responseModel = await _<<EntityName>>Manager.Save<<EntityNameSingular>>Async(requestModel);
+            if (responseModel.Valid)
+            {
+                responseModel.Message = Url.RouteUrl(RouteNames.<<EntityName>>_List, new { Id = "111" })!;
+            }
+            return Json(responseModel);
+        }
+
+        [HttpPost("delete/{id}", Name = RouteNames.<<EntityName>>_Delete)]
+        public async Task<IActionResult> Delete<<EntityNameSingular>>Async(int id)
+        {
+            var user = GetCurrentUser();
+            var responseModel = await _<<EntityName>>Manager.Delete<<EntityNameSingular>>Async(id, user.Id);
+            if (responseModel.Valid)
+            {
+                responseModel.Message = Url.RouteUrl(RouteNames.<<EntityName>>_List, new { Id = "111" })!;
+            }
+            return Json(responseModel);
+        }
+    }
+}

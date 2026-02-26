@@ -1,0 +1,118 @@
+﻿@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Admin.Models.Interfaces.Managers;
+@using IDAProject.Web.Models.RequestModels.Employees
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@using IDAProject.Web.Models.RequestModels.Partners;
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.General;
+@inject IMasterDataManager masterDataManager;
+@inject IStringLocalizer<SharedResources> localizer
+@inject IAccountManager accountManager;
+@using IDAProject.Web.Admin.Managers.Helpers;
+@inject AuthorizationHelpers AuthorizationHelpers;
+@{
+	var supportedMasterDataTables = await masterDataManager.GetSupportedMasterDataTables();
+	var token = Context.Request.HttpContext.Request.Cookies[Constants.AdminCookieToken];
+	var user = accountManager.GetUserFromJwt(token!);
+}
+<style>
+	.slide-menu.submenu {
+		display: none;
+	}
+
+	.side-menu__item {
+		padding-left: 20px;
+	}
+
+	.slide-item {
+		padding-left: 20px;
+	}
+
+	.main-sidemenu h3 {
+		font-weight: bold;
+		position: relative;
+		left: -20px !important;
+	}
+</style>
+<div class="sticky is-expanded " style="margin-bottom: -74px;">
+	<div class="app-sidebar__overlay active" data-bs-toggle="sidebar"></div>
+	<div class="app-sidebar ps ps--active-y sidemenu-scroll">
+		<div class="side-header">
+			<a class="header-brand1" href="http:\\www.program.co.rs">
+				<img src="~/images/program_logo_new.png" class="header-brand-img desktop-logo" alt="logo">
+				<img src="~/images/program_logo_new.png" class="header-brand-img toggle-logo" alt="logo">
+				<img src="~/images/program_logo_new.png" class="header-brand-img light-logo" alt="logo">
+				<img src="~/images/program_logo_new.png" class="header-brand-img light-logo1" alt="logo">
+			</a>
+		</div>
+		<div class="main-sidemenu is-expanded">
+			<div class="slide-left disabled active d-none" id="slide-left">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24" height="24" viewBox="0 0 24 24">
+					<path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>
+				</svg>
+			</div>
+			<ul class="side-menu open" style="margin-right: 0px; margin-left: 0px;">
+
+				<li>
+					<h3>@localizer["Menu"]</h3>
+				</li>
+				<li class="slide">
+					<a class="side-menu__item has-link" data-bs-toggle="slide" href="@Url.RouteUrl(RouteNames.Home_Dashboard)">
+						<i class="fa fa-home side-menu__icon"></i>
+						<span class="side-menu__label">
+							@localizer["Glavni"]
+						</span>
+					</a>
+				</li>
+				<li>
+					<h3>@localizer["Master data"]</h3>
+				</li>
+				<li class="slide">
+					<a class="side-menu__item" data-bs-toggle="slide" href="#">
+						<i class="fa fa-users side-menu__icon"></i>
+						<span class="side-menu__label">@localizer["Stuff"]</span><i class="angle fa fa-angle-right"></i>
+					</a>
+					<ul class="slide-menu">
+						<li><a href="@Url.RouteUrl(RouteNames.Employees_New)" class="slide-item">@localizer["AddNew"]</a></li>
+						<li><a href="@Url.RouteUrl(RouteNames.Employees_List)" class="slide-item">@localizer["Search"]</a></li>
+					</ul>
+				</li>
+				@* 					<li class="slide">
+						<a class="side-menu__item" data-bs-toggle="slide" href="#">
+							<i class="fa fa-calendar side-menu__icon"></i>
+							<span class="side-menu__label">@localizer["Period"]</span><i class="angle fa fa-angle-right"></i>
+						</a>
+						<ul class="slide-menu">
+							<li><a href="@Url.RouteUrl(RouteNames.Periods_New)" class="slide-item">@localizer["AddNew"]</a></li>
+							<li><a href="@Url.RouteUrl(RouteNames.Periods_List)" class="slide-item">@localizer["Search"]</a></li>
+						</ul>
+					</li> *@
+
+				@if (AuthorizationHelpers.UserHasRights(user, (int)AspNetRoles.Administrator, (int)AspNetFeatures.Any))
+				{
+					<li>
+						<h3>@localizer["Administration"]</h3>
+					</li>
+					<li class="slide">
+						<a class="side-menu__item" data-bs-toggle="slide" href="#">
+							<i class="fa fa-user-plus side-menu__icon"></i>
+							<span class="side-menu__label">@localizer["Administration"]</span><i class="angle fa fa-angle-right"></i>
+						</a>
+						<ul class="slide-menu">
+							<li><a href="@Url.RouteUrl(RouteNames.Users_List)" class="slide-item">@localizer["UserAccounts"]</a></li>
+							<li><a href="@Url.RouteUrl(RouteNames.Roles_List)" class="slide-item">@localizer["Roles"]</a></li>
+							<li><a href="@Url.RouteUrl(RouteNames.Companies_List)" class="slide-item">@localizer["CompanyInfo"]</a></li>
+						</ul>
+					</li>
+				}
+
+			</ul>
+			<div class="slide-right" id="slide-right">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24" height="24" viewBox="0 0 24 24">
+					<path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
+				</svg>
+			</div>
+		</div>
+	</div>
+</div>

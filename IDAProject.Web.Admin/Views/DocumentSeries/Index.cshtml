@@ -1,0 +1,94 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.DocumentSeries.DocumentSeriesViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+@{
+    ViewData["Title"] = "Document series";
+    var urlDeleteDocumentSerie = Url.RouteUrl(RouteNames.DocumentSeries_Delete, new { id = 111 });
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <partial name="DocumentSeriesContextOptionsPartial" model="@Model" />
+    </div>
+</div>
+<div class="row row-sm">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body" style="overflow-x:auto">
+                <tms-ajax-table id="tableDocumentSeries" view-model="@Model" table-settings-reference-table="DocumentSeries" />
+            </div>
+        </div>
+    </div>
+</div>
+<tms-modal id="editDocumentSerie" title="Edit" save-button="true" modal-size="@ModalSize.Large" />
+
+<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+
+<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+<script type="text/javascript">
+
+    function searchDocumentSeries() {
+
+        $.ajax({
+            url: "@Url.RouteUrl(RouteNames.DocumentSeries_Search)",
+            method: "POST",
+            data: {
+                documentSerieTypeId: $("#dsDocumentSerieTypeId").val()
+            },
+            success: function (response) {
+                loadJson("tableDocumentSeries", response);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+
+        $("#dsEdit").click(function () {
+            var selectedId = getSelectedItemId("tableDocumentSeries");
+            document.location = '@Url.RouteUrl(RouteNames.DocumentSeries_Edit, new { id = "111" })'.replace("111", selectedId);
+        });
+        $("#dsAdd").click(function () {
+            document.location = '@Url.RouteUrl(RouteNames.DocumentSeries_New)';
+        });
+        $("#dsView").click(function () {
+            var selectedId = getSelectedItemId("tableDocumentSeries");
+            document.location = '@Url.RouteUrl(RouteNames.DocumentSeries_View, new { id = "111" })'.replace("111", selectedId);
+        });
+        $("#dsDelete").click(function () {
+            Swal.fire({
+                title: '@localizer["DeleteQuestion"]',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '@localizer["DeleteConfirmation"]'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var selectedId = getSelectedItemId("tableDocumentSeries");
+                    $.ajax({
+                        url: '@urlDeleteDocumentSerie'.replace("111", selectedId),
+                        method: "POST",
+                        success: function (response) {
+                            location = response.message;
+                        }
+                    });
+                }
+            })
+        });
+        $("#buttonSearchDocumentSeries").click(searchDocumentSeries);
+
+        $("#buttonResetSearchDocumentSeries").click(function () {
+
+            $("#dsDocumentSerieTypeId").prop("selectedIndex", 0);
+
+            searchDocumentSeries();
+        });
+        searchDocumentSeries();
+    });
+</script>

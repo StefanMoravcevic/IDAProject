@@ -1,0 +1,67 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.PageViewModel<IDAProject.Web.Models.Dto.MasterData.MasterEntity>
+@using IDAProject.Web.Helpers;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@{
+    var data = Model.Data!;
+    var index = 0;
+}
+<table id="tableRecords" class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width:50px;">Id</th>
+            @foreach (var item in data.Fields)
+            {
+                <th data-col="@item.Name">@item.DisplayName</th>
+            }
+            <th style="width:80px;">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var record in data.Records)
+        {
+            index = 0;
+            <tr>
+                <td>@record.Id</td>
+                @foreach (var val in record.Values)
+                {
+                    var field = data.Fields[index];
+                    var fieldValue = MasterDataConverter.GetRawValue(val, field.Type);
+
+                    if (field.Options.Any())
+                    {
+                        var valInt = DataHelpers.SafeInt(val);
+                        if (valInt.HasValue)
+                        {
+                            var fkValue = field.Options.FirstOrDefault(x => x.Value == valInt.Value);
+                            if (fkValue == null)
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td>@fkValue.Description</td>
+                            }
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    }
+                    else
+                    {
+                        <td>@val</td>
+                    }
+                    index++;
+                }
+                <td>
+                    <button type="button" name="edit" data-id="@record.Id" class="d-flex align-items-center justify-content-center" value="@record.Id">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <button type="button" id="btnAddNewItem" class="btn btn-primary">Add new item</button>
+</div>

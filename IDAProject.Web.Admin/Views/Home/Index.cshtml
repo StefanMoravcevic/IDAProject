@@ -1,0 +1,126 @@
+﻿@using IDAProject.Web.Admin.Models.Common;
+@model IDAProject.Web.Admin.Models.ViewModels.Home.HomeViewModel
+@using IDAProject.Web.Models.RequestModels.Employees
+@using IDAProject.Web.Models.RequestModels.Partners;
+@using IDAProject.Web.Models.General.Enums
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+
+@{
+    ViewData["Title"] = "Sirius dashboard";
+}
+<style>
+    .partial-container-wrapper1 {
+        resize: both;
+        width: 100%;
+    }
+
+    .partial-container-wrapper2 {
+        resize: both;
+        width: 100%;
+    }
+
+    .partial-container1 {
+        width: 140%;
+        height: 100%;
+        transform: scale(0.75);
+        transform-origin: top left;
+    }
+
+    .partial-container2 {
+        width: 130%;
+        height: 100%;
+        transform: scale(0.75);
+        transform-origin: top left;
+    }
+
+    .page-main {
+        background-color: #950000;
+    }
+
+    .green-color {
+        color: green;
+    }
+
+    .blue-color {
+        color: royalblue;
+    }
+
+    .red-color {
+        color: orangered;
+    }
+
+    .rod-color {
+        color: darkgoldenrod;
+    }
+
+    .green1-color {
+        color: mediumseagreen;
+    }
+
+    .blue1-color {
+        color: dodgerblue;
+    }
+
+    .red1-color {
+        color: indianred;
+    }
+
+    .yellow-color {
+        color: gold;
+    }
+
+    .brown-color {
+        color: brown;
+    }
+
+    .blue2-color {
+        color: mediumblue;
+    }
+
+    .red2-color {
+        color: mediumvioletred;
+    }
+
+    .yellow1-color {
+        color: chocolate;
+    }
+
+    .brown1-color {
+        color: saddlebrown;
+    }
+    .custom-shadow {
+        box-shadow: 0 0 25px rgba(255, 0, 0, 0.7); /* crvena senka */
+    }
+
+</style>
+@*<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+*@
+<script src="~/lib/chart/chart.js"></script>
+
+
+<div class="d-flex justify-content-center mt-5">
+    <div class="card p-3 custom-shadow" style="width: 900px;">
+        <!-- SLIKA -->
+        <img src="~/images/febi_bilstein.jpg" alt="Febi Bilstein" class="w-100 mb-3">
+
+        <!-- VIDEO -->
+        <video class="w-100" autoplay loop muted playsinline>
+            <source src="~/videos/videoplayback (2).mp4" type="video/mp4" />
+        </video>
+    </div>
+</div>
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+
+    });
+</script>

@@ -1,0 +1,319 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Partners.PartnerViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Helpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@inject IStringLocalizer<SharedResources> localizer
+@{
+    var partner = Model.Partner;
+    if (partner.Id == 0)
+    {
+        ViewData["Title"] = "New partner";
+    }
+    else
+    {
+        ViewData["Title"] = partner.Name;
+    }
+
+    var templateParams = new { id = "111" };
+
+    var urlSearchByZipCode = Url.RouteUrl(RouteNames.GeoLocation_ZipCode_Get, new { zipCode = "111" });
+    var urlCitiesByState = Url.RouteUrl(RouteNames.GeoLocation_CitiesByState_Get, new { stateId = "111" });
+    var urlZipCodesByCity = Url.RouteUrl(RouteNames.GeoLocation_ZipCodesByCity_Get, new { cityId = "111" });
+    var urlTypesByCategory = Url.RouteUrl(RouteNames.Partners_TypesByCategory, templateParams);
+    var urlListPartners = Url.RouteUrl(RouteNames.Partners_List, new { partnerCategoryId = Model.Partner.PartnerCategoryId });
+}
+<div class="card">
+    <div class="card-body">
+        <div class="panel panel-primary">
+            <div class="row">
+                <div class="col-lg-12 col-md-12" id="partnerDataContainer">
+                    <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">Partner basic info</h4>
+                            <tms-input type="Hidden" name="Id" id="parId" value="@partner.Id" />
+                        </div>
+                        <div class="card-body p-0 task-edit-main">
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-select name="PartnerCategoryId" id="parPartnerCategoryId" options="@Model.PartnerCategories" selected-option="@partner.PartnerCategoryId" label="Partner category:" />
+                                </div>
+
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-select name="PartnerTypeId" id="parPartnerType" options="@Model.PartnerTypes" selected-option="@partner.PartnerTypeId" label="Partner type:" />
+                                </div>
+                            </div>
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="Code" id="parCode" value="@partner.Code!" label="Code:" placeholder="Enter code..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="Name" id="parName" value="@partner.Name" label="Name:" required="true" placeholder="Enter partner name..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="Address" id="parAddress" value="@partner.Address!" label="Address:" placeholder="Enter address..." />
+                                </div>
+                                <div class="row p-5 border-bottom">
+                                    <div class="col-sm-12 col-md-4 col-xl-3">
+                                        <tms-input type="Text" name="Mc" id="parMc" value="@partner.Mc!" label="MC:" placeholder="Enter MC..." />
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 col-xl-3">
+                                        <tms-input type="Text" name="Ein" id="parEin" value="@partner.Ein!" label="EIN:" placeholder="Enter EIN..." />
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 col-xl-3">
+                                        <tms-input type="Text" name="Dot" id="parDot" value="@partner.Dot!" label="DOT:" placeholder="Enter DOT..." />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">Location</h4>
+                        </div>
+                        <div class="row p-5 border-bottom">
+                            <div class="col-sm-12 col-md-6 col-xl-4">
+                                <tms-input type="Text" name="ZipCode" id="parZipCode" value="@partner.ZipCode!" label="Zip code:" placeholder="Enter zip code..." />
+                                <tms-input type="Hidden" name="ZipCodeId" id="parZipCodeId" value="@partner.ZipCodeId!" />
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-xl-4">
+                                <tms-select name="StateId" id="parStateId" options="@Model.States" selected-option="@partner.StateId" label="State:" empty-option-text="Select state..." />
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-xl-4">
+                                <tms-select name="CityId" id="parCityId" options="@Model.Cities" selected-option="@partner.CityId" label="City:" empty-option-text="Select city..." />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">Contact info</h4>
+                        </div>
+                        <div class="card-body p-0 task-edit-main">
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="Phone" value="@partner.Phone!" label="Phone:" placeholder="Enter phone number..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="Fax" value="@partner.Fax!" label="Fax:" placeholder="Enter fax number..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="Email" value="@partner.Email!" label="E-mail:" placeholder="Enter e-mail address..." />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row p-5 border-bottom">
+                            <tms-input type="Hidden" name="ContactCompanyId" id="parContactCompanyId" value="@partner.ContactCompanyId" /> @*ovo ovde bi trebalo napraviti da bude izbor kada se ne ide kreiranje preko kontakata*@
+                            @if (partner.ContactCompanyId > 0 || partner.Id > 0)
+                            {
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-select name="PrimaryContactId" id="parPrimaryContactId" options="@Model.PrimaryContacts" selected-option="@partner.PrimaryContactId" label="Primary contact:" empty-option-text="Select primary contact ..." />
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-sm-12 col-md-4 col-xl-3" style="display:none">
+                                    <tms-select name="PrimaryContactId" id="parPrimaryContactId" options="@Model.PrimaryContacts" selected-option="@partner.PrimaryContactId" label="Primary contact:" empty-option-text="Select primary contact ..." />
+                                </div>
+                            }
+                            <div class="col-sm-12 col-md-4 col-xl-3">
+                                <tms-input type="Text" name="ContactPerson" id="parContactPerson" value="@partner.ContactPerson!" label="Contact person:" placeholder="Enter contact person..." />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">Accounting details</h4>
+                        </div>
+                        <div class="card-body p-0 task-edit-main">
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="BankAccountNumber" id="BankAccountNumber" value="@partner.BankAccountNumber!" label="Bank account #:" placeholder="Enter bank account numbre..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="RautingNumber" id="RautingNumber" value="@partner.RautingNumber!" label="Routing number:" placeholder="Enter routing number..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="AccountingCode" id="AccountingCode" value="@partner.AccountingCode!" label="Accounting code:" placeholder="Enter accounting code..." />
+                                </div>
+                            </div>
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-select name="IncomeTypeId" id="parIncomeTypeId" options="@Model.IncomeTypes" selected-option="@partner.IncomeTypeId" label="Income type:" empty-option-text="Select income type..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-select name="PaymentConditionId" id="parPaymentConditionId" options="@Model.PaymentConditions" selected-option="@partner.PaymentConditionId" label="Payment condition:" empty-option-text="Select payment condition..." />
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label text-muted" for="parNote">Invoice note:</label>
+                                        <div class="input-group">
+                                            <textarea name="DisclaimerNote" class="form-control text-dark" id="parDisclaimerNote" style="height:180px;">@partner.DisclaimerNote</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">Status</h4>
+                        </div>
+                        <div class="card-body p-0 task-edit-main">
+                            <div class="row p-5 border-botto">
+                                <div class="col-sm-12 col-md-12 col-xl-3">
+                                    <div class="form-group">
+                                        <label class="form-label text-muted">Blocked</label>
+                                        <div class="d-flex align-items-center mt-3">
+                                            <tms-input type="Radio" name="Blocked" id="parBlockedYes" value="true" label="Yes" checked="@partner.Blocked" classes="me-5" />
+                                            <tms-input type="Radio" name="Blocked" id="parBlockedNo" value="false" label="No" checked="@partner.Blocked == false" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="form-label text-muted" for="parNote">Blocked note:</label>
+                                        <div class="input-group">
+                                            <textarea name="BlockedComment" class="form-control text-dark" id="parBlockedNote" style="height:180px;">@partner.BlockedComment</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="row p-5">
+                    <div class="btn-list text-end">
+                        <button class="btn btn-outline-danger" id="buttonCancel">Cancel</button>
+                        <button class="btn btn-primary" id="buttonSave">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+    <script type="text/javascript">
+
+        function loadCitiesAndSelectById(stateId, cityId) {
+
+            $.ajax({
+                url: '@urlCitiesByState'.replace("111", stateId),
+                method: 'GET',
+                success: function (cities) {
+
+                    $("#parCityId :not(option:first)").remove();
+
+                    $(cities).each(function (_, city) {
+                        $('#parCityId').append(`<option value="${city.id}">${city.name}</option>`);
+                    });
+
+                    if (cityId != 0) {
+                        $("#parCityId").val(cityId);
+                    }
+                }
+            });
+        }
+
+        function loadAddressByZipCode() {
+            var zipCode = $("#parZipCode").val();
+
+            if (zipCode != "") {
+
+                $.ajax({
+                    url: '@urlSearchByZipCode'.replace("111", zipCode),
+                    method: 'GET',
+                    success: function (response) {
+                        if (response.valid) {
+
+                            var zipInfo = response.payload;
+
+                            $("#parZipCodeId").val(zipInfo.zipCodeId);
+                            $("#parStateId").val(zipInfo.state.id);
+                            loadCitiesAndSelectById(zipInfo.state.id, zipInfo.city.id);
+                        }
+                    }
+                });
+            }
+        }
+
+        function loadTypes() {
+
+            var categoryId = $("#parPartnerCategoryId").val();
+            $.ajax({
+                url: '@urlTypesByCategory'.replace("111", categoryId),
+                method: 'GET',
+                success: function (items) {
+
+                    $("#parPartnerType :not(option:first)").remove();
+
+                    $(items).each(function (_, item) {
+                        $('#parPartnerType').append(`<option value="${item.value}">${item.description}</option>`);
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            if (@Model.ReadOnly == 1) {
+                $("#partnerDataContainer :input").prop("disabled", true);
+                $("#buttonSave").prop("disabled", true);
+            }
+            $("#parZipCode").blur(loadAddressByZipCode);
+
+            $("#parZipCode").keypress(function (event) {
+                var zipCode = $("#parZipCode").val();
+                if (event.which == 13 || zipCode.length == 5) {
+                    event.preventDefault();
+                    loadAddressByZipCode();
+                }
+            });
+
+            $("#parStateId").change(function () {
+                var stateId = $("#parStateId").val();
+                loadCitiesAndSelectById(stateId, 0);
+            });
+
+            $("#buttonSave").click(function () {
+                var $inputsContainer = $("#partnerDataContainer");
+
+                if (validateRequiredFields($inputsContainer, '@localizer["ValidationMsg"]')) {
+                    var jsonData = serializeJSON($inputsContainer);
+
+                    $.ajax({
+                        url: "@Url.RouteUrl(RouteNames.Partners_Save)",
+                        method: "POST",
+                        data: jsonData,
+                        success: function (response) {
+                            handleActionResponseMessage(response, function () {
+                                location = response.message + '?PartnerCategoryId=' + $("#parPartnerCategoryId").val();
+                            }, '@localizer["Error"]', '@localizer["SavedMsg"]');
+                        }
+                    });
+                }
+            });
+            $("#buttonCancel").click(function () {
+                document.location = '@urlListPartners';
+            });
+
+            $("#parPrimaryContactId").change(function () {
+                var selectedText = $("#parPrimaryContactId option:selected").text();
+                $("#parContactPerson").val(selectedText);
+            });
+            $("#parPartnerCategoryId").change(loadTypes);
+            //$("#parManufacturerId").change(loadModels);
+        });
+    </script>
+}

@@ -1,0 +1,124 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Partners.PartnersViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums;
+@using System.ComponentModel;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+<div class="card">
+    <div class="card-body">
+        <div class="panel panel-primary">
+            <div class="panel-body tabs-menu-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab25">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="context-panel">
+                                    <div class="card-body tab-option-container">
+                                        <a href="@Url.RouteUrl(RouteNames.Partners_New)">
+                                            <i class="fa fa-plus" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                            <div>Add new</div>
+                                        </a>
+                                        <button id="parEdit">
+                                            <i class="fa fa-pencil-square-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                            <div>Edit</div>
+                                        </button>
+                                        <button id="parView">
+                                            <i class="fa fa-eye" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                            <div>View</div>
+                                        </button>
+                                        <button id="parDelete">
+                                            <i class="fa fa-trash-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                            <div>Delete</div>
+                                        </button>
+                                        @if (Model.PartnerCategoryId == PartnerTypes.Customers)
+                                        {
+                                            <button id="parToursForCustomers">
+                                                <i class="fa fa-archive" data-bs-toggle="tooltip" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                                <div>Customers loads list</div>
+                                            </button>
+                                            <button id="parInvoicesForCustomers">
+                                                <i class="fa fa-navicon" data-bs-toggle="tooltip" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                                <div>Customers invoice list</div>
+                                            </button>
+                                        }
+                                        else if (Model.PartnerCategoryId == PartnerTypes.Brokers)
+                                        {
+                                            <button id="parToursForBrokers">
+                                                <i class="fa fa-archive" data-bs-toggle="tooltip" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                                <div>Brokers loads list</div>
+                                            </button>
+                                            <button id="parInvoicesForBrokers">
+                                                <i class="fa fa-navicon" data-bs-toggle="tooltip" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                                <div>Brokers invoice list</div>
+                                            </button>
+                                        }
+                                        else if (Model.PartnerCategoryId == PartnerTypes.Factoring_houses)
+                                        {
+                                            <button id="parFactoringFees">
+                                                <i class="fa fa-usd" data-bs-toggle="tooltip" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                                <div>Factoring fees</div>
+                                            </button>
+                                            <button id="parToursForFactorings">
+                                                <i class="fa fa-archive" data-bs-toggle="tooltip" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                                <div>Factorings loads list</div>
+                                            </button>
+                                            <button id="parInvoicesForFactorings">
+                                                <i class="fa fa-navicon" data-bs-toggle="tooltip" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                                <div>Factorings invoice list</div>
+                                            </button>
+                                        }
+                                        else if (Model.PartnerCategoryId == PartnerTypes.Subcontractors)
+                                        {
+                                            <button id="subcontractorFees">
+                                                <i class="fa fa-usd" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                                <div>Load fees</div>
+                                            </button>
+                                            <button id="parToursForSubcontractors">
+                                                <i class="fa fa-archive" data-bs-toggle="tooltip" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                                <div>Subcontractors loads list</div>
+                                            </button>
+                                            <button id="parInvoicesForSubcontractors">
+                                                <i class="fa fa-navicon" data-bs-toggle="tooltip" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                                <div>Subcontractors invoice list</div>
+                                            </button>
+                                            <button id="parStatementsForSubcontractors">
+                                                <i class="fa fa-reorder" data-bs-toggle="tooltip" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                                <div>Subcontractors statement list</div>
+                                            </button>
+                                        }
+                                        <button id="parExportExcel">
+                                            <i class="fa fa-file-excel-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                            <div>Export to excel</div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row search-params-wrapper">
+                <div class="col-sm-6 col-md-4 col-xl-3">
+                    <tms-input type="Text" name="Keyword" id="parKeyword" label="Keyword:" placeholder="Code / Name / Address" />
+                    <tms-input type="Hidden" name="PartnerCategoryId" id="PartnerCategoryId" value="@Model.PartnerCategoryId" />
+                </div>
+                <div class="col-sm-4 col-md-3 col-xl-2">
+                    <div class="form-group">
+                        <label class="form-label text-muted" for="parSearchBlocked">Blocked:</label>
+                        <select class="form-control form-select text-dark" id="parSearchBlocked" name="Blocked">
+                            <option value="" selected="selected">All</option>
+                            <option value="false">Active</option>
+                            <option value="true">Blocked</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="btn-list text-end search-button-wrapper">
+                    <div class="form-group">
+                        <button class="btn btn-primary" id="buttonSearchPartners">Search</button>
+                        <button class="btn btn-primary" id="buttonResetSearchPartners">Reset search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

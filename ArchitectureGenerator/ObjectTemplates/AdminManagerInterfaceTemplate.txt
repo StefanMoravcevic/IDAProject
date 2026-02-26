@@ -1,0 +1,15 @@
+﻿using DeclarationFactory.Web.Models.General;
+using DeclarationFactory.Web.Models.Dto.<<EntityName>>;
+using DeclarationFactory.Web.Models.RequestModels.<<EntityName>>;
+
+namespace DeclarationFactory.Web.Admin.Models.Interfaces.Managers
+{
+    public interface I<<EntityName>>Manager
+    {
+        Task<ResponseModelList<<<EntityNameSingular>>Dto>> Search<<EntityName>>Async(Search<<EntityName>>Params searchParams);
+        Task<ResponseModel<<<EntityNameSingular>>Dto>> Get<<EntityNameSingular>>ByIdAsync(int id);
+        Task<ResponseModelBase> Delete<<EntityNameSingular>>Async(int id, int? userId);
+        Task<ResponseModel<int>> Save<<EntityNameSingular>>Async(Save<<EntityNameSingular>>RequestModel requestModel);
+    }
+}
+

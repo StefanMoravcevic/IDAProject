@@ -1,0 +1,93 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Printers.PrinterViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@inject IStringLocalizer<SharedResources> localizer
+@{
+    var printer = Model.Printer;
+    var urlList = Url.RouteUrl(RouteNames.Printers_List);
+}
+<div class="card">
+    <div class="card-body">
+        <div class="panel panel-primary">
+            <div class="row">
+                <div class="col-lg-12 col-md-12" id="printerDataContainer">
+                    <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">@localizer["Printer info"]</h4>
+                            <tms-input type="Hidden" name="Id" id="orgUnitId" value="@printer.Id" />
+                        </div>
+                        <div class="card-body p-0 task-edit-main">
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-4">
+                                    <tms-input type="Text" name="Name" id="printerNameId" value="@printer.Name" required="true" label="@localizer["Name"]" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="Text" name="BarCode" id="printerBarCodeId" value="@printer.BarCode" required="true" label="@localizer["BarCode"]" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="Text" name="Ip4Address" id="Ip4AddressId" value="@printer.Ip4Address" required="true" label="@localizer["IP address"]" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="Number" name="Port" id="PortId" value="@printer.Port" required="true" label="@localizer["Port"]" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="row p-5">
+                    <div class="btn-list text-end">
+                        <button class="btn btn-outline-danger" id="buttonCancel">@localizer["Cancel"]</button>
+                        <button class="btn btn-primary" id="buttonSave">@localizer["Save"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+    @section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            if (@Model.ReadOnly == 1) {
+                $("#printerDataContainer :input").prop("disabled", true);
+                $("#buttonSave").prop("disabled", true);
+            }
+            $("#buttonSave").click(function () {
+                var $inputsContainer = $("#printerDataContainer");
+
+                if (validateRequiredFields($inputsContainer, '@localizer["ValidationMsg"]')) {
+                    var jsonData = serializeJSON($inputsContainer);
+
+                    $.ajax({
+                        url: "@Url.RouteUrl(RouteNames.Printers_Save)",
+                        method: "POST",
+                        data: jsonData,
+                        success: function (response) {
+                            handleActionResponseMessage(response, function () {
+                                location = response.message;
+                            }, '@localizer["Error"]', '@localizer["SavedMsg"]');
+                        }
+                    });
+                }
+            });
+            $("#buttonCancel").click(function () {
+                document.location = '@urlList';
+            });
+
+        });
+    </script>
+}

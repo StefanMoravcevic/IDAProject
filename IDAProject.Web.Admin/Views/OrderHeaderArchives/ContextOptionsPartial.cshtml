@@ -1,0 +1,47 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.OrderHeaderArchives.OrderHeaderArchivesViewModel;
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+<div class="card">
+	<div class="card-body">
+		<div class="panel panel-primary">
+			<div class="panel-body tabs-menu-body">
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab25">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="context-panel">
+									<div class="card-body tab-option-container">
+										<button id="orderLines">
+											<i class="fa fa-list" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+											<div>@localizer["Lines"]</div>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row search-params-wrapper">
+				<div class="col-md-12">
+					<div class="col-md-12">
+						<div class="col-sm-6 col-md-6 col-lg-3" id="selectBUC">
+							<tms-input type="Text" name="Keyword" id="SearchKeyword" label="@localizer["Keyword"]" />
+
+						</div>
+						<div class="btn-list text-end search-button-wrapper">
+							<div class="form-group">
+								<button class="btn btn-primary" id="buttonSearch">@localizer["Search"]</button>
+								<button class="btn btn-primary" id="buttonResetSearch">@localizer["ResetSearch"]</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

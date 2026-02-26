@@ -1,0 +1,128 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Users.UserViewModel;
+@using IDAProject.Web.Helpers;
+@using IDAProject.Web.Models.General;
+@using IDAProject.Web.Admin.Models.Common;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@inject IStringLocalizer<SharedResources> localizer
+
+@{
+    var urlUserRoleCreate = Url.RouteUrl(RouteNames.UserRole_Create);
+    var urlUserRoleDelete = Url.RouteUrl(RouteNames.UserRole_Delete, new { userRoleId = "111" });
+    var user = Model.UserData;
+}
+@section Scripts {
+    <script type="text/javascript" src="~/lib/datatables/dataTables.select.min.js"></script>
+}
+    <div class="row" id="editForm">
+        <input type="hidden" value="@user.Id" name="Id" id="Id" />
+        <div class="col-md-12">
+            <label for="Username" class="">@localizer["Username"]</label>
+            <input type="text" id="Username" name="Username" value="@user.UserName" inputType="input" readonly="readonly" class="form-control text-dark" />
+            <div style ="margin-top:20px !important; margin-bottom:0px;">
+            <a href="@Url.RouteUrl(RouteNames.Roles_List)" target="_blank">@localizer["Roles"]</a>
+                <tms-select name="Roles" options="@Model.Roles" id="Roles" />
+            </div>
+            <div class="btn-list">
+            <button class="btn btn-primary" id="addButton">@localizer["Assign"]</button>
+            <button class="btn btn-primary" id="removeButton">@localizer["Remove"]</button>
+            </div>
+            <div class="form-group">
+            <label style="margin-top:20px; margin-bottom:0px;">@localizer["Assigned roles"]:</label>
+                <table id="tableUserRoles" class="table table-striped">
+                    <thead>
+                        <tr>
+                        <th style="width:10px;">@localizer["Id"]</th>
+                        <th>@localizer["Role name"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var usr in Model.UserRoles)
+                    {
+                        <tr>
+                            <td>@usr.Value</td>
+                            <td>@usr.Description</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#Roles").select2({
+            dropdownParent: $('#manageUserRoles')
+        });
+
+        var tableUR = $('#tableUserRoles').DataTable({
+
+            select: { style: 'single' },
+            searching: false,
+            paging: false,
+            info: false,
+        });
+
+        $("#addButton").click(function () {
+            var userId = $("#Id").val();
+            var roleId = $("#Roles").val();
+            var roleName = $("#Roles option:selected").text();
+            if (roleId > 0) {
+                $.ajax({
+                    url: '@urlUserRoleCreate',
+                    method: 'POST',
+                    data: {
+                        UserId: userId,
+                        RoleId: roleId
+                    },
+                    success: function (response) {
+                        if (response.valid) {
+                            tableUR.row.add(['-', roleName]).draw();
+                            Swal.fire({
+                                icon: 'success',
+                                title: '@localizer["The role has been assigned successfuly."]',
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '@localizer["Error"]',
+                                text: response.message
+                            });
+                        }
+                    },
+                });
+            }
+            else {
+                Swal.fire({
+                    icon: 'info',
+                    title: '@localizer["You must select role from the dropdown list."]',
+                });
+            }
+        });
+        $("#removeButton").click(function () {
+            if (tableUR.rows('.selected').any()) {
+                var userRoleId = tableUR.row('.selected').data()[0];
+                $.ajax({
+                    url: '@urlUserRoleDelete'.replace("111", userRoleId),
+                    method: 'POST',
+                    success: function (response) {
+                        var rows = tableUR
+                            .rows('.selected')
+                            .remove()
+                            .draw();
+                    }
+                });
+            }
+            else {
+                Swal.fire({
+                    icon: 'info',
+                    title: '@localizer["You must select user role from the list."]',
+                });
+            }
+        });
+    });
+</script>

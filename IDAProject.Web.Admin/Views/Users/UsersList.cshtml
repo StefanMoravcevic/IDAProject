@@ -1,0 +1,78 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Users.UsersViewModel
+@using IDAProject.Web.Helpers;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+
+<table id="tableUsers" class="table table-striped">
+    <thead>
+        <tr>
+            @foreach (var columnName in Model.AllColumns)
+            {
+                if (columnName == "Id")
+                {
+                    <th style="width:40px;">@localizer["Id"]</th>
+                }
+                else if (columnName == "EmailConfirmed" || columnName == "PhoneNumberConfirmed" || columnName == "IsActive" || columnName == "Roles #")
+                {
+                    <th style="text-align:center;">@localizer[columnName]</th>
+                }
+                else
+                {
+                    <th>@localizer[columnName]</th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var usr in Model.Users)
+        {
+            <tr>
+                <td>@usr.Id</td>
+                <td>@usr.UserName</td>
+                <td>@usr.Email</td>
+                @* @if (usr.EmailConfirmed == true)
+                {
+                    <td style="text-align:center;">
+                        <i class="fa fa-check-square" style="color:green"></i>
+                    </td>
+                }
+                else
+                {
+                    <td style="text-align:center;">
+                        <i class="fa fa-times" style="color:red"></i>
+                    </td>
+                } *@
+                <td>@usr.PhoneNumber</td>
+@*                 @if (usr.PhoneNumberConfirmed == true)
+                {
+                    <td style="text-align:center;">
+                        <i class="fa fa-check-square" style="color:green"></i>
+                    </td>
+                }
+                else
+                {
+                    <td style="text-align:center;">
+                        <i class="fa fa-times" style="color:red"></i>
+                    </td>
+                } *@
+                @if (usr.IsActive == true)
+                {
+                    <td style="text-align:center;">
+                        <i class="fa fa-check-square" style="color:green"></i>
+                    </td>
+                }
+                else
+                {
+                    <td style="text-align:center;">
+                        <i class="fa fa-times" style="color:red"></i>
+                    </td>
+                }
+                <td>@usr.Employee</td>
+                <td>@usr.UserCulture</td>
+                <td style="text-align:center;">@usr.Roles</td>
+            </tr>
+        }
+    </tbody>
+</table>

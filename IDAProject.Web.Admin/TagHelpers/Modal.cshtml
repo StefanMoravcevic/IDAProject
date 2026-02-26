@@ -1,0 +1,23 @@
+﻿@model IDAProject.Web.Admin.Models.TagHelpers.ModalViewModel
+
+<div class="modal fade" id="@Model.Id" tabindex="-1">
+    <div class="modal-dialog @Model.ModalSizeClass">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="@Model.IdTitle">@Model.Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-splitter">
+                <div class="modal-body" id="@Model.IdContent"></div>
+                <div class="side-view" style="display:none;"></div>
+            </div>                        
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zatvori</button>
+                @if (Model.ShowConfirmButton)
+                {
+                    <button type="button" class="btn btn-primary" id="@Model.IdConfirm">@Model.ConfirmButtonText</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

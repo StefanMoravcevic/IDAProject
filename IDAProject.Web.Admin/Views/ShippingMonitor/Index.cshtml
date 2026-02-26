@@ -1,0 +1,464 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.PackagingMonitor.PackagingMonitorViewModel
+@using Microsoft.Extensions.Localization
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@inject IStringLocalizer<SharedResources> localizer
+
+@{
+    ViewData["Title"] = "Shipping monitor";
+    Layout = "~/Views/Shared/_LayoutNoSidebar.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+@* <script type="text/javascript" src="~/js/packagingOrder.js"></script> *@
+
+<style type="text/css">
+    body {
+        background: url('/images/wintlogo.png') no-repeat center center fixed;
+        height: 100%;
+        margin: 0;
+        box-sizing: border-box; /* Include padding in the element's total width and height */
+        background-size: 50%;
+    }
+
+    .table-container {
+        height: 100%;
+        padding: 10px; /* Adjust the padding as needed */
+        box-sizing: border-box;
+        background-color: rgba(255, 255, 255, 0.9); /* Solid background with slight transparency */
+    }
+
+    .tablePackage {
+        width: 100%;
+        margin: 0;
+        table-layout: fixed;
+        border-collapse: collapse; /* Make table borders look cleaner */
+    }
+
+    .table1 {
+        height: 70vh;
+        overflow-y: auto; /* Allow scrolling if content overflows */
+    }
+
+    .table2 {
+        height: 30vh;
+        overflow-y: auto; /* Allow scrolling if content overflows */
+    }
+
+    thead td {
+        background-color: #00adef; /* Bright blue from the logo */
+        color: white;
+        padding: 9px; /* Add padding for better readability */
+        font-size: 1.2em; /* Slightly larger font for headers */
+        font-weight: bold; /* Bold font for headers */
+        position: sticky;
+        top: 0;
+    }
+
+    tbody td {
+        border: 1px solid #ddd;
+        text-align: left;
+        padding: 6px; /* Add padding for better readability */
+        background-color: #ffffff; /* White background for rows */
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9; /* Light grey for alternating rows */
+    }
+
+    .table-container h1 {
+        color: #00adef; /* Bright blue from the logo */
+        text-align: center; /* Center the header text */
+        font-size: 2em; /* Increase the font size of the header */
+    }
+
+    tfoot td {
+        background-color: #333; /* Dark footer for contrast */
+        color: white;
+        padding: 10px;
+    }
+    @@keyframes blink {
+        50% { opacity: 0.2; }
+    }
+
+    .past-date td {
+        animation: blink 2s infinite;
+        color: red;
+        background-color: transparent !important;
+    }
+    td.status-zaOdvajanje {
+        color: #BF3131 !important;
+        font-weight: bold;
+    }
+    td.status-odvajanje {
+        color: #FFB433 !important;
+        font-weight: bold;
+    }
+    td.status-odvojen {
+        color: #1F7D53 !important;
+        font-weight: bold;
+    }
+    td.status-zapakovan {
+        font-weight: bold;
+    }
+</style>
+
+<tms-input type="Hidden" name="ApiUrl" id="ApiUrl" value="@Model.ApiUrl" />
+
+<div class="container-fluid vh-100 p-3">
+    <div class="row h-70">
+        <div class="col-5 p-2 table-container table1" id="topTable">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Header 1</th>
+                        <th>Header 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Data 1</td>
+                        <td>Data 2</td>
+                    </tr>
+                    <tr>
+                        <td>Data 3</td>
+                        <td>Data 4</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-7 p-2 table-container table1" id="topTableRight">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Header 1</th>
+                        <th>Header 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Data 1</td>
+                        <td>Data 2</td>
+                    </tr>
+                    <tr>
+                        <td>Data 3</td>
+                        <td>Data 4</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row h-30">
+        <div class="col-5 p-2 table-container table2" id="bottomTable">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Header 1</th>
+                        <th>Header 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Data 1</td>
+                        <td>Data 2</td>
+                    </tr>
+                    <tr>
+                        <td>Data 3</td>
+                        <td>Data 4</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-7 p-2 table-container table2" id="bottomTableRight">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Header 1</th>
+                        <th>Header 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Data 1</td>
+                        <td>Data 2</td>
+                    </tr>
+                    <tr>
+                        <td>Data 3</td>
+                        <td>Data 4</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    let apiUrl = $("#ApiUrl").val();
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl(apiUrl + "/packageStatusHub", {
+            skipNegotiation: true,
+            transport: signalR.HttpTransportType.WebSockets
+        })
+        .build();
+
+    connection.start().catch(err => console.error(err.toString()));
+
+    connection.on("ReceiveShippingUpdate", (newShippingStatuses) => {
+        let shippingList = newShippingStatuses.shippingList.filter(x => x.status != 'Zapakovan');
+        let shippingListRight = newShippingStatuses.shippingList.filter(x => x.status == 'Zapakovan');
+        let personalTakeofList = newShippingStatuses.personalTakeofList.filter(x => x.status != 'Zapakovan');
+        let personalTakeofListRight = newShippingStatuses.personalTakeofList.filter(x => x.status == 'Zapakovan');
+
+        let tableContainer = document.getElementById('topTable');
+        tableContainer.innerHTML = createTopTable(shippingList);
+        tableContainer = document.getElementById('topTableRight');
+        tableContainer.innerHTML = createTopTableRight(shippingListRight);
+        tableContainer = document.getElementById('bottomTable');
+        tableContainer.innerHTML = createBottomTable(personalTakeofList);
+        tableContainer = document.getElementById('bottomTableRight');
+        tableContainer.innerHTML = createBottomTableRight(personalTakeofListRight);
+
+    });
+
+    function createTopTable(groupedData) {
+        const container = document.createElement('div');
+
+        const table = document.createElement('table');
+        table.classList.add('tablePackage');
+
+        const header = table.createTHead();
+        const headerRow = header.insertRow(0);
+        let cell0 = headerRow.insertCell(0);
+        cell0.innerHTML = 'Opis rute razvoza';
+        cell0.style.width = '18%';
+        let cell1 = headerRow.insertCell(1);
+        cell1.innerHTML = 'Vreme preseka';
+        cell1.style.width = '16%';
+        let cell2 = headerRow.insertCell(2);
+        cell2.innerHTML = 'Vreme rute';
+        cell2.style.width = '16%';
+        let cell3 = headerRow.insertCell(3);
+        cell3.innerHTML = 'Nalog za odvajanje';
+        cell3.style.width = '36%';
+        let cell4 = headerRow.insertCell(4);
+        cell4.innerHTML = 'Status';
+        cell4.style.width = '14%';
+        const body = table.createTBody();
+        groupedData.forEach(line => {
+            let srcTranspRouteDescription = line.srcTranspRouteDescription !== null ? `${line.srcTranspRouteDescription}` : '';
+            let srcTranspStartDateTime = line.srcTranspStartDateTime !== null ? formatTime(line.srcTranspStartDateTime) : '';
+            let srcTranspCutOffDateTime = line.srcTranspCutOffDateTime !== null ? formatTime(line.srcTranspCutOffDateTime) : '';
+            const cutoffDateTime = new Date(line.srcTranspCutOffDateTime);
+            const now = new Date();
+            let no = line.no !== null ? `${line.no}` : '';
+            let status = line.status !== null ? `${line.status}` : '';
+            let itemNo = line.itemNo !== null ? `${line.itemNo}` : '';
+            const row = body.insertRow();
+            if (cutoffDateTime < now){
+                row.classList.add('past-date');
+            }
+            row.insertCell(0).innerHTML = srcTranspRouteDescription;
+            row.insertCell(1).innerHTML = `${srcTranspCutOffDateTime}`;
+            row.insertCell(2).innerHTML = `${srcTranspStartDateTime}`;
+            row.insertCell(3).innerHTML = no;
+
+            const statusCell = row.insertCell(4);
+            statusCell.innerHTML = status;
+
+            if (status === 'Za odvajanje') {
+                statusCell.classList.add('status-zaOdvajanje');
+            } else if (status === 'Odvajanje') {
+                statusCell.classList.add('status-odvajanje');
+            } else if (status === 'Odvojen') {
+                statusCell.classList.add('status-odvojen');
+            }
+        });
+
+        container.appendChild(table);
+        return container.innerHTML;
+
+    }
+    function createTopTableRight(groupedData) {
+        const container = document.createElement('div');
+
+        const table = document.createElement('table');
+        table.classList.add('tablePackage');
+
+        const header = table.createTHead();
+        const headerRow = header.insertRow(0);
+        let cell0 = headerRow.insertCell(0);
+        cell0.innerHTML = 'Opis rute razvoza';
+        cell0.style.width = '12%';
+        let cell1 = headerRow.insertCell(1);
+        cell1.innerHTML = 'Vreme preseka';
+        cell1.style.width = '9%';
+        let cell2 = headerRow.insertCell(2);
+        cell2.innerHTML = 'Vreme rute';
+        cell2.style.width = '9%';
+        let cell3 = headerRow.insertCell(3);
+        cell3.innerHTML = 'Paket';
+        cell3.style.width = '18%';
+        let cell4 = headerRow.insertCell(4);
+        cell4.innerHTML = 'Status';
+        cell4.style.width = '10%';
+        let cell5 = headerRow.insertCell(5);
+        cell5.innerHTML = 'Kataloški broj';
+        cell5.style.width = '18%';
+        let cell6 = headerRow.insertCell(6);
+        cell6.innerHTML = 'Brend';
+        cell6.style.width = '15%';
+        let cell7 = headerRow.insertCell(7);
+        cell7.innerHTML = 'Vreme zatvaranja';
+        cell7.style.width = '9%';
+
+        const body = table.createTBody();
+        groupedData.forEach(line => {
+            let srcTranspRouteDescription = line.srcTranspRouteDescription !== null ? `${line.srcTranspRouteDescription}` : '';
+            let srcTranspStartDateTime = line.srcTranspStartDateTime !== null ? formatTime(line.srcTranspStartDateTime) : '';
+            let srcTranspCutOffDateTime = line.srcTranspCutOffDateTime !== null ? formatTime(line.srcTranspCutOffDateTime) : '';
+            let creationDateTime = line.creationDateTime !== null ? formatTime(line.creationDateTime) : '';
+            const cutoffDateTime = new Date(line.srcTranspCutOffDateTime);
+            const now = new Date();
+            let no = line.no !== null ? `${line.no}` : '';
+            let status = line.status !== null ? `${line.status}` : '';
+            let itemNo = line.itemNo !== null ? `${line.itemNo}` : '';
+            let brend = line.itemVendorBrandCode !== null ? `${line.itemVendorBrandCode}` : '';
+            const row = body.insertRow();
+            if (cutoffDateTime < now){
+                row.classList.add('past-date');
+            }
+            row.insertCell(0).innerHTML = srcTranspRouteDescription;
+            row.insertCell(1).innerHTML = `${srcTranspCutOffDateTime}`;
+            row.insertCell(2).innerHTML = `${srcTranspStartDateTime}`;
+            row.insertCell(3).innerHTML = no;
+            const statusCell = row.insertCell(4);
+            statusCell.innerHTML = status;
+            if (status === 'Zapakovan') {
+                statusCell.classList.add('status-zapakovan');
+            }
+            row.insertCell(5).innerHTML = itemNo;
+            row.insertCell(6).innerHTML = brend;
+            row.insertCell(7).innerHTML = creationDateTime;
+        });
+
+        container.appendChild(table);
+        return container.innerHTML;
+
+    }
+    function createBottomTable(groupedData) {
+        const container = document.createElement('div');
+
+        const table = document.createElement('table');
+        table.classList.add('tablePackage');
+
+        const header = table.createTHead();
+        const headerRow = header.insertRow(0);
+        let cell0 = headerRow.insertCell(0);
+        cell0.innerHTML = 'Opis rute razvoza';
+        cell0.style.width = '18%';
+        let cell1 = headerRow.insertCell(1);
+        cell1.innerHTML = 'Šifra kupca';
+        cell1.style.width = '14%';
+        let cell2 = headerRow.insertCell(2);
+        cell2.innerHTML = 'Kupac';
+        cell2.style.width = '32%';
+        let cell3 = headerRow.insertCell(3);
+        cell3.innerHTML = 'Nalog za odvajanje';
+        cell3.style.width = '22%';
+        let cell4 = headerRow.insertCell(4);
+        cell4.innerHTML = 'Status';
+        cell4.style.width = '14%';
+
+        const body = table.createTBody();
+        groupedData.forEach(line => {
+            let srcTranspRouteDescription = 'Lično preuzimanje';
+            let customerNo = line.customerNo !== null ? line.customerNo : '';
+            let customer = line.customer !== null ? line.customer : '';
+            let no = line.no !== null ? `${line.no}` : '';
+            let status = line.status !== null ? `${line.status}` : '';
+            let itemNo = line.itemNo !== null ? `${line.itemNo}` : '';
+            const row = body.insertRow();
+            row.insertCell(0).innerHTML = srcTranspRouteDescription;
+            row.insertCell(1).innerHTML = customerNo;
+            row.insertCell(2).innerHTML = customer;
+            row.insertCell(3).innerHTML = no;
+            const statusCell = row.insertCell(4);
+            statusCell.innerHTML = status;
+
+            if (status === 'Za odvajanje') {
+                statusCell.classList.add('status-zaOdvajanje');
+            } else if (status === 'Odvajanje') {
+                statusCell.classList.add('status-odvajanje');
+            } else if (status === 'Odvojen') {
+                statusCell.classList.add('status-odvojen');
+            }
+        });
+
+        container.appendChild(table);
+        return container.innerHTML;
+
+    }
+    function createBottomTableRight(groupedData) {
+        const container = document.createElement('div');
+
+        const table = document.createElement('table');
+        table.classList.add('tablePackage');
+
+        const header = table.createTHead();
+        const headerRow = header.insertRow(0);
+        let cell0 = headerRow.insertCell(0);
+        cell0.innerHTML = 'Opis rute razvoza';
+        cell0.style.width = '12%';
+        let cell1 = headerRow.insertCell(1);
+        cell1.innerHTML = 'Šifra kupca';
+        cell1.style.width = '9%';
+        let cell2 = headerRow.insertCell(2);
+        cell2.innerHTML = 'Kupac';
+        cell2.style.width = '25%';
+        let cell3 = headerRow.insertCell(3);
+        cell3.innerHTML = 'Paket';
+        cell3.style.width = '13%';
+        let cell4 = headerRow.insertCell(4);
+        cell4.innerHTML = 'Status';
+        cell4.style.width = '10%';
+        let cell5 = headerRow.insertCell(5);
+        cell5.innerHTML = 'Kataloški broj';
+        cell5.style.width = '13%';
+        let cell6 = headerRow.insertCell(6);
+        cell6.innerHTML = 'Brend';
+        cell6.style.width = '9%';
+        let cell7 = headerRow.insertCell(7);
+        cell7.innerHTML = 'Vreme zatvaranja';
+        cell7.style.width = '9%';
+
+        const body = table.createTBody();
+        groupedData.forEach(line => {
+            let srcTranspRouteDescription = 'Lično preuzimanje';
+            let customerNo = line.customerNo !== null ? line.customerNo : '';
+            let customer = line.customer !== null ? line.customer : '';
+            let creationDateTime = line.creationDateTime !== null ? formatTime(line.creationDateTime) : '';
+            let no = line.no !== null ? `${line.no}` : '';
+            let status = line.status !== null ? `${line.status}` : '';
+            let itemNo = line.itemNo !== null ? `${line.itemNo}` : '';
+            let brend = line.itemVendorBrandCode !== null ? `${line.itemVendorBrandCode}` : '';
+            const row = body.insertRow();
+            row.insertCell(0).innerHTML = srcTranspRouteDescription;
+            row.insertCell(1).innerHTML = customerNo;
+            row.insertCell(2).innerHTML = customer;
+            row.insertCell(3).innerHTML = no;
+            const statusCell = row.insertCell(4);
+            statusCell.innerHTML = status;
+            if (status === 'Zapakovan') {
+                statusCell.classList.add('status-zapakovan');
+            }
+            row.insertCell(5).innerHTML = itemNo;
+            row.insertCell(6).innerHTML = brend;
+            row.insertCell(7).innerHTML = creationDateTime;
+        });
+
+        container.appendChild(table);
+        return container.innerHTML;
+
+    }
+
+</script>

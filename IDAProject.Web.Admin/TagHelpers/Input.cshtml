@@ -1,0 +1,87 @@
+﻿@using System;
+@using IDAProject.Web.Admin.Models.TagHelpers
+@model IDAProject.Web.Admin.Models.TagHelpers.InputViewModel
+
+@if (Model.Type == FromInputType.Text)
+{
+    <div class="form-group @Model.Classes">
+        <label class="form-label text-muted" for="@Model.Id">@Model.Label</label>
+        <input type="@Model.Type" id="@Model.Id" name="@Model.Name" class="form-control text-dark" @Model.AdditionalAttributes placeholder="@Model.Placeholder" value="@Model.Value" data-tag="@Model.Tag">
+    </div>
+}
+@if (Model.Type == FromInputType.Email)
+{
+    <div class="form-group @Model.Classes">
+        <label class="form-label text-muted" for="@Model.Id">@Model.Label</label>
+        <input type="email" id="@Model.Id" name="@Model.Name" class="form-control text-dark" @Model.AdditionalAttributes placeholder="@Model.Placeholder" value="@Model.Value" data-tag="@Model.Tag">
+    </div>
+}
+@if (Model.Type == FromInputType.Date)
+{
+    <div class="form-group @Model.Classes">
+        <label class="form-label text-muted" for="@Model.Id">@Model.Label</label>
+        <input type="text" data-date="auto" id="@Model.Id" name="@Model.Name" class="form-control text-dark" @Model.AdditionalAttributes placeholder="@Model.Placeholder" value="@Model.Value" data-tag="@Model.Tag">
+    </div>
+}
+@if (Model.Type == FromInputType.Tel)
+{
+    <div class="form-group @Model.Classes">
+        <label class="form-label text-muted" for="@Model.Id">@Model.Label</label>
+        <input type="tel" id="@Model.Id" name="@Model.Name" class="form-control text-dark" @Model.AdditionalAttributes placeholder="@Model.Placeholder" value="@Model.Value" data-tag="@Model.Tag">
+    </div>
+}
+else if (Model.Type == FromInputType.Number)
+{
+    <div class="form-group @Model.Classes">
+        <label class="form-label text-muted" for="@Model.Id">@Model.Label</label>
+        <input type="number" id="@Model.Id" name="@Model.Name" class="form-control text-dark" @Model.AdditionalAttributes placeholder="@Model.Placeholder" value="@Model.Value" data-tag="@Model.Tag">
+    </div>
+}
+else if (Model.Type == FromInputType.Password)
+{
+    <div class="form-group @Model.Classes">
+        <label class="form-label text-muted" for="@Model.Id">@Model.Label</label>
+        <input type="password" id="@Model.Id" name="@Model.Name" class="form-control text-dark" @Model.AdditionalAttributes placeholder="@Model.Placeholder" value="@Model.Value" data-tag="@Model.Tag">
+    </div>
+}
+else if (Model.Type == FromInputType.File)
+{
+    <div class="form-group @Model.Classes">
+        <label class="form-label text-muted" for="@Model.Id">@Model.Label</label>
+        <input type="file" id="@Model.Id" name="@Model.Name" @Model.AdditionalAttributes accept="@Model.Accept" data-tag="@Model.Tag">
+    </div>
+}
+else if (Model.Type == FromInputType.CheckBox)
+{
+    <div class="form-group">
+        <div class="custom-checkbox custom-control @Model.Classes">
+            @if (Model.Checked)
+            {
+                <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" id="@Model.Id" name="@Model.Name" @Model.AdditionalAttributes value="@Model.Value" checked="checked" data-tag="@Model.Tag">
+            }
+            else
+            {
+                <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" id="@Model.Id" name="@Model.Name" @Model.AdditionalAttributes value="@Model.Value" data-tag="@Model.Tag">
+            }
+            <label for="@Model.Id" class="custom-control-label form-label text-muted">@Model.Label</label>
+        </div>
+    </div>
+}
+else if (Model.Type == FromInputType.Radio)
+{
+    <label class="custom-control custom-radio @Model.Classes" for="@Model.Id">
+        @if (Model.Checked)
+        {
+            <input type="radio" name="@Model.Name" id="@Model.Id" class="custom-control-input" @Model.AdditionalAttributes value="@Model.Value" checked="checked" data-tag="@Model.Tag">
+        }
+        else
+        {
+            <input type="radio" name="@Model.Name" id="@Model.Id" class="custom-control-input" @Model.AdditionalAttributes value="@Model.Value" data-tag="@Model.Tag">
+        }
+        <span class="custom-control-label">@Model.Label</span>
+    </label>
+}
+else if (Model.Type == FromInputType.Hidden)
+{
+    <input type="hidden" id="@Model.Id" name="@Model.Name" @Model.AdditionalAttributes value="@Model.Value" data-tag="@Model.Tag" />
+}

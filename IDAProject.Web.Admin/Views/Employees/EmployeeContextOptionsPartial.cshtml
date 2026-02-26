@@ -1,0 +1,63 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Employees.EmployeeViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using System.ComponentModel;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@inject IStringLocalizer<SharedResources> localizer
+@if (ViewData["EditMode"] != null && (bool)ViewData["EditMode"])
+{
+
+
+	<div class="row">
+		<div class="col-lg-12 col-md-12">
+			<div class="card">
+				<div class="card-header border-bottom">
+					<h4 class="mb-0">@localizer["Contact basic info"]</h4>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card">
+		<div class="card-body">
+			<div class="panel panel-primary">
+				<div class="panel-body tabs-menu-body">
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab25">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="context-panel">
+										<div class="card-body tab-option-container" style="overflow-x:auto">
+
+
+											<button id="EmployeePrevious">
+												<i class="fa fa-arrow-left" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+												<div>@localizer["Previous"]</div>
+											</button>
+											<button id="EmployeeNext">
+												<i class="fa fa-arrow-right" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+												<div>@localizer["NextOrder"]</div>
+											</button>
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+							@*<div class="btn-list text-end search-button-wrapper">
+						<div class="form-group">
+						<button class="btn btn-primary" id="buttonSearchTransactionJournals">@localizer["Search"]</button>
+						<button class="btn btn-primary" id="buttonResetSearchTransactionJournals">@localizer["ResetSearch"]</button>
+						</div>
+						</div>*@
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}

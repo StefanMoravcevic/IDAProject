@@ -1,0 +1,39 @@
+﻿@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Admin.Models.TagHelpers
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Helpers;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+
+<div class="panel panel-primary">
+    <div class="row">
+        <div class="col-lg-12 col-md-12" id="dataContainer">
+            <div class="card">
+                <div class="card-header border-bottom">
+                    <h4 class="mb-0">@localizer["EnterUserNameAndEmail"]</h4>
+                </div>
+                <div class="card-body p-0 task-edit-main">
+                    <div class="row p-5 border-bottom">
+                        <div class="wrap-input100">
+                            <input class="input100 validate-input" type="text" name="UserNameRA" id="userNameRA" placeholder="@localizer["Username"]">
+                            <span class="focus-input100"></span>
+                            <span class="symbol-input100">
+                                <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <div class="wrap-input100">
+                            <input class="input100 validate-input" type="text" name="EmailRA" id="emailRA" placeholder="@localizer["E-mail"]">
+                            <span class="focus-input100"></span>
+                            <span class="symbol-input100">
+                                <i class="fa fa-envelope" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

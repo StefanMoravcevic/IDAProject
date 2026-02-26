@@ -1,0 +1,109 @@
+﻿@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.Employees
+@using IDAProject.Web.Models.RequestModels.Partners;
+@using IDAProject.Web.Admin.Models.Interfaces.Managers;
+@using IDAProject.Web.Models.General.Enums
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@using IDAProject.Web.Admin.Managers.Helpers;
+@inject AuthorizationHelpers AuthorizationHelpers;
+@inject IAccountManager accountManager;
+@using IDAProject.Web.Models.General;
+
+@{
+    ViewData["Title"] = "Sirius applications";
+    Layout = "_LayoutLogin";
+    var token = Context.Request.HttpContext.Request.Cookies[Constants.AdminCookieToken];
+    var user = accountManager.GetUserFromJwt(token!);
+}
+<style>
+
+    .green-color {
+        color: green;
+        border: 2px;
+    }
+
+    .blue-color {
+        color: royalblue;
+    }
+
+    .red-color {
+        color: orangered;
+    }
+
+    .rod-color {
+        color: darkgoldenrod;
+    }
+
+    .green1-color {
+        color: mediumseagreen;
+    }
+
+    .blue1-color {
+        color: #32c5f4;
+    }
+
+    .red1-color {
+        color: indianred;
+    }
+
+    .yellow-color {
+        color: gold;
+    }
+
+    .brown-color {
+        color: brown;
+    }
+
+    .blue2-color {
+        color: mediumblue;
+    }
+
+    .red2-color {
+        color: mediumvioletred;
+    }
+
+    .yellow1-color {
+        color: chocolate;
+    }
+
+    .brown1-color {
+        color: saddlebrown;
+    }
+</style>
+
+<div class="row row-sm">
+    <div class="col-lg-12">
+        <div class="row d-flex justify-content-center my-3">
+            <div class="col-lg-6 row row-sm ">
+                <div class="row d-flex justify-content-center my-3" style="margin-top:20px">
+                    <div class="col-md-12 d-flex justify-content-center my-3">
+                        <div class="context-panel">
+                            @localizer["Choose application:"]
+                            <div class="card-body tab-option-container">
+                                @if (AuthorizationHelpers.UserHasRights(user, (int)AspNetRoles.Any, (int)AspNetFeatures.Any))
+                                {
+                                    <button id="IDAProject" style="width:120px">
+                                        <i class="fa fa-info blue1-color" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                        <div style="font-style:normal; font-weight:550; font-size:medium">@localizer["IDAProject"]</div>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        $("#IDAProject").click(function () {
+            document.location = '@Url.RouteUrl(RouteNames.Home_Dashboard)';
+        });
+    });
+</script>

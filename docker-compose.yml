@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  tms.web.api:
+    image: ${DOCKER_REGISTRY-}tmswebapi
+    build:
+      context: .
+      dockerfile: Tms.Web.Api\Dockerfile

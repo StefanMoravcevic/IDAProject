@@ -1,0 +1,115 @@
+﻿@using IDAProject.Web.Admin.Models.Common
+@using IDAProject.Web.Models.General.Enums
+@using NPOI.SS.Formula.Functions
+@model IDAProject.Web.Admin.Models.ViewModels.Addresses.AddressesViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+
+@{
+    ViewData["Title"] = "Addresses";
+
+    var urlDeleteAddress = Url.RouteUrl(RouteNames.Addresses_Delete, new { id = 111 });
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <partial name="ContextOptionsPartial" model="@Model" />
+    </div>
+</div>
+<tms-input type="Hidden" name="AddressTypeId" id="AddressTypeId" value="@Model.AddressTypeId" />
+<tms-input type="Hidden" name="Id" id="Id" value="@Model.Id" />
+@* <tms-input type="Hidden" name="EmployeeId" id="EmployeeId" value="@Model." /> *@
+<div class="row row-sm">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body" style="overflow-x:auto">
+                <tms-ajax-table id="tableAddresses" view-model="@Model" table-settings-reference-table="Addresses" />
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+<script type="text/javascript">
+    //a javascript function which forms an ajax request based on the addrestypeid passed
+    $(document).ready(function () {
+
+        $("#addCreate").click(function () {
+            var addressTypeId = $("#AddressTypeId").val();
+            var id = $("#Id").val();
+            document.location = '@Url.RouteUrl(RouteNames.Addresses_New,new { AddressTypeId = "xxx",Id = "yyy"})'.replace("xxx", addressTypeId).replace("yyy", id);
+        });
+        $("#addEdit").click(function () {
+            var selectedId = getSelectedItemId("tableAddresses");
+            document.location = '@Url.RouteUrl(RouteNames.Addresses_Edit, new { id = "111" })'.replace("111", selectedId);
+        });
+        $("#addDelete").click(function () {
+            Swal.fire({
+                title: '@localizer["DeleteQuestion"]',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '@localizer["DeleteConfirmation"]'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var selectedId = getSelectedItemId("tableAddresses");
+                    var addressTypeId = $("#AddressTypeId").val();
+                    var id = $("#Id").val();
+                    $.ajax({
+                        url: '@urlDeleteAddress'.replace("111", selectedId),
+                        method: "POST",
+                        success: function (response) {
+                            location = response.message.replace("xxx", addressTypeId).replace("yyy", id);
+                        }
+                    });
+                }
+            })
+        });
+
+        searchAddresses();
+    });
+
+    function getDataByAddressType(id, addressTypeId) {
+        let data;
+
+        switch (addressTypeId) {
+            case @AddressTypes.CompanyAddress:
+                data = { CompanyId: id };
+                break;
+            case @AddressTypes.PartnerAddress:
+                data = { PartnerId: id };
+                break;
+            case @AddressTypes.BenefitUserAddress:
+                data = { BenefitUserId: id };
+                break;
+            default:
+                console.error('Invalid addressTypeId');
+                return;
+        }
+
+        return data;
+    }
+
+    function searchAddresses() {
+        let addressTypeId = parseInt($("#AddressTypeId").val());
+        let id = parseInt($("#Id").val())
+        let data = getDataByAddressType(id, addressTypeId);
+
+        if (!data) {
+            return;
+        }
+
+        $.ajax({
+            url: "@Url.RouteUrl(RouteNames.Addresses_Search)",
+            method: "POST",
+            data: data,
+            success: function (response) {
+                loadJson("tableAddresses", response);
+            }
+        });
+    }
+
+</script>

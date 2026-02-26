@@ -1,0 +1,35 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.ScannedLines.ScannedLinesListViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>@localizer["Scanned quantity"]</th>
+            <th>@localizer["Requested quantity"]</th>
+            <th>@localizer["Date"]</th>
+            <th>@localizer["Print"]</th> <!-- nova kolona -->
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.ScannedLines.Count; i++)
+        {
+            var line = Model.ScannedLines[i];
+            <tr>
+                <td>@line.Id</td>
+                <td>@line.ScannedQuantity</td>
+                <td>@line.RequestedQuantity</td>
+                <td>@line.Date.Value.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-secondary print-btn-modal"
+                            data-id="@line.Id"
+                            title="@localizer["Print"]">
+                        <i class="fa fa-print"></i>
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

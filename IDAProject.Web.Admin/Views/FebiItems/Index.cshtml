@@ -1,0 +1,243 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.FebiItems.FebiItemsViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using NPOI.SS.Formula.Functions
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+@{
+	ViewData["Title"] = $"Items";
+	var localizedPagination = @Html.Raw(Json.Serialize(new PaginationLocalizerModel(localizer)));
+	var urlDelete = Url.RouteUrl(RouteNames.FebiItems_Delete, new { id = 111 });
+}
+<style>
+	#tableItems tbody tr {
+		cursor: pointer !important;
+	}
+</style>
+<div class="row">
+	<div class="col-lg-12 col-md-12">
+		<div class="card">
+			<div class="card-header border-bottom">
+				<h4 class="mb-0">@localizer["Items"]</h4>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12 text-end">
+		<button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#itemsCollapse" aria-expanded="true" aria-controls="itemsCollapse" style="background-color:white;">
+			<i class="fa fa-expand" id="showContext" style="color:black;"></i>
+		</button>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<partial name="ContextOptionsPartial" model="@Model" />
+	</div>
+</div>
+<div class="row row-sm">
+	<div class="col-lg-12">
+		<div class="card">
+			<div class="card-body" style="overflow-x:auto">
+				<tms-ajax-table id="tableItems" view-model="@Model" table-settings-reference-table="FebiItems" />
+			</div>
+		</div>
+	</div>
+</div>
+<tms-modal id="editItem" title="Edit" save-button="false" modal-size="@ModalSize.Default" />
+
+
+@section Styles {
+	<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+	<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+	<script type="text/javascript">
+		function changeMainIcon() {
+				if ($("#itemsCollapse").hasClass("show")) {
+					$("#showContext").removeClass("fa-expand").addClass("fa-compress");
+				} else {
+					$("#showContext").removeClass("fa-compress").addClass("fa-expand");
+				}
+		}
+		function changeSecondIcon() {
+			if ($("#searchContext").hasClass("show")) {
+				$("#showSearch").removeClass("fa-angle-down").addClass("fa-angle-up");
+			}
+			else
+			{
+				$("#showSearch").removeClass("fa-angle-up").addClass("fa-angle-down");
+			}
+		}
+
+		function searchItems() {
+			var filterCriteria = {
+				keyword: $("#iSearchKeyword").val(),
+			};
+
+			localStorage.setItem('filterCriteria', JSON.stringify(filterCriteria));
+
+			$.ajax({
+				url: "@Url.RouteUrl(RouteNames.FebiItems_Search)",
+				method: "POST",
+				data: filterCriteria,
+				success: function (response) {
+					// response.forEach(function(item) {
+					// 	if (item.photo && item.photo !== '') {
+					// 		item.photo = '<img src="' + item.photo + '" alt="Photo" style="width: 50px; height: 50px;"/>';
+					// 	} else {
+					// 		item.photo = '';
+					// 	}
+					// });
+
+					loadJson("tableItems", response, @localizedPagination);
+
+					// Select the row logic
+					var selectedRowId = localStorage.getItem("#itemId");
+					if (selectedRowId) {
+						$("#tableItems tr").each(function () {
+							if ($(this).data("id") == selectedRowId) {
+								$(this).addClass("selected");
+							} else {
+								$(this).removeClass("selected");
+							}
+						});
+					} else {
+						$("#tableItems tr").removeClass("selected");
+					}	
+				}
+			});
+		}
+		function applyFilters() {
+			var filterCriteria = JSON.parse(localStorage.getItem('filterCriteria'));
+			if (filterCriteria) {
+				$("#iSearchKeyword").val(filterCriteria.keyword);
+				searchEmployees();
+			}
+			var selectedRowId = localStorage.getItem("#itemId");
+			if (selectedRowId) {
+				// Koristite setTimeout kako biste osigurali da se tabela prvo učita
+				setTimeout(function () {
+					$("#tableItems tr").each(function () {
+						if ($(this).data("id") == selectedRowId) {
+							$(this).addClass("selected");
+						}
+					});
+				}, 100);
+			}
+		}
+
+		function resetFilters() {
+			// Resetovanje vrednosti filtera
+			$("#iSearchKeyword").val('');
+
+			// Uklanjanje filtera iz localStorage
+			localStorage.removeItem('filterCriteria');
+
+			// Ponovno učitavanje tabele bez filtera
+			searchEmployees();
+		}
+
+		function saveSelectedRow(rowId) {
+			localStorage.setItem("#itemId", rowId);
+		}
+
+		$("#tableItems").on("click", "tr", function () {
+			var selectedRowId = $(this).data("id"); // Pretpostavljam da red ima `data-id` atribut sa ID-om reda
+			saveSelectedRow(selectedRowId);
+			// Ostatak logike za selektovanje reda, kao što je dodavanje klase za označavanje
+			$("#tableItems tr").removeClass("selected");
+			$(this).addClass("selected");
+		});
+
+		$(document).ready(function () {
+			changeMainIcon();
+			changeSecondIcon();
+
+
+			$("#tableItems tr.selected").removeClass("selected");
+
+			$("#itemEdit").click(function () {
+				var selectedId = getSelectedItemId("tableItems");
+				document.location = '@Url.RouteUrl(RouteNames.FebiItems_Edit, new { id = "111" })'.replace("111", selectedId);
+			});
+			$("#itemView").click(function () {
+				var selectedId = getSelectedItemId("tableItems");
+				document.location = '@Url.RouteUrl(RouteNames.FebiItems_View, new { id = "111" })'.replace("111", selectedId);
+			});
+
+			$("#tableItems").on("dblclick", "tbody tr", function () {
+				var selectedId = $(this).data("id");
+				document.location = '@Url.RouteUrl(RouteNames.FebiItems_View, new { id = "111" })'.replace("111", selectedId);
+			});
+
+			$("#itemDelete").click(function () {
+				Swal.fire({
+					title: '@localizer["DeleteQuestion"]',
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonText: '@localizer["DeleteConfirmation"]'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						var selectedId = getSelectedItemId("tableItems");
+						$.ajax({
+							url: '@urlDelete'.replace("111", selectedId),
+							method: "POST",
+							data: {
+								jobTypeId: jobTypeId,
+							},
+						   success: function (response) {
+							handleActionResponseMessage(response, function () {
+								location = response.message;
+							}, '@localizer["Error"]', '@localizer["DeletedMsg"]');
+						}
+						});
+					}
+				})
+			});
+
+			$("#buttonSearchItems").click(searchItems);
+			$("#iSearchKeyword").on('keypress', function (e) {
+				if (e.which === 13) {
+					searchItems();
+				}
+			});
+
+			$("#buttonResetSearchItems").click(function () {
+				$("#iSearchKeyword").val(null);
+				searchItems();
+			});
+
+			$("#itemExportExcel").click(function () {
+				exportToExcel("tableItems", "FebiItems.xlsx");
+			});
+
+			$('#itemsCollapse').on('show.bs.collapse', function () {
+				$("#showContext").removeClass("fa-expand").addClass("fa-compress");
+			});
+
+			$('#itemsCollapse').on('hide.bs.collapse', function () {
+				$("#showContext").removeClass("fa-compress").addClass("fa-expand");
+			});
+
+			$('#searchContext').on('show.bs.collapse', function (e) {
+				e.stopPropagation();
+				$("#showSearch").removeClass("fa-angle-down").addClass("fa-angle-up");
+			});
+
+			$('#searchContext').on('hide.bs.collapse', function (e) {
+				e.stopPropagation();
+				$("#showSearch").removeClass("fa-angle-up").addClass("fa-angle-down");
+			});
+
+			searchItems();
+		});
+	</script>
+}

@@ -1,0 +1,167 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <AssemblyVersion></AssemblyVersion>
+    <FileVersion></FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\ViewModels\AccountingPeriods\**" />
+    <Compile Remove="Models\ViewModels\Costs\**" />
+    <Compile Remove="Models\ViewModels\Deductions\**" />
+    <Compile Remove="Models\ViewModels\EscrowDeposits\**" />
+    <Compile Remove="Models\ViewModels\FebiItems\**" />
+    <Compile Remove="Models\ViewModels\Fuels\**" />
+    <Compile Remove="Models\ViewModels\Loans\**" />
+    <Compile Remove="Models\ViewModels\OrderHeaderArchives\**" />
+    <Compile Remove="Models\ViewModels\OrderHeaders\**" />
+    <Compile Remove="Models\ViewModels\OrderLineArchives\**" />
+    <Compile Remove="Models\ViewModels\OrderLines\**" />
+    <Compile Remove="Models\ViewModels\Printers\**" />
+    <Compile Remove="Models\ViewModels\Reports\**" />
+    <Compile Remove="Models\ViewModels\ScannedLines\**" />
+    <Compile Remove="Models\ViewModels\Statements\**" />
+    <Compile Remove="obj\Release\**" />
+    <Compile Remove="Views\FebiItems\**" />
+    <Compile Remove="Views\OrderHeaderArchives\**" />
+    <Compile Remove="Views\OrderHeaders\**" />
+    <Compile Remove="Views\OrderLineArchives\**" />
+    <Compile Remove="Views\OrderLines\**" />
+    <Compile Remove="Views\Periods\**" />
+    <Compile Remove="Views\Printers\**" />
+    <Compile Remove="Views\ScannedLines\**" />
+    <Compile Remove="wwwroot\js\microsoft\**" />
+    <Content Remove="Models\ViewModels\AccountingPeriods\**" />
+    <Content Remove="Models\ViewModels\Costs\**" />
+    <Content Remove="Models\ViewModels\Deductions\**" />
+    <Content Remove="Models\ViewModels\EscrowDeposits\**" />
+    <Content Remove="Models\ViewModels\FebiItems\**" />
+    <Content Remove="Models\ViewModels\Fuels\**" />
+    <Content Remove="Models\ViewModels\Loans\**" />
+    <Content Remove="Models\ViewModels\OrderHeaderArchives\**" />
+    <Content Remove="Models\ViewModels\OrderHeaders\**" />
+    <Content Remove="Models\ViewModels\OrderLineArchives\**" />
+    <Content Remove="Models\ViewModels\OrderLines\**" />
+    <Content Remove="Models\ViewModels\Printers\**" />
+    <Content Remove="Models\ViewModels\Reports\**" />
+    <Content Remove="Models\ViewModels\ScannedLines\**" />
+    <Content Remove="Models\ViewModels\Statements\**" />
+    <Content Remove="obj\Release\**" />
+    <Content Remove="Views\FebiItems\**" />
+    <Content Remove="Views\OrderHeaderArchives\**" />
+    <Content Remove="Views\OrderHeaders\**" />
+    <Content Remove="Views\OrderLineArchives\**" />
+    <Content Remove="Views\OrderLines\**" />
+    <Content Remove="Views\Periods\**" />
+    <Content Remove="Views\Printers\**" />
+    <Content Remove="Views\ScannedLines\**" />
+    <Content Remove="wwwroot\js\microsoft\**" />
+    <EmbeddedResource Remove="Models\ViewModels\AccountingPeriods\**" />
+    <EmbeddedResource Remove="Models\ViewModels\Costs\**" />
+    <EmbeddedResource Remove="Models\ViewModels\Deductions\**" />
+    <EmbeddedResource Remove="Models\ViewModels\EscrowDeposits\**" />
+    <EmbeddedResource Remove="Models\ViewModels\FebiItems\**" />
+    <EmbeddedResource Remove="Models\ViewModels\Fuels\**" />
+    <EmbeddedResource Remove="Models\ViewModels\Loans\**" />
+    <EmbeddedResource Remove="Models\ViewModels\OrderHeaderArchives\**" />
+    <EmbeddedResource Remove="Models\ViewModels\OrderHeaders\**" />
+    <EmbeddedResource Remove="Models\ViewModels\OrderLineArchives\**" />
+    <EmbeddedResource Remove="Models\ViewModels\OrderLines\**" />
+    <EmbeddedResource Remove="Models\ViewModels\Printers\**" />
+    <EmbeddedResource Remove="Models\ViewModels\Reports\**" />
+    <EmbeddedResource Remove="Models\ViewModels\ScannedLines\**" />
+    <EmbeddedResource Remove="Models\ViewModels\Statements\**" />
+    <EmbeddedResource Remove="obj\Release\**" />
+    <EmbeddedResource Remove="Views\FebiItems\**" />
+    <EmbeddedResource Remove="Views\OrderHeaderArchives\**" />
+    <EmbeddedResource Remove="Views\OrderHeaders\**" />
+    <EmbeddedResource Remove="Views\OrderLineArchives\**" />
+    <EmbeddedResource Remove="Views\OrderLines\**" />
+    <EmbeddedResource Remove="Views\Periods\**" />
+    <EmbeddedResource Remove="Views\Printers\**" />
+    <EmbeddedResource Remove="Views\ScannedLines\**" />
+    <EmbeddedResource Remove="wwwroot\js\microsoft\**" />
+    <None Remove="Models\ViewModels\AccountingPeriods\**" />
+    <None Remove="Models\ViewModels\Costs\**" />
+    <None Remove="Models\ViewModels\Deductions\**" />
+    <None Remove="Models\ViewModels\EscrowDeposits\**" />
+    <None Remove="Models\ViewModels\FebiItems\**" />
+    <None Remove="Models\ViewModels\Fuels\**" />
+    <None Remove="Models\ViewModels\Loans\**" />
+    <None Remove="Models\ViewModels\OrderHeaderArchives\**" />
+    <None Remove="Models\ViewModels\OrderHeaders\**" />
+    <None Remove="Models\ViewModels\OrderLineArchives\**" />
+    <None Remove="Models\ViewModels\OrderLines\**" />
+    <None Remove="Models\ViewModels\Printers\**" />
+    <None Remove="Models\ViewModels\Reports\**" />
+    <None Remove="Models\ViewModels\ScannedLines\**" />
+    <None Remove="Models\ViewModels\Statements\**" />
+    <None Remove="obj\Release\**" />
+    <None Remove="Views\FebiItems\**" />
+    <None Remove="Views\OrderHeaderArchives\**" />
+    <None Remove="Views\OrderHeaders\**" />
+    <None Remove="Views\OrderLineArchives\**" />
+    <None Remove="Views\OrderLines\**" />
+    <None Remove="Views\Periods\**" />
+    <None Remove="Views\Printers\**" />
+    <None Remove="Views\ScannedLines\**" />
+    <None Remove="wwwroot\js\microsoft\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\FebiItemsController.cs" />
+    <Compile Remove="Controllers\OrderHeaderArchivesController.cs" />
+    <Compile Remove="Controllers\OrderHeadersController.cs" />
+    <Compile Remove="Controllers\OrderLineArchivesController.cs" />
+    <Compile Remove="Controllers\OrderLinesController.cs" />
+    <Compile Remove="Controllers\PeriodsController.cs" />
+    <Compile Remove="Controllers\PrintersController.cs" />
+    <Compile Remove="Controllers\ScannedLinesController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IDAProject.Web.Admin.Ioc\IDAProject.Web.Admin.Ioc.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="obj\" />
+    <Folder Include="wwwroot\js\pages\" />
+    <Folder Include="wwwroot\lib\pekeUpload\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
+    <PackageReference Include="NPOI" Version="2.6.2" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Addresses\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Addresses\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\images\bannerLeft\qwp-3god-web-baner-desni.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\images\bannerRight\qwp-3god-web-baner-levi.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\images\fullPageAd\Slajder-QWP-reklama.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\images\wintlogo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties libman_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+</Project>

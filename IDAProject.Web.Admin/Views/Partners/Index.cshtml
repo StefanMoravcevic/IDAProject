@@ -1,0 +1,122 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Partners.PartnersViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using System.ComponentModel;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+@{
+    var partnerType = PartnerTypes.GetDescription(Model.PartnerCategoryId);
+    if (string.IsNullOrEmpty(partnerType))
+    {
+        Model.PartnerCategoryId = 9999;
+        partnerType = PartnerTypes.GetDescription(Model.PartnerCategoryId);
+    };
+
+
+    ViewData["Title"] = $"Partners - {partnerType}";
+
+    var urlDeletePartner = Url.RouteUrl(RouteNames.Partners_Delete, new { id = 111 });
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <partial name="ContextOptionsPartial" model="@Model" />
+    </div>
+</div>
+<div class="row row-sm">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body" style="overflow-x:auto">
+                <tms-ajax-table id="tablePartners" view-model="@Model" table-settings-reference-table="Partners" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+    @section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+    <script type="text/javascript">
+
+        function searchPartners() {
+
+            $.ajax({
+                url: "@Url.RouteUrl(RouteNames.Partners_Search)",
+                method: "POST",
+                data: {
+                    blocked: $("#parSearchBlocked").val(),
+                    keyword: $("#parKeyword").val(),
+                    partnerCategoryId: $("#PartnerCategoryId").val(),
+                },
+                success: function (response) {
+                    loadJson("tablePartners", response);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $("#parEdit").click(function () {
+                var selectedId = getSelectedItemId("tablePartners");
+                document.location = '@Url.RouteUrl(RouteNames.Partners_Edit, new { id = "111" })'.replace("111", selectedId);
+            });
+            $("#parView").click(function () {
+                var selectedId = getSelectedItemId("tablePartners");
+                document.location = '@Url.RouteUrl(RouteNames.Partners_View, new { id = "111" })'.replace("111", selectedId);
+            });
+            $("#parDelete").click(function () {
+                Swal.fire({
+                    title: '@localizer["DeleteQuestion"]',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '@localizer["DeleteConfirmation"]'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var selectedId = getSelectedItemId("tablePartners");
+                        var partnerCategoryId = $("#PartnerCategoryId").val();
+                        $.ajax({
+                            url: '@urlDeletePartner'.replace("111", selectedId),
+                            method: "POST",
+                            success: function (response) {
+                                location = response.message + '?PartnerCategoryId=' + partnerCategoryId;
+                            }
+                        });
+                    }
+                })
+            });
+
+            $("#buttonResetSearchPartners").click(function () {
+                $("#parSearchBlocked").val(null);
+                $("#parKeyword").val(null);
+                var partnerCategoryId = $("#PartnerCategoryId").val();
+                $.ajax({
+                    url: "@Url.RouteUrl(RouteNames.Partners_Search)",
+                    method: "POST",
+                    data: {
+                        blocked: null,
+                        keyword: null,
+                        partnerCategoryId: partnerCategoryId,
+                    },
+                    success: function (response) {
+                        loadJson("tablePartners", response);
+                    }
+                });
+            });
+
+            $("#parExportExcel").click(function () {
+                exportToExcel("tablePartners", "Partners.xlsx");
+            });
+
+            $("#buttonSearchPartners").click(searchPartners);
+
+            searchPartners();
+        });
+    </script>
+}

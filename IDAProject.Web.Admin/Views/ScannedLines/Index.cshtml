@@ -1,0 +1,142 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.ScannedLines.ScannedLinesViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using NPOI.SS.Formula.Functions
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+@{
+	ViewData["Title"] = "Scanned lines history";
+	var localizedPagination = @Html.Raw(Json.Serialize(new PaginationLocalizerModel(localizer)));
+	var urlDelete = Url.RouteUrl(RouteNames.FebiItems_Delete, new { id = 111 });
+}
+<style>
+	#tableItems tbody tr {
+		cursor: pointer !important;
+	}
+</style>
+<div class="row">
+	<div class="col-lg-12 col-md-12">
+		<div class="card">
+			<div class="card-header border-bottom">
+				<h4 class="mb-0">@localizer["Scanned lines history"]</h4>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12 text-end">
+		<button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#scannedLinesCollapse" aria-expanded="true" aria-controls="scannedLinesCollapse" style="background-color:white;">
+			<i class="fa fa-expand" id="showContext" style="color:black;"></i>
+		</button>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<partial name="ContextOptionsPartial" model="@Model" />
+	</div>
+</div>
+<div class="row row-sm">
+	<div class="col-lg-12">
+		<div class="card">
+			<div class="card-body" style="overflow-x:auto">
+				<tms-ajax-table id="tableScannedLines" view-model="@Model" table-settings-reference-table="ScannedLines" />
+			</div>
+		</div>
+	</div>
+</div>
+<tms-modal id="editItem" title="Edit" save-button="false" modal-size="@ModalSize.Default" />
+
+
+@section Styles {
+	<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+	<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+	<script type="text/javascript">
+		function changeMainIcon() {
+				if ($("#scannedLinesCollapse").hasClass("show")) {
+					$("#showContext").removeClass("fa-expand").addClass("fa-compress");
+				} else {
+					$("#showContext").removeClass("fa-compress").addClass("fa-expand");
+				}
+		}
+		function changeSecondIcon() {
+			if ($("#searchContext").hasClass("show")) {
+				$("#showSearch").removeClass("fa-angle-down").addClass("fa-angle-up");
+			}
+			else
+			{
+				$("#showSearch").removeClass("fa-angle-up").addClass("fa-angle-down");
+			}
+		}
+
+		function searchScannedLines() {
+
+			$.ajax({
+			url: "@Url.RouteUrl(RouteNames.ScannedLine_Search)",
+				method: "POST",
+				data: {
+					keyword : $("#iSearchKeyword").val()
+				},
+				success: function (response) {
+					loadJson("tableScannedLines", response, @localizedPagination);
+
+					setTimeout(function() {
+						$('#tableScannedLines tbody tr').each(function() {
+							var $optionsCell = $(this).find('td:last');
+							$optionsCell.html('<button class="btn btn-sm btn-primary print-btn"><i class="fa fa-print"></i></button>');
+						});
+					}, 100);
+				}
+			});
+		}
+		const successSound = new Audio('/sounds/succes.mp3');
+		const errorSound = new Audio('/sounds/error.mp3');
+		$(document).ready(function () {
+			changeMainIcon();
+			changeSecondIcon();
+
+
+			$("#buttonSearchItems").click(searchScannedLines);
+			$("#iSearchKeyword").on('keypress', function (e) {
+				if (e.which === 13) {
+					searchScannedLines();
+				}
+			});
+
+			$("#buttonResetSearchItems").click(function () {
+				$("#iSearchKeyword").val(null);
+				searchScannedLines();
+			});
+
+			$(document).on('click', '.print-btn', function () {
+				var selectedId = getSelectedItemId("tableScannedLines");
+
+				$.ajax({
+					url: "@Url.RouteUrl(RouteNames.ScannedLine_Print)",
+					method: "GET",
+					data: { scannedLineId: selectedId },
+					success: function (response) {
+						if(response.valid)
+						{
+							successSound.play();
+						}
+						else 
+						{
+							errorSound.play();
+						}
+					}
+				});
+			});
+
+			searchScannedLines();
+		});
+	</script>
+}

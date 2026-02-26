@@ -1,0 +1,94 @@
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using DeclarationFactory.Web.Api.Models.Interfaces.Managers;
+using DeclarationFactory.Web.Api.Models.Interfaces.Repositories;
+using DeclarationFactory.Web.Models.Dto.<<EntityName>>;
+using DeclarationFactory.Web.Models.General;
+using DeclarationFactory.Web.Models.RequestModels.<<EntityName>>;
+
+namespace DeclarationFactory.Web.Api.Managers
+{
+    public class <<EntityName>>Manager : I<<EntityName>>Manager
+    {
+        private readonly I<<EntityName>>Repository _<<EntityName>>Repository;
+        private readonly ILogger _logger;
+
+        public <<EntityName>>Manager(ILogger<<<EntityName>>Manager> logger, I<<EntityName>>Repository <<EntityName>>Repository)
+        {
+            _logger = logger;
+            _<<EntityName>>Repository = <<EntityName>>Repository;
+        }
+        public async Task<ResponseModelList<<<EntityNameSingular>>Dto>> Search<<EntityName>>Async(Search<<EntityName>>Params searchParams)
+        {
+            var result = new ResponseModelList<<<EntityNameSingular>>Dto>();
+            try
+            {
+                result.Payload = await _<<EntityName>>Repository.Search<<EntityName>>Async(searchParams);
+                result.Valid = true;
+            }   
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                var reqModel = JsonConvert.SerializeObject(searchParams);
+                _logger.LogError(e,$"request model: {reqModel}");
+            }
+            return result;
+        }
+
+        public async Task<ResponseModel<<<EntityNameSingular>>Dto>> Get<<EntityNameSingular>>ByIdAsync(int id)
+        {
+            var result = new ResponseModel<<<EntityNameSingular>>Dto>();
+            try
+            {
+                result.Payload = await _<<EntityName>>Repository.Get<<EntityNameSingular>>ByIdAsync(id);
+                if (result.Payload == null)
+                {
+                    result.Message = "The <<EntityNameSingular>>  with the specified id could not be found.";
+                }
+                else
+                {
+                    result.Valid = true;
+                }
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                _logger.LogError(e, $"id: {id}");
+            }
+            return result;
+        }
+
+        public async Task<ResponseModelBase> Delete<<EntityNameSingular>>Async(int id, int? userId)
+        {
+            var result = new ResponseModelBase();
+            try
+            {
+                await _<<EntityName>>Repository.Delete<<EntityNameSingular>>Async(id, userId);
+                result.Valid = true;
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                _logger.LogError(e, $"id: {id}");
+            }
+            return result;
+        }
+
+        public async Task<ResponseModel<int>> Save<<EntityNameSingular>>Async(Save<<EntityNameSingular>>RequestModel requestModel)
+        {
+            var result = new ResponseModel<int>();
+            try
+            {
+                result.Payload = await _<<EntityName>>Repository.Save<<EntityNameSingular>>Async(requestModel);
+                result.Valid = true;
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                var reqModel = JsonConvert.SerializeObject(requestModel);
+                _logger.LogError(e, $"request model: {reqModel}");
+            }
+            return result;
+        }
+    }
+}

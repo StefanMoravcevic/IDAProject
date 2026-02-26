@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="FebiItemsManager.cs" />
+    <Compile Remove="OrderHeaderArchivesManager.cs" />
+    <Compile Remove="OrderHeadersManager.cs" />
+    <Compile Remove="OrderLineArchivesManager.cs" />
+    <Compile Remove="OrderLinesManager.cs" />
+    <Compile Remove="PeriodsManager.cs" />
+    <Compile Remove="PrintersManager.cs" />
+    <Compile Remove="ScannedLinesManager.cs" />
+    <Compile Remove="UhuraAuthService.cs" />
+    <Compile Remove="UhuraMasterDataService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Embeded\GenericEmailTemplate.htm" />
+    <None Remove="Embeded\TableRowTemplate.htm" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Embeded\TableRowTemplate.htm" />
+    <EmbeddedResource Include="Embeded\GenericEmailTemplate.htm" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="7.0.6" />
+    <PackageReference Include="FirebaseAdmin" Version="2.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NPOI" Version="2.6.2" />
+    <PackageReference Include="System.DirectoryServices.Protocols" Version="8.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IDAProject.Web.Api.Repositories\IDAProject.Web.Api.Repositories.csproj" />
+    <ProjectReference Include="..\IDAProject.Web.Helpers\IDAProject.Web.Helpers.csproj" />
+    <ProjectReference Include="..\IDAProject.Web.Models\IDAProject.Web.Models.csproj" />
+    <ProjectReference Include="..\IDAProject.Web.Word\IDAProject.Web.Word.csproj" />
+  </ItemGroup>
+
+</Project>
+

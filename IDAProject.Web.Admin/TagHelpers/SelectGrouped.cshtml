@@ -1,0 +1,37 @@
+﻿@using IDAProject.Web.Admin.Models.TagHelpers
+@using IDAProject.Web.Models.Interfaces.Html
+@model SelectGroupedViewModel
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+<div class="form-group">
+    <label class="form-label text-muted" for="@Model.Id">@Model.Label</label>
+    <select class="form-control form-select text-dark" id="@Model.Id" name="@Model.Name">
+        @if (!string.IsNullOrEmpty(Model.EmptyOptionText))
+        {
+            if (Model.SelectedValue == null)
+            {
+                <option value="@Model.EmptyOptionValue">@Model.EmptyOptionText</option>
+            }
+            else
+            {
+                <option selected="selected">@Model.EmptyOptionText</option>
+            }
+        }
+        @foreach (var group in Model.Options)
+        {
+            <optgroup label="@group.Name">
+                @foreach (var option in group.Options)
+                {
+                    if (option.Value == Model.SelectedValue)
+                    {
+                        <option value="@option.Value" selected="selected">@option.Description</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Value">@option.Description</option>
+                    }
+                }
+            </optgroup>
+        }
+    </select>
+</div>

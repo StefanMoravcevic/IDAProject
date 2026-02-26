@@ -1,0 +1,128 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Auth\ResponseModels\**" />
+    <Compile Remove="Dto\AccountingPeriods\**" />
+    <Compile Remove="Dto\Costs\**" />
+    <Compile Remove="Dto\Deductions\**" />
+    <Compile Remove="Dto\EscrowDeposits\**" />
+    <Compile Remove="Dto\FebiItems\**" />
+    <Compile Remove="Dto\Fuels\**" />
+    <Compile Remove="Dto\Incomes\**" />
+    <Compile Remove="Dto\Invoices\**" />
+    <Compile Remove="Dto\Loans\**" />
+    <Compile Remove="Dto\OrderHeaderArchives\**" />
+    <Compile Remove="Dto\OrderHeaders\**" />
+    <Compile Remove="Dto\OrderLineArchives\**" />
+    <Compile Remove="Dto\OrderLines\**" />
+    <Compile Remove="Dto\PackagesStatus\**" />
+    <Compile Remove="Dto\PackagingOrders\**" />
+    <Compile Remove="Dto\Printers\**" />
+    <Compile Remove="Dto\ScannedLines\**" />
+    <Compile Remove="Dto\ShippingStatus\**" />
+    <Compile Remove="Dto\Statements\**" />
+    <Compile Remove="Dto\Tours\**" />
+    <Compile Remove="RequestModels\Credits\**" />
+    <Compile Remove="RequestModels\Deductions\**" />
+    <Compile Remove="RequestModels\EscrowDeposits\**" />
+    <Compile Remove="RequestModels\Fuels\**" />
+    <Compile Remove="RequestModels\Invoices\**" />
+    <Compile Remove="RequestModels\Loans\**" />
+    <Compile Remove="RequestModels\OrderHeaderArchives\**" />
+    <Compile Remove="RequestModels\OrderHeaders\**" />
+    <Compile Remove="RequestModels\OrderLineArchives\**" />
+    <Compile Remove="RequestModels\OrderLines\**" />
+    <Compile Remove="RequestModels\PackagesStatus\**" />
+    <Compile Remove="RequestModels\ScannedLines\**" />
+    <Compile Remove="RequestModels\Statements\**" />
+    <Compile Remove="RequestModels\Tolls\**" />
+    <Compile Remove="RequestModels\Vehicles\**" />
+    <EmbeddedResource Remove="Auth\ResponseModels\**" />
+    <EmbeddedResource Remove="Dto\AccountingPeriods\**" />
+    <EmbeddedResource Remove="Dto\Costs\**" />
+    <EmbeddedResource Remove="Dto\Deductions\**" />
+    <EmbeddedResource Remove="Dto\EscrowDeposits\**" />
+    <EmbeddedResource Remove="Dto\FebiItems\**" />
+    <EmbeddedResource Remove="Dto\Fuels\**" />
+    <EmbeddedResource Remove="Dto\Incomes\**" />
+    <EmbeddedResource Remove="Dto\Invoices\**" />
+    <EmbeddedResource Remove="Dto\Loans\**" />
+    <EmbeddedResource Remove="Dto\OrderHeaderArchives\**" />
+    <EmbeddedResource Remove="Dto\OrderHeaders\**" />
+    <EmbeddedResource Remove="Dto\OrderLineArchives\**" />
+    <EmbeddedResource Remove="Dto\OrderLines\**" />
+    <EmbeddedResource Remove="Dto\PackagesStatus\**" />
+    <EmbeddedResource Remove="Dto\PackagingOrders\**" />
+    <EmbeddedResource Remove="Dto\Printers\**" />
+    <EmbeddedResource Remove="Dto\ScannedLines\**" />
+    <EmbeddedResource Remove="Dto\ShippingStatus\**" />
+    <EmbeddedResource Remove="Dto\Statements\**" />
+    <EmbeddedResource Remove="Dto\Tours\**" />
+    <EmbeddedResource Remove="RequestModels\Credits\**" />
+    <EmbeddedResource Remove="RequestModels\Deductions\**" />
+    <EmbeddedResource Remove="RequestModels\EscrowDeposits\**" />
+    <EmbeddedResource Remove="RequestModels\Fuels\**" />
+    <EmbeddedResource Remove="RequestModels\Invoices\**" />
+    <EmbeddedResource Remove="RequestModels\Loans\**" />
+    <EmbeddedResource Remove="RequestModels\OrderHeaderArchives\**" />
+    <EmbeddedResource Remove="RequestModels\OrderHeaders\**" />
+    <EmbeddedResource Remove="RequestModels\OrderLineArchives\**" />
+    <EmbeddedResource Remove="RequestModels\OrderLines\**" />
+    <EmbeddedResource Remove="RequestModels\PackagesStatus\**" />
+    <EmbeddedResource Remove="RequestModels\ScannedLines\**" />
+    <EmbeddedResource Remove="RequestModels\Statements\**" />
+    <EmbeddedResource Remove="RequestModels\Tolls\**" />
+    <EmbeddedResource Remove="RequestModels\Vehicles\**" />
+    <None Remove="Auth\ResponseModels\**" />
+    <None Remove="Dto\AccountingPeriods\**" />
+    <None Remove="Dto\Costs\**" />
+    <None Remove="Dto\Deductions\**" />
+    <None Remove="Dto\EscrowDeposits\**" />
+    <None Remove="Dto\FebiItems\**" />
+    <None Remove="Dto\Fuels\**" />
+    <None Remove="Dto\Incomes\**" />
+    <None Remove="Dto\Invoices\**" />
+    <None Remove="Dto\Loans\**" />
+    <None Remove="Dto\OrderHeaderArchives\**" />
+    <None Remove="Dto\OrderHeaders\**" />
+    <None Remove="Dto\OrderLineArchives\**" />
+    <None Remove="Dto\OrderLines\**" />
+    <None Remove="Dto\PackagesStatus\**" />
+    <None Remove="Dto\PackagingOrders\**" />
+    <None Remove="Dto\Printers\**" />
+    <None Remove="Dto\ScannedLines\**" />
+    <None Remove="Dto\ShippingStatus\**" />
+    <None Remove="Dto\Statements\**" />
+    <None Remove="Dto\Tours\**" />
+    <None Remove="RequestModels\Credits\**" />
+    <None Remove="RequestModels\Deductions\**" />
+    <None Remove="RequestModels\EscrowDeposits\**" />
+    <None Remove="RequestModels\Fuels\**" />
+    <None Remove="RequestModels\Invoices\**" />
+    <None Remove="RequestModels\Loans\**" />
+    <None Remove="RequestModels\OrderHeaderArchives\**" />
+    <None Remove="RequestModels\OrderHeaders\**" />
+    <None Remove="RequestModels\OrderLineArchives\**" />
+    <None Remove="RequestModels\OrderLines\**" />
+    <None Remove="RequestModels\PackagesStatus\**" />
+    <None Remove="RequestModels\ScannedLines\**" />
+    <None Remove="RequestModels\Statements\**" />
+    <None Remove="RequestModels\Tolls\**" />
+    <None Remove="RequestModels\Vehicles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Dto\Companies\PartnerDto.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IDAProject.Web.Helpers\IDAProject.Web.Helpers.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,34 @@
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+#Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
+#For more information, please see https://aka.ms/containercompat
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["DeclarationFactory.Web.Api/DeclarationFactory.Web.Api.csproj", "DeclarationFactory.Web.Api/"]
+COPY ["DeclarationFactory.Web.Api.Ioc/DeclarationFactory.Web.Api.Ioc.csproj", "DeclarationFactory.Web.Api.Ioc/"]
+COPY ["DeclarationFactory.Web.Api.Managers/DeclarationFactory.Web.Api.Managers.csproj", "DeclarationFactory.Web.Api.Managers/"]
+COPY ["DeclarationFactory.Web.Api.Repositories/DeclarationFactory.Web.Api.Repositories.csproj", "DeclarationFactory.Web.Api.Repositories/"]
+COPY ["DeclarationFactory.Web.Api.Models/DeclarationFactory.Web.Api.Models.csproj", "DeclarationFactory.Web.Api.Models/"]
+COPY ["DeclarationFactory.Web.Db/DeclarationFactory.Web.Db.csproj", "DeclarationFactory.Web.Db/"]
+COPY ["DeclarationFactory.Web.Models/DeclarationFactory.Web.Models.csproj", "DeclarationFactory.Web.Models/"]
+COPY ["DeclarationFactory.Web.Helpers/DeclarationFactory.Web.Helpers.csproj", "DeclarationFactory.Web.Helpers/"]
+COPY ["DeclarationFactory.Web.Api.Reports/DeclarationFactory.Web.Api.Reports.csproj", "DeclarationFactory.Web.Api.Reports/"]
+RUN dotnet restore "DeclarationFactory.Web.Api/DeclarationFactory.Web.Api.csproj"
+COPY . .
+WORKDIR "/src/DeclarationFactory.Web.Api"
+RUN dotnet build "DeclarationFactory.Web.Api.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "DeclarationFactory.Web.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+ENV ASPNETCORE_URLS=http://0.0.0.0:5169/
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "DeclarationFactory.Web.Api.dll"]

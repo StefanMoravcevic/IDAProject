@@ -1,0 +1,189 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Employees.EmployeesViewModel;
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+
+<div class="card">
+	<div class="card-body">
+		<div class="panel panel-primary collapse show" id="employeeCollapse">
+			<div class="tab-menu-heading border-bottom-0">
+				<div class="tabs-menu4 border-bottomo-sm">
+					<nav class="nav d-sm-flex">
+						<a class="nav-link border border-bottom-0 br-sm-5 me-2 active" data-bs-toggle="tab" href="#tab25"> @localizer["General"] </a>
+						<a class="nav-link border border-bottom-lg-0 br-sm-5 me-2" data-bs-toggle="tab" href="#tab28"> @localizer["Personal data"] </a>
+@* 						<a class="nav-link border border-bottom-lg-0 br-sm-5 me-2" data-bs-toggle="tab" href="#tab29"> @localizer["Personal Documents"] </a> *@
+					</nav>
+				</div>
+			</div>
+			<div class="panel-body tabs-menu-body">
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab25">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="context-panel">
+									<div class="card-body tab-option-container" style="overflow-x:auto">
+										<a href="@Url.RouteUrl(RouteNames.Employees_New)">
+											<i class="fa fa-plus" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+											<div>@localizer["AddNew"]</div>
+										</a>
+										<button id="empEdit">
+											<i class="fa fa-pencil-square-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+											<div>@localizer["Edit"]</div>
+										</button>
+										<button id="empView">
+											<i class="fa fa-eye" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+											<div>@localizer["View"]</div>
+										</button>
+										<button id="empDelete">
+											<i class="fa fa-trash-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+											<div>@localizer["Delete"]</div>
+										</button>
+										@* <button id="empAddresses">
+											<i class="fa fa-address-book" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+											<div>@localizer["Addresses"]</div>
+										</button> *@
+
+										@*                                        <button id="empLicenses">
+										<i class="fa fa-id-card-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+										<div>Licenses</div>
+										</button>
+										<button id="empCertificates">
+										<i class="fa fa-certificate" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+										<div>Certificates</div>
+										</button>
+										*@ 
+										<button id="empDocuments">
+											<i class="fa fa-folder-open-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+											<div>@localizer["Documents"]</div>
+										</button>
+										@* 										<button id="empPrintTest">
+											<i class="fa fa-file-pdf-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+											<div>@localizer["Print test"]</div>
+										</button> *@
+										@*                                        @if (Model.JobTypeId == JobTypes.Company_driver || Model.JobTypeId == JobTypes.External_driver)
+										{
+										<button id="empDispatchers">
+										<i class="fa fa-headphones" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+										<div>Dispatcher</div>
+										</button>
+										<button id="empComHistory">
+										<i class="fa fa-envelope-open-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+										<div>Communication history</div>
+										</button>
+										<button id="empDriverCard">
+										<i class="fa fa-file-pdf-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+										<div>Print driver card</div>
+										</button>
+										}
+										@if (Model.JobTypeId == JobTypes.Dispatcher)
+										{
+										<button id="empDrivers">
+										<i class="fa fa-headphones" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+										<div>Drivers</div>
+										</button>
+										<button id="empComHistory">
+										<i class="fa fa-envelope-open-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+										<div>Communication history</div>
+										</button>
+										}
+										*@@* <button id="empExportExcel">
+											<i class="fa fa-file-excel-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+											<div>@localizer["ExportToExcel"]</div>
+										</button> *@
+										@*                                        <button id="empMessages">
+										<i class="fa fa-commenting-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+										<div>Messages</div>
+										</button>*@
+										@* <button id="buRequestList">
+											<i class="fa fa-eye" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+											<div>@localizer["Request approval list"]</div>
+										</button> *@
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="tab28">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="context-panel">
+									<div class="card-body tab-option-container">
+										<button id="empAddresses">
+											<i class="fa  fa-address-card" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+											<div>@localizer["Addresses"]</div>
+										</button>
+										@* <button id="empFamilyMembers">
+											<i class="fa fa-users" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+											<div>@localizer["Family members"]</div>
+										</button> *@
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					@* <div class="tab-pane" id="tab29">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="context-panel">
+									<div class="card-body tab-option-container">
+										<button id="empIdentityCards">
+											<i class="fa fa-id-card-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+											<div>@localizer["Identity cards"]</div>
+										</button>
+										<button id="empPassports">
+											<i class="fa fa-book" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+											<div>@localizer["Passports"]</div>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div> *@
+				</div>
+			</div>
+			<div class="row search-params-wrapper">
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-12 text-start pb-2">
+							<button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#searchContext" aria-expanded="true" aria-controls="searchContext" style="background-color:white;">
+								<i class="fa fa-angle-down" id="showSearch" style="color:black;"></i>
+							</button>
+						</div>
+					</div>
+					<div class="collapse show" id="searchContext">
+						<div class="col-md-12">
+							<div class="d-flex">
+								<div class="col-sm-6 col-md-6 col-lg-3" id="selectBUC">
+									<tms-input type="Text" name="Keyword" id="empSearchKeyword" label="@localizer["Keyword"]" @* placeholder="@localizer["Employee name, middlename, surname"]" *@ />
+									<tms-input type="Hidden" name="JobTypeId" id="JobTypeId" value="@Model.JobTypeId" />
+								</div>
+								@* <div class="col-sm-6 col-md-4 col-lg-2" id="selectBUC">
+									<div class="form-group">
+										<label class="form-label text-muted" for="empSearchBlocked">@localizer["Blocked"]:</label>
+										<select class="form-control form-select text-dark" id="empSearchBlocked" name="Blocked">
+											<option value="" selected="selected">@localizer["All"]</option>
+											<option value="false">@localizer["ActivePlural"]</option>
+											<option value="true">@localizer["BlockedPlural"]</option>
+										</select>
+									</div>
+								</div> *@
+							</div>
+							<div class="btn-list text-end search-button-wrapper">
+								<div class="form-group">
+									<button class="btn btn-primary" id="buttonSearchEmployees">@localizer["Search"]</button>
+									<button class="btn btn-primary" id="buttonResetSearchEmployees">@localizer["ResetSearch"]</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,225 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.GeneralSettings.GeneralSettingViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using System.ComponentModel;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+@{
+    ViewData["Title"] = "Application settings";
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="panel panel-primary">
+            <div class="row">
+                <div class="col-lg-12 col-md-12" id="settingsDataContainer">
+                    <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">Measure units</h4>
+                            <tms-input type="Hidden" name="Id" id="gsId" value="@Model.GeneralSetting.Id" />
+                        </div>
+                        <div class="card-body p-0 task-edit-main">
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-select name="MeasureVehicleLengthId" id="gsMeasureVehicleLengthId" options="@Model.MeasureUnits" selected-option="@Model.GeneralSetting.MeasureVehicleLength.Id" label="Vehicle length measure:" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-select name="MeasureVehicleWeightId" id="gsMeasureVehicleWeightId" options="@Model.MeasureUnits" selected-option="@Model.GeneralSetting.MeasureVehicleWeight.Id" label="Vehicle weight measure:" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-select name="MeasureTraveledWayId" id="gsMeasureTraveledWayId" options="@Model.MeasureUnits" selected-option="@Model.GeneralSetting.MeasureTraveledWay.Id" label="Travelled way measure:" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-select name="MeasureFuelId" id="gsMeasureFuelId" options="@Model.MeasureUnits" selected-option="@Model.GeneralSetting.MeasureFuel.Id" label="Fuel measure:" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+@*                     <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">Number and date formats</h4>
+                        </div>
+                        <div class="card-body p-0 task-edit-main">
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="DateFormat" required="true" id="gsDateFormat" value="@Model.GeneralSetting.DateFormat!" label="Date format:" placeholder="Enter format of date..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-input type="Text" name="DecimalPlaces" id="gsDecimalPlaces" value="@Model.GeneralSetting.DecimalPlaces!" label="Number of decimal places:" placeholder="Enter number of decimal places..." />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-3">
+                                    <tms-select name="CurrencyId" id="gsCurrencyId" options="@Model.Currencies" selected-option="@Model.GeneralSetting.Currency.Id" label="Currency:" />
+                                </div>
+                            </div>
+                        </div>
+                    </div> *@
+@*                     <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">Notifications</h4>
+                        </div>
+                        <div class="card-body p-0 task-edit-main">
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="CheckBox" name="DriverLicenseNotification" tag="rddl" id="DriverLicenseNotification" value="true" checked="@Model.GeneralSetting.ReminderDaysDriverLicense.HasValue" label="Driver license" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="CheckBox" name="VehicleLicenseNotification" tag="rdlp" id="VehicleLicenseNotification" value="true" checked="@Model.GeneralSetting.ReminderDaysLicensePlate.HasValue" label="Vehicle license" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="CheckBox" name="SafetyTestNotification" tag="rdst" id="SafetyTestNotification" value="true" checked="@Model.GeneralSetting.ReminderDaysSafetyTest.HasValue" label="Safety test" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="CheckBox" name="AnualDOTNotification" tag="rdadot" id="AnualDOTNotification" value="true" checked="@Model.GeneralSetting.ReminderDaysAdot.HasValue" label="DOT inspection" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="CheckBox" name="IFTANotification" tag="rdifta" id="IFTANotification" value="true" checked="@Model.GeneralSetting.ReminderDaysIfta.HasValue" label="IFTA" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="CheckBox" name="EmployeeCertificatesNotification" tag="rdec" id="EmployeeCertificatesNotification" value="true" checked="@Model.GeneralSetting.ReminderEmployeeCertificates.HasValue" label="Certificates" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="CheckBox" name="AdvanceCostsNotification" tag="rdac" id="AdvanceCostsNotification" value="true" checked="@Model.GeneralSetting.ReminderAdvanceCosts.HasValue" label="Advance costs" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="CheckBox" name="MaintenancePlanNotification" tag="rdmc" id="MaintenancePlanNotification" value="true" checked="@Model.GeneralSetting.ReminderMaintenancePlan.HasValue" label="Maintenance plan" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="CheckBox" name="MaintenanceMileageNotification" tag="rdmm" id="MaintenanceMileageNotification" value="true" checked="@Model.GeneralSetting.ReminderMaintenanceMileage.HasValue" label="Maintenance plan mileage" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="CheckBox" name="MaintenanceWorkingHoursNotification" tag="rdmwh" id="MaintenanceWorkingHoursNotification" value="true" checked="@Model.GeneralSetting.ReminderMaintenanceWorkingHours.HasValue" label="Maintenance plan working hours" />
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header border-bottom">
+                                    <h6 class="mb-0">Days prior to notify expiration</h6>
+                                </div>
+                                <div class="card-body p-0 task-edit-main">
+                                    <div class="row p-5 border-bottom">
+                                        <div class="col-sm-4 col-md-2 col-xl-2">
+                                            <tms-input type="Number" name="ReminderDaysDriverLicense" id="rddl" tag="#DriverLicenseNotification" value="@Model.GeneralSetting.ReminderDaysDriverLicense!" label="Driver license:" placeholder="Enter number of days..." />
+                                        </div>
+                                        <div class="col-sm-4 col-md-2 col-xl-2">
+                                            <tms-input type="Number" name="ReminderDaysLicensePlate" id="rdlp" tag="#VehicleLicenseNotification" value="@Model.GeneralSetting.ReminderDaysLicensePlate!" label="Vehicle registration:" placeholder="Enter number of days..." />
+                                        </div>
+                                        <div class="col-sm-4 col-md-2 col-xl-2">
+                                            <tms-input type="Number" name="ReminderDaysSafetyTest" id="rdst" tag="#SafetyTestNotification" value="@Model.GeneralSetting.ReminderDaysSafetyTest!" label="Safety test:" placeholder="Enter number of days..." />
+                                        </div>
+                                        <div class="col-sm-4 col-md-2 col-xl-2">
+                                            <tms-input type="Number" name="ReminderDaysAdot" id="rdadot" tag="#AnualDOTNotification" value="@Model.GeneralSetting.ReminderDaysAdot!" label="DOT inspection:" placeholder="Enter number of days..." />
+                                        </div>
+                                        <div class="col-sm-4 col-md-2 col-xl-2">
+                                            <tms-input type="Number" name="ReminderDaysIfta" id="rdifta" tag="#IFTANotification" value="@Model.GeneralSetting.ReminderDaysIfta!" label="IFTA:" placeholder="Enter number of days..." />
+                                        </div>
+                                        <div class="col-sm-4 col-md-2 col-xl-2">
+                                            <tms-input type="Number" name="ReminderEmployeeCertificates" id="rdec" tag="#EmployeeCertificatesNotification" value="@Model.GeneralSetting.ReminderEmployeeCertificates!" label="Certificates:" placeholder="Enter number of days..." />
+                                        </div>
+                                        <div class="col-sm-4 col-md-2 col-xl-2">
+                                            <tms-input type="Number" name="ReminderAdvanceCosts" id="rdac" tag="#AdvanceCostsNotification" value="@Model.GeneralSetting.ReminderAdvanceCosts!" label="Advance Costs:" placeholder="Enter number of days..." />
+                                        </div>
+                                        <div class="col-sm-4 col-md-2 col-xl-2">
+                                            <tms-input type="Number" name="ReminderMaintenancePlan" id="rdmc" tag="#MaintenancePlanNotification" value="@Model.GeneralSetting.ReminderMaintenancePlan!" label="Maintenance Plan:" placeholder="Enter number of days..." />
+                                        </div>
+                                        <div class="col-sm-4 col-md-2 col-xl-2">
+                                            <tms-input type="Number" name="ReminderMaintenanceMileage" id="rdmm" tag="#MaintenanceMileageNotification" value="@Model.GeneralSetting.ReminderMaintenanceMileage!" label="Maintenance Plan Mileage:" placeholder="Enter mileage..." />
+                                        </div>
+                                        <div class="col-sm-4 col-md-2 col-xl-2">
+                                            <tms-input type="Number" name="ReminderMaintenanceWorkingHours" id="rdmwh" tag="#MaintenanceWorkingHoursNotification" value="@Model.GeneralSetting.ReminderMaintenanceWorkingHours!" label="Maintenance Plan Working Hours:" placeholder="Enter number of hours..." />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+@*                    <div class="card">
+                        <div class="card-header border-bottom">
+                            <h4 class="mb-0">Visual appearance</h4>
+                        </div>
+                        <div class="card-body p-0 task-edit-main">
+                            <div class="row p-5 border-bottom">
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="CheckBox" name="VehicleGroupedView" id="VehicleGroupedView" value="true" checked="@Model.GeneralSetting.VehicleGroupedView" label="Vehicle grouped view" />
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-xl-2">
+                                    <tms-input type="CheckBox" name="EmployeeGroupedView" id="EmployeeGroupedView" value="true" checked="@Model.GeneralSetting.EmployeeGroupedView" label="Employee grouped view" />
+                                </div>
+                            </div>
+                        </div>
+                    </div> *@
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="row p-5">
+                    <div class="btn-list text-end">
+                        <button class="btn btn-outline-danger" id="buttonCancel">Cancel</button>
+                        <button class="btn btn-primary" id="buttonSave">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+    @section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+    <script type="text/javascript">
+
+        function onSaveSuccess(){}
+
+        $(document).ready(function () {
+
+            $("input[type='checkbox'][data-tag]").change(function () {
+                var isChecked = $(this).is(":checked");
+                var targetId = $(this).data("tag");
+                var $target = $("#"+targetId);
+
+                if(isChecked)
+                {
+                    $target.val("1");
+                }
+                else
+                {
+                    $target.val("");
+                }
+            });
+
+            $("input[type='number'][data-tag]").change(function () {
+
+                var $this = $(this);
+                var val = $this.val();
+                var isValidPeriod = $.isNumeric(val) && parseInt(val,10) > 0;
+                var targetSelector = $this.data("tag");
+
+                $(targetSelector).prop('checked', isValidPeriod);
+            });
+
+            $("#buttonSave").click(function () {
+                var $inputsContainer = $("#settingsDataContainer");
+
+                if (validateRequiredFields($inputsContainer, '@localizer["ValidationMsg"]')) {
+                    var jsonData = serializeJSON($inputsContainer);
+
+                    $.ajax({
+                        url: "@Url.RouteUrl(RouteNames.GeneralSettings_Save)",
+                        method: "POST",
+                        data: jsonData,
+                        success: function (response) {
+                            handleActionResponseMessage(response, onSaveSuccess, '@localizer["Error"]', '@localizer["SavedMsg"]');
+                        }
+                    });
+                }
+            });
+
+        });
+    </script>
+}

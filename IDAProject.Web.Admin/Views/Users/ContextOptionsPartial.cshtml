@@ -1,0 +1,96 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Users.UsersViewModel;
+@using IDAProject.Web.Helpers;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+<div class="row">
+	<div class="col-lg-12 col-md-12">
+		<div class="card">
+			<div class="card-header border-bottom">
+				<h4 class="mb-0">@localizer["UserAccounts"]<h4>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="card">
+	<div class="card-body">
+		<div class="row">
+			<div class="col-md-12 text-end">
+				<button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#tabUsers" aria-expanded="true" aria-controls="tabUsers" style="background-color:white;">
+					<i class="fa fa-expand" id="showContext" style="color:black;"></i>
+				</button>
+			</div>
+		</div>
+		<div class="panel panel-primary collapse show" id="tabUsers">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="context-panel">
+						<div class="card-body tab-option-container">
+							<button id="btnAddNew">
+								<i class="fa fa-plus" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+								<div>@localizer["AddNew"]</div>
+							</button>
+							<button id="btnEdit">
+								<i class="fa fa-pencil-square-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+								<div>@localizer["Edit"]</div>
+							</button>
+							<button id="btnRoles">
+								<i class="fa fa-folder-open-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+								<div>@localizer["Manage roles"]</div>
+							</button>
+@* 							<button id="btnOrgUnits">
+								<i class="fa fa-cubes" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+								<div>@localizer["Manage org units"]</div>
+							</button> *@
+							<button id="btnResetPassword">
+								<i class="fa fa-terminal" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+								<div>@localizer["Reset password"]</div>
+							</button>
+							<button id="btnAddEditDefaultPrinter">
+								<i class="fa fa-laptop" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+								<div>@localizer["Add/Edit default printer"]</div>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row search-params-wrapper">
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-12 text-start pb-2">
+							<button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#searchContext" aria-expanded="true" aria-controls="searchContext" style="background-color:white;">
+								<i class="fa fa-angle-down" id="showSearch" style="color:black;"></i>
+							</button>
+						</div>
+					</div>
+					<div class="collapse show" id="searchContext">
+						<div class="col-md-12">
+							<div class="row">
+								<div class="col-sm-12 col-md-12 col-xl-4">
+									<tms-input type="Text" name="filterKeyword" id="filterKeyword" label="@localizer["Keyword"]:" @* placeholder="@localizer["Username, email, name, surname, phone number"]..." *@ />
+								</div>
+								@* <div class="col-sm-12 col-md-12 col-xl-3">
+									<div class="form-group">
+										<label class="form-label text-muted" for="filterActive">@localizer["Active"]:</label>
+										<select class="form-control form-select text-dark" id="filterActive" name="filterActive">
+											<option value=-1 selected="selected">@localizer["All"]</option>
+											<option value=1>@localizer["ActivePlural"]</option>
+											<option value=0>@localizer["Deactivated"]</option>
+										</select>
+									</div>
+								</div> *@
+								<div class="btn-list text-end search-button-wrapper">
+									<div class="form-group">
+										<button class="btn btn-primary" id="searchButton">@localizer["Search"]</button>
+										<button class="btn btn-primary" id="resetFiltersButton">@localizer["ResetSearch"]</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

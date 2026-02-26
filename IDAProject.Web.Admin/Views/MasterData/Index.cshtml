@@ -1,0 +1,133 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.PageViewModel<IDAProject.Web.Models.Dto.MasterData.MasterEntity>
+@using IDAProject.Web.Admin.Models.Common;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+@{
+    var data = Model.Data;
+    ViewData["Title"] = data!.TableName;
+    var urlPatternEditRecord = Url.RouteUrl(RouteNames.MasterData_Edit, new { tableName = data!.TableName, id = 111 });
+    var urlPatternCreate = Url.RouteUrl(RouteNames.MasterData_Create);
+    var urlPatternUpdate = Url.RouteUrl(RouteNames.MasterData_Update);
+}
+
+<tms-modal id="editRecordModal" title="Edit" save-button="true" save-button-text="Save" />
+<div class="row row-sm">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <partial name="RecordsList" model="@Model" />
+            </div>
+        </div>        
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#tableRecords').DataTable();
+
+            $('#tableRecords').on('click',"button[name='edit']",function(){
+                var id = $(this).data('id');
+
+                $.ajax({
+                    url: '@urlPatternEditRecord'.replace("111", id),
+                    method: 'GET',
+                    success: function (response) {
+                        $("#editRecordModal .modal-body").html(response);
+                        var editModal = new bootstrap.Modal(document.getElementById('editRecordModal'));
+                        editModal.show();
+                    }
+                });
+            });
+
+
+            $("#btnAddNewItem").click(function () {
+                var id;
+
+                $.ajax({
+                    url: '@urlPatternEditRecord'.replace("111", id),
+                    method: 'GET',
+                    success: function (response) {
+                        $("#editRecordModal .modal-body").html(response);
+                        var editModal = new bootstrap.Modal(document.getElementById('editRecordModal'));
+                        editModal.show();
+                    }
+                });
+            });
+
+            $('#editRecordModal').on('click', '#editRecordModal-confirm', function(){
+                var masterEntityRequestModel = {
+                    tableName: $("#editRecordModal input[name='TableName']").val(),
+                    fields: []
+                };
+
+                $("#editRecordModal input[type='text'],#editRecordModal select").each(function (index, element) {
+                    var $element = $(element);
+                    var name = $element.attr("name");
+
+                    var fieldRecord = {
+                        value:$element.val(),
+                        name:name
+                    };
+                    masterEntityRequestModel.fields.push(fieldRecord);
+                });
+
+                $("#editRecordModal input[type='checkbox']").each(function (index, element) {
+                    var $element = $(element);
+                    var name = $element.attr("name");
+
+                    var fieldRecord = {
+                        value: $element.is(":checked"),
+                        name: name
+                    };
+                    masterEntityRequestModel.fields.push(fieldRecord);
+                });
+
+                var isNewRecord = $("#editRecordModal input[name='Id']").length == 0;
+                var method = isNewRecord ? "POST" : "PUT";
+                var url = isNewRecord ? "@urlPatternCreate" : "@urlPatternUpdate";
+
+                if(isNewRecord == false){
+                    var idFieldRecord = {
+                        value: $("#editRecordModal input[name='Id']").val(),
+                        name: "Id"
+                    };
+                    masterEntityRequestModel.fields.push(idFieldRecord);
+                }
+
+                $.ajax({
+                    url: url,
+                    method: method,
+                    data: masterEntityRequestModel,
+                    success: function (response) {
+
+                        if(response.valid){
+                            $('#editRecordModal').hide();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Your work has been saved'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload(true);;
+                                }
+                            });
+                        }
+                        else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

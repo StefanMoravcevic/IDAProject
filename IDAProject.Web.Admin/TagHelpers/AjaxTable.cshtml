@@ -1,0 +1,204 @@
+﻿@model IDAProject.Web.Admin.Models.TagHelpers.AjaxTableViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Admin;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@inject IStringLocalizer<SharedResources> localizer
+
+@{
+    var visibilityInputsSelector = $"#{Model.TableWrapperId} div[data-visibility-options='{Model.Id}'] input[type='checkbox']";
+    var tableBodySelector = $"#{Model.Id} tbody";
+}
+
+<div id="@Model.TableWrapperId" class="dataTables_wrapper no-footer">
+
+    @if(Model.ShowOptions)
+    {
+        <div class="row justify-content-between">
+            <div class="col-sm-4 col-md-4 option-rows-count">
+                <div class="dataTables_length">
+                    <label>
+                        <select class="form-select form-select-sm" id="rows-count-@Model.Id">
+                            <option value="10">10</option>
+                            <option value="20" selected>20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="200">200</option>
+                            <option value="1000">Max (1000 rows)</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+            <div data-visibility-options="@Model.Id" class="btn-group col-sm-4 col-md-2 table-columns">
+                <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" style="position:absolute; right:20px;">
+                    @localizer["Columns"]
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="dropdown-plus-title">Display columns <b class="fa fa-angle-up" aria-hidden="true"></b> </li>
+                    @foreach (var column in Model.TableDefinition.Columns)
+                    {
+                        var id = Model.Id + "-dc-" + column.Name;
+                        <li><tms-input type="CheckBox" label="@column.HeaderText" id="@id" name="@column.Name" checked='!column.IsHidden' /></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-sm-12">
+            <table id="@Model.Id" class="table table-striped dataTable no-footer" style="width: 100%;">
+                <thead>
+                    <tr>
+                        @foreach (var column in Model.TableDefinition.Columns)
+                        {
+                            if (column.IsOptionsColumn)
+                            {
+                                var names = string.Join(",", column.Options.Select(x => x.Name));
+                                var icons = string.Join(",", column.Options.Select(x => x.FontIconClass));
+                                var colors = string.Join(",", column.Options.Select(x => x.Color));
+                                <th data-name="_options_" style="@column.HeaderStyle" data-options="@names" data-icons="@icons" data-colors="@colors" data-cell-style="text-align:center;" data-prepare="@column.OnPrepareCellContent">Options</th>
+                            }
+                            else if (column.IsHidden)
+                            {
+                                <th data-name="@column.Name" style="@column.HeaderStyle" data-cell-style="@column.CellStyle" class="sorting hidden-column" data-prepare="@column.OnPrepareCellContent">@column.HeaderText</th>
+                            }
+                            else
+                            {
+                                <th data-name="@column.Name" style="@column.HeaderStyle" data-cell-style="@column.CellStyle" class="sorting" data-prepare="@column.OnPrepareCellContent">
+                                    <div class="table-handle"></div>
+                                    <div class="sort">@column.HeaderText</div>
+                                </th>
+                            }
+                        }
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot style="display:none;">
+                    <tr>
+                        @foreach (var column in Model.TableDefinition.Columns)
+                        {
+                            if (column.IsOptionsColumn)
+                            {
+                                <td></td>
+                            }
+                            else if (column.IsHidden)
+                            {
+                                <td data-name="@column.Name" class="footer-sum hidden-column"></td>
+                            }
+                            else
+                            {
+                                <td data-name="@column.Name" class="footer-sum"></td>
+                            }
+                        }
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+  
+    <div class="row">
+        <div class="col-sm-12 col-md-5">
+            <div class="dataTables_info" role="status">No entries</div>
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <div class="dataTables_paginate">
+                <ul class="pagination" id="paging-@Model.Id"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("@Html.Raw(visibilityInputsSelector)").change(function () {
+
+            var $this = $(this);
+            var reqModel = {
+                tableName: '@Model.TableSettingsReferenceTable',
+                columnName: $this.attr("name"),
+                isVisible: $this.is(":checked")
+            };
+
+            $.ajax({
+                url: '@Url.RouteUrl(RouteNames.MasterDataTableColumn_Update)',
+                method: 'PUT',
+                data: reqModel,
+                success: function (response) {
+
+                    // n is 1-indexed, meaning that the counting starts at 1
+                    var colIndex = getColumnIndexByName('@Model.Id', reqModel.columnName);
+                    if (colIndex != -1) {
+                        colIndex = colIndex + 1;
+                        if (reqModel.isVisible) {
+                            $(`#@Model.Id td:nth-child(${colIndex}),th:nth-child(${colIndex})`).removeClass('hidden-column');
+                        }
+                        else {
+                            $(`#@Model.Id td:nth-child(${colIndex}),th:nth-child(${colIndex})`).addClass('hidden-column');
+                        }
+                    }
+                }
+            });
+        });
+
+        $('@Html.Raw(tableBodySelector)').on('click', 'tr', function () {
+
+            $('@Html.Raw(tableBodySelector) tr').removeClass('selected');
+            $(this).addClass('selected');
+        });
+
+        $('#rows-count-@Model.Id').click(function(){
+            var pageSize = getPageSize('@Model.Id');
+            renderPagingPanel('@Model.Id', pageSize, 1);
+
+            $('@Html.Raw(tableBodySelector) tr').addClass("hidden-row");
+            $('@Html.Raw(tableBodySelector) tr').slice(0, pageSize).removeClass("hidden-row");
+        });
+        
+        $('#@Model.Id').on('click', 'thead th .sort', function () {
+
+            var tableElement = document.getElementById('@Model.Id');
+            var columnIndex = $(this).closest("th").index();
+
+            sortAjaxTable(columnIndex, tableElement);
+            $('#rows-count-@Model.Id').click();
+        });
+
+        $('#paging-@Model.Id').on('click', 'a[data-index]', function() {
+
+            var pageSize = getPageSize('@Model.Id');
+            var pageIndex = parseInt($(this).data('index'),10);
+            renderPagingPanel('@Model.Id', pageSize, pageIndex);
+
+            var startIndex = (pageIndex - 1) * pageSize;
+            var endIndex = startIndex + pageSize;
+
+            $('@Html.Raw(tableBodySelector) tr').addClass("hidden-row");
+            $('@Html.Raw(tableBodySelector) tr').slice(startIndex, endIndex).removeClass("hidden-row");
+        });
+
+
+        
+        $('#@Model.Id').dragtable({
+            persistState: function () {
+
+                var reqModel = {
+                    tableName: '@Model.TableSettingsReferenceTable',
+                    columns: []
+                };
+
+                reqModel.columns = getColumnNamesByCurrentOrder('@Model.Id');
+
+                $.ajax({
+                    url: '@Url.RouteUrl(RouteNames.MasterDataTableColumnOrder_Update)',
+                    method: 'PUT',
+                    data: reqModel
+                });
+            }
+        });
+    });
+</script>

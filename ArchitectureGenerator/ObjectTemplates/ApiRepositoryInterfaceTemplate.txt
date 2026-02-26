@@ -1,0 +1,14 @@
+﻿
+using DeclarationFactory.Web.Models.Dto.<<EntityName>>;
+using DeclarationFactory.Web.Models.RequestModels.<<EntityName>>;
+
+namespace DeclarationFactory.Web.Api.Models.Interfaces.Repositories
+{
+    public interface I<<EntityName>>Repository
+    {
+        Task<<<EntityNameSingular>>Dto> Get<<EntityNameSingular>>ByIdAsync(int id);
+        Task<int> Save<<EntityNameSingular>>Async(Save<<EntityNameSingular>>RequestModel requestModel);
+        Task<List<<<EntityNameSingular>>Dto>> Search<<EntityName>>Async(Search<<EntityName>>Params searchParams);
+        Task Delete<<EntityNameSingular>>Async(int id, int? userId);
+    }
+}

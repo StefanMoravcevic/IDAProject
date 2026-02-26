@@ -1,0 +1,53 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.DocumentSeries.DocumentSeriesViewModel;
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+<div class="card">
+    <div class="card-body">
+        <div class="panel panel-primary">
+            <div class="panel-body tabs-menu-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab11">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="context-panel">
+                                    <div class="card-body tab-option-container" style="overflow-x:auto">
+                                        <button id="dsAdd">
+                                            <i class="fa fa-plus" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                            <div>Add new</div>
+                                        </button>
+                                        <button id="dsView">
+                                            <i class="fa fa-eye" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                            <div>View</div>
+                                        </button>
+                                        <button id="dsEdit">
+                                            <i class="fa fa-pencil-square-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                            <div>Edit</div>
+                                        </button>
+                                        <button id="dsDelete">
+                                            <i class="fa fa-trash-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+                                            <div>Delete</div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row search-params-wrapper">
+                            <div class="col-sm-12 col-md-8 col-xl-3">
+                                <tms-select name="DocumentSerieTypeId" id="dsDocumentSerieTypeId" options="@Model.DocumentSerieTypes" label="Document types:" empty-option-text="---" />
+                            </div>
+                            <div class="btn-list text-end search-button-wrapper">
+                                <div class="form-group">
+                                    <button class="btn btn-primary" id="buttonSearchDocumentSeries">Search</button>
+                                    <button class="btn btn-primary" id="buttonResetSearchDocumentSeries">Reset search</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
