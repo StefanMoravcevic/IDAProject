@@ -13,9 +13,9 @@ namespace IDAProject.Web.Api.Repositories
 {
     public class RolesRepository : IRolesRepository
     {
-        private readonly IDAProjectContext _dbContext;
+        private readonly IdaContext _dbContext;
 
-        public RolesRepository(IDAProjectContext dbContext)
+        public RolesRepository(IdaContext dbContext)
         {
             _dbContext = dbContext;
         }

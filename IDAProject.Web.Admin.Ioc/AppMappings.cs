@@ -29,6 +29,11 @@ namespace IDAProject.Web.Admin.Ioc
             serviceCollection.AddScoped<IDocumentSeriesManager, DocumentSeriesManager>();
             serviceCollection.AddScoped<IReportsManager, ReportsManager>();
             serviceCollection.AddScoped<IEmployeesManager, EmployeesManager>();
+            serviceCollection.AddScoped<IUserNotificationsManager, UserNotificationsManager>();
+            serviceCollection.AddScoped<IProjectsManager, ProjectsManager>();
+            serviceCollection.AddScoped<IIdaTasksManager, IdaTasksManager>();
+            serviceCollection.AddScoped<IRegularActivitiesManager, RegularActivitiesManager>();
+            serviceCollection.AddScoped<ITasksPlanningsManager, TasksPlanningsManager>();
 
             serviceCollection.AddScoped<AuthorizationService>();
             serviceCollection.AddScoped<AuthorizationHelpers>();

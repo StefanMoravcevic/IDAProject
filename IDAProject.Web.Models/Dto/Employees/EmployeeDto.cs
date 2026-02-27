@@ -20,6 +20,7 @@ namespace IDAProject.Web.Models.Dto.Employees
         public string? City { get; set; }
         public string? StateShort { get; set; }
         public string? Gender { get; set; }
+        public string? Sector { get; set; }
         
         public string BirthDateFormatted
         {

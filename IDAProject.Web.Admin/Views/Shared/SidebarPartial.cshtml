@@ -61,7 +61,7 @@
 					<a class="side-menu__item has-link" data-bs-toggle="slide" href="@Url.RouteUrl(RouteNames.Home_Dashboard)">
 						<i class="fa fa-home side-menu__icon"></i>
 						<span class="side-menu__label">
-							@localizer["Glavni"]
+							@localizer["Home page"]
 						</span>
 					</a>
 				</li>
@@ -76,6 +76,24 @@
 					<ul class="slide-menu">
 						<li><a href="@Url.RouteUrl(RouteNames.Employees_New)" class="slide-item">@localizer["AddNew"]</a></li>
 						<li><a href="@Url.RouteUrl(RouteNames.Employees_List)" class="slide-item">@localizer["Search"]</a></li>
+					</ul>
+				</li>
+				<li class="slide">
+					<a class="side-menu__item" data-bs-toggle="slide" href="@Url.RouteUrl(RouteNames.IDA_Index)">
+						<i class="fa fa-tasks side-menu__icon"></i>
+						<span class="side-menu__label">@localizer["IDA"]</span>
+					</a>
+				</li>
+				<li class="slide">
+					<a class="side-menu__item" data-bs-toggle="slide" href="#">
+						<i class="fa fa-table side-menu__icon"></i>
+						<span class="side-menu__label">@localizer["MasterData"]</span><i class="angle fa fa-angle-right"></i>
+					</a>
+					<ul class="slide-menu">
+						@foreach (var item in supportedMasterDataTables)
+						{
+							<li><a href="@Url.RouteUrl(RouteNames.MasterData_List, new { tableName = item.TableName })" class="slide-item">@localizer[item.Description]</a></li>
+						}
 					</ul>
 				</li>
 				@* 					<li class="slide">
@@ -103,6 +121,7 @@
 							<li><a href="@Url.RouteUrl(RouteNames.Users_List)" class="slide-item">@localizer["UserAccounts"]</a></li>
 							<li><a href="@Url.RouteUrl(RouteNames.Roles_List)" class="slide-item">@localizer["Roles"]</a></li>
 							<li><a href="@Url.RouteUrl(RouteNames.Companies_List)" class="slide-item">@localizer["CompanyInfo"]</a></li>
+							<li><a href="@Url.RouteUrl(RouteNames.UserNotifications_List)" class="slide-item">@localizer["User notifications"]</a></li>
 						</ul>
 					</li>
 				}

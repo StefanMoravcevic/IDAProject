@@ -13,10 +13,10 @@ namespace IDAProject.Web.Api.Repositories
 {
     public class MasterDataRepository : IMasterDataRepository
     {
-        private readonly IDAProjectContext _dbContext;
+        private readonly IdaContext _dbContext;
         private readonly IMasterDataProvidersFactory _masterDataProvidersFactory;
 
-        public MasterDataRepository(IDAProjectContext dbContext, IMasterDataProvidersFactory masterDataProvidersFactory)
+        public MasterDataRepository(IdaContext dbContext, IMasterDataProvidersFactory masterDataProvidersFactory)
         {
             _dbContext = dbContext;
             _masterDataProvidersFactory = masterDataProvidersFactory;

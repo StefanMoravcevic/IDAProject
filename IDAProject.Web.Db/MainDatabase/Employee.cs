@@ -81,6 +81,8 @@ public partial class Employee
 
     public string? Photo { get; set; }
 
+    public int? SectorId { get; set; }
+
     public virtual ICollection<AspNetUser> AspNetUsers { get; set; } = new List<AspNetUser>();
 
     public virtual City? City { get; set; }
@@ -96,6 +98,8 @@ public partial class Employee
     public virtual OrgUnit? OrgUnit { get; set; }
 
     public virtual Partner? Partner { get; set; }
+
+    public virtual Sector? Sector { get; set; }
 
     public virtual State? State { get; set; }
 

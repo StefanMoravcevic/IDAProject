@@ -128,6 +128,46 @@
         public const string UserOrgUnits_Delete = "UserOrgUnits_Delete";
 
 
+        public const string UserNotifications_List = "UserNotifications_List";
+        public const string UserNotifications_Search = "UserNotifications_Search";
+        public const string UserNotifications_New = "UserNotifications_New";
+        public const string UserNotifications_Edit = "UserNotifications_Edit";
+        public const string UserNotifications_Save = "UserNotifications_Save";
+        public const string UserNotifications_Delete = "UserNotifications_Delete";
+        public const string UserNotifications_View = "UserNotifications_View";
+
+
+        public const string Projects_List = "Projects_List";
+        public const string Projects_Search = "Projects_Search";
+        public const string Projects_New = "Projects_New";
+        public const string Projects_Edit = "Projects_Edit";
+        public const string Projects_Save = "Projects_Save";
+        public const string Projects_Delete = "Projects_Delete";
+
+        public const string IdaTasks_List = "IdaTasks_List";
+        public const string IdaTasks_Search = "IdaTasks_Search";
+        public const string IdaTasks_New = "IdaTasks_New";
+        public const string IdaTasks_Edit = "IdaTasks_Edit";
+        public const string IdaTasks_Save = "IdaTasks_Save";
+        public const string IdaTasks_Delete = "IdaTasks_Delete";
+
+        public const string RegularActivities_List = "RegularActivities_List";
+        public const string RegularActivities_Search = "RegularActivities_Search";
+        public const string RegularActivities_New = "RegularActivities_New";
+        public const string RegularActivities_Edit = "RegularActivities_Edit";
+        public const string RegularActivities_Save = "RegularActivities_Save";
+        public const string RegularActivities_Delete = "RegularActivities_Delete";
+
+        public const string TasksPlannings_List = "TasksPlannings_List";
+        public const string TasksPlannings_Search = "TasksPlannings_Search";
+        public const string TasksPlannings_New = "TasksPlannings_New";
+        public const string TasksPlannings_Edit = "TasksPlannings_Edit";
+        public const string TasksPlannings_Save = "TasksPlannings_Save";
+        public const string TasksPlannings_Delete = "TasksPlannings_Delete";
+
+        public const string IDA_Index = "IDA_Index";
+
+
         public const string Roles_List = "Roles_List";
         public const string Role_Edit = "Role_Edit";
         public const string Role_New = "Role_New";

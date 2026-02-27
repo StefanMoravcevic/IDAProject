@@ -120,6 +120,18 @@
   <data name="Active" xml:space="preserve">
     <value>Aktivan</value>
   </data>
+  <data name="Activity" xml:space="preserve">
+    <value>Aktivnost</value>
+  </data>
+  <data name="Activity type" xml:space="preserve">
+    <value>Vrsta aktivnosti</value>
+  </data>
+  <data name="Activity types" xml:space="preserve">
+    <value>Vrste aktivnosti</value>
+  </data>
+  <data name="Add row" xml:space="preserve">
+    <value>Dodaj red</value>
+  </data>
   <data name="Add/Edit default printer" xml:space="preserve">
     <value>Dodaj/Izmeni podrazumevani štampač</value>
   </data>
@@ -213,6 +225,15 @@
   <data name="City" xml:space="preserve">
     <value>Grad</value>
   </data>
+  <data name="Click for showing/hiding project tasks" xml:space="preserve">
+    <value>Kliknite za prikaz/skrivanje projektnih zadataka</value>
+  </data>
+  <data name="Click for showing/hiding regular activity" xml:space="preserve">
+    <value>Kliknite za prikaz/sakrivanje redovnih aktivnosti</value>
+  </data>
+  <data name="Click for showing/hiding tasks" xml:space="preserve">
+    <value>Kliknite za prikaz/skrivanje zadataka</value>
+  </data>
   <data name="Close" xml:space="preserve">
     <value>Zatvori</value>
   </data>
@@ -285,6 +306,9 @@
   <data name="Delivery route code" xml:space="preserve">
     <value>Šifra rute razvoza</value>
   </data>
+  <data name="Description" xml:space="preserve">
+    <value>Opis</value>
+  </data>
   <data name="Display columns" xml:space="preserve">
     <value>Prikaži kolone</value>
   </data>
@@ -297,8 +321,14 @@
   <data name="DownloadFileName" xml:space="preserve">
     <value>Ime fajla</value>
   </data>
+  <data name="Due Date" xml:space="preserve">
+    <value>Rok</value>
+  </data>
   <data name="DueDate" xml:space="preserve">
     <value>Rok uplate</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Trajanje</value>
   </data>
   <data name="E-mailConfirmed" xml:space="preserve">
     <value>Potvrđen mail</value>
@@ -354,6 +384,15 @@
   <data name="Enter name" xml:space="preserve">
     <value>Unesite ulicu</value>
   </data>
+  <data name="Enter new project task" xml:space="preserve">
+    <value>Unesite novi projektni zadatak</value>
+  </data>
+  <data name="Enter new regular activity" xml:space="preserve">
+    <value>Unesite redovnu aktivnost</value>
+  </data>
+  <data name="Enter new task" xml:space="preserve">
+    <value>Unesite novi zadatak</value>
+  </data>
   <data name="Enter number" xml:space="preserve">
     <value>Unesite broj ulice</value>
   </data>
@@ -366,11 +405,20 @@
   <data name="Enter PIB" xml:space="preserve">
     <value>Unesite PIB</value>
   </data>
+  <data name="Enter regular activity name" xml:space="preserve">
+    <value>Unesite naziv redovne aktivnosti</value>
+  </data>
   <data name="Enter responsible person" xml:space="preserve">
     <value>Unesite odgovornu osobu</value>
   </data>
   <data name="Enter role name" xml:space="preserve">
     <value>Unesite ime role</value>
+  </data>
+  <data name="Enter task due date" xml:space="preserve">
+    <value>Unesite rok zadatka</value>
+  </data>
+  <data name="Enter task name" xml:space="preserve">
+    <value>Unesite ime zadatka</value>
   </data>
   <data name="Enter web address" xml:space="preserve">
     <value>Unesite web stranicu</value>
@@ -447,8 +495,14 @@
   <data name="First name" xml:space="preserve">
     <value>Ime</value>
   </data>
+  <data name="For all users" xml:space="preserve">
+    <value>Za sve korisnike</value>
+  </data>
   <data name="ForgotPassword" xml:space="preserve">
     <value>Zaboravljena šifra?</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>Od</value>
   </data>
   <data name="FromDate" xml:space="preserve">
     <value>Od datuma</value>
@@ -465,11 +519,20 @@
   <data name="General" xml:space="preserve">
     <value>Opšte</value>
   </data>
+  <data name="Group" xml:space="preserve">
+    <value>Grupa</value>
+  </data>
+  <data name="Groups" xml:space="preserve">
+    <value>Grupe</value>
+  </data>
   <data name="Headers" xml:space="preserve">
     <value>Zaglavlja</value>
   </data>
   <data name="Headers archive" xml:space="preserve">
     <value>Arhiva zaglavlja</value>
+  </data>
+  <data name="Home page" xml:space="preserve">
+    <value>Početna strana</value>
   </data>
   <data name="Installment" xml:space="preserve">
     <value>Rate</value>
@@ -567,6 +630,9 @@
   <data name="No" xml:space="preserve">
     <value>Ne</value>
   </data>
+  <data name="Note" xml:space="preserve">
+    <value>Opis</value>
+  </data>
   <data name="Notes" xml:space="preserve">
     <value>Beleške</value>
   </data>
@@ -587,6 +653,9 @@
   </data>
   <data name="Order date" xml:space="preserve">
     <value>Datum</value>
+  </data>
+  <data name="Order number" xml:space="preserve">
+    <value>Redni broj</value>
   </data>
   <data name="Orders" xml:space="preserve">
     <value>Porudžbine</value>
@@ -663,6 +732,9 @@
   <data name="Photo" xml:space="preserve">
     <value>Slika</value>
   </data>
+  <data name="Plans for day" xml:space="preserve">
+    <value>Planiranje za dan</value>
+  </data>
   <data name="Port" xml:space="preserve">
     <value>Port</value>
   </data>
@@ -681,8 +753,20 @@
   <data name="Process" xml:space="preserve">
     <value>Obrada</value>
   </data>
+  <data name="Project" xml:space="preserve">
+    <value>Projekat</value>
+  </data>
+  <data name="Projects" xml:space="preserve">
+    <value>Projekti</value>
+  </data>
   <data name="Quantity" xml:space="preserve">
     <value>Količina</value>
+  </data>
+  <data name="Regular activity" xml:space="preserve">
+    <value>Redovna aktivnost</value>
+  </data>
+  <data name="Regular activity name" xml:space="preserve">
+    <value>Naziv aktivnosti</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Ukloni</value>
@@ -759,6 +843,12 @@
   <data name="Segment" xml:space="preserve">
     <value>Segment</value>
   </data>
+  <data name="Select activity type" xml:space="preserve">
+    <value>Izaberite vrstu aktivnosti</value>
+  </data>
+  <data name="Select activity type to generate table" xml:space="preserve">
+    <value>Izaberite vrstu aktivnosti da biste generisali tabelu</value>
+  </data>
   <data name="Select city" xml:space="preserve">
     <value>Izaberite grad</value>
   </data>
@@ -783,6 +873,9 @@
   <data name="Select gender" xml:space="preserve">
     <value>Izaberite pol</value>
   </data>
+  <data name="Select group" xml:space="preserve">
+    <value>Izaberite grupu korisnika</value>
+  </data>
   <data name="Select job type" xml:space="preserve">
     <value>Izaberite vrstu posla</value>
   </data>
@@ -804,11 +897,20 @@
   <data name="Select printer" xml:space="preserve">
     <value>Izaberite štampač</value>
   </data>
+  <data name="Select project" xml:space="preserve">
+    <value>Izaberite projekat</value>
+  </data>
+  <data name="Select regular activity" xml:space="preserve">
+    <value>Izaberite redovnu aktivnost</value>
+  </data>
   <data name="Select segment" xml:space="preserve">
     <value>Izaberite segment</value>
   </data>
   <data name="Select state" xml:space="preserve">
     <value>Izaberite državu</value>
+  </data>
+  <data name="Select task" xml:space="preserve">
+    <value>Izaberite zadatak</value>
   </data>
   <data name="Select zip code" xml:space="preserve">
     <value>Izaberite poštanski broj</value>
@@ -837,6 +939,9 @@
   <data name="State" xml:space="preserve">
     <value>Država</value>
   </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
   <data name="Street name" xml:space="preserve">
     <value>Ulica</value>
   </data>
@@ -848,6 +953,18 @@
   </data>
   <data name="Surname" xml:space="preserve">
     <value>Prezime</value>
+  </data>
+  <data name="Task" xml:space="preserve">
+    <value>Zadatak</value>
+  </data>
+  <data name="Task due date" xml:space="preserve">
+    <value>Rok zadatka</value>
+  </data>
+  <data name="Task name" xml:space="preserve">
+    <value>Ime zadatka</value>
+  </data>
+  <data name="Tasks" xml:space="preserve">
+    <value>Zadaci</value>
   </data>
   <data name="TickerMessage" xml:space="preserve">
     <value>Poruka za slajder</value>
@@ -862,7 +979,7 @@
     <value>Vreme</value>
   </data>
   <data name="to" xml:space="preserve">
-    <value>do</value>
+    <value>Do</value>
   </data>
   <data name="TotalAmount" xml:space="preserve">
     <value>Ukupan iznos</value>
@@ -878,6 +995,12 @@
   </data>
   <data name="Uploaded date" xml:space="preserve">
     <value>Datum postavljanja</value>
+  </data>
+  <data name="User notification basic info" xml:space="preserve">
+    <value>Osnovne informacije o obaveštenju korisnicima</value>
+  </data>
+  <data name="User notifications" xml:space="preserve">
+    <value>Obaveštenja korisnicima</value>
   </data>
   <data name="UserAccounts" xml:space="preserve">
     <value>Korisnički nalozi</value>
@@ -905,6 +1028,9 @@
   </data>
   <data name="ZipCode" xml:space="preserve">
     <value>Poštanski broj</value>
+  </data>
+  <data name="Аctivity" xml:space="preserve">
+    <value>Аktivnost</value>
   </data>
   <data name="Аddresses" xml:space="preserve">
     <value>Adrese</value>

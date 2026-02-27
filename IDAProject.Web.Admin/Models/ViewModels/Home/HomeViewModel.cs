@@ -14,6 +14,6 @@ namespace IDAProject.Web.Admin.Models.ViewModels.Home
         //public List<VehiclesAvailabilityDto> VehiclesAvailability { get; set; }
 
 
-        public DateTime DefaultDateFrom { get; internal set; }
+        public string? EmployeePhoto { get; internal set; }
     }
 }

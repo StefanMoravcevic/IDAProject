@@ -11,9 +11,9 @@ namespace IDAProject.Web.Api.Repositories
 {
     public class UsersRepository : IUsersRepository
     {
-        private readonly IDAProjectContext _dbContext;
+        private readonly IdaContext _dbContext;
 
-        public UsersRepository(IDAProjectContext dbContext)
+        public UsersRepository(IdaContext dbContext)
         {
             _dbContext = dbContext;
         }

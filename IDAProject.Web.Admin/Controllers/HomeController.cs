@@ -21,11 +21,13 @@ namespace IDAProject.Web.Admin.Controllers
     public class HomeController : BaseController
     {
         private readonly IMasterDataManager _masterDataManager;
+        private readonly IUserNotificationsManager _userNotificationsManager;
+        private readonly IEmployeesManager _employeesManager;
         private readonly IConfiguration _configuration;
         private readonly IReportsManager _reportsManager;
         private readonly IStringLocalizer<SharedResources> _localizer;
 
-        public HomeController(ILogger<HomeController> logger, IAccountManager accountManager, IReportsManager reportsManager, IStringLocalizer<SharedResources> localizer,
+        public HomeController(ILogger<HomeController> logger, IAccountManager accountManager, IReportsManager reportsManager, IStringLocalizer<SharedResources> localizer, IUserNotificationsManager userNotificationsManager, IEmployeesManager employeesManager,
 
             IMasterDataManager masterDataManager, IConfiguration configuration) : base(accountManager, logger)
         {
@@ -33,6 +35,8 @@ namespace IDAProject.Web.Admin.Controllers
             _masterDataManager = masterDataManager;
             _configuration = configuration;
             _localizer = localizer;
+            _userNotificationsManager = userNotificationsManager;
+            _employeesManager = employeesManager;
         }
 
         [HttpGet("index", Name = RouteNames.Home_Dashboard)]
@@ -49,15 +53,8 @@ namespace IDAProject.Web.Admin.Controllers
             var viewModel = new HomeViewModel();
             var user = GetCurrentUser();
             viewModel.User = user;
-            if (user.Roles.Contains(AspNetRoles.Administrator.ToString()))
-            {
-                return View(viewModel);
-            }
-            else if (user.Roles.Contains(AspNetRoles.Skeniranje.ToString()))
-            {
-                return RedirectToAction("IndexWithoutHeader", "OrderLines");
-            }
-
+            var employeePhoto = (await _employeesManager.GetEmployeeByIdAsync(user.EmployeeId)).Payload.Photo;
+            viewModel.EmployeePhoto = employeePhoto;
             return View(viewModel);
         }
 

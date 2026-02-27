@@ -50,6 +50,7 @@ public partial class AspNetUser
 
     public int? OrgId { get; set; }
 
+    public virtual ICollection<ActivityType> ActivityTypes { get; set; } = new List<ActivityType>();
 
     public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
@@ -93,6 +94,8 @@ public partial class AspNetUser
 
     public virtual ICollection<HierarchyLevel> HierarchyLevels { get; set; } = new List<HierarchyLevel>();
 
+    public virtual ICollection<IdaTask> IdaTasks { get; set; } = new List<IdaTask>();
+
     public virtual ICollection<Integration> Integrations { get; set; } = new List<Integration>();
 
     public virtual ICollection<JobType> JobTypes { get; set; } = new List<JobType>();
@@ -115,15 +118,25 @@ public partial class AspNetUser
 
     public virtual ICollection<Period> Periods { get; set; } = new List<Period>();
 
+    public virtual ICollection<PlanStatus> PlanStatuses { get; set; } = new List<PlanStatus>();
+
+    public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
+
+    public virtual ICollection<RegularActivity> RegularActivities { get; set; } = new List<RegularActivity>();
+
     public virtual ICollection<Relationship> Relationships { get; set; } = new List<Relationship>();
 
     public virtual ICollection<State> States { get; set; } = new List<State>();
+
+    public virtual ICollection<TasksPlanning> TasksPlannings { get; set; } = new List<TasksPlanning>();
 
     public virtual ICollection<UserLog> UserLogs { get; set; } = new List<UserLog>();
 
     public virtual ICollection<UserMessage> UserMessageUserFromNavigations { get; set; } = new List<UserMessage>();
 
     public virtual ICollection<UserMessage> UserMessageUserToNavigations { get; set; } = new List<UserMessage>();
+
+    public virtual ICollection<UserNotification> UserNotifications { get; set; } = new List<UserNotification>();
 
     public virtual ICollection<UserSetting> UserSettingDeletedByNavigations { get; set; } = new List<UserSetting>();
 

@@ -1,0 +1,109 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.UserNotifications.UserNotificationsViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using System.ComponentModel;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+@{
+
+    ViewData["Title"] = $"User notifications";
+
+    var urlDeleteNotification = Url.RouteUrl(RouteNames.UserNotifications_Delete, new { id = 111 });
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <partial name="ContextOptionsPartial" model="@Model" />
+    </div>
+</div>
+<div class="row row-sm">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body" style="overflow-x:auto">
+                <tms-ajax-table id="tableUserNotifications" view-model="@Model" table-settings-reference-table="UserNotifications" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+    <script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+    <script type="text/javascript">
+
+        function searchUserNotifications() {
+
+            $.ajax({
+                url: "@Url.RouteUrl(RouteNames.UserNotifications_Search)",
+                method: "POST",
+                data: {
+         
+                },
+                success: function (response) {
+                    loadJson("tableUserNotifications", response);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $("#edit").click(function () {
+                var selectedId = getSelectedItemId("tableUserNotifications");
+                document.location = '@Url.RouteUrl(RouteNames.UserNotifications_Edit, new { id = "111" })'.replace("111", selectedId);
+            });
+            $("#view").click(function () {
+                var selectedId = getSelectedItemId("tableUserNotifications");
+                document.location = '@Url.RouteUrl(RouteNames.UserNotifications_View, new { id = "111" })'.replace("111", selectedId);
+            });
+            $("#delete").click(function () {
+                Swal.fire({
+                    title: '@localizer["DeleteQuestion"]',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '@localizer["DeleteConfirmation"]'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var selectedId = getSelectedItemId("tableUserNotifications");
+                        $.ajax({
+                            url: '@urlDeleteNotification'.replace("111", selectedId),
+                            method: "POST",
+                            success: function (response) {
+                                location = response.message;
+                            }
+                        });
+                    }
+                })
+            });
+
+            // $("#buttonResetSearchPartners").click(function () {
+            //     $("#parSearchBlocked").val(null);
+            //     $("#parKeyword").val(null);
+            //     var partnerCategoryId = $("#PartnerCategoryId").val();
+            //     $.ajax({
+            //         url: "@Url.RouteUrl(RouteNames.Partners_Search)",
+            //         method: "POST",
+            //         data: {
+            //             blocked: null,
+            //             keyword: null,
+            //             partnerCategoryId: partnerCategoryId,
+            //         },
+            //         success: function (response) {
+            //             loadJson("tablePartners", response);
+            //         }
+            //     });
+            // });
+
+
+            // $("#buttonSearchPartners").click(searchPartners);
+
+            searchUserNotifications();
+        });
+    </script>
+}

@@ -8,6 +8,8 @@ using IDAProject.Web.Api.Repositories;
 using IDAProject.Web.Api.Repositories.IdentityStores;
 using IDAProject.Web.Api.Repositories.MasterDataProviders;
 using IDAProject.Web.Db.MainDatabase;
+using IDAProject.Web.Api.Models.Interfaces.Managers;
+using IDAProject.Web.Api.Managers;
 
 
 namespace IDAProject.Web.Api.Ioc
@@ -29,7 +31,7 @@ namespace IDAProject.Web.Api.Ioc
 
         public static void CreateIdentityFrameworkMappings(IdentityBuilder identityBuilder)
         {
-            identityBuilder.AddEntityFrameworkStores<IDAProjectContext>();
+            identityBuilder.AddEntityFrameworkStores<IdaContext>();
             identityBuilder.AddUserStore<AppUserStore>();            
         }
 
@@ -48,6 +50,11 @@ namespace IDAProject.Web.Api.Ioc
             serviceCollection.AddScoped<INotificationsRepository, NotificationsRepository>();
             serviceCollection.AddScoped<IDocumentsRepository, DocumentsRepository>();
             serviceCollection.AddScoped<IDocumentSeriesRepository, DocumentSeriesRepository>();
+            serviceCollection.AddScoped<IUserNotificationsRepository, UserNotificationsRepository>();
+            serviceCollection.AddScoped<IProjectsRepository, ProjectsRepository>();
+            serviceCollection.AddScoped<IIdaTasksRepository, IdaTasksRepository>();
+            serviceCollection.AddScoped<IRegularActivitiesRepository, RegularActivitiesRepository>();
+            serviceCollection.AddScoped<ITasksPlanningsRepository, TasksPlanningsRepository>();
 
    
             serviceCollection.AddSingleton<IMasterDataProvidersFactory, MasterDataProvidersFactory>();            
@@ -68,6 +75,11 @@ namespace IDAProject.Web.Api.Ioc
             serviceCollection.AddScoped<IDocumentsManager, DocumentsManager>();
             serviceCollection.AddScoped<IDocumentSeriesManager, DocumentSeriesManager>();
             serviceCollection.AddScoped<ILdapManager, LdapManager>();
+            serviceCollection.AddScoped<IUserNotificationsManager, UserNotificationsManager>();
+            serviceCollection.AddScoped<IProjectsManager, ProjectsManager>();
+            serviceCollection.AddScoped<IIdaTasksManager, IdaTasksManager>();
+            serviceCollection.AddScoped<IRegularActivitiesManager, RegularActivitiesManager>();
+            serviceCollection.AddScoped<ITasksPlanningsManager, TasksPlanningsManager>();
         }
 
         private static void MapReports(IServiceCollection serviceCollection)

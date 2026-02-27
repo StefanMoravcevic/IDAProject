@@ -18,6 +18,7 @@ namespace IDAProject.Web.Admin.Models.ViewModels.Employees
             Companies = new List<GenericSelectOption>();
             Genders = new List<GenericSelectOption>();
             ZipCodes = new List<GenericSelectOption>();
+            Sectors = new List<GenericSelectOption>();
         }
 
         public EmployeeDto Employee { get; set; }
@@ -31,6 +32,7 @@ namespace IDAProject.Web.Admin.Models.ViewModels.Employees
         public IEnumerable<ISelectOption> Companies { get; set; }
         public IEnumerable<ISelectOption> NoticeTypes { get; set; }
         public IEnumerable<ISelectOption> Genders { get; set; }
+        public IEnumerable<ISelectOption> Sectors { get; set; }
         public int ReadOnly { get; set; }
         public int JobTypeId { get; set; }
         public EmployeeDocumentsViewModel? EmployeeDocumentsViewModel { get; set; }

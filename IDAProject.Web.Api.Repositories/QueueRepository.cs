@@ -11,9 +11,9 @@ namespace IDAProject.Web.Api.Repositories
     public class QueueRepository : IQueueRepository
     {
 
-        private readonly IDAProjectContext _dbContext;
+        private readonly IdaContext _dbContext;
 
-        public QueueRepository(IDAProjectContext dbContext)
+        public QueueRepository(IdaContext dbContext)
         {
             _dbContext = dbContext;
         }

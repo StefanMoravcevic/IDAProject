@@ -50,7 +50,7 @@ finally
 ConfigurationManager configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultDatabase");
 
-builder.Services.AddDbContext<IDAProjectContext>(options => options.UseSqlServer(connectionString!));
+builder.Services.AddDbContext<IdaContext>(options => options.UseSqlServer(connectionString!));
 
 // CORS configuration disable cors
 builder.Services.AddCors(options =>
@@ -169,12 +169,8 @@ var firebaseSection = configuration.GetSection("Firebase");
 builder.Services.Configure<FirebaseSettings>(firebaseSection);
 
 var binPath = AppDomain.CurrentDomain.BaseDirectory;
-var keyPath = Path.Combine(binPath, "Firebase", "key.json");
+//var keyPath = Path.Combine(binPath, "Firebase", "key.json");
 
-var defaultApp = FirebaseApp.Create(new AppOptions()
-{
-    Credential = GoogleCredential.FromFile(keyPath)
-});
 
 builder.Services.AddHangfire(configuration => configuration
             .UseSimpleAssemblyNameTypeSerializer()
@@ -187,13 +183,13 @@ builder.Services.AddHangfireServer(options => options.SchedulePollingInterval = 
 // Add signalR
 builder.Services.AddSignalR();
 
-builder.Services.AddHttpClient("UhuraClient", client =>
-{
-    client.BaseAddress = new Uri("https://bis1.prod.apimanagement.eu20.hana.ondemand.com/");
-    client.Timeout = TimeSpan.FromSeconds(30);
-    client.DefaultRequestHeaders.Accept.Add(
-        new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-});
+//builder.Services.AddHttpClient("UhuraClient", client =>
+//{
+//    client.BaseAddress = new Uri("https://bis1.prod.apimanagement.eu20.hana.ondemand.com/");
+//    client.Timeout = TimeSpan.FromSeconds(30);
+//    client.DefaultRequestHeaders.Accept.Add(
+//        new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+//});
 
 
 

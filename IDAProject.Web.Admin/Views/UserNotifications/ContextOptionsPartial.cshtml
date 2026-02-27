@@ -1,0 +1,71 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.UserNotifications.UserNotificationsViewModel;
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.General.Enums;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+
+
+<div class="card">
+	<div class="card-body">
+		<div class="panel-body tabs-menu-body">
+			<div class="tab-content">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="context-panel">
+							<div class="card-body tab-option-container" style="overflow-x:auto">
+								<a href="@Url.RouteUrl(RouteNames.UserNotifications_New)">
+									<i class="fa fa-plus" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+									<div>@localizer["AddNew"]</div>
+								</a>
+								<button id="edit">
+									<i class="fa fa-pencil-square-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+									<div>@localizer["Edit"]</div>
+								</button>
+								<button id="view">
+									<i class="fa fa-eye" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+									<div>@localizer["View"]</div>
+								</button>
+								<button id="delete">
+									<i class="fa fa-trash-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
+									<div>@localizer["Delete"]</div>
+								</button>
+
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		@* <div class="row search-params-wrapper">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-12 text-start pb-2">
+						<button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#searchContext" aria-expanded="true" aria-controls="searchContext" style="background-color:white;">
+							<i class="fa fa-angle-down" id="showSearch" style="color:black;"></i>
+						</button>
+					</div>
+				</div>
+				<div class="collapse show" id="searchContext">
+					<div class="col-md-12">
+						<div class="d-flex">
+							<div class="col-sm-6 col-md-6 col-lg-3" id="selectBUC">
+								<tms-input type="Text" name="Keyword" id="empSearchKeyword" label="@localizer["Keyword"]"
+								<tms-input type="Hidden" name="JobTypeId" id="JobTypeId" value="@Model.JobTypeId" />
+							</div>
+						</div>
+						<div class="btn-list text-end search-button-wrapper">
+							<div class="form-group">
+								<button class="btn btn-primary" id="buttonSearchEmployees">@localizer["Search"]</button>
+								<button class="btn btn-primary" id="buttonResetSearchEmployees">@localizer["ResetSearch"]</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> *@
+	</div>
+</div>

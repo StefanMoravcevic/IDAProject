@@ -841,7 +841,7 @@
     <value>Приказано</value>
   </data>
   <data name="to" xml:space="preserve">
-    <value>до</value>
+    <value>До</value>
   </data>
   <data name="Columns" xml:space="preserve">
     <value>Колоне</value>
@@ -938,5 +938,131 @@
   </data>
   <data name="Selected filters" xml:space="preserve">
     <value>Селектовани филтери</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Опис</value>
+  </data>
+  <data name="For all users" xml:space="preserve">
+    <value>За све кориснике</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Група</value>
+  </data>
+  <data name="Note" xml:space="preserve">
+    <value>Опис</value>
+  </data>
+  <data name="Select group" xml:space="preserve">
+    <value>Изаберите групу корисника</value>
+  </data>
+  <data name="User notification basic info" xml:space="preserve">
+    <value>Основне информације о обавештењу корисницима</value>
+  </data>
+  <data name="User notifications" xml:space="preserve">
+    <value>Обавештења корисницима</value>
+  </data>
+  <data name="Activity types" xml:space="preserve">
+    <value>Врсте активности</value>
+  </data>
+  <data name="Click for showing/hiding project tasks" xml:space="preserve">
+    <value>Кликните за приказ/скривање пројектних задатака</value>
+  </data>
+  <data name="Click for showing/hiding tasks" xml:space="preserve">
+    <value>Кликните за приказ/скривање задатака</value>
+  </data>
+  <data name="Enter new project task" xml:space="preserve">
+    <value>Унесите нови пројектни задатак</value>
+  </data>
+  <data name="Enter new regular activity" xml:space="preserve">
+    <value>Унесите редовну активност</value>
+  </data>
+  <data name="Enter new task" xml:space="preserve">
+    <value>Унесите нови задатак</value>
+  </data>
+  <data name="Enter regular activity name" xml:space="preserve">
+    <value>Унесите назив редовне активности</value>
+  </data>
+  <data name="Enter task due date" xml:space="preserve">
+    <value>Унесите рок задатка</value>
+  </data>
+  <data name="Enter task name" xml:space="preserve">
+    <value>Унесите име задатка</value>
+  </data>
+  <data name="Groups" xml:space="preserve">
+    <value>Групе</value>
+  </data>
+  <data name="Home page" xml:space="preserve">
+    <value>Почетна страна</value>
+  </data>
+  <data name="Project" xml:space="preserve">
+    <value>Пројекат</value>
+  </data>
+  <data name="Projects" xml:space="preserve">
+    <value>Пројекти</value>
+  </data>
+  <data name="Regular activity name" xml:space="preserve">
+    <value>Назив активности</value>
+  </data>
+  <data name="Select project" xml:space="preserve">
+    <value>Изаберите пројекат</value>
+  </data>
+  <data name="Task due date" xml:space="preserve">
+    <value>Рок задатка</value>
+  </data>
+  <data name="Task name" xml:space="preserve">
+    <value>Име задатка</value>
+  </data>
+  <data name="Tasks" xml:space="preserve">
+    <value>Задаци</value>
+  </data>
+  <data name="Activity" xml:space="preserve">
+    <value>Активност</value>
+  </data>
+  <data name="Activity type" xml:space="preserve">
+    <value>Врста активности</value>
+  </data>
+  <data name="Add row" xml:space="preserve">
+    <value>Додај ред</value>
+  </data>
+  <data name="Click for showing/hiding regular activity" xml:space="preserve">
+    <value>Кликните за приказ/сакривање редовних активности</value>
+  </data>
+  <data name="Due Date" xml:space="preserve">
+    <value>Рок</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Трајање</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>Од</value>
+  </data>
+  <data name="Order number" xml:space="preserve">
+    <value>Редни број</value>
+  </data>
+  <data name="Plans for day" xml:space="preserve">
+    <value>Планирање за дан</value>
+  </data>
+  <data name="Regular activity" xml:space="preserve">
+    <value>Редовна активност</value>
+  </data>
+  <data name="Select activity type" xml:space="preserve">
+    <value>Изаберите врсту активности</value>
+  </data>
+  <data name="Select activity type to generate table" xml:space="preserve">
+    <value>Изаберите врсту активности да бисте генерисали табелу</value>
+  </data>
+  <data name="Select regular activity" xml:space="preserve">
+    <value>Изаберите редовну активност</value>
+  </data>
+  <data name="Select task" xml:space="preserve">
+    <value>Изаберите задатак</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="Task" xml:space="preserve">
+    <value>Задатак</value>
+  </data>
+  <data name="Аctivity" xml:space="preserve">
+    <value>Активност</value>
   </data>
 </root>

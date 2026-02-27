@@ -16,7 +16,7 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
             _supportedTables.Add(new MasterDataTableInfo("MeasureUnits", "Measure Units"));
         }
 
-        public async Task<int> CreateTableDataAsync(IDAProjectContext dbContext, MasterEntityRequestModel requestModel)
+        public async Task<int> CreateTableDataAsync(IdaContext dbContext, MasterEntityRequestModel requestModel)
         {
             var measureUnit = new MeasureUnit();
 
@@ -27,7 +27,7 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
             return entity.Entity.Id;
         }
 
-        public List<ISelectOption> GetSelectOptionsByTable(IDAProjectContext dbContext, string tableName, string descriptionColumnName)
+        public List<ISelectOption> GetSelectOptionsByTable(IdaContext dbContext, string tableName, string descriptionColumnName)
         {
             throw new NotSupportedException();
         }
@@ -37,7 +37,7 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
             return false;
         }
 
-        public async Task<MasterEntity> GetTableDataAsync(IDAProjectContext dbContext, string tableName, int? id)
+        public async Task<MasterEntity> GetTableDataAsync(IdaContext dbContext, string tableName, int? id)
         {
             var result = new MasterEntity(tableName);
 
@@ -100,7 +100,7 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
             return false; // turned off!
         }
 
-        public async Task UpdateTableDataAsync(IDAProjectContext dbContext, MasterEntityRequestModel requestModel)
+        public async Task UpdateTableDataAsync(IdaContext dbContext, MasterEntityRequestModel requestModel)
         {
             var idField = requestModel.Fields.Single(x => x.Name == "Id");
             var id = (int)MasterDataConverter.GetRawValue(idField.Value, typeof(int))!;
@@ -111,12 +111,12 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
             await dbContext.SaveChangesAsync();
         }
 
-        public List<ISelectOption> GetFilteredSelectOptionsByTable(IDAProjectContext dbContext, string tableName, string keyPropertyName, int propertyValue, string descriptionPropertyName)
+        public List<ISelectOption> GetFilteredSelectOptionsByTable(IdaContext dbContext, string tableName, string keyPropertyName, int propertyValue, string descriptionPropertyName)
         {
             throw new NotSupportedException();
         }
 
-        public async Task SoftDeleteByIdAsync(IDAProjectContext dbContext, string tableName, int id, int? deletedByUserId)
+        public async Task SoftDeleteByIdAsync(IdaContext dbContext, string tableName, int id, int? deletedByUserId)
         {
             var measureUnit = dbContext.MeasureUnits.Single(x => x.Id == id);
             measureUnit.IsDeleted = true;

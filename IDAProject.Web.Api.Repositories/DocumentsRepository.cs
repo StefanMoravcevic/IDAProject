@@ -7,9 +7,9 @@ namespace IDAProject.Web.Api.Repositories
 {
     public class DocumentsRepository : IDocumentsRepository
     {
-        private readonly IDAProjectContext _dbContext;
+        private readonly IdaContext _dbContext;
 
-        public DocumentsRepository(IDAProjectContext dbContext)
+        public DocumentsRepository(IdaContext dbContext)
         {
             _dbContext = dbContext;
         }

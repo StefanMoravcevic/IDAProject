@@ -16,6 +16,13 @@
         <div class="card-body">
             <form method="post" class="login100-form validate-form" asp-route="@RouteNames.Accounts_DoLogin" enctype="application/x-www-form-urlencoded">
                 <span class="login100-form-title"> @localizer["LoginTitle"] </span>
+                <!-- Slika centrirana -->
+                <div class="d-flex justify-content-center mb-4">
+                    <img src="~/images/logoALPACK.png" alt="Logo" style="max-width: 150px; height: auto;">
+                </div>
+
+
+
                 <div class="wrap-input100 validate-input" data-bs-validate="@localizer["LoginUserNameValidation"]">
                     <input class="input100" type="text" name="Username" placeholder="@localizer["Username"]">
                     <span class="focus-input100"></span>
@@ -23,6 +30,7 @@
                         <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                     </span>
                 </div>
+
                 <div class="wrap-input100 validate-input" data-bs-validate="@localizer["LoginPasswordValidation"]">
                     <input class="input100" type="password" name="Password" placeholder="@localizer["Password"]">
                     <span class="focus-input100"></span>
@@ -30,9 +38,7 @@
                         <i class="fa fa-key" aria-hidden="true"></i>
                     </span>
                 </div>
-                @* <div class="text-end pt-1">
-                    <p class="mb-0"><a href="forgot-password.html" class="text-primary ms-1">@localizer["ForgotPassword"]</a></p>
-                </div> *@
+
                 <div class="container-login100-form-btn">
                     <input type="submit" value="@localizer["Login"]" class="login100-form-btn" style="background-color: red;" />
                 </div>

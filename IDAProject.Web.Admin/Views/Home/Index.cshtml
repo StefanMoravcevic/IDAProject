@@ -9,6 +9,7 @@
 
 @{
     ViewData["Title"] = "Sirius dashboard";
+    var urlLogout = Url.RouteUrl(RouteNames.Accounts_Logout);
 }
 <style>
     .partial-container-wrapper1 {
@@ -33,10 +34,6 @@
         height: 100%;
         transform: scale(0.75);
         transform-origin: top left;
-    }
-
-    .page-main {
-        background-color: #950000;
     }
 
     .green-color {
@@ -94,6 +91,15 @@
         box-shadow: 0 0 25px rgba(255, 0, 0, 0.7); /* crvena senka */
     }
 
+    .info-box {
+        background-color: white;
+        color: black;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
 </style>
 @*<div class="text-center">
     <h1 class="display-4">Welcome</h1>
@@ -102,19 +108,39 @@
 *@
 <script src="~/lib/chart/chart.js"></script>
 
+<div class="container-fluid mt-4">
+    <div class="row align-items-center info-box">
 
-<div class="d-flex justify-content-center mt-5">
-    <div class="card p-3 custom-shadow" style="width: 900px;">
-        <!-- SLIKA -->
-        <img src="~/images/febi_bilstein.jpg" alt="Febi Bilstein" class="w-100 mb-3">
+        <div class="col-md-8">
+            <h1>Zdravo @Model.User.FirstName!</h1>
+            <p>
+                Ovde će kasnije ići tekst ili informacije koje želiš da prikažeš korisniku.
+                Možeš dodavati kartice, statistike, ili šta god budeš želeo.
+            </p>
+        </div>
 
-        <!-- VIDEO -->
-        <video class="w-100" autoplay loop muted playsinline>
-            <source src="~/videos/videoplayback (2).mp4" type="video/mp4" />
-        </video>
+        <div class="col-md-4 text-center">
+
+            <img src="@Model.EmployeePhoto"
+                 alt="Profilna slika"
+                 class="img-fluid rounded-circle"
+                 style="max-width: 200px;" />
+
+            <!-- Dugmad ispod slike -->
+            <div class="mt-3 d-flex justify-content-center gap-2">
+                <a href="@urlLogout" class="btn btn-danger">
+                   @localizer["Log out"]
+                </a>
+
+                <a href="/Home/Instructions" class="btn btn-primary">
+                    @localizer["Manual"]
+                </a>
+            </div>
+
+        </div>
+
     </div>
 </div>
-
 
 
 <script>
