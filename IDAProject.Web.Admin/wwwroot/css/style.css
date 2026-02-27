@@ -2308,8 +2308,8 @@ fieldset:disabled a.btn {
 
 .btn-success {
     color: #fff !important;
-    background-color: #13bfa6 !important;
-    border-color: #13bfa6 !important;
+    background-color: #fabb3e !important;
+    border-color: #fabb3e !important;
 }
 
 .btn-success:hover {
@@ -18607,6 +18607,15 @@ img {
 img {
     max-width: 100%;
 }
+.page-main {
+    background-attachment: fixed !important;
+    height: 100%;
+    width: 100%;
+    background: url("../images/ALPACK.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: inline-table;
+}
 
 .loader-img {
     position: absolute;
@@ -18622,7 +18631,7 @@ img {
     background-attachment: fixed !important;
     height: 100%;
     width: 100%;
-    background: url("../images/Febi.jpg");
+    background: url("../images/ALPACK.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

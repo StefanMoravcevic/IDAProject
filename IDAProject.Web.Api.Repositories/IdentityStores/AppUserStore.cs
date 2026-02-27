@@ -7,9 +7,9 @@ using IDAProject.Web.Api.Models.Auth;
 
 namespace IDAProject.Web.Api.Repositories.IdentityStores
 {
-    public class AppUserStore : UserStore<AppIdentityUser, AppIdentityRole, IDAProjectContext, int>
+    public class AppUserStore : UserStore<AppIdentityUser, AppIdentityRole, IdaContext, int>
     {
-        public AppUserStore(IDAProjectContext context) : base(context)
+        public AppUserStore(IdaContext context) : base(context)
         {
         }
 

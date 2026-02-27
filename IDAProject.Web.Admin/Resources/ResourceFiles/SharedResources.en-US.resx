@@ -789,7 +789,7 @@
     <value>Showing</value>
   </data>
   <data name="to" xml:space="preserve">
-    <value>to</value>
+    <value>To</value>
   </data>
   <data name="Columns" xml:space="preserve">
     <value>Columns</value>
@@ -886,5 +886,128 @@
   </data>
   <data name="Selected filters" xml:space="preserve">
     <value>Selected filters</value>
+  </data>
+  <data name="For all users" xml:space="preserve">
+    <value>For all users</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="Note" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="Select group" xml:space="preserve">
+    <value>Select group...</value>
+  </data>
+  <data name="User notification basic info" xml:space="preserve">
+    <value>User notification basic info</value>
+  </data>
+  <data name="User notifications" xml:space="preserve">
+    <value>User notifications</value>
+  </data>
+  <data name="Activity types" xml:space="preserve">
+    <value>Activity types</value>
+  </data>
+  <data name="Click for showing/hiding project tasks" xml:space="preserve">
+    <value>Click for showing/hiding project tasks</value>
+  </data>
+  <data name="Click for showing/hiding tasks" xml:space="preserve">
+    <value>Click for showing/hiding tasks</value>
+  </data>
+  <data name="Enter new project task" xml:space="preserve">
+    <value>Enter new project task</value>
+  </data>
+  <data name="Enter new regular activity" xml:space="preserve">
+    <value>Enter new regular activity</value>
+  </data>
+  <data name="Enter new task" xml:space="preserve">
+    <value>Enter new task</value>
+  </data>
+  <data name="Enter regular activity name" xml:space="preserve">
+    <value>Enter regular activity name</value>
+  </data>
+  <data name="Enter task due date" xml:space="preserve">
+    <value>Enter task due date</value>
+  </data>
+  <data name="Enter task name" xml:space="preserve">
+    <value>Enter task name</value>
+  </data>
+  <data name="Groups" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="Home page" xml:space="preserve">
+    <value>Home page</value>
+  </data>
+  <data name="Project" xml:space="preserve">
+    <value>Project</value>
+  </data>
+  <data name="Projects" xml:space="preserve">
+    <value>Projects</value>
+  </data>
+  <data name="Regular activity name" xml:space="preserve">
+    <value>Regular activity name</value>
+  </data>
+  <data name="Select project" xml:space="preserve">
+    <value>Select project</value>
+  </data>
+  <data name="Task due date" xml:space="preserve">
+    <value>Task due date</value>
+  </data>
+  <data name="Task name" xml:space="preserve">
+    <value>Task name</value>
+  </data>
+  <data name="Tasks" xml:space="preserve">
+    <value>Tasks</value>
+  </data>
+  <data name="Activity" xml:space="preserve">
+    <value>Activity</value>
+  </data>
+  <data name="Activity type" xml:space="preserve">
+    <value>Activity type</value>
+  </data>
+  <data name="Add row" xml:space="preserve">
+    <value>Add row</value>
+  </data>
+  <data name="Click for showing/hiding regular activity" xml:space="preserve">
+    <value>Click for showing/hiding regular activity</value>
+  </data>
+  <data name="Due Date" xml:space="preserve">
+    <value>Due Date</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="Order number" xml:space="preserve">
+    <value>Order number</value>
+  </data>
+  <data name="Plans for day" xml:space="preserve">
+    <value>Plans for day</value>
+  </data>
+  <data name="Regular activity" xml:space="preserve">
+    <value>Regular activity</value>
+  </data>
+  <data name="Select activity type" xml:space="preserve">
+    <value>Select activity type</value>
+  </data>
+  <data name="Select activity type to generate table" xml:space="preserve">
+    <value>Select activity type to generate table</value>
+  </data>
+  <data name="Select regular activity" xml:space="preserve">
+    <value>Select regular activity</value>
+  </data>
+  <data name="Select task" xml:space="preserve">
+    <value>Select task</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Task" xml:space="preserve">
+    <value>Task</value>
+  </data>
+  <data name="Аctivity" xml:space="preserve">
+    <value>Аctivity</value>
   </data>
 </root>

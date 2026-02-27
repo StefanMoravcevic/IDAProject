@@ -4,16 +4,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IDAProject.Web.Db.MainDatabase;
 
-public partial class IDAProjectContext : DbContext
+public partial class IdaContext : DbContext
 {
-    public IDAProjectContext()
+    public IdaContext()
     {
     }
 
-    public IDAProjectContext(DbContextOptions<IDAProjectContext> options)
+    public IdaContext(DbContextOptions<IdaContext> options)
         : base(options)
     {
     }
+
+    public virtual DbSet<ActivityType> ActivityTypes { get; set; }
 
     public virtual DbSet<Address> Addresses { get; set; }
 
@@ -79,6 +81,8 @@ public partial class IDAProjectContext : DbContext
 
     public virtual DbSet<HierarchyLevel> HierarchyLevels { get; set; }
 
+    public virtual DbSet<IdaTask> IdaTasks { get; set; }
+
     public virtual DbSet<Integration> Integrations { get; set; }
 
     public virtual DbSet<Item> Items { get; set; }
@@ -111,9 +115,17 @@ public partial class IDAProjectContext : DbContext
 
     public virtual DbSet<Period> Periods { get; set; }
 
+    public virtual DbSet<PlanStatus> PlanStatuses { get; set; }
+
+    public virtual DbSet<Project> Projects { get; set; }
+
+    public virtual DbSet<RegularActivity> RegularActivities { get; set; }
+
     public virtual DbSet<Relationship> Relationships { get; set; }
 
     public virtual DbSet<Schema> Schemas { get; set; }
+
+    public virtual DbSet<Sector> Sectors { get; set; }
 
     public virtual DbSet<Server> Servers { get; set; }
 
@@ -123,19 +135,33 @@ public partial class IDAProjectContext : DbContext
 
     public virtual DbSet<State1> States1 { get; set; }
 
+    public virtual DbSet<TasksPlanning> TasksPlannings { get; set; }
+
     public virtual DbSet<UserLog> UserLogs { get; set; }
 
     public virtual DbSet<UserMessage> UserMessages { get; set; }
+
+    public virtual DbSet<UserNotification> UserNotifications { get; set; }
 
     public virtual DbSet<UserSetting> UserSettings { get; set; }
 
     public virtual DbSet<ZipCode> ZipCodes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultDatabase", o => o.UseCompatibilityLevel(110));
+        => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultDatabase");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ActivityType>(entity =>
+        {
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.Name).HasMaxLength(100);
+
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.ActivityTypes)
+                .HasForeignKey(d => d.DeletedBy)
+                .HasConstraintName("FK_ActivityTypes_AspNetUsers");
+        });
+
         modelBuilder.Entity<Address>(entity =>
         {
             entity.Property(e => e.DeletedDate).HasColumnType("datetime");
@@ -604,6 +630,10 @@ public partial class IDAProjectContext : DbContext
                 .HasForeignKey(d => d.PartnerId)
                 .HasConstraintName("FK_Employees_Partners");
 
+            entity.HasOne(d => d.Sector).WithMany(p => p.Employees)
+                .HasForeignKey(d => d.SectorId)
+                .HasConstraintName("FK_Employees_Sectors");
+
             entity.HasOne(d => d.State).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.StateId)
                 .HasConstraintName("FK_Employees_States");
@@ -695,6 +725,24 @@ public partial class IDAProjectContext : DbContext
             entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.HierarchyLevels)
                 .HasForeignKey(d => d.DeletedBy)
                 .HasConstraintName("FK_HierarchyLevels_AspNetUsers");
+        });
+
+        modelBuilder.Entity<IdaTask>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Tasks");
+
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(200);
+            entity.Property(e => e.DueDate).HasColumnType("datetime");
+            entity.Property(e => e.Name).HasMaxLength(200);
+
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.IdaTasks)
+                .HasForeignKey(d => d.DeletedBy)
+                .HasConstraintName("FK_IdaTasks_AspNetUsers");
+
+            entity.HasOne(d => d.Project).WithMany(p => p.IdaTasks)
+                .HasForeignKey(d => d.ProjectId)
+                .HasConstraintName("FK_IdaTasks_Projects");
         });
 
         modelBuilder.Entity<Integration>(entity =>
@@ -980,6 +1028,37 @@ public partial class IDAProjectContext : DbContext
                 .HasConstraintName("FK_Periods_AspNetUsers");
         });
 
+        modelBuilder.Entity<PlanStatus>(entity =>
+        {
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.Name).HasMaxLength(500);
+
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.PlanStatuses)
+                .HasForeignKey(d => d.DeletedBy)
+                .HasConstraintName("FK_PlanStatuses_AspNetUsers");
+        });
+
+        modelBuilder.Entity<Project>(entity =>
+        {
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(500);
+
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.Projects)
+                .HasForeignKey(d => d.DeletedBy)
+                .HasConstraintName("FK_Projects_AspNetUsers");
+        });
+
+        modelBuilder.Entity<RegularActivity>(entity =>
+        {
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.Name).HasMaxLength(500);
+
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.RegularActivities)
+                .HasForeignKey(d => d.DeletedBy)
+                .HasConstraintName("FK_RegularActivities_AspNetUsers");
+        });
+
         modelBuilder.Entity<Relationship>(entity =>
         {
             entity.Property(e => e.DeletedDate).HasColumnType("datetime");
@@ -997,6 +1076,12 @@ public partial class IDAProjectContext : DbContext
             entity.ToTable("Schema", "HangFire");
 
             entity.Property(e => e.Version).ValueGeneratedNever();
+        });
+
+        modelBuilder.Entity<Sector>(entity =>
+        {
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.Name).HasMaxLength(500);
         });
 
         modelBuilder.Entity<Server>(entity =>
@@ -1059,6 +1144,39 @@ public partial class IDAProjectContext : DbContext
                 .HasConstraintName("FK_HangFire_State_Job");
         });
 
+        modelBuilder.Entity<TasksPlanning>(entity =>
+        {
+            entity.ToTable("TasksPlanning");
+
+            entity.Property(e => e.ActivityName).HasMaxLength(100);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.ActivityType).WithMany(p => p.TasksPlannings)
+                .HasForeignKey(d => d.ActivityTypeId)
+                .HasConstraintName("FK_TasksPlanning_ActivityTypes");
+
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.TasksPlannings)
+                .HasForeignKey(d => d.DeletedBy)
+                .HasConstraintName("FK_TasksPlanning_AspNetUsers");
+
+            entity.HasOne(d => d.PlanStatus).WithMany(p => p.TasksPlannings)
+                .HasForeignKey(d => d.PlanStatusId)
+                .HasConstraintName("FK_TasksPlanning_PlanStatuses");
+
+            entity.HasOne(d => d.Project).WithMany(p => p.TasksPlannings)
+                .HasForeignKey(d => d.ProjectId)
+                .HasConstraintName("FK_TasksPlanning_Projects");
+
+            entity.HasOne(d => d.RegularActivity).WithMany(p => p.TasksPlannings)
+                .HasForeignKey(d => d.RegularActivityId)
+                .HasConstraintName("FK_TasksPlanning_RegularActivities");
+
+            entity.HasOne(d => d.Task).WithMany(p => p.TasksPlannings)
+                .HasForeignKey(d => d.TaskId)
+                .HasConstraintName("FK_TasksPlanning_IdaTasks");
+        });
+
         modelBuilder.Entity<UserLog>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_UsersLogs");
@@ -1097,6 +1215,24 @@ public partial class IDAProjectContext : DbContext
                 .HasForeignKey(d => d.UserTo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserMessages_AspNetUsersTo");
+        });
+
+        modelBuilder.Entity<UserNotification>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Notifications");
+
+            entity.Property(e => e.DateFrom).HasColumnType("datetime");
+            entity.Property(e => e.DateTo).HasColumnType("datetime");
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.Note).HasMaxLength(500);
+
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.UserNotifications)
+                .HasForeignKey(d => d.DeletedBy)
+                .HasConstraintName("FK_Notifications_AspNetUsers");
+
+            entity.HasOne(d => d.Sector).WithMany(p => p.UserNotifications)
+                .HasForeignKey(d => d.SectorId)
+                .HasConstraintName("FK_Notifications_Sectors");
         });
 
         modelBuilder.Entity<UserSetting>(entity =>

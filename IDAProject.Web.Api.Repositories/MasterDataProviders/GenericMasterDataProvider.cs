@@ -29,31 +29,38 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
             _entityTypes = new List<IEntityType>();
             _supportedTables = new List<MasterDataTableInfo>()
             {
-                new MasterDataTableInfo("Cities","Cities"),
-                new MasterDataTableInfo("CostIncomeTypes","Cost Income Types"),
-                new MasterDataTableInfo("Currencies","Currencies"),
-                new MasterDataTableInfo("ExchangeRates","Exchange Rates"),
-                new MasterDataTableInfo("DocumentTypes","Document Types"),
-                new MasterDataTableInfo("DocumentSerieTypes","Document Serie Types"),
-                new MasterDataTableInfo("EmploymentTypes","Employment Types"),
-                new MasterDataTableInfo("BenefitTypes","Benefit Types"),
-                new MasterDataTableInfo("BenefitCategories","Benefit Categories"),
-                new MasterDataTableInfo("PaybackReasons","Payback Reasons"),
-                new MasterDataTableInfo("Genders","Genders"),
-                new MasterDataTableInfo("HierarchyLevels","Hierarchy Levels"),
-                new MasterDataTableInfo("JobTypes","Job Types"),
-                new MasterDataTableInfo("Languages","Languages"),
-                new MasterDataTableInfo("MeasureUnits","Measure Units"),
-                new MasterDataTableInfo("MeasureUnitTypes","Measure Unit Types"),
-                new MasterDataTableInfo("NoticeTypes","Notice Types"),
-                new MasterDataTableInfo("PartnerCategories","Partner Categories"),
-                new MasterDataTableInfo("PartnerTypes","Partner Types"),
-                new MasterDataTableInfo("Relationships","Relationships"),
-                new MasterDataTableInfo("States","States")
+                //new MasterDataTableInfo("Cities","Cities"),
+                //new MasterDataTableInfo("CostIncomeTypes","Cost Income Types"),
+                //new MasterDataTableInfo("Currencies","Currencies"),
+                //new MasterDataTableInfo("ExchangeRates","Exchange Rates"),
+                //new MasterDataTableInfo("DocumentTypes","Document Types"),
+                //new MasterDataTableInfo("DocumentSerieTypes","Document Serie Types"),
+                //new MasterDataTableInfo("EmploymentTypes","Employment Types"),
+                //new MasterDataTableInfo("BenefitTypes","Benefit Types"),
+                //new MasterDataTableInfo("BenefitCategories","Benefit Categories"),
+                //new MasterDataTableInfo("PaybackReasons","Payback Reasons"),
+                //new MasterDataTableInfo("Genders","Genders"),
+                //new MasterDataTableInfo("HierarchyLevels","Hierarchy Levels"),
+                //new MasterDataTableInfo("JobTypes","Job Types"),
+                //new MasterDataTableInfo("Languages","Languages"),
+                //new MasterDataTableInfo("MeasureUnits","Measure units"),
+                //new MasterDataTableInfo("MeasureUnitTypes","Measure Unit Types"),
+                //new MasterDataTableInfo("NoticeTypes","Notice Types"),
+                //new MasterDataTableInfo("PartnerCategories","Partner Categories"),
+                //new MasterDataTableInfo("PartnerTypes","Partner Types"),
+                //new MasterDataTableInfo("Relationships","Relationships"),
+                //new MasterDataTableInfo("States","States"),
+                new MasterDataTableInfo("Sectors","Groups"),
+                new MasterDataTableInfo("ActivityTypes","Activity types"),
+                new MasterDataTableInfo("Projects","Projects"),
+                new MasterDataTableInfo("IdaTasks","Tasks"),
+                new MasterDataTableInfo("PlanStatuses","Plan statuses"),
+                new MasterDataTableInfo("RegularActivities","Regular activities")
+   
             };
         }
 
-        public async Task<int> CreateTableDataAsync(IDAProjectContext dbContext, MasterEntityRequestModel requestModel)
+        public async Task<int> CreateTableDataAsync(IdaContext dbContext, MasterEntityRequestModel requestModel)
         {
             var dbContextType = dbContext.GetType();
             var tableSetProperty = dbContextType.GetProperty(requestModel.TableName)!;
@@ -72,7 +79,7 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
         }
 
         
-        private List<GenericSelectOption> GetSelectOptions(IDAProjectContext dbContext, IForeignKey foreignKey)
+        private List<GenericSelectOption> GetSelectOptions(IdaContext dbContext, IForeignKey foreignKey)
         {
             var relatedEntity = foreignKey.PrincipalEntityType;
             var dbContextType = dbContext.GetType();
@@ -106,7 +113,7 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
         }
 
 
-        public async Task<MasterEntity> GetTableDataAsync(IDAProjectContext dbContext, string tableName, int? id)
+        public async Task<MasterEntity> GetTableDataAsync(IdaContext dbContext, string tableName, int? id)
         {
             EnsureEntityTypesInitialized(dbContext);
             var result = new MasterEntity(tableName);
@@ -169,7 +176,7 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
             return result;
         }
 
-        public List<ISelectOption> GetFilteredSelectOptionsByTable(IDAProjectContext dbContext, string tableName, string keyPropertyName, int propertyValue, string descriptionPropertyName)
+        public List<ISelectOption> GetFilteredSelectOptionsByTable(IdaContext dbContext, string tableName, string keyPropertyName, int propertyValue, string descriptionPropertyName)
         {
             EnsureEntityTypesInitialized(dbContext);
             var result = new List<ISelectOption>();
@@ -249,7 +256,7 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
         }
 
 
-        public List<ISelectOption> GetSelectOptionsByTable(IDAProjectContext dbContext, string tableName, string descriptionExpression)
+        public List<ISelectOption> GetSelectOptionsByTable(IdaContext dbContext, string tableName, string descriptionExpression)
         {
             EnsureEntityTypesInitialized(dbContext);
             var result = new List<ISelectOption>();
@@ -316,7 +323,7 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
         }
 
 
-        public async Task UpdateTableDataAsync(IDAProjectContext dbContext, MasterEntityRequestModel requestModel)
+        public async Task UpdateTableDataAsync(IdaContext dbContext, MasterEntityRequestModel requestModel)
         {
             var dbContextType = dbContext.GetType();
             var tableSetProperty = dbContextType.GetProperty(requestModel.TableName)!;
@@ -334,7 +341,7 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task SoftDeleteByIdAsync(IDAProjectContext dbContext, string tableName, int id, int? deletedByUserId)
+        public async Task SoftDeleteByIdAsync(IdaContext dbContext, string tableName, int id, int? deletedByUserId)
         {
             var dbContextType = dbContext.GetType();
             var tableSetProperty = dbContextType.GetProperty(tableName)!;
@@ -367,7 +374,7 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
             return result;
         }
 
-        private void EnsureEntityTypesInitialized(IDAProjectContext dbContext)
+        private void EnsureEntityTypesInitialized(IdaContext dbContext)
         {
             if (!_entityTypes.Any())
             {

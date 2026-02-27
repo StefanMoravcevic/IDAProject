@@ -1,0 +1,122 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.UserNotifications.UserNotificationViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Helpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@inject IStringLocalizer<SharedResources> localizer
+@{
+	var notification = Model.UserNotification;
+	var urlListNotification = Url.RouteUrl(RouteNames.UserNotifications_List);
+
+}
+<div class="card">
+	<div class="card-body">
+		<div class="panel panel-primary">
+			<div class="row">
+				<div class="col-lg-12 col-md-12" id="notificationContainer">
+					<div class="card">
+						<div class="card-header border-bottom">
+							<h4 class="mb-0">@localizer["User notification basic info"]</h4>
+							<tms-input type="Hidden" name="Id" id="notificationId" value="@notification.Id" />
+						</div>
+						<div class="card-body p-0 task-edit-main">
+							<div class="row p-5 border-bottom">
+								<div class="col-sm-12 col-md-4 col-xl-3">
+									<tms-input type="Date" name="DateFrom" id="DateFromId" value="@notification.DateFrom!" label="@localizer["Date from"]" placeholder="@localizer["Enter date from"]" />
+								</div>
+								<div class="col-sm-12 col-md-4 col-xl-3">
+									<tms-input type="Date" name="DateTo" id="DateToId" value="@notification.DateTo!" label="@localizer["Date to"]" placeholder="@localizer["Enter date to"]" />
+								</div>
+								<div class="col-sm-12 col-md-4 col-xl-3">
+									<tms-input type="CheckBox" name="ForAllUsers" id="ForAllUsersId" value="true" label="@localizer["For all users"]" checked="@notification.ForAllUsers" />
+								</div>
+								<div class="col-sm-12 col-md-6 col-xl-3" id="sectorWrapper">
+									<tms-select name="SectorId"
+												id="SectorId"
+												options="@Model.Sectors"
+												selected-option="@notification.SectorId"
+												label="@localizer["Group"]:"
+												empty-option-text="@localizer["Select group"]..." />
+								</div>
+								<div class="col-sm-12 col-md-12 col-xl-12 col-lg-12">
+									<div class="form-group">
+										<label class="form-label text-muted" for="Note">@localizer["Description"]:</label>
+										<div class="input-group">
+											<textarea name="Note" class="form-control text-dark" id="NoteId" style="height:120px;">@notification.Note</textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="row p-5">
+					<div class="btn-list text-end">
+						<button class="btn btn-outline-danger" id="buttonCancel">@localizer["Cancel"]</button>
+						<button class="btn btn-primary" id="buttonSave">@localizer["Save"]</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section Styles {
+	<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+	<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+	<script type="text/javascript">
+
+		function toggleSector() {
+			if ($("#ForAllUsersId").is(":checked")) {
+				$("#sectorWrapper").hide();
+
+				$("#SectorId").val(null).trigger("change");
+			} else {
+				$("#sectorWrapper").show();
+			}
+		}
+
+		$(document).ready(function () {
+			toggleSector();
+			$("#ForAllUsersId").on("change", function () {
+				toggleSector();
+			});
+			if (@Model.ReadOnly == 1) {
+				$("#notificationContainer :input").prop("disabled", true);
+				$("#buttonSave").prop("disabled", true);
+			}
+
+			$("#buttonSave").click(function () {
+				var $inputsContainer = $("#notificationContainer");
+
+				if (validateRequiredFields($inputsContainer, '@localizer["ValidationMsg"]')) {
+					var jsonData = serializeJSON($inputsContainer);
+
+					$.ajax({
+						url: "@Url.RouteUrl(RouteNames.UserNotifications_Save)",
+						method: "POST",
+						data: jsonData,
+						success: function (response) {
+							handleActionResponseMessage(response, function () {
+								location = response.message;
+							}, '@localizer["Error"]', '@localizer["SavedMsg"]');
+						}
+					});
+				}
+			});
+
+			$("#buttonCancel").click(function () {
+				document.location = '@urlListNotification';
+			});
+		});
+	</script>
+}

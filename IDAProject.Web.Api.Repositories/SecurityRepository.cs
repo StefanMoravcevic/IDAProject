@@ -6,9 +6,9 @@ namespace IDAProject.Web.Api.Repositories
 {
     public class SecurityRepository : ISecurityRepository
     {
-        private readonly IDAProjectContext _dbContext;
+        private readonly IdaContext _dbContext;
 
-        public SecurityRepository(IDAProjectContext dbContext)
+        public SecurityRepository(IdaContext dbContext)
         {
             _dbContext = dbContext;
         }

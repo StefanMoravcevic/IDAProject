@@ -134,6 +134,7 @@ namespace IDAProject.Web.Admin.Controllers
             viewModel.Companies = await _masterDataManager.GetSelectOptionsByTableAsync("Companies", "Name");
             viewModel.NoticeTypes = await _masterDataManager.GetSelectOptionsByTableAsync("NoticeTypes", "Name");
             viewModel.OrgUnits = await _masterDataManager.GetSelectOptionsByTableAsync("OrgUnits", "Name");
+            viewModel.Sectors = await _masterDataManager.GetSelectOptionsByTableAsync("Sectors", "Name");
             viewModel.User = GetCurrentUser();
 
             return viewModel;
@@ -201,8 +202,20 @@ namespace IDAProject.Web.Admin.Controllers
         }
 
         [HttpPost("save", Name = RouteNames.Employees_Save)]
-        public async Task<IActionResult> SaveEmployeeAsync(SaveEmployeeRequestModel requestModel)
+        public async Task<IActionResult> SaveEmployeeAsync(SaveEmployeeRequestModel requestModel, IFormFile? PhotoFile)
         {
+            if (PhotoFile != null && PhotoFile.Length > 0)
+            {
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(PhotoFile.FileName);
+                var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
+
+                using (var stream = new FileStream(savePath, FileMode.Create))
+                {
+                    await PhotoFile.CopyToAsync(stream);
+                }
+
+                requestModel.Photo = "/images/" + fileName;
+            }
             var responseModel = await _employeesManager.SaveEmployeeAsync(requestModel);
             if (responseModel.Valid)
             {

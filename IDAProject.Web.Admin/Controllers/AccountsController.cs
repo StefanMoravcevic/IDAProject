@@ -24,14 +24,16 @@ namespace IDAProject.Web.Admin.Controllers
     public class AccountsController : BaseController
     {
         private readonly IAccountManager _accountManager;
+        private readonly IEmployeesManager _employeesManager;
         private readonly IUsersManager _userManager;
 
         public AccountsController(ILogger<AccountsController> logger,
-            IUsersManager userManager, IAccountManager accountManager)
+            IUsersManager userManager, IAccountManager accountManager, IEmployeesManager employeesManager)
             : base(accountManager, logger)
         {
             _accountManager = accountManager;
             _userManager = userManager;
+            _employeesManager = employeesManager;
         }
 
         [AllowAnonymous]

@@ -11,9 +11,9 @@ namespace IDAProject.Web.Api.Repositories
 {
     public class PartnersRepository : IPartnersRepository
     {
-        private readonly IDAProjectContext _dbContext;
+        private readonly IdaContext _dbContext;
 
-        public PartnersRepository(IDAProjectContext dbContext)
+        public PartnersRepository(IdaContext dbContext)
         {
             _dbContext = dbContext;
         }

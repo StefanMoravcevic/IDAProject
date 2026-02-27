@@ -9,11 +9,11 @@ namespace IDAProject.Web.Api.Models.Interfaces.Internal
     {
         bool IsProvider(string tableName);
 
-        Task<MasterEntity> GetTableDataAsync(IDAProjectContext dbContext, string tableName, int? id);
+        Task<MasterEntity> GetTableDataAsync(IdaContext dbContext, string tableName, int? id);
 
-        Task UpdateTableDataAsync(IDAProjectContext dbContext, MasterEntityRequestModel requestModel);
+        Task UpdateTableDataAsync(IdaContext dbContext, MasterEntityRequestModel requestModel);
 
-        Task<int> CreateTableDataAsync(IDAProjectContext dbContext, MasterEntityRequestModel requestModel);
+        Task<int> CreateTableDataAsync(IdaContext dbContext, MasterEntityRequestModel requestModel);
 
         List<MasterDataTableInfo> GetSupportedMasterDataTables();
 
@@ -28,10 +28,10 @@ namespace IDAProject.Web.Api.Models.Interfaces.Internal
         /// Display expresion where column name is wrapped with curly braces. Example: {columnName1} {columnName2}, or {columnName1}/{columnName2} etc.
         /// If without curly braces then it'll be considered as column name.</param>
         /// <returns>Returns a list of <see cref="ISelectOption"/> for the specified parameters.</returns>
-        List<ISelectOption> GetSelectOptionsByTable(IDAProjectContext dbContext, string tableName, string descriptionExpression);
+        List<ISelectOption> GetSelectOptionsByTable(IdaContext dbContext, string tableName, string descriptionExpression);
 
-        List<ISelectOption> GetFilteredSelectOptionsByTable(IDAProjectContext dbContext, string tableName, string keyPropertyName, int propertyValue, string descriptionPropertyName);
+        List<ISelectOption> GetFilteredSelectOptionsByTable(IdaContext dbContext, string tableName, string keyPropertyName, int propertyValue, string descriptionPropertyName);
 
-        Task SoftDeleteByIdAsync(IDAProjectContext dbContext, string tableName, int id, int? deletedByUserId);
+        Task SoftDeleteByIdAsync(IdaContext dbContext, string tableName, int id, int? deletedByUserId);
     }
 }

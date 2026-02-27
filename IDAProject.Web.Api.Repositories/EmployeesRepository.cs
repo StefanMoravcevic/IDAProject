@@ -12,9 +12,9 @@ namespace IDAProject.Web.Api.Repositories
 {
     public class EmployeesRepository : IEmployeesRepository
     {
-        private readonly IDAProjectContext _dbContext;
+        private readonly IdaContext _dbContext;
 
-        public EmployeesRepository(IDAProjectContext dbContext)
+        public EmployeesRepository(IdaContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -172,7 +172,9 @@ namespace IDAProject.Web.Api.Repositories
                                 //Gender = emp.Gender!.Name,
                                 ZipCode = emp.ZipCode!.ZipCode1,
                                 EmployeeNumber = emp.EmployeeNumber,
-                                Photo = emp.Photo
+                                Photo = emp.Photo,
+                                SectorId = emp.SectorId,
+                                Sector = emp.Sector!.Name
 
                             }).ToListAsync();
 

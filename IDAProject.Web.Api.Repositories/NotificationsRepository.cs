@@ -5,9 +5,9 @@ namespace IDAProject.Web.Api.Repositories
 {
     public class NotificationsRepository : INotificationsRepository
     {
-        private readonly IDAProjectContext _dbContext;
+        private readonly IdaContext _dbContext;
 
-        public NotificationsRepository(IDAProjectContext dbContext)
+        public NotificationsRepository(IdaContext dbContext)
         {
             _dbContext = dbContext;
         }

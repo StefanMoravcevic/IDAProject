@@ -27,7 +27,7 @@ namespace IDAProject.Web.Helpers
             var result = string.Empty;
             if (date.HasValue)
             {
-                result = date.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
+                result = date.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
             }
             return result;
         }
@@ -37,7 +37,7 @@ namespace IDAProject.Web.Helpers
             var result = string.Empty;
             if (date.HasValue)
             {
-                result = date.Value.ToString("MM/dd/yyyy hh:mm tt", CultureInfo.InvariantCulture);
+                result = date.Value.ToString("dd.MM.yyyy hh:mm tt", CultureInfo.InvariantCulture);
             }
             return result;
         }

@@ -39,5 +39,6 @@
         public string? AccountingCode { get; set; }
         public string? EmployeeNumber { get; set; }
         public string? Photo { get; set; }
+        public int? SectorId { get; set; }
     }
 }

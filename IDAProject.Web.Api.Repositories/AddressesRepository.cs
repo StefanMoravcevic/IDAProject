@@ -9,9 +9,9 @@ namespace IDAProject.Web.Api.Repositories
 {
     public class AddressesRepository : IAddressesRepository
     {
-        private readonly IDAProjectContext _dbContext;
+        private readonly IdaContext _dbContext;
 
-        public AddressesRepository(IDAProjectContext dbContext)
+        public AddressesRepository(IdaContext dbContext)
         {
             _dbContext = dbContext;
         }

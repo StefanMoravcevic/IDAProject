@@ -20,9 +20,9 @@ namespace IDAProject.Web.Api.Repositories
 {
     public class EmailJobSettingsRepository : IEmailJobSettingsRepository
     {
-        private readonly IDAProject.Web.Db.MainDatabase.IDAProjectContext _dbContext;
+        private readonly IDAProject.Web.Db.MainDatabase.IdaContext _dbContext;
 
-        public EmailJobSettingsRepository(IDAProject.Web.Db.MainDatabase.IDAProjectContext dbContext)
+        public EmailJobSettingsRepository(IDAProject.Web.Db.MainDatabase.IdaContext dbContext)
         {
             _dbContext = dbContext;
         }

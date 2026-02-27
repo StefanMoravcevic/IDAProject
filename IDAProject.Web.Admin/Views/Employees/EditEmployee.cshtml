@@ -66,6 +66,9 @@
 											<tms-select name="GenderId" id="empGenderId" options="@Model.Genders" selected-option="@employee.GenderId" label="@localizer["Gender"]:" empty-option-text="@localizer["Select gender"]..." />
 										</div> *@
 										<div class="col-sm-12 col-md-6 col-xl-3">
+											<tms-select name="SectorId" id="SectorId" options="@Model.Sectors" selected-option="@employee.SectorId" label="@localizer["Group"]:" empty-option-text="@localizer["Select group"]..." />
+										</div>
+										<div class="col-sm-12 col-md-6 col-xl-3">
 											<tms-select name="JobTypeId" id="empJobTypeId" options="@Model.JobTypes" selected-option="@employee.JobTypeId" label="@localizer["JobType"]:" empty-option-text="@localizer["Select job type"]..." />
 										</div>
 										<div class="col-sm-12 col-md-12 col-xl-6">
@@ -442,13 +445,28 @@
 				if (validateRequiredFields($inputsContainer)) {
 
 					var jsonData = serializeJSON($inputsContainer);
-					var imageElement = document.getElementById("Photo");
-					var base64Image = imageElement.src
-					jsonData.Photo = base64Image;
+					var formData = new FormData();
+
+				// Dodaj podatke iz JSON-a u FormData
+					for (var key in jsonData) {
+						formData.append(key, jsonData[key]);
+					}
+
+					var photoSrc = $("#Photo").attr("src");
+					// Dodaj sliku (ako je izabrana)
+					var fileInput = document.getElementById("fileInput");
+					if (fileInput.files.length > 0) {
+						formData.append("PhotoFile", fileInput.files[0]);
+					}
+					else {
+						formData.append("Photo", photoSrc);
+					}
 					$.ajax({
 						url: "@Url.RouteUrl(RouteNames.Employees_Save)",
 						method: "POST",
-						data: jsonData,
+						data: formData,
+						processData: false,
+						contentType: false,
 						success: function (response) {
 							handleActionResponseMessage(response, function () {
 								location = response.message;
@@ -466,6 +484,8 @@
 			$("#empGenderId").select2({
 			});
 			$("#empJobTypeId").select2({
+			});
+			$("#SectorId").select2({
 			});
 			$("#empNoticeTypeId").select2({
 			});
