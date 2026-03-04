@@ -1,9 +1,11 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using IDAProject.Web.Admin.Models.Interfaces.Managers;
 using IDAProject.Web.Models.Dto.IdaTasks;
 using IDAProject.Web.Models.General;
+using IDAProject.Web.Models.Interfaces.Html;
+using IDAProject.Web.Models.RequestModels.Employees;
 using IDAProject.Web.Models.RequestModels.IdaTasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace IDAProject.Web.Admin.Managers
 {
@@ -36,6 +38,21 @@ namespace IDAProject.Web.Admin.Managers
         public async Task<ResponseModel<int>> SaveIdaTaskAsync(SaveIdaTaskRequestModel requestModel)
         {
             var result = await PostAsync<SaveIdaTaskRequestModel, ResponseModel<int>>($"api/IdaTasks", requestModel);
+            return result;
+        }
+
+        public async Task<IEnumerable<ISelectOption>> GetUncompletedTasks(bool hasProjectId)
+        {
+            var searchParams = new SearchIdaTasksParams { HasProject = hasProjectId, IsCompleted = false};
+            var tasksResponse = await SearchIdaTasksAsync(searchParams);
+            var tasksList = tasksResponse.Payload.OrderBy(x => x.Id).ThenBy(y => y.Name);
+
+            var result = tasksList.Select(x => new GenericSelectOption
+            {
+                Value = x.Id,
+                Description = x.Name
+            });
+
             return result;
         }
     }

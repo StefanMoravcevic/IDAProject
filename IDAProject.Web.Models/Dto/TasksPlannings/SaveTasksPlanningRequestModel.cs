@@ -14,13 +14,18 @@ public Int32? ProjectId { get; set; }
 public Int32? TaskId { get; set; }
 public Int32? RegularActivityId { get; set; }
 public Int32? ActivityTypeId { get; set; }
-public String ActivityName { get; set; }
+public String? ActivityName { get; set; }
 public TimeOnly? TimeFrom { get; set; }
 public TimeOnly? TimeTo { get; set; }
 public TimeOnly? Duration { get; set; }
 public Int32? PlanNo { get; set; }
 public Int32? PlanStatusId { get; set; }
+public Int32? EmployeeId { get; set; }
 public DateTime? CreatedAt { get; set; }
+
+        public string? TimeFromFormatted { get; set; }
+        public string? TimeToFormatted { get; set; }
+        public string? DurationFormatted { get; set; }
 
     }
 }

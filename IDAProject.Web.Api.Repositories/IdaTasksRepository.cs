@@ -41,6 +41,10 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.ProjectId != null);
                 }
+                if(searchParams.IsCompleted.HasValue)
+                {
+                    query = query.Where(x => x.IsCompleted == searchParams.IsCompleted);
+                }
             }
 
             result = await query.Select(a => new IdaTaskDto

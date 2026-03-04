@@ -1065,4 +1065,58 @@
   <data name="Аctivity" xml:space="preserve">
     <value>Активност</value>
   </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Акције</value>
+  </data>
+  <data name="Enter absence" xml:space="preserve">
+    <value>Унесите одсуство</value>
+  </data>
+  <data name="Plan new day" xml:space="preserve">
+    <value>Планирај нови дан</value>
+  </data>
+  <data name="Select status" xml:space="preserve">
+    <value>Изаберите статус</value>
+  </data>
+  <data name="Yours today plans" xml:space="preserve">
+    <value>Твој данашњи план</value>
+  </data>
+  <data name="Activities" xml:space="preserve">
+    <value>Активности</value>
+  </data>
+  <data name="Finished" xml:space="preserve">
+    <value>Завршено</value>
+  </data>
+  <data name="Plan no" xml:space="preserve">
+    <value>Редни број</value>
+  </data>
+  <data name="Select activity type first" xml:space="preserve">
+    <value>Изаберите врсту активности</value>
+  </data>
+  <data name="Your task" xml:space="preserve">
+    <value>Твој задатак</value>
+  </data>
+  <data name="Yours today realisation" xml:space="preserve">
+    <value>Твоја данашња реализација</value>
+  </data>
+  <data name="Absence type" xml:space="preserve">
+    <value>Врста одсуства</value>
+  </data>
+  <data name="Absences" xml:space="preserve">
+    <value>Одсуства</value>
+  </data>
+  <data name="All day" xml:space="preserve">
+    <value>Цео дан</value>
+  </data>
+  <data name="Click for change" xml:space="preserve">
+    <value>Кликните за измену реда</value>
+  </data>
+  <data name="Enter date" xml:space="preserve">
+    <value>Унесите датум</value>
+  </data>
+  <data name="Select absence type" xml:space="preserve">
+    <value>Унесите врсту одсуства</value>
+  </data>
+  <data name="Users photo" xml:space="preserve">
+    <value>Фотографија корисника</value>
+  </data>
 </root>

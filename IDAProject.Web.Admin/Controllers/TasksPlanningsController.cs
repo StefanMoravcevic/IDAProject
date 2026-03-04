@@ -64,11 +64,11 @@ namespace IDAProject.Web.Admin.Controllers
         [HttpPost("save", Name = RouteNames.TasksPlannings_Save)]
         public async Task<IActionResult> SaveTasksPlanningAsync(SaveTasksPlanningRequestModel requestModel)
         {
+            var user = GetCurrentUser();
+            requestModel.UserId = user.Id;
+            requestModel.CreatedAt = DateTime.Now;
+            requestModel.EmployeeId = user.EmployeeId;
             var responseModel = await _TasksPlanningsManager.SaveTasksPlanningAsync(requestModel);
-            if (responseModel.Valid)
-            {
-                responseModel.Message = Url.RouteUrl(RouteNames.TasksPlannings_List, new { Id = "111" })!;
-            }
             return Json(responseModel);
         }
 
