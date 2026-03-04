@@ -1,9 +1,10 @@
-using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using IDAProject.Web.Api.Models.Interfaces.Repositories;
 using IDAProject.Web.Db.MainDatabase;
 using IDAProject.Web.Helpers;
 using IDAProject.Web.Models.Dto.TasksPlannings;
 using IDAProject.Web.Models.RequestModels.TasksPlannings;
+using Microsoft.EntityFrameworkCore;
 
 namespace IDAProject.Web.Api.Repositories
 {
@@ -37,14 +38,61 @@ namespace IDAProject.Web.Api.Repositories
             }
             else
             {
-                //implement actual search params here
-                throw new System.NotImplementedException();     
+                if (searchParams.ActivityTypeId.HasValue)
+                {
+                    query = query.Where(x => x.ActivityTypeId == searchParams.ActivityTypeId);
+                }
+                if (!string.IsNullOrEmpty(searchParams.CreatedDate))
+                {
+                    if (DateTime.TryParseExact(searchParams.CreatedDate,
+                                               "dd.MM.yyyy",
+                                               CultureInfo.InvariantCulture,
+                                               DateTimeStyles.None,
+                                               out var parsedDate))
+                    {
+                        query = query.Where(x => x.CreatedAt.HasValue &&
+                                                 x.CreatedAt.Value.Date == parsedDate.Date);
+                    }
+                }
+                if (searchParams.UserId.HasValue)
+                {
+                    query = query.Where(x => x.UserId == searchParams.UserId);
+                }
             }
 
-            result = await query.Select(a => new TasksPlanningDto
+            result = await query.OrderBy(x => x.TimeFrom).Select(a => new TasksPlanningDto
             {
-                //implement assignment of properties here, only id is implemented as default
-                Id = a.Id
+                Id = a.Id,
+                UserId = a.UserId,
+                PlanStatusId = a.PlanStatusId,
+                PlanStatus = a.PlanStatus.Name,
+                ActivityName = a.ActivityName,
+                ActivityTypeId = a.ActivityTypeId,
+                ActivityTypeName = a.ActivityType.Name,
+                CreatedAt = a.CreatedAt,
+                Duration = a.Duration,
+                EmployeeId = a.EmployeeId,
+                PlanNo = a.PlanNo,
+                Project = a.Project.Description,
+                ProjectId = a.ProjectId,
+                RegularActivityId = a.RegularActivityId,
+                RegularActivity = a.RegularActivity.Name,
+                TaskId = a.TaskId,
+                Task = a.Task.Name,
+                TimeFrom = a.TimeFrom,
+                TimeTo = a.TimeTo,
+                DisplayTask =
+        a.ProjectId != null && a.TaskId != null
+            ? a.Project.Description + " - " + a.Task.Name
+            : a.TaskId != null
+                ? a.Task.Name
+                : a.RegularActivityId != null
+                    ? a.RegularActivity.Name
+                    : "",
+                IsFinished =
+    a.TaskId != null
+        ? a.Task.IsCompleted
+        : (bool?)null
 
             }).ToListAsync();
             return result;

@@ -1062,13 +1062,17 @@ function validateRequiredFieldsExcludingContainer($inputsContainer, $excludedInp
 }
 function serializeJSON($inputsContainer) {
     var obj = {};
+
     $("input,select,textarea", $inputsContainer).each(function (_, field) {
+
         if (!field.name || ['file', 'reset', 'submit', 'button'].indexOf(field.type) > -1) {
             return;
         }
+
         if (field.dataset.manser != undefined) {
             return;
         }
+
         else if (field.type === 'select-multiple') {
             var options = [];
             Array.prototype.slice.call(field.options).forEach(function (option) {
@@ -1080,18 +1084,28 @@ function serializeJSON($inputsContainer) {
             }
             return;
         }
+
+        // 🔥 DODATO: time input podrška
+        else if (field.type === 'time') {
+            obj[field.name] = field.value;
+            return;
+        }
+
         else if (field.dataset.date != undefined) {
             var inputDate = getDateTimeFromInput(field);
             obj[field.name] = getEncodedDateTime(inputDate);
         }
+
         else if (field.classList.contains('laterDefinedDatePicker')) {
             var inputDate = getDateTimeFromInput(field);
             obj[field.name] = getEncodedDateTime(inputDate);
         }
+
         else if (['checkbox', 'radio'].indexOf(field.type) > -1 && !field.checked) {
             return;
         }
-        else if (field.type !== 'time' && !obj[field.name]) {
+
+        else if (!obj[field.name]) {
             if (field.classList.contains('decimal-text')) {
                 obj[field.name] = getDecimalFromInputField(field);
             }
@@ -1099,8 +1113,8 @@ function serializeJSON($inputsContainer) {
                 obj[field.name] = field.value;
             }
         }
-
     });
+
     return obj;
 }
 

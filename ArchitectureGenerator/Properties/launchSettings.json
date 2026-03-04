@@ -2,7 +2,7 @@
   "profiles": {
     "ArchitectureGenerator": {
       "commandName": "Project",
-      "commandLineArgs": "TasksPlanning"
+      "commandLineArgs": "EmployeeAbsence"
     }
   }
 }

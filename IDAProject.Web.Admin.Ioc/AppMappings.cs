@@ -34,6 +34,7 @@ namespace IDAProject.Web.Admin.Ioc
             serviceCollection.AddScoped<IIdaTasksManager, IdaTasksManager>();
             serviceCollection.AddScoped<IRegularActivitiesManager, RegularActivitiesManager>();
             serviceCollection.AddScoped<ITasksPlanningsManager, TasksPlanningsManager>();
+            serviceCollection.AddScoped<IEmployeeAbsencesManager, EmployeeAbsencesManager>();
 
             serviceCollection.AddScoped<AuthorizationService>();
             serviceCollection.AddScoped<AuthorizationHelpers>();

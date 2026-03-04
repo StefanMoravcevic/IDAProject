@@ -37,9 +37,13 @@ public partial class TasksPlanning
 
     public DateTime? CreatedAt { get; set; }
 
+    public int? EmployeeId { get; set; }
+
     public virtual ActivityType? ActivityType { get; set; }
 
     public virtual AspNetUser? DeletedByNavigation { get; set; }
+
+    public virtual Employee? Employee { get; set; }
 
     public virtual PlanStatus? PlanStatus { get; set; }
 
@@ -48,4 +52,6 @@ public partial class TasksPlanning
     public virtual RegularActivity? RegularActivity { get; set; }
 
     public virtual IdaTask? Task { get; set; }
+
+    public virtual AspNetUser? User { get; set; }
 }

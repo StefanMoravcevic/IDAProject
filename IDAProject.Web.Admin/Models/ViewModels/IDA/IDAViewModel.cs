@@ -8,6 +8,7 @@ namespace IDAProject.Web.Admin.Models.ViewModels.IDA
         public IDAViewModel()
         {
             Projects = new List<GenericSelectOption>();
+            ProjectTasks = new List<GenericSelectOption>();
             Tasks = new List<GenericSelectOption>();
             ActivityTypes = new List<GenericSelectOption>();
             PlanStatuses = new List<GenericSelectOption>();
@@ -15,10 +16,12 @@ namespace IDAProject.Web.Admin.Models.ViewModels.IDA
         }
 
         public IEnumerable<ISelectOption> Projects { get; set; }
+        public IEnumerable<ISelectOption> ProjectTasks { get; set; }
         public IEnumerable<ISelectOption> Tasks { get; set; }
         public IEnumerable<ISelectOption> ActivityTypes { get; set; }
         public IEnumerable<ISelectOption> PlanStatuses { get; set; }
         public IEnumerable<ISelectOption> RegularActivities { get; set; }
         public string? Today { get; set; }
+        public string? ImageSource { get; set; }
     }
 }

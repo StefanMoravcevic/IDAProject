@@ -91,6 +91,8 @@ public partial class Employee
 
     public virtual AspNetUser? DeletedByNavigation { get; set; }
 
+    public virtual ICollection<EmployeeAbsence> EmployeeAbsences { get; set; } = new List<EmployeeAbsence>();
+
     public virtual JobType? JobType { get; set; }
 
     public virtual NoticeType? NoticeType { get; set; }
@@ -102,6 +104,8 @@ public partial class Employee
     public virtual Sector? Sector { get; set; }
 
     public virtual State? State { get; set; }
+
+    public virtual ICollection<TasksPlanning> TasksPlannings { get; set; } = new List<TasksPlanning>();
 
     public virtual ZipCode? ZipCode { get; set; }
 }

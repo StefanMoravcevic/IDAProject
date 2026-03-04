@@ -137,6 +137,17 @@
         public const string UserNotifications_View = "UserNotifications_View";
 
 
+        public const string EmployeeAbsences_List = "EmployeeAbsences_List";
+        public const string EmployeeAbsences_ListByEmployeeId = "EmployeeAbsences_ListByEmployeeId";
+        public const string EmployeeAbsences_RecordsByEmployeeId = "EmployeeAbsences_RecordsByEmployeeId";
+        public const string EmployeeAbsences_Search = "EmployeeAbsences_Search";
+        public const string EmployeeAbsences_New = "EmployeeAbsences_New";
+        public const string EmployeeAbsences_Edit = "EmployeeAbsences_Edit";
+        public const string EmployeeAbsences_Save = "EmployeeAbsences_Save";
+        public const string EmployeeAbsences_Delete = "EmployeeAbsences_Delete";
+        public const string EmployeeAbsences_View = "EmployeeAbsences_View";
+
+
         public const string Projects_List = "Projects_List";
         public const string Projects_Search = "Projects_Search";
         public const string Projects_New = "Projects_New";
@@ -166,6 +177,7 @@
         public const string TasksPlannings_Delete = "TasksPlannings_Delete";
 
         public const string IDA_Index = "IDA_Index";
+        public const string IDA_PlanNewDay = "IDA_PlanNewDay";
 
 
         public const string Roles_List = "Roles_List";

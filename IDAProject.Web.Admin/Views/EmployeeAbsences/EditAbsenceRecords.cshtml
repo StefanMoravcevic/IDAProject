@@ -1,0 +1,60 @@
+﻿@model List<IDAProject.Web.Models.Dto.EmployeeAbsences.EmployeeAbsenceDto>
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Helpers;
+@using IDAProject.Web.Models.General.Enums
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+<style>
+
+</style>
+<table id="tableAbsence" style="width:100%;" class="table table-striped dataTable no-footer table-modern">
+    <thead>
+        <tr>
+            @* <th>@localizer["Vehicle"]</th> *@
+            <th>@localizer["Absence type"]</th>
+            <th>@localizer["Date from"]</th>
+            <th>@localizer["Date to"]</th>
+            <th>@localizer["All day"]</th>
+            <th>@localizer["Time from"]</th>
+            <th>@localizer["Time to"]</th>
+            <th>@localizer["Note"]</th>
+            <th style="text-align:center;">@localizer["Options"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var record in Model)
+        {
+            <tr>
+                @* <td>@record.Vehicle</td> *@
+                <td>@record.AbsenceType</td>
+                <td>@record.DateFromFormatted</td>
+                <td>@record.DateToFormatted</td>
+                <td style="text-align:center;">
+                    @if (record.AllDay)
+                    {
+                        <i class="fa fa-check-circle" style="color: green;"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-times-circle" style="color: red;"></i>
+                    }
+                </td>
+                <td>@record.TimeFromForTableFormatted</td>
+                <td>@record.TimeToForTableFormatted</td>
+                <td>@record.Comment</td>
+                <td style="text-align:center;">
+                    <button type="button" name="delete" data-id="@record.Id" class="align-items-center justify-content-center" value="@record.Id">
+                        <i class="fa fa-trash-o" style="color:red;"></i>
+                    </button>
+                    <button type="button" name="edit" data-id="@record.Id" class="align-items-center justify-content-center" value="@record.Id">
+                        <i class="fa fa-pencil-square-o" style="padding-left:15px;"></i>
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

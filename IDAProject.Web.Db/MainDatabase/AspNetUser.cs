@@ -86,6 +86,8 @@ public partial class AspNetUser
 
     public virtual Employee? Employee { get; set; }
 
+    public virtual ICollection<EmployeeAbsence> EmployeeAbsences { get; set; } = new List<EmployeeAbsence>();
+
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 
     public virtual ICollection<EmploymentType> EmploymentTypes { get; set; } = new List<EmploymentType>();
@@ -128,7 +130,9 @@ public partial class AspNetUser
 
     public virtual ICollection<State> States { get; set; } = new List<State>();
 
-    public virtual ICollection<TasksPlanning> TasksPlannings { get; set; } = new List<TasksPlanning>();
+    public virtual ICollection<TasksPlanning> TasksPlanningDeletedByNavigations { get; set; } = new List<TasksPlanning>();
+
+    public virtual ICollection<TasksPlanning> TasksPlanningUsers { get; set; } = new List<TasksPlanning>();
 
     public virtual ICollection<UserLog> UserLogs { get; set; } = new List<UserLog>();
 
