@@ -15,6 +15,8 @@ public partial class IdaContext : DbContext
     {
     }
 
+    public virtual DbSet<AbsenceType> AbsenceTypes { get; set; }
+
     public virtual DbSet<ActivityType> ActivityTypes { get; set; }
 
     public virtual DbSet<Address> Addresses { get; set; }
@@ -70,6 +72,8 @@ public partial class IdaContext : DbContext
     public virtual DbSet<EmailQueue> EmailQueues { get; set; }
 
     public virtual DbSet<Employee> Employees { get; set; }
+
+    public virtual DbSet<EmployeeAbsence> EmployeeAbsences { get; set; }
 
     public virtual DbSet<EmploymentType> EmploymentTypes { get; set; }
 
@@ -152,6 +156,12 @@ public partial class IdaContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<AbsenceType>(entity =>
+        {
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.Name).HasMaxLength(100);
+        });
+
         modelBuilder.Entity<ActivityType>(entity =>
         {
             entity.Property(e => e.DeletedDate).HasColumnType("datetime");
@@ -641,6 +651,26 @@ public partial class IdaContext : DbContext
             entity.HasOne(d => d.ZipCode).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.ZipCodeId)
                 .HasConstraintName("FK_Employees_ZipCodes");
+        });
+
+        modelBuilder.Entity<EmployeeAbsence>(entity =>
+        {
+            entity.Property(e => e.Comment).HasMaxLength(500);
+            entity.Property(e => e.DateFrom).HasColumnType("datetime");
+            entity.Property(e => e.DateTo).HasColumnType("datetime");
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.AbsenceType).WithMany(p => p.EmployeeAbsences)
+                .HasForeignKey(d => d.AbsenceTypeId)
+                .HasConstraintName("FK_EmployeeAbsences_AbsenceTypes");
+
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.EmployeeAbsences)
+                .HasForeignKey(d => d.DeletedBy)
+                .HasConstraintName("FK_EmployeeAbsences_AspNetUsers");
+
+            entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeAbsences)
+                .HasForeignKey(d => d.EmployeeId)
+                .HasConstraintName("FK_EmployeeAbsences_Employees");
         });
 
         modelBuilder.Entity<EmploymentType>(entity =>
@@ -1156,9 +1186,13 @@ public partial class IdaContext : DbContext
                 .HasForeignKey(d => d.ActivityTypeId)
                 .HasConstraintName("FK_TasksPlanning_ActivityTypes");
 
-            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.TasksPlannings)
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.TasksPlanningDeletedByNavigations)
                 .HasForeignKey(d => d.DeletedBy)
                 .HasConstraintName("FK_TasksPlanning_AspNetUsers");
+
+            entity.HasOne(d => d.Employee).WithMany(p => p.TasksPlannings)
+                .HasForeignKey(d => d.EmployeeId)
+                .HasConstraintName("FK_TasksPlanning_Employees");
 
             entity.HasOne(d => d.PlanStatus).WithMany(p => p.TasksPlannings)
                 .HasForeignKey(d => d.PlanStatusId)
@@ -1175,6 +1209,10 @@ public partial class IdaContext : DbContext
             entity.HasOne(d => d.Task).WithMany(p => p.TasksPlannings)
                 .HasForeignKey(d => d.TaskId)
                 .HasConstraintName("FK_TasksPlanning_IdaTasks");
+
+            entity.HasOne(d => d.User).WithMany(p => p.TasksPlanningUsers)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_TasksPlanning_AspNetUsers1");
         });
 
         modelBuilder.Entity<UserLog>(entity =>

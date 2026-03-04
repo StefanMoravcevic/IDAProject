@@ -1010,4 +1010,58 @@
   <data name="Аctivity" xml:space="preserve">
     <value>Аctivity</value>
   </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Activities" xml:space="preserve">
+    <value>Activities</value>
+  </data>
+  <data name="Enter absence" xml:space="preserve">
+    <value>Enter absence</value>
+  </data>
+  <data name="Finished" xml:space="preserve">
+    <value>Finished</value>
+  </data>
+  <data name="Plan new day" xml:space="preserve">
+    <value>Plan new day</value>
+  </data>
+  <data name="Plan no" xml:space="preserve">
+    <value>Plan no</value>
+  </data>
+  <data name="Select activity type first" xml:space="preserve">
+    <value>Select activity type first</value>
+  </data>
+  <data name="Select status" xml:space="preserve">
+    <value>Select status</value>
+  </data>
+  <data name="Your task" xml:space="preserve">
+    <value>Your task</value>
+  </data>
+  <data name="Yours today plans" xml:space="preserve">
+    <value>Yours today plans</value>
+  </data>
+  <data name="Yours today realisation" xml:space="preserve">
+    <value>Yours today realisation</value>
+  </data>
+  <data name="Absence type" xml:space="preserve">
+    <value>Absence type</value>
+  </data>
+  <data name="Absences" xml:space="preserve">
+    <value>Absences</value>
+  </data>
+  <data name="All day" xml:space="preserve">
+    <value>All day</value>
+  </data>
+  <data name="Click for change" xml:space="preserve">
+    <value>Click for change</value>
+  </data>
+  <data name="Enter date" xml:space="preserve">
+    <value>Enter date</value>
+  </data>
+  <data name="Select absence type" xml:space="preserve">
+    <value>Select absence type</value>
+  </data>
+  <data name="Users photo" xml:space="preserve">
+    <value>Users photo</value>
+  </data>
 </root>

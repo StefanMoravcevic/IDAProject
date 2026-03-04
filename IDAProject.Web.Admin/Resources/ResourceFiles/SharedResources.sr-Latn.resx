@@ -117,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Absence type" xml:space="preserve">
+    <value>Vrsta odsustva</value>
+  </data>
+  <data name="Absences" xml:space="preserve">
+    <value>Odsustva</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Akcije</value>
+  </data>
   <data name="Active" xml:space="preserve">
     <value>Aktivan</value>
+  </data>
+  <data name="Activities" xml:space="preserve">
+    <value>Aktivnosti</value>
   </data>
   <data name="Activity" xml:space="preserve">
     <value>Aktivnost</value>
@@ -146,6 +158,9 @@
   </data>
   <data name="Administration" xml:space="preserve">
     <value>Administracija</value>
+  </data>
+  <data name="All day" xml:space="preserve">
+    <value>Ceo dan</value>
   </data>
   <data name="Amount" xml:space="preserve">
     <value>Iznos</value>
@@ -224,6 +239,9 @@
   </data>
   <data name="City" xml:space="preserve">
     <value>Grad</value>
+  </data>
+  <data name="Click for change" xml:space="preserve">
+    <value>Kliknite za izmenu reda</value>
   </data>
   <data name="Click for showing/hiding project tasks" xml:space="preserve">
     <value>Kliknite za prikaz/skrivanje projektnih zadataka</value>
@@ -345,6 +363,9 @@
   <data name="EmployeeNumber" xml:space="preserve">
     <value>Šifra zaposlenog</value>
   </data>
+  <data name="Enter absence" xml:space="preserve">
+    <value>Unesite odsustvo</value>
+  </data>
   <data name="Enter birth date" xml:space="preserve">
     <value>Unesite datum rođenja</value>
   </data>
@@ -353,6 +374,9 @@
   </data>
   <data name="Enter company name" xml:space="preserve">
     <value>Unesite ime kompanije</value>
+  </data>
+  <data name="Enter date" xml:space="preserve">
+    <value>Unesite datum</value>
   </data>
   <data name="Enter date from" xml:space="preserve">
     <value>Unesite datum od</value>
@@ -488,6 +512,9 @@
   </data>
   <data name="Filters" xml:space="preserve">
     <value>Filteri</value>
+  </data>
+  <data name="Finished" xml:space="preserve">
+    <value>Završeno</value>
   </data>
   <data name="First" xml:space="preserve">
     <value>Prva</value>
@@ -732,6 +759,12 @@
   <data name="Photo" xml:space="preserve">
     <value>Slika</value>
   </data>
+  <data name="Plan new day" xml:space="preserve">
+    <value>Planiraj novi dan</value>
+  </data>
+  <data name="Plan no" xml:space="preserve">
+    <value>Redni broj</value>
+  </data>
   <data name="Plans for day" xml:space="preserve">
     <value>Planiranje za dan</value>
   </data>
@@ -843,7 +876,13 @@
   <data name="Segment" xml:space="preserve">
     <value>Segment</value>
   </data>
+  <data name="Select absence type" xml:space="preserve">
+    <value>Unesite vrstu odsustva</value>
+  </data>
   <data name="Select activity type" xml:space="preserve">
+    <value>Izaberite vrstu aktivnosti</value>
+  </data>
+  <data name="Select activity type first" xml:space="preserve">
     <value>Izaberite vrstu aktivnosti</value>
   </data>
   <data name="Select activity type to generate table" xml:space="preserve">
@@ -908,6 +947,9 @@
   </data>
   <data name="Select state" xml:space="preserve">
     <value>Izaberite državu</value>
+  </data>
+  <data name="Select status" xml:space="preserve">
+    <value>Izaberite status</value>
   </data>
   <data name="Select task" xml:space="preserve">
     <value>Izaberite zadatak</value>
@@ -1008,6 +1050,9 @@
   <data name="Username" xml:space="preserve">
     <value>Korisničko ime</value>
   </data>
+  <data name="Users photo" xml:space="preserve">
+    <value>Fotografija korisnika</value>
+  </data>
   <data name="ValidationMsg" xml:space="preserve">
     <value>Popunite obavezna polja.</value>
   </data>
@@ -1025,6 +1070,15 @@
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Da</value>
+  </data>
+  <data name="Your task" xml:space="preserve">
+    <value>Tvoj zadatak</value>
+  </data>
+  <data name="Yours today plans" xml:space="preserve">
+    <value>Tvoj današnji plan</value>
+  </data>
+  <data name="Yours today realisation" xml:space="preserve">
+    <value>Tvoja današnja realizacija</value>
   </data>
   <data name="ZipCode" xml:space="preserve">
     <value>Poštanski broj</value>

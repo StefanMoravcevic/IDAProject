@@ -1,5 +1,6 @@
-using IDAProject.Web.Models.General;
 using IDAProject.Web.Models.Dto.IdaTasks;
+using IDAProject.Web.Models.General;
+using IDAProject.Web.Models.Interfaces.Html;
 using IDAProject.Web.Models.RequestModels.IdaTasks;
 
 namespace IDAProject.Web.Admin.Models.Interfaces.Managers
@@ -10,6 +11,7 @@ namespace IDAProject.Web.Admin.Models.Interfaces.Managers
         Task<ResponseModel<IdaTaskDto>> GetIdaTaskByIdAsync(int id);
         Task<ResponseModelBase> DeleteIdaTaskAsync(int id, int? userId);
         Task<ResponseModel<int>> SaveIdaTaskAsync(SaveIdaTaskRequestModel requestModel);
+        Task<IEnumerable<ISelectOption>> GetUncompletedTasks(bool hasProjectId);
     }
 }
 

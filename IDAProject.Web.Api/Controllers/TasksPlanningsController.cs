@@ -41,6 +41,15 @@ namespace IDAProject.Web.Api.Controllers
         [HttpPost]
         public async Task<ResponseModel<int>> SaveTasksPlanningAsync(SaveTasksPlanningRequestModel requestModel)
         {
+            if (TimeOnly.TryParse(requestModel.TimeFromFormatted, out var tf))
+                requestModel.TimeFrom = tf;
+
+            if (TimeOnly.TryParse(requestModel.TimeToFormatted, out var tt))
+                requestModel.TimeTo = tt;
+
+            if (TimeOnly.TryParse(requestModel.DurationFormatted, out var td))
+                requestModel.Duration = td;
+
             var response = await _TasksPlanningsManager.SaveTasksPlanningAsync(requestModel);
             return response;
         }
