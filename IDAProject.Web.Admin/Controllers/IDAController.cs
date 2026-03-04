@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using IDAProject.Web.Admin.Managers;
 using IDAProject.Web.Admin.Managers.Attributes;
 using IDAProject.Web.Admin.Models.Common;
 using IDAProject.Web.Admin.Models.Interfaces.Managers;
@@ -15,10 +16,14 @@ namespace IDAProject.Web.Admin.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IMasterDataManager _masterDataManager;
-        public IDAController(ILogger<IDAController> logger, IAccountManager accountManager, IConfiguration configuration, IMasterDataManager masterDataManager) : base(accountManager, logger)
+        private readonly IIdaTasksManager _idaTasksManager;
+        private readonly IEmployeesManager _employeesManager;
+        public IDAController(ILogger<IDAController> logger, IAccountManager accountManager, IConfiguration configuration, IMasterDataManager masterDataManager, IIdaTasksManager idaTasksManager, IEmployeesManager employeesManager) : base(accountManager, logger)
         {
             _configuration = configuration;
             _masterDataManager = masterDataManager;
+            _idaTasksManager = idaTasksManager;
+            _employeesManager = employeesManager;
         }
 
 
@@ -26,14 +31,45 @@ namespace IDAProject.Web.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var viewModel = new IDAViewModel();
+            var user = GetCurrentUser();
             viewModel.Projects = await _masterDataManager.GetSelectOptionsByTableAsync("Projects", "Description");
-            viewModel.Tasks = await _masterDataManager.GetSelectOptionsByTableAsync("IdaTasks", "Name");
+            viewModel.Tasks = await _idaTasksManager.GetUncompletedTasks(false);
+            viewModel.ProjectTasks = await _idaTasksManager.GetUncompletedTasks(true);
             viewModel.ActivityTypes = await _masterDataManager.GetSelectOptionsByTableAsync("ActivityTypes", "Name");
             viewModel.PlanStatuses = await _masterDataManager.GetSelectOptionsByTableAsync("PlanStatuses", "Name");
             viewModel.RegularActivities = await _masterDataManager.GetSelectOptionsByTableAsync("RegularActivities", "Name");
-            viewModel.User = GetCurrentUser();
+            viewModel.User = user;
+            var employeePhoto = (await _employeesManager.GetEmployeeByIdAsync(user.EmployeeId)).Payload.Photo;
+            viewModel.ImageSource = employeePhoto;
             viewModel.Today = DateTime.Now.Date.ToString("dd.MM.yyyy");
             return View(viewModel);
+        }
+        [HttpGet("planNewDay", Name = RouteNames.IDA_PlanNewDay)]
+        public async Task<IActionResult> PlanNewDay()
+        {
+            var viewModel = new IDAViewModel();
+            viewModel.Projects = await _masterDataManager.GetSelectOptionsByTableAsync("Projects", "Description");
+            var user = GetCurrentUser();
+            viewModel.ProjectTasks = await _masterDataManager.GetSelectOptionsByTableAsync("IdaTasks", "Name");
+            viewModel.Tasks = await _idaTasksManager.GetUncompletedTasks(false);
+            viewModel.ProjectTasks = await _idaTasksManager.GetUncompletedTasks(true);
+            viewModel.ActivityTypes = await _masterDataManager.GetSelectOptionsByTableAsync("ActivityTypes", "Name");
+            viewModel.PlanStatuses = await _masterDataManager.GetSelectOptionsByTableAsync("PlanStatuses", "Name");
+            viewModel.RegularActivities = await _masterDataManager.GetSelectOptionsByTableAsync("RegularActivities", "Name");
+            viewModel.User = user;
+            var employeePhoto = (await _employeesManager.GetEmployeeByIdAsync(user.EmployeeId)).Payload.Photo;
+            viewModel.ImageSource = employeePhoto;
+            var nextDay = DateTime.Now.Date.AddDays(1);
+
+            // preskoči vikend
+            while (nextDay.DayOfWeek == DayOfWeek.Saturday || nextDay.DayOfWeek == DayOfWeek.Sunday)
+            {
+                nextDay = nextDay.AddDays(1);
+            }
+
+            viewModel.Today = nextDay.ToString("dd.MM.yyyy");
+
+            return View("Index", viewModel);
         }
     }
 }

@@ -1,0 +1,77 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.EmployeeAbsences.EmployeeAbsenceViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using IDAProject.Web.Admin.Models.Interfaces.Managers
+@using Microsoft.Extensions.Localization
+@using IDAProject.Web.Admin.Models.TagHelpers
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Models.General;
+@using IDAProject.Web.Helpers;
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@inject IStringLocalizer<SharedResources> localizer
+@inject IAccountManager accountManager;
+
+@{
+	var token = Context.Request.HttpContext.Request.Cookies[Constants.AdminCookieToken];
+	var user = accountManager.GetUserFromJwt(token!);
+}
+
+<style>
+	.slika {
+		max-width: 300px;
+		max-height: 300px;
+	}
+</style>
+<div class="card">
+	<div class="panel panel-primary">
+		<div class="row">
+			<div class="col-lg-12 col-md-12" id="employeeAbsenceViewModel">
+
+				<div class="card">
+					<div class="card-header border-bottom">
+						<h4 class="mb-0">@localizer["Enter absence"]</h4>
+					</div>
+					<div class="card-body p-0 task-edit-main">
+						<div class="row p-5 border-bottom">
+							<div class="row search-params-wrapper">
+								<div class="col-sm-12 col-md-9 col-xl-5">
+									<tms-select name="AbsenceTypeId" id="AbsenceTypeId" options="@Model.AbsenceTypes" label="@localizer["Absence type"]:"  empty-option-text="@localizer["Select absence type"]" />
+								</div>
+								<div class="col-sm-12 col-md-3 col-xl-5">
+									<tms-input type="Date" name="DateFrom" id="DateFrom" label="@localizer["Date"]:" placeholder="@localizer["Enter date"]..." />
+								</div>
+								<div class="col-sm-12 col-md-3 col-xl-5">
+									<tms-input type="CheckBox" name="AllDay" id="AllDayId" value="true" label="@localizer["All day"]:" />
+								</div>
+								<div class="col-sm-12 col-md-3 col-xl-5">
+									<tms-input type="Text" name="TimeFromFormatted" id="TimeFromFormattedId" label="@localizer["Time from"]:" />
+								</div>
+								<div class="col-sm-12 col-md-3 col-xl-5">
+									<tms-input type="Text" name="TimeToFormatted" id="TimeToFormatted" label="@localizer["Time to"]:" />
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="form-label text-muted">@localizer["Note"]:</label>
+										<div class="input-group">
+											<textarea name="Comment" id="NoteId" class="form-control text-dark" style="height:80px;"></textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+	});
+</script>
