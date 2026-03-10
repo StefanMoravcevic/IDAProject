@@ -28,4 +28,6 @@ public partial class IdaTask
     public virtual Project? Project { get; set; }
 
     public virtual ICollection<TasksPlanning> TasksPlannings { get; set; } = new List<TasksPlanning>();
+
+    public virtual ICollection<TasksRealization> TasksRealizations { get; set; } = new List<TasksRealization>();
 }

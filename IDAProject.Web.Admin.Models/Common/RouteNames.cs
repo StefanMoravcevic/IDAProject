@@ -175,6 +175,15 @@
         public const string TasksPlannings_Edit = "TasksPlannings_Edit";
         public const string TasksPlannings_Save = "TasksPlannings_Save";
         public const string TasksPlannings_Delete = "TasksPlannings_Delete";
+        public const string TasksPlannings_GetById = "TasksPlannings_GetById";
+
+
+        public const string TasksRealizations_List = "TasksRealizations_List";
+        public const string TasksRealizations_Search = "TasksRealizations_Search";
+        public const string TasksRealizations_New = "TasksRealizations_New";
+        public const string TasksRealizations_Edit = "TasksRealizations_Edit";
+        public const string TasksRealizations_Save = "TasksRealizations_Save";
+        public const string TasksRealizations_Delete = "TasksRealizations_Delete";
 
         public const string IDA_Index = "IDA_Index";
         public const string IDA_PlanNewDay = "IDA_PlanNewDay";

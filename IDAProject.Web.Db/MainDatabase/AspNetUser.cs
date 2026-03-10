@@ -134,6 +134,10 @@ public partial class AspNetUser
 
     public virtual ICollection<TasksPlanning> TasksPlanningUsers { get; set; } = new List<TasksPlanning>();
 
+    public virtual ICollection<TasksRealization> TasksRealizationDeletedByNavigations { get; set; } = new List<TasksRealization>();
+
+    public virtual ICollection<TasksRealization> TasksRealizationUsers { get; set; } = new List<TasksRealization>();
+
     public virtual ICollection<UserLog> UserLogs { get; set; } = new List<UserLog>();
 
     public virtual ICollection<UserMessage> UserMessageUserFromNavigations { get; set; } = new List<UserMessage>();

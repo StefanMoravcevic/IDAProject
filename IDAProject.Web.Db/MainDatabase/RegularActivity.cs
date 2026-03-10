@@ -20,4 +20,6 @@ public partial class RegularActivity
     public virtual AspNetUser? DeletedByNavigation { get; set; }
 
     public virtual ICollection<TasksPlanning> TasksPlannings { get; set; } = new List<TasksPlanning>();
+
+    public virtual ICollection<TasksRealization> TasksRealizations { get; set; } = new List<TasksRealization>();
 }

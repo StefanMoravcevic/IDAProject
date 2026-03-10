@@ -1119,4 +1119,10 @@
   <data name="Users photo" xml:space="preserve">
     <value>Фотографија корисника</value>
   </data>
+  <data name="Report" xml:space="preserve">
+    <value>Извештај</value>
+  </data>
+  <data name="Select plan no" xml:space="preserve">
+    <value>Изаберите редни број</value>
+  </data>
 </root>
