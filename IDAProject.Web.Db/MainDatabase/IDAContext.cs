@@ -141,6 +141,8 @@ public partial class IdaContext : DbContext
 
     public virtual DbSet<TasksPlanning> TasksPlannings { get; set; }
 
+    public virtual DbSet<TasksRealization> TasksRealizations { get; set; }
+
     public virtual DbSet<UserLog> UserLogs { get; set; }
 
     public virtual DbSet<UserMessage> UserMessages { get; set; }
@@ -1213,6 +1215,44 @@ public partial class IdaContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.TasksPlanningUsers)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_TasksPlanning_AspNetUsers1");
+        });
+
+        modelBuilder.Entity<TasksRealization>(entity =>
+        {
+            entity.ToTable("TasksRealization");
+
+            entity.Property(e => e.Activity).HasMaxLength(100);
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.Report).HasMaxLength(100);
+
+            entity.HasOne(d => d.ActivityType).WithMany(p => p.TasksRealizations)
+                .HasForeignKey(d => d.ActivityTypeId)
+                .HasConstraintName("FK_TasksRealization_ActivityTypes");
+
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.TasksRealizationDeletedByNavigations)
+                .HasForeignKey(d => d.DeletedBy)
+                .HasConstraintName("FK_TasksRealization_AspNetUsers");
+
+            entity.HasOne(d => d.IdaTask).WithMany(p => p.TasksRealizations)
+                .HasForeignKey(d => d.IdaTaskId)
+                .HasConstraintName("FK_TasksRealization_IdaTasks");
+
+            entity.HasOne(d => d.Project).WithMany(p => p.TasksRealizations)
+                .HasForeignKey(d => d.ProjectId)
+                .HasConstraintName("FK_TasksRealization_Projects");
+
+            entity.HasOne(d => d.RegularActivity).WithMany(p => p.TasksRealizations)
+                .HasForeignKey(d => d.RegularActivityId)
+                .HasConstraintName("FK_TasksRealization_RegularActivities");
+
+            entity.HasOne(d => d.TasksPlanning).WithMany(p => p.TasksRealizations)
+                .HasForeignKey(d => d.TasksPlanningId)
+                .HasConstraintName("FK_TasksRealization_TasksPlanning");
+
+            entity.HasOne(d => d.User).WithMany(p => p.TasksRealizationUsers)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_TasksRealization_AspNetUsers1");
         });
 
         modelBuilder.Entity<UserLog>(entity =>

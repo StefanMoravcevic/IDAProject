@@ -1064,4 +1064,10 @@
   <data name="Users photo" xml:space="preserve">
     <value>Users photo</value>
   </data>
+  <data name="Report" xml:space="preserve">
+    <value>Report</value>
+  </data>
+  <data name="Select plan no" xml:space="preserve">
+    <value>Select plan no</value>
+  </data>
 </root>

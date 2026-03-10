@@ -810,6 +810,9 @@
   <data name="RepeatPassword" xml:space="preserve">
     <value>Nova šifra ponovo</value>
   </data>
+  <data name="Report" xml:space="preserve">
+    <value>Izveštaj</value>
+  </data>
   <data name="Reports" xml:space="preserve">
     <value>Izveštaji</value>
   </data>
@@ -932,6 +935,9 @@
   </data>
   <data name="Select partner code" xml:space="preserve">
     <value>Izaberite šifru partnera</value>
+  </data>
+  <data name="Select plan no" xml:space="preserve">
+    <value>Izaberite redni broj</value>
   </data>
   <data name="Select printer" xml:space="preserve">
     <value>Izaberite štampač</value>
