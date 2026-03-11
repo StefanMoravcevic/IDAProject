@@ -12,6 +12,7 @@ namespace IDAProject.Web.Models.RequestModels.TasksPlannings
         public int? ActivityTypeId { get; set; }
         public string? CreatedDate { get; set; }
         public int? UserId { get; set; }
+        public bool? Finished { get; set; }
         //<<SearchParams>>
     }
 }

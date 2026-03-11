@@ -1070,4 +1070,19 @@
   <data name="Select plan no" xml:space="preserve">
     <value>Select plan no</value>
   </data>
+  <data name="Project tasks list" xml:space="preserve">
+    <value>Project tasks list</value>
+  </data>
+  <data name="Regular activities list" xml:space="preserve">
+    <value>Regular activities list</value>
+  </data>
+  <data name="Tasks list" xml:space="preserve">
+    <value>Tasks list</value>
+  </data>
+  <data name="Enter description" xml:space="preserve">
+    <value>Enter description</value>
+  </data>
+  <data name="Edit realization" xml:space="preserve">
+    <value>Edit realization</value>
+  </data>
 </root>

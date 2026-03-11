@@ -56,7 +56,7 @@ namespace IDAProject.Web.Api.Repositories
                 }
             }
 
-            result = await query.Select(a => new TasksRealizationDto
+            result = await query.OrderBy(x => x.TimeFrom).Select(a => new TasksRealizationDto
             {
                 Id = a.Id,
                 ActivityTypeId = a.ActivityTypeId,

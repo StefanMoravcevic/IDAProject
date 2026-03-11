@@ -40,7 +40,8 @@ namespace IDAProject.Web.Admin.Controllers
     new Web.Models.RequestModels.TasksPlannings.SearchTasksPlanningsParams
     {
         UserId = user.Id,
-        CreatedDate = today
+        CreatedDate = today,
+        Finished = false
     }
 );
 

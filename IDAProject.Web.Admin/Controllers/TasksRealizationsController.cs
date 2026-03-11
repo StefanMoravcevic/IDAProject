@@ -12,17 +12,23 @@ namespace IDAProject.Web.Admin.Controllers
     public class TasksRealizationsController : BaseController
     {
         private readonly ITasksRealizationsManager _TasksRealizationsManager;
+        private readonly IIdaTasksManager _idaTasksManager;
+        private readonly ITasksPlanningsManager _tasksPlanningsManager;
         private readonly IMasterDataManager _masterDataManager;
 
         public TasksRealizationsController(
             ILogger<TasksRealizationsController> logger,
             IAccountManager accountManager,
+            IIdaTasksManager idaTasksManager,
+            ITasksPlanningsManager tasksPlanningsManager,
             ITasksRealizationsManager TasksRealizationsManager,
             IMasterDataManager masterDataManager)
             : base(accountManager, logger)
         {
             _TasksRealizationsManager = TasksRealizationsManager;
+            _tasksPlanningsManager = tasksPlanningsManager;
             _masterDataManager = masterDataManager;
+            _idaTasksManager = idaTasksManager;
         }
         [HttpGet("TasksRealizationsList", Name = RouteNames.TasksRealizations_List)]
         public async Task<IActionResult> Index()
@@ -74,6 +80,15 @@ namespace IDAProject.Web.Admin.Controllers
             var responseModel = await _TasksRealizationsManager.SaveTasksRealizationAsync(requestModel);
             if (responseModel.Valid)
             {
+                if (requestModel.Finished)
+                {
+                    if(requestModel.ActivityTypeId == (int)ActivityTypes.Projekat || requestModel.ActivityTypeId == (int)ActivityTypes.Zadatak) 
+                    {
+                        var taskId = await _idaTasksManager.GetIdaTaskByIdAsync(requestModel.IdaTaskId.Value);
+                        taskId.Payload.IsCompleted = true;
+                        await _idaTasksManager.SaveIdaTaskAsync(taskId.Payload);
+                    }
+                }
                 responseModel.Message = Url.RouteUrl(RouteNames.TasksRealizations_List, new { Id = "111" })!;
             }
             return Json(responseModel);
