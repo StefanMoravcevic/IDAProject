@@ -1,8 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
+using IDAProject.Web.Api.Managers;
 using IDAProject.Web.Api.Models.Interfaces.Managers;
 using IDAProject.Web.Models.Dto.TasksRealizations;
 using IDAProject.Web.Models.General;
+using IDAProject.Web.Models.General.Enums;
 using IDAProject.Web.Models.RequestModels.TasksRealizations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IDAProject.Web.Api.Controllers
 {
@@ -11,10 +13,12 @@ namespace IDAProject.Web.Api.Controllers
     public class TasksRealizationsController : ControllerBase
     {
         private readonly ITasksRealizationsManager _TasksRealizationsManager;
+        private readonly ITasksPlanningsManager _tasksPlanningsManager;
 
-        public TasksRealizationsController(ITasksRealizationsManager TasksRealizationsManager)
+        public TasksRealizationsController(ITasksRealizationsManager TasksRealizationsManager, ITasksPlanningsManager tasksPlanningsManager)
         {
             _TasksRealizationsManager = TasksRealizationsManager;
+            _tasksPlanningsManager = tasksPlanningsManager;
         }
 
         [HttpGet("{id}")]
@@ -27,7 +31,7 @@ namespace IDAProject.Web.Api.Controllers
         [HttpDelete("delete/{id}/{userId}")]
         public async Task<ResponseModelBase> DeleteTasksRealizationAsync(int id, int? userId)
         {
-            var response = await _TasksRealizationsManager.DeleteTasksRealizationAsync(id,userId);
+            var response = await _TasksRealizationsManager.DeleteTasksRealizationAsync(id, userId);
             return response;
         }
 
@@ -41,6 +45,14 @@ namespace IDAProject.Web.Api.Controllers
         [HttpPost]
         public async Task<ResponseModel<int>> SaveTasksRealizationAsync(SaveTasksRealizationRequestModel requestModel)
         {
+            if (requestModel.Finished)
+            {
+                var taskPlanningId = await _tasksPlanningsManager.GetTasksPlanningByIdAsync(requestModel.TasksPlanningId.Value);
+                taskPlanningId.Payload.PlanStatusId = 2;
+                await _tasksPlanningsManager.SaveTasksPlanningAsync(taskPlanningId.Payload);
+
+
+            }
             if (TimeOnly.TryParse(requestModel.TimeFromFormatted, out var tf))
                 requestModel.TimeFrom = tf;
 
