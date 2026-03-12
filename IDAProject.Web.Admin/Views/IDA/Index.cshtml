@@ -421,7 +421,6 @@
 @section Scripts {
 
 	<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 	<script type="text/javascript">
 			let planPieChart = null;
@@ -1742,7 +1741,7 @@
 						}
 
 						// // Ostala polja
-						// row.find("input[name='ActivityName']").val(res.activityName);
+						row.find("input[name='Activity']").val(res.activityName);
 						// row.find("input[name='TimeFromFormatted']").val(res.timeFrom);
 						// row.find("input[name='TimeToFormatted']").val(res.timeTo);
 						// row.find("input[name='DurationFormatted']").val(res.duration);

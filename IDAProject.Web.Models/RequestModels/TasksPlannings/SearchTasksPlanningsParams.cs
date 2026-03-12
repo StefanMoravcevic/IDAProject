@@ -13,6 +13,8 @@ namespace IDAProject.Web.Models.RequestModels.TasksPlannings
         public string? CreatedDate { get; set; }
         public int? UserId { get; set; }
         public bool? Finished { get; set; }
+        public string? StartDate { get; set; }  // dd.MM.yyyy
+        public string? EndDate { get; set; }    // dd.MM.yyyy
         //<<SearchParams>>
     }
 }

@@ -130,9 +130,17 @@ public partial class AspNetUser
 
     public virtual ICollection<State> States { get; set; } = new List<State>();
 
+    public virtual ICollection<TasksPlanningComment> TasksPlanningCommentDeletedByNavigations { get; set; } = new List<TasksPlanningComment>();
+
+    public virtual ICollection<TasksPlanningComment> TasksPlanningCommentUsers { get; set; } = new List<TasksPlanningComment>();
+
     public virtual ICollection<TasksPlanning> TasksPlanningDeletedByNavigations { get; set; } = new List<TasksPlanning>();
 
     public virtual ICollection<TasksPlanning> TasksPlanningUsers { get; set; } = new List<TasksPlanning>();
+
+    public virtual ICollection<TasksRealizationComment> TasksRealizationCommentDeletedByNavigations { get; set; } = new List<TasksRealizationComment>();
+
+    public virtual ICollection<TasksRealizationComment> TasksRealizationCommentUsers { get; set; } = new List<TasksRealizationComment>();
 
     public virtual ICollection<TasksRealization> TasksRealizationDeletedByNavigations { get; set; } = new List<TasksRealization>();
 

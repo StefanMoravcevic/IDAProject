@@ -53,5 +53,7 @@ public partial class TasksRealization
 
     public virtual TasksPlanning? TasksPlanning { get; set; }
 
+    public virtual ICollection<TasksRealizationComment> TasksRealizationComments { get; set; } = new List<TasksRealizationComment>();
+
     public virtual AspNetUser? User { get; set; }
 }

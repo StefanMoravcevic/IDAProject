@@ -1085,4 +1085,46 @@
   <data name="Edit realization" xml:space="preserve">
     <value>Edit realization</value>
   </data>
+  <data name="IDA View" xml:space="preserve">
+    <value>IDA View</value>
+  </data>
+  <data name="Current week" xml:space="preserve">
+    <value>Current week</value>
+  </data>
+  <data name="Last week" xml:space="preserve">
+    <value>Last week</value>
+  </data>
+  <data name="Previous day" xml:space="preserve">
+    <value>Previous day</value>
+  </data>
+  <data name="Previous week" xml:space="preserve">
+    <value>Previous week</value>
+  </data>
+  <data name="Plan for" xml:space="preserve">
+    <value>Plan for</value>
+  </data>
+  <data name="Please select employee" xml:space="preserve">
+    <value>Please select employee</value>
+  </data>
+  <data name="Realization for" xml:space="preserve">
+    <value>Realization for</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Comments</value>
+  </data>
+  <data name="No comments yet" xml:space="preserve">
+    <value>No comments yet</value>
+  </data>
+  <data name="Leave comment" xml:space="preserve">
+    <value>Leave comment</value>
+  </data>
+  <data name="Reply" xml:space="preserve">
+    <value>Reply</value>
+  </data>
+  <data name="Write a reply" xml:space="preserve">
+    <value>Write a reply</value>
+  </data>
+  <data name="Type reply" xml:space="preserve">
+    <value>Type reply</value>
+  </data>
 </root>

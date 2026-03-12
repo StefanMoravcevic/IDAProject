@@ -1140,4 +1140,46 @@
   <data name="Edit realization" xml:space="preserve">
     <value>Измените реализацију</value>
   </data>
+  <data name="IDA View" xml:space="preserve">
+    <value>Преглед ИДА</value>
+  </data>
+  <data name="Current week" xml:space="preserve">
+    <value>Текућа недеља</value>
+  </data>
+  <data name="Last week" xml:space="preserve">
+    <value>Претходна недеља</value>
+  </data>
+  <data name="Previous day" xml:space="preserve">
+    <value>Претходни дан</value>
+  </data>
+  <data name="Previous week" xml:space="preserve">
+    <value>Претходна недеља</value>
+  </data>
+  <data name="Plan for" xml:space="preserve">
+    <value>План за</value>
+  </data>
+  <data name="Please select employee" xml:space="preserve">
+    <value>Молимо изаберите запосленог</value>
+  </data>
+  <data name="Realization for" xml:space="preserve">
+    <value>Реализација за</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Коментари</value>
+  </data>
+  <data name="No comments yet" xml:space="preserve">
+    <value>Нема додатих коментара</value>
+  </data>
+  <data name="Leave comment" xml:space="preserve">
+    <value>Оставите коментар</value>
+  </data>
+  <data name="Reply" xml:space="preserve">
+    <value>Одговорите</value>
+  </data>
+  <data name="Write a reply" xml:space="preserve">
+    <value>Напишите одговор</value>
+  </data>
+  <data name="Type reply" xml:space="preserve">
+    <value>Унесите одговор</value>
+  </data>
 </root>
