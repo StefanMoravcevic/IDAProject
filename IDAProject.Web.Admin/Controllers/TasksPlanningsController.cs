@@ -31,6 +31,12 @@ namespace IDAProject.Web.Admin.Controllers
             await UpdateNavigationWithAjaxTableViewModel(viewModel, _masterDataManager, "TasksPlannings");
             return View(viewModel);
         }
+        [HttpGet("getById/{id}", Name = RouteNames.TasksPlannings_GetById)]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var responseModel = await _TasksPlanningsManager.GetTasksPlanningByIdAsync(id);
+            return Json(responseModel.Payload);
+        }
 
         [HttpPost("search", Name = RouteNames.TasksPlannings_Search)]
         public async Task<IActionResult> SearchTasksPlannings(SearchTasksPlanningsParams searchParams)

@@ -175,8 +175,34 @@
         public const string TasksPlannings_Edit = "TasksPlannings_Edit";
         public const string TasksPlannings_Save = "TasksPlannings_Save";
         public const string TasksPlannings_Delete = "TasksPlannings_Delete";
+        public const string TasksPlannings_GetById = "TasksPlannings_GetById";
+
+
+        public const string TasksRealizations_List = "TasksRealizations_List";
+        public const string TasksRealizations_Search = "TasksRealizations_Search";
+        public const string TasksRealizations_New = "TasksRealizations_New";
+        public const string TasksRealizations_Edit = "TasksRealizations_Edit";
+        public const string TasksRealizations_Save = "TasksRealizations_Save";
+        public const string TasksRealizations_Delete = "TasksRealizations_Delete";
+
+
+        public const string TasksPlanningComments_List = "TasksPlanningComments_List";
+        public const string TasksPlanningComments_Search = "TasksPlanningComments_Search";
+        public const string TasksPlanningComments_New = "TasksPlanningComments_New";
+        public const string TasksPlanningComments_Edit = "TasksPlanningComments_Edit";
+        public const string TasksPlanningComments_Save = "TasksPlanningComments_Save";
+        public const string TasksPlanningComments_Delete = "TasksPlanningComments_Delete";
+
+
+        public const string TasksRealizationComments_List = "TasksRealizationComments_List";
+        public const string TasksRealizationComments_Search = "TasksRealizationComments_Search";
+        public const string TasksRealizationComments_New = "TasksRealizationComments_New";
+        public const string TasksRealizationComments_Edit = "TasksRealizationComments_Edit";
+        public const string TasksRealizationComments_Save = "TasksRealizationComments_Save";
+        public const string TasksRealizationComments_Delete = "TasksRealizationComments_Delete";
 
         public const string IDA_Index = "IDA_Index";
+        public const string IDA_IndexView = "IDA_IndexView";
         public const string IDA_PlanNewDay = "IDA_PlanNewDay";
 
 

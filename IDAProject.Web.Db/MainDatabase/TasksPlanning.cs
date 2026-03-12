@@ -53,5 +53,9 @@ public partial class TasksPlanning
 
     public virtual IdaTask? Task { get; set; }
 
+    public virtual ICollection<TasksPlanningComment> TasksPlanningComments { get; set; } = new List<TasksPlanningComment>();
+
+    public virtual ICollection<TasksRealization> TasksRealizations { get; set; } = new List<TasksRealization>();
+
     public virtual AspNetUser? User { get; set; }
 }
