@@ -12,6 +12,7 @@ namespace IDAProject.Web.Models.RequestModels.IdaTasks
 
         public bool? HasProject { get; set; }
         public bool? IsCompleted { get; set; }
+        public int? ProjectId { get; set; }
         //<<SearchParams>>
     }
 }

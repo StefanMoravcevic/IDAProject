@@ -36,14 +36,21 @@ namespace IDAProject.Web.Api.Repositories
                 query = query.Where(x => x.Id == searchParams.Id);
             }
             else
-            {    
-                if(searchParams.HasProject.HasValue && searchParams.HasProject.Value == true)
+            {
+                if (searchParams.HasProject.HasValue)
                 {
-                    query = query.Where(x => x.ProjectId != null);
+                    if (searchParams.HasProject.Value)
+                        query = query.Where(x => x.ProjectId != null);
+                    else
+                        query = query.Where(x => x.ProjectId == null);
                 }
-                if(searchParams.IsCompleted.HasValue)
+                if (searchParams.IsCompleted.HasValue)
                 {
                     query = query.Where(x => x.IsCompleted == searchParams.IsCompleted);
+                }
+                if (searchParams.ProjectId.HasValue)
+                {
+                    query = query.Where(x => x.ProjectId == searchParams.ProjectId);
                 }
             }
 

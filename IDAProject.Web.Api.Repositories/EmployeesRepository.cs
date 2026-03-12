@@ -174,7 +174,8 @@ namespace IDAProject.Web.Api.Repositories
                                 EmployeeNumber = emp.EmployeeNumber,
                                 Photo = emp.Photo,
                                 SectorId = emp.SectorId,
-                                Sector = emp.Sector!.Name
+                                Sector = emp.Sector!.Name,
+                                UserId = emp.AspNetUsers.FirstOrDefault().Id
 
                             }).ToListAsync();
 

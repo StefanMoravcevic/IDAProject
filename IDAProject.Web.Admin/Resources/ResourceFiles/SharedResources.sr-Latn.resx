@@ -261,6 +261,9 @@
   <data name="Columns" xml:space="preserve">
     <value>Kolone</value>
   </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Komentari</value>
+  </data>
   <data name="Company" xml:space="preserve">
     <value>Kompanija</value>
   </data>
@@ -287,6 +290,9 @@
   </data>
   <data name="CreateQuestion" xml:space="preserve">
     <value>Da li ste sigurni da želite da kreirate odluku o rati?</value>
+  </data>
+  <data name="Current week" xml:space="preserve">
+    <value>Tekuća nedelja</value>
   </data>
   <data name="Customer order number" xml:space="preserve">
     <value>Broj porudžbine</value>
@@ -354,6 +360,9 @@
   <data name="Edit" xml:space="preserve">
     <value>Izmeni</value>
   </data>
+  <data name="Edit realization" xml:space="preserve">
+    <value>Izmenite realizaciju</value>
+  </data>
   <data name="Emloyee basic info" xml:space="preserve">
     <value>Osnovne informacije o zaposlenom</value>
   </data>
@@ -383,6 +392,9 @@
   </data>
   <data name="Enter date to" xml:space="preserve">
     <value>Unesite datum do</value>
+  </data>
+  <data name="Enter description" xml:space="preserve">
+    <value>Unesite opis</value>
   </data>
   <data name="Enter e-mail" xml:space="preserve">
     <value>Unesite e-mail</value>
@@ -561,6 +573,9 @@
   <data name="Home page" xml:space="preserve">
     <value>Početna strana</value>
   </data>
+  <data name="IDA View" xml:space="preserve">
+    <value>Pregled IDA</value>
+  </data>
   <data name="Installment" xml:space="preserve">
     <value>Rate</value>
   </data>
@@ -602,6 +617,12 @@
   </data>
   <data name="Last" xml:space="preserve">
     <value>Poslednja</value>
+  </data>
+  <data name="Last week" xml:space="preserve">
+    <value>Prethodna nedelja</value>
+  </data>
+  <data name="Leave comment" xml:space="preserve">
+    <value>Ostavite komentar</value>
   </data>
   <data name="LeftBannerButton" xml:space="preserve">
     <value>Odaberite levi baner</value>
@@ -656,6 +677,9 @@
   </data>
   <data name="No" xml:space="preserve">
     <value>Ne</value>
+  </data>
+  <data name="No comments yet" xml:space="preserve">
+    <value>Nema dodatih komentara</value>
   </data>
   <data name="Note" xml:space="preserve">
     <value>Opis</value>
@@ -759,6 +783,9 @@
   <data name="Photo" xml:space="preserve">
     <value>Slika</value>
   </data>
+  <data name="Plan for" xml:space="preserve">
+    <value>Plan za</value>
+  </data>
   <data name="Plan new day" xml:space="preserve">
     <value>Planiraj novi dan</value>
   </data>
@@ -768,8 +795,17 @@
   <data name="Plans for day" xml:space="preserve">
     <value>Planiranje za dan</value>
   </data>
+  <data name="Please select employee" xml:space="preserve">
+    <value>Molimo izaberite zaposlenog</value>
+  </data>
   <data name="Port" xml:space="preserve">
     <value>Port</value>
+  </data>
+  <data name="Previous day" xml:space="preserve">
+    <value>Prethodni dan</value>
+  </data>
+  <data name="Previous week" xml:space="preserve">
+    <value>Prethodna nedelja</value>
   </data>
   <data name="Print" xml:space="preserve">
     <value>Štampaj</value>
@@ -789,11 +825,20 @@
   <data name="Project" xml:space="preserve">
     <value>Projekat</value>
   </data>
+  <data name="Project tasks list" xml:space="preserve">
+    <value>Lista projektnih zadataka</value>
+  </data>
   <data name="Projects" xml:space="preserve">
     <value>Projekti</value>
   </data>
   <data name="Quantity" xml:space="preserve">
     <value>Količina</value>
+  </data>
+  <data name="Realization for" xml:space="preserve">
+    <value>Realizacija za</value>
+  </data>
+  <data name="Regular activities list" xml:space="preserve">
+    <value>Lista redovnih aktivnosti</value>
   </data>
   <data name="Regular activity" xml:space="preserve">
     <value>Redovna aktivnost</value>
@@ -809,6 +854,12 @@
   </data>
   <data name="RepeatPassword" xml:space="preserve">
     <value>Nova šifra ponovo</value>
+  </data>
+  <data name="Reply" xml:space="preserve">
+    <value>Odgovorite</value>
+  </data>
+  <data name="Report" xml:space="preserve">
+    <value>Izveštaj</value>
   </data>
   <data name="Reports" xml:space="preserve">
     <value>Izveštaji</value>
@@ -933,6 +984,9 @@
   <data name="Select partner code" xml:space="preserve">
     <value>Izaberite šifru partnera</value>
   </data>
+  <data name="Select plan no" xml:space="preserve">
+    <value>Izaberite redni broj</value>
+  </data>
   <data name="Select printer" xml:space="preserve">
     <value>Izaberite štampač</value>
   </data>
@@ -1008,6 +1062,9 @@
   <data name="Tasks" xml:space="preserve">
     <value>Zadaci</value>
   </data>
+  <data name="Tasks list" xml:space="preserve">
+    <value>Lista zadataka</value>
+  </data>
   <data name="TickerMessage" xml:space="preserve">
     <value>Poruka za slajder</value>
   </data>
@@ -1028,6 +1085,9 @@
   </data>
   <data name="TotalAmountFormatted" xml:space="preserve">
     <value>Ukupan iznos</value>
+  </data>
+  <data name="Type reply" xml:space="preserve">
+    <value>Unesite odgovor</value>
   </data>
   <data name="UICulture" xml:space="preserve">
     <value>Jezik</value>
@@ -1067,6 +1127,9 @@
   </data>
   <data name="Wint article no" xml:space="preserve">
     <value>WINT šifra artikla</value>
+  </data>
+  <data name="Write a reply" xml:space="preserve">
+    <value>Napišite odgovor</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Da</value>

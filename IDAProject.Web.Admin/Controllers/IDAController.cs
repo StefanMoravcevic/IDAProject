@@ -5,6 +5,7 @@ using IDAProject.Web.Admin.Models.Common;
 using IDAProject.Web.Admin.Models.Interfaces.Managers;
 using IDAProject.Web.Admin.Models.ViewModels;
 using IDAProject.Web.Admin.Models.ViewModels.IDA;
+using IDAProject.Web.Models.General;
 using IDAProject.Web.Models.General.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,13 +18,15 @@ namespace IDAProject.Web.Admin.Controllers
         private readonly IConfiguration _configuration;
         private readonly IMasterDataManager _masterDataManager;
         private readonly IIdaTasksManager _idaTasksManager;
+        private readonly ITasksPlanningsManager _tasksPlanningsManager;
         private readonly IEmployeesManager _employeesManager;
-        public IDAController(ILogger<IDAController> logger, IAccountManager accountManager, IConfiguration configuration, IMasterDataManager masterDataManager, IIdaTasksManager idaTasksManager, IEmployeesManager employeesManager) : base(accountManager, logger)
+        public IDAController(ILogger<IDAController> logger, IAccountManager accountManager, IConfiguration configuration, IMasterDataManager masterDataManager, IIdaTasksManager idaTasksManager, IEmployeesManager employeesManager, ITasksPlanningsManager tasksPlanningsManager) : base(accountManager, logger)
         {
             _configuration = configuration;
             _masterDataManager = masterDataManager;
             _idaTasksManager = idaTasksManager;
             _employeesManager = employeesManager;
+            _tasksPlanningsManager = tasksPlanningsManager;
         }
 
 
@@ -32,6 +35,34 @@ namespace IDAProject.Web.Admin.Controllers
         {
             var viewModel = new IDAViewModel();
             var user = GetCurrentUser();
+            var today = DateTime.Now.Date.ToString("dd.MM.yyyy");
+            var taskPlannings = await _tasksPlanningsManager.SearchTasksPlanningsAsync(
+    new Web.Models.RequestModels.TasksPlannings.SearchTasksPlanningsParams
+    {
+        UserId = user.Id,
+        CreatedDate = today,
+        Finished = false
+    }
+);
+
+            // Napravi listu sa stvarnim planovima
+            var taskPlanningsList = taskPlannings.Payload
+                .Select(x => new GenericSelectOption
+                {
+                    Value = x.Id,
+                    Description = x.PlanNo.Value.ToString() ?? ""
+                })
+                .ToList();
+
+            // Dodaj opciju sa 0 na kraj
+            taskPlanningsList.Add(new GenericSelectOption
+            {
+                Value = 0,
+                Description = "0" // tekst koji želiš
+            });
+
+            // Postavi svojstvo na novu listu
+            viewModel.TaskPlannings = taskPlanningsList;
             viewModel.Projects = await _masterDataManager.GetSelectOptionsByTableAsync("Projects", "Description");
             viewModel.Tasks = await _idaTasksManager.GetUncompletedTasks(false);
             viewModel.ProjectTasks = await _idaTasksManager.GetUncompletedTasks(true);
@@ -43,6 +74,51 @@ namespace IDAProject.Web.Admin.Controllers
             viewModel.ImageSource = employeePhoto;
             viewModel.Today = DateTime.Now.Date.ToString("dd.MM.yyyy");
             return View(viewModel);
+        }
+        [HttpGet("indexView", Name = RouteNames.IDA_IndexView)]
+        public async Task<IActionResult> IndexView()
+        {
+            var viewModel = new IDAViewModel();
+            var user = GetCurrentUser();
+            var today = DateTime.Now.Date.ToString("dd.MM.yyyy");
+            var taskPlannings = await _tasksPlanningsManager.SearchTasksPlanningsAsync(
+    new Web.Models.RequestModels.TasksPlannings.SearchTasksPlanningsParams
+    {
+        UserId = user.Id,
+        CreatedDate = today,
+        Finished = false
+    }
+);
+
+            // Napravi listu sa stvarnim planovima
+            var taskPlanningsList = taskPlannings.Payload
+                .Select(x => new GenericSelectOption
+                {
+                    Value = x.Id,
+                    Description = x.PlanNo.Value.ToString() ?? ""
+                })
+                .ToList();
+
+            // Dodaj opciju sa 0 na kraj
+            taskPlanningsList.Add(new GenericSelectOption
+            {
+                Value = 0,
+                Description = "0" // tekst koji želiš
+            });
+
+            // Postavi svojstvo na novu listu
+            viewModel.TaskPlannings = taskPlanningsList;
+            viewModel.Projects = await _masterDataManager.GetSelectOptionsByTableAsync("Projects", "Description");
+            viewModel.Tasks = await _idaTasksManager.GetUncompletedTasks(false);
+            viewModel.ProjectTasks = await _idaTasksManager.GetUncompletedTasks(true);
+            viewModel.ActivityTypes = await _masterDataManager.GetSelectOptionsByTableAsync("ActivityTypes", "Name");
+            viewModel.PlanStatuses = await _masterDataManager.GetSelectOptionsByTableAsync("PlanStatuses", "Name");
+            viewModel.RegularActivities = await _masterDataManager.GetSelectOptionsByTableAsync("RegularActivities", "Name");
+            viewModel.User = user;
+            var employeePhoto = (await _employeesManager.GetEmployeeByIdAsync(user.EmployeeId)).Payload.Photo;
+            viewModel.ImageSource = employeePhoto;
+            viewModel.Today = DateTime.Now.Date.ToString("dd.MM.yyyy");
+            return View("ViewIndex",viewModel);
         }
         [HttpGet("planNewDay", Name = RouteNames.IDA_PlanNewDay)]
         public async Task<IActionResult> PlanNewDay()

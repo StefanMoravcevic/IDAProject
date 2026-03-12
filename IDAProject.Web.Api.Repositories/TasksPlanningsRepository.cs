@@ -58,6 +58,22 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.UserId == searchParams.UserId);
                 }
+                if (!string.IsNullOrEmpty(searchParams.StartDate) && !string.IsNullOrEmpty(searchParams.EndDate))
+                {
+                    if (DateTime.TryParseExact(searchParams.StartDate, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var start) &&
+                        DateTime.TryParseExact(searchParams.EndDate, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var end))
+                    {
+                        query = query.Where(x => x.CreatedAt.HasValue &&
+                                                 x.CreatedAt.Value.Date >= start.Date &&
+                                                 x.CreatedAt.Value.Date <= end.Date);
+                    }
+                }
+                if (searchParams.Finished.HasValue)
+                {
+                    query = query.Where(x =>
+                        !x.TasksRealizations.Any() ||
+                        x.TasksRealizations.Any(r => r.Finished == searchParams.Finished));
+                }
             }
 
             result = await query.OrderBy(x => x.TimeFrom).Select(a => new TasksPlanningDto
@@ -89,10 +105,7 @@ namespace IDAProject.Web.Api.Repositories
                 : a.RegularActivityId != null
                     ? a.RegularActivity.Name
                     : "",
-                IsFinished =
-    a.TaskId != null
-        ? a.Task.IsCompleted
-        : (bool?)null
+                IsFinished = a.TasksRealizations.FirstOrDefault().Finished
 
             }).ToListAsync();
             return result;
