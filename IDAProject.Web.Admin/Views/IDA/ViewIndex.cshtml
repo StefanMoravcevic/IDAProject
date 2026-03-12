@@ -1,0 +1,888 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.IDA.IDAViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Helpers;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using IDAProject.Web.Admin.Models.TagHelpers.Base;
+@using IDAProject.Web.Admin.TagHelpers.Base;
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@{
+	ViewData["Title"] = "View IDA";
+}
+<style>
+    #employeesMatrix {
+        padding: 10px;
+        font-family: Arial, sans-serif;
+    }
+
+    .matrix-group {
+        margin-bottom: 20px;
+    }
+
+    .matrix-group-title {
+        font-weight: bold;
+        font-size: 1.3em;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 5px;
+    }
+
+    .matrix-job {
+        margin-left: 30px; /* uvlačenje ispod sektora */
+        margin-bottom: 10px;
+        padding-left: 10px;
+        border-left: 2px solid #aaa;
+    }
+
+    button.selected {
+        background-color: #f08418 !important; /* Narandžasta pozadina */
+        color: white !important; /* Beli tekst */
+        border-color: #f08418 !important; /* Narandžasti border */
+    }
+
+    .matrix-job-title {
+        font-style: italic;
+        margin-bottom: 5px;
+        color: #555;
+        font-weight: 500;
+    }
+
+    .matrix-employees {
+        display: flex;
+        flex-direction: column; /* ovo je ključno da budu jedan ispod drugog */
+        gap: 5px;
+        margin-left: 20px; /* uvlačenje ispod jobType */
+    }
+
+    .matrix-employee {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #f08418;
+
+        background-color: #ffffff;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .matrix-employee:hover {
+        background-color: #d0e0ff;
+        transform: scale(1.05);
+    }
+    #employeesHeader{
+        background-color:#f08418;
+        color:white;
+    }
+
+    .matrix-employee.selected {
+        background-color: #36A2EB;
+        color: white;
+        font-weight: bold;
+        border-radius: 4px;
+    }
+
+    .comment-item {
+        border-bottom: 1px solid #eee;
+        padding: 8px 0;
+    }
+
+    .comment-reply {
+        margin-left: 20px;
+        border-left: 2px solid #ddd;
+        padding-left: 10px;
+        margin-top: 5px;
+    }
+</style>
+<div class="container-fluid mt-1">
+
+    <div class="row g-2">
+
+        <!-- LEVI DEO: EMPLOYEES MATRIX -->
+        <div class="col-xl-2 col-lg-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header fw-bold" id="employeesHeader">
+                    @localizer["Stuff"]
+                </div>
+                <div class="card-body p-2" style="max-height:650px; overflow-y:auto; background-color:#FFFCF5;">
+                    <div id="employeesMatrix">
+                        <!-- AJAX puni -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DESNI DEO: CONTROLS + DINAMIČKE TABELA -->
+        <div class="col-xl-10 col-lg-9">
+
+            <!-- CONTROLS CARD -->
+            <div class="card shadow-sm border-0 mb-2">
+                <div class="card-body" style="border: 2px solid #f08418; background-color: #FFFCF5;">
+                    <div class="row align-items-center g-2">
+
+                        <!-- USER IMAGE -->
+                        <div class="col-auto text-center">
+                                <img src=""
+                                     class="rounded-circle border"
+                                     style="width:70px;height:70px;object-fit:cover;" id="employeePhoto"/>
+                        </div>
+
+                        <!-- PRETHODNI DAN -->
+                        <div class="col-xl-2 col-md-3">
+                            <button class="btn btn-outline-primary w-100 btn-sm" id="prevDay">
+                                @localizer["Previous day"]
+                            </button>
+                        </div>
+
+                        <!-- TEKUCA NEDELJA -->
+                        <div class="col-xl-2 col-md-3">
+                            <button class="btn btn-outline-primary w-100 btn-sm" id="currentWeek">
+                                @localizer["Current week"]
+                            </button>
+                        </div>
+
+                        <!-- PRETHODNA NEDELJA -->
+                        <div class="col-xl-2 col-md-3">
+                            <button class="btn btn-outline-primary w-100 btn-sm" id="prevWeek">
+                                @localizer["Previous week"]
+                            </button>
+                        </div>
+
+                        <!-- OD -->
+                        <div class="col-auto">
+                            <label class="small text-muted mb-0">@localizer["Date from"]</label>
+                        </div>
+                        <div class="col-xl-2 col-md-2">
+                            <tms-input type="Date" class="form-control form-control-sm" id="dateFromId" name="DateFrom" />
+                        </div>
+
+                        <!-- DO -->
+                        <div class="col-auto">
+                            <label class="small text-muted mb-0">@localizer["Date to"]</label>
+                        </div>
+                        <div class="col-xl-2 col-md-2">
+                            <tms-input type="Date" class="form-control form-control-sm" id="dateToId" name="DateTo" />
+                        </div>
+                        @* <div class="col-auto">
+                            <button class="btn btn-outline-primary btn-sm" id="searchByDate">
+                                @localizer["Search"]
+                            </button>
+                        </div> *@
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLES CARD -->
+            <div class="card shadow-sm mt-3">
+
+                <div class="card-header fw-bold" id="activityHeader"
+                     style="background-color:#FA690C; color:white; cursor:pointer;">
+                    📝 @localizer["Activities"]
+                </div>
+
+                <div class="card-body" id="activitiesBody">
+
+                    <div class="row g-3">
+
+                        <!-- Dinamičke tabele -->
+                        <div class="col-12 col-md-6 col-xl-6">
+                            <div id="plannedTablesContainer"></div>
+                            <div id="plannedChartsContainer"></div>
+                        </div>
+                        <div class="col-12 col-md-6 col-xl-6">
+                            <div id="realizedTablesContainer"></div>
+                            <div id="realizedChartsContainer"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="commentsModal" tabindex="-1" aria-labelledby="commentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="commentsModalLabel">@localizer["Plan comments"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div id="commentsContainer">
+                </div>
+
+                <hr>
+                <div class="mb-3">
+                    <label for="newCommentText" class="form-label">@localizer["Leave comment"]</label>
+                    <textarea class="form-control" id="newCommentText" rows="2"></textarea>
+                </div>
+
+                <button type="button" class="btn btn-primary" id="saveCommentBtn">@localizer["Save"]</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="realizationCommentsModal" tabindex="-1" aria-labelledby="realizationCommentsModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="commentsModalLabel">@localizer["Realization comments"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div id="commentsContainer">
+                </div>
+
+                <hr>
+                <div class="mb-3">
+                    <label for="newCommentText" class="form-label">@localizer["Leave comment"]</label>
+                    <textarea class="form-control" id="newCommentText" rows="2"></textarea>
+                </div>
+
+                <button type="button" class="btn btn-primary" id="saveCommentBtn">@localizer["Save"]</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section Styles {
+	<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+	<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+	<script type="text/javascript">
+        const planPieCharts = {};
+        const realizationPieCharts = {};
+        let selectedEmployeeId = null;
+        let selectedUserId = null;
+        function searchTaskPlanningsPopulateTable(userId, startDate, endDate, tableId, canvasId) {
+            $.ajax({
+                url: "@Url.RouteUrl(RouteNames.TasksPlannings_Search)",
+                method: "POST",
+                data: { userId, startDate, endDate },
+                success: function(data) {
+                    const tbody = $(`#${tableId} tbody`);
+                    tbody.empty();
+
+                    let stats = {}; // za chart
+
+                    data.forEach(item => {
+                        let finishedIcon = item.isFinished === null ? '-' :
+                                           item.isFinished === true ? '<span style="color:green;font-weight:bold;">✔</span>' :
+                                           '<span style="color:red;font-weight:bold;">✖</span>';
+
+                        let row = `
+                            <tr data-id="${item.id}">
+                                <td>${item.displayTask ?? ""}</td>
+                                <td>${item.planNo ?? ""}</td>
+                                <td>${item.activityName ?? ""}</td>
+                                <td>${item.timeFromFormatted ?? ""}</td>
+                                <td>${item.timeToFormatted ?? ""}</td>
+                                <td>${item.durationFormatted ?? ""}</td>
+                                <td>${item.planStatus ?? ""}</td>
+                                <td class="text-center">${finishedIcon}</td>
+                                <td style="text-align:center;"><i class="fa fa-comment" style="cursor:pointer;"></i></td>
+                            </tr>
+                        `;
+                        tbody.append(row);
+
+                        // Stats za chart
+                        let type = item.activityTypeName ?? "Unknown";
+                        stats[type] = (stats[type] || 0) + 1;
+                    });
+
+                    // Render pie chart za ovu tabelu
+                    renderPlanPieChart(stats, canvasId);
+                },
+                error: function(err) { console.log(err); }
+            });
+        }
+        function searchTaskRealizationPopulateTable(userId, startDate, endDate, tableId,canvasId) {
+            $.ajax({
+                url: "@Url.RouteUrl(RouteNames.TasksRealizations_Search)",
+                method: "POST",
+                data: { userId, startDate, endDate },
+                success: function(data) {
+                    const tbody = $(`#${tableId} tbody`);
+                    tbody.empty();
+
+                    let stats = {}; // za chart
+
+                    data.forEach(item => {
+                        let finishedIcon = item.isFinished === null ? '-' :
+                                           item.isFinished === true ? '<span style="color:green;font-weight:bold;">✔</span>' :
+                                           '<span style="color:red;font-weight:bold;">✖</span>';
+
+                        let row = `
+                            <tr data-id="${item.id}">
+                                <td>${item.displayTask ?? ""}</td>
+                                <td>${item.planNo ?? ""}</td>
+                                <td>${item.activity ?? ""}</td>
+                                <td>${item.timeFromFormattedForTable ?? ""}</td>
+                                <td>${item.timeToFormattedForTable ?? ""}</td>
+                                <td>${item.durationFormattedForTable ?? ""}</td>
+                                <td>${item.report ?? ""}</td>
+                                <td class="text-center">${finishedIcon}</td>
+                                <td style="text-align:center;"><i class="fa fa-comment" style="cursor:pointer;"></i></td>
+                            </tr>
+                        `;
+                        tbody.append(row);
+
+                        // Stats za chart
+                        let type = item.activityType ?? "Unknown";
+                        stats[type] = (stats[type] || 0) + 1;
+                    });
+
+                    // Render pie chart za ovu tabelu
+                    renderRealizationPieChart(stats, canvasId);
+                },
+                error: function(err) { console.log(err); }
+            });
+        }
+        function loadEmployeesMatrix() {
+
+            $.ajax({
+                url: "@Url.RouteUrl(RouteNames.Employees_Search)",
+                method: "POST",
+                success: function (data) {
+
+                    buildEmployeesMatrix(data);
+
+                },
+                error: function () {
+                    console.error("Greška pri učitavanju zaposlenih");
+                }
+            });
+
+        }
+        function renderPlanPieChart(stats, canvasId) {
+            const ctx = document.getElementById(canvasId)?.getContext('2d');
+            if (!ctx) return; // Ako element ne postoji, izlazi
+
+            const total = Object.values(stats).reduce((a, b) => a + b, 0);
+
+            // Uništi prethodni chart ako postoji
+            if (planPieCharts[canvasId]) {
+                planPieCharts[canvasId].destroy();
+            }
+
+            planPieCharts[canvasId] = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(stats),
+                    datasets: [{
+                        data: Object.values(stats),
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                            '#FF9F40', '#C9CBCF', '#FF6384', '#36A2EB'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom'
+                        },
+                        datalabels: {
+                            color: '#fff',
+                            formatter: function(value) {
+                                if (!total) return '0%';
+                                return ((value / total) * 100).toFixed(1) + '%';
+                            },
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+
+        // Funkcija za realization chart
+        function renderRealizationPieChart(stats, canvasId) {
+            const ctx = document.getElementById(canvasId)?.getContext('2d');
+            if (!ctx) return;
+
+            const total = Object.values(stats).reduce((a, b) => a + b, 0);
+
+            if (realizationPieCharts[canvasId]) {
+                realizationPieCharts[canvasId].destroy();
+            }
+
+            realizationPieCharts[canvasId] = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(stats),
+                    datasets: [{
+                        data: Object.values(stats),
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                            '#FF9F40', '#C9CBCF', '#FF6384', '#36A2EB'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom'
+                        },
+                        datalabels: {
+                            color: '#fff',
+                            formatter: function(value) {
+                                if (!total) return '0%';
+                                return ((value / total) * 100).toFixed(1) + '%';
+                            },
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+        
+        function formatDate(date) {
+            let d = date.getDate().toString().padStart(2,'0');
+            let m = (date.getMonth() + 1).toString().padStart(2,'0');
+            let y = date.getFullYear();
+            return `${d}.${m}.${y}`;
+        }
+
+        // Helper: računa start i end date po periodu
+        function getDateRange(period) {
+            const today = new Date();
+            let startDate = new Date();
+            let endDate = new Date();
+
+            switch(period) {
+                case 'prevDay':
+                    startDate.setDate(today.getDate() - 1);
+                    endDate.setDate(today.getDate() - 1);
+                    break;
+
+                case 'currentWeek':
+                    let day = today.getDay(); // 0 = nedelja
+                    let diff = today.getDate() - day + (day === 0 ? -6 : 1); // ponedeljak
+                    startDate.setDate(diff);
+                    endDate.setDate(diff + 6); // nedelja
+                    break;
+
+                case 'prevWeek':
+                    let day2 = today.getDay();
+                    let diff2 = today.getDate() - day2 - 6; // ponedeljak prošle nedelje
+                    startDate.setDate(diff2);
+                    endDate.setDate(diff2 + 6); // nedelja prošle nedelje
+                    break;
+
+                default:
+                    startDate = today;
+                    endDate = today;
+            }
+
+            return {
+                startDate: formatDate(startDate),
+                endDate: formatDate(endDate)
+            };
+        }
+        function buildEmployeesMatrix(data) {
+            let html = "";
+            let groups = {};
+
+            data.forEach(e => {
+                if (!groups[e.sector]) groups[e.sector] = {};
+                if (!groups[e.sector][e.jobType]) groups[e.sector][e.jobType] = [];
+                groups[e.sector][e.jobType].push(e);
+            });
+
+            for (let sector in groups) {
+                html += `<div class="matrix-group">
+                            <div class="matrix-group-title">${sector}</div>`;
+
+                for (let job in groups[sector]) {
+                    html += `<div class="matrix-job">
+                                <div class="matrix-job-title">${job}</div>
+                                <div class="matrix-employees">`;
+
+                                    groups[sector][job].forEach(emp => {
+                        html += `
+                        <div class="matrix-employee" data-id="${emp.id}">
+                            ${emp.name} ${emp.surname}
+                        </div>
+                        `;
+                    });
+
+                    html += `</div></div>`; // kraj matrix-employees + matrix-job
+                }
+
+                html += `</div>`; // kraj matrix-group
+            }
+
+            $("#employeesMatrix").html(html);
+        }
+        function loadEmployeeTables(period, customStart, customEnd) {
+            if (!selectedUserId) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '@localizer["Please select employee"]',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            // Odredi period
+            let range;
+            if (period === 'custom' && customStart && customEnd) {
+                range = {
+                    startDate: customStart,
+                    endDate: customEnd
+                };
+            } else {
+                range = getDateRange(period); // postojeća logika za prevDay, currentWeek, prevWeek
+            }
+
+            // Dobijamo sve datume u periodu
+            const dates = getDatesInRange(
+                new Date(range.startDate.split('.').reverse().join('-')),
+                new Date(range.endDate.split('.').reverse().join('-'))
+            ).reverse();
+
+            // Očisti prethodne tabele i chartove
+            $('#plannedTablesContainer').empty();
+            $('#realizedTablesContainer').empty();
+
+            dates.forEach(date => {
+                const formattedDate = formatDate(date); // dd.MM.yyyy
+                const safeIdPlanned = `plannedTable_${formattedDate.replace(/\./g, '-')}`;
+                const safeIdReal = `realizedTable_${formattedDate.replace(/\./g, '-')}`;
+                const canvasIdPlanned = `planPieChart_${formattedDate.replace(/\./g, '-')}`;
+                const canvasIdReal = `realizationPieChart_${formattedDate.replace(/\./g, '-')}`;
+
+                // --- Planned HTML ---
+                const plannedHtml = `
+                <div class="card shadow-sm mt-3">
+                    <div class="card-header bg-warning text-white fw-bold">
+                        📌 @localizer["Plan for"] - ${formattedDate}
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-modern" id="${safeIdPlanned}">
+                            <thead>
+                                <tr>
+                                    <th>@localizer["Your task"]</th><th>@localizer["Plan no"]</th><th>@localizer["Activity"]</th>
+                                    <th>@localizer["Time from"]</th><th>@localizer["Time to"]</th><th>@localizer["Duration"]</th>
+                                    <th>Status</th><th>@localizer["Finished"]</th><th>@localizer["Comments"]</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div class="mt-3 d-flex justify-content-center">
+                            <div style="width: 320px;">
+                                <canvas id="${canvasIdPlanned}"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                $('#plannedTablesContainer').append(plannedHtml);
+
+                // --- Realized HTML ---
+                const realizedHtml = `
+                <div class="card shadow-sm mt-3">
+                    <div class="card-header bg-success text-white fw-bold">
+                        ✅ @localizer["Realization for"] - ${formattedDate}
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-modern" id="${safeIdReal}">
+                            <thead>
+                                <tr>
+                                    <th>@localizer["Your task"]</th><th>@localizer["Plan no"]</th><th>@localizer["Activity"]</th>
+                                    <th>@localizer["Time from"]</th><th>@localizer["Time to"]</th><th>@localizer["Duration"]</th>
+                                    <th>@localizer["Report"]</th><th>@localizer["Finished"]</th><th>@localizer["Comments"]</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div class="mt-3 d-flex justify-content-center">
+                            <div style="width: 320px;">
+                                <canvas id="${canvasIdReal}"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                $('#realizedTablesContainer').append(realizedHtml);
+
+                // --- Popuni podatke i generiši chartove ---
+                searchTaskPlanningsPopulateTable(selectedUserId, formattedDate, formattedDate, safeIdPlanned, canvasIdPlanned);
+                searchTaskRealizationPopulateTable(selectedUserId, formattedDate, formattedDate, safeIdReal, canvasIdReal);
+            });
+
+            // Sinhronizuj visine tabela
+            setTimeout(() => syncTableHeights(), 100);
+        }
+        function getDatesInRange(startDate, endDate) {
+            const dates = [];
+            let current = new Date(startDate);
+            const end = new Date(endDate);
+
+            while (current <= end) {
+                dates.push(new Date(current));
+                current.setDate(current.getDate() + 1);
+            }
+            return dates;
+        }
+        function syncTableHeights() {
+            $('#plannedTablesContainer .card').each(function(index) {
+                const plannedHeight = $(this).outerHeight();
+                const realizedCard = $('#realizedTablesContainer .card').eq(index);
+                if (!realizedCard.length) return; // ako nema odgovarajuće desne kartice
+                const realizedHeight = realizedCard.outerHeight();
+                const maxHeight = Math.max(plannedHeight, realizedHeight);
+
+                $(this).height(maxHeight);
+                realizedCard.height(maxHeight);
+            });
+        }
+
+       function loadComments(planId) {
+            const container = $('#commentsContainer');
+            container.empty();
+
+            $.ajax({
+                url: '@Url.RouteUrl(RouteNames.TasksPlanningComments_Search)',
+                method: 'POST',
+                data: { planId: planId },
+                success: function(comments) {
+                    if (comments.length === 0) {
+                        container.html('<p>@localizer["No comments yet"]</p>');
+                    } else {
+                        // Prvo filtriramo root komentare
+                        comments.filter(c => !c.parentTaskPlanningCommentId).forEach(c => {
+                            appendCommentRecursive(c, comments, container, 0);
+                        });
+                    }
+                },
+                error: function(err) {
+                    console.error(err);
+                }
+            });
+        }
+
+        function renderCommentHtml(comment, level = 0) {
+            const indent = level * 20; // 20px po nivou uvlačenja
+            return $(`
+                <div class="comment-item ${level > 0 ? 'reply-item' : ''}" data-comment-id="${comment.id}" style="margin-left: ${indent}px; display:none;">
+                    <div class="d-flex align-items-center mb-1">
+                        <img src="${comment.photo}" alt="Photo" class="rounded-circle me-2" width="32" height="32">
+                        <strong>${comment.username}</strong>
+                    </div>
+                    <div class="small text-muted mb-1">${formatDateTime(comment.createdAt)}</div>
+                    <div class="comment-text mb-1">${comment.comment}</div>
+                    <button class="reply-btn" data-comment-id="${comment.id}" style="
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 3px;
+                        padding: 0 4px;
+                        font-size: 0.7rem;
+                        border: none;
+                        background: none;
+                        color: #0d6efd;
+                        cursor: pointer;
+                    ">
+                        <i class="fa fa-reply" style="font-size:0.75rem;"></i> @localizer["Reply"]
+                    </button>
+                    <div class="replies-container"></div>
+                </div>
+            `).fadeIn(300); // fadeIn efekt
+        }
+        function appendCommentRecursive(comment, allComments, container, level) {
+            const $comment = renderCommentHtml(comment, level);
+            container.append($comment);
+
+            // Tražimo sve reply-jeve za ovaj komentar
+            const replies = allComments.filter(r => r.parentTaskPlanningCommentId === comment.id);
+            if (replies.length) {
+                const $repliesContainer = $comment.find('.replies-container');
+                replies.forEach(r => {
+                    appendCommentRecursive(r, allComments, $repliesContainer, level + 1); // level +1 za uvlačenje
+                });
+            }
+        }
+
+       function formatDateTime(dateTimeString) {
+            const date = new Date(dateTimeString);
+
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            return `${day}.${month}.${year} ${hours}:${minutes}:${seconds}`;
+        }
+        $(document).ready(function () {
+            $("#dateFromId, #dateToId").blur(function () {
+
+                const from = $('#dateFromId').val();
+                const to = $('#dateToId').val();
+
+                if (!selectedUserId) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '@localizer["Please select employee"]',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                if (!from || !to) return;
+
+                loadEmployeeTables('custom', from, to);
+            });
+            loadEmployeesMatrix();
+            $(document).on('click', '#employeesMatrix .matrix-employee', function() {
+
+                selectedEmployeeId = $(this).data('id');
+
+                $('#employeesMatrix .matrix-employee').removeClass('selected');
+                $(this).addClass('selected');
+
+                // AJAX za dobijanje userId
+                $.ajax({
+                    url: '@Url.RouteUrl(RouteNames.Employees_Search)',
+                    method: 'POST',
+                    data: { id: selectedEmployeeId },
+                    success: function(result) {
+
+                        selectedUserId = result[0].userId;
+                        if (result[0].photo) 
+                        {
+                            $("#employeePhoto").attr('src', result[0].photo);
+                        }
+                    },
+                    error: function(err) {
+                        console.error('Error fetching userId for employee:', err);
+                    }
+                });
+
+            });
+
+            const periodButtons = ['#prevDay', '#currentWeek', '#prevWeek'];
+
+            periodButtons.forEach(selector => {
+                $(selector).click(function() {
+                    // ukloni klasu selected sa svih dugmadi
+                    periodButtons.forEach(s => $(s).removeClass('selected'));
+
+                    // dodaj klasu na kliknuto dugme
+                    $(this).addClass('selected');
+
+                    // pozovi funkciju za učitavanje tabela
+                    const period = $(this).attr('id');
+                    loadEmployeeTables(period);
+                });
+            });
+
+            $(document).on('click', '#plannedTablesContainer td .fa-comment', function() {
+                const planId = $(this).closest('tr').data('id');
+                $('#commentsModal').data('plan-id', planId);
+                $('#newCommentText').val('');
+
+                // Učitaj komentare
+                loadComments(planId);
+
+                // Prikaži modal
+                $('#commentsModal').modal('show');
+            });
+
+            $('#saveCommentBtn').click(function() {
+                const planId = $('#commentsModal').data('plan-id');
+                const text = $('#newCommentText').val().trim();
+                if(!text) return;
+
+                $.ajax({
+                    url: '@Url.RouteUrl(RouteNames.TasksPlanningComments_Save)',
+                    method: 'POST',
+                    data: { taskPlanningId: planId, comment: text },
+                    success: function(newComment) {
+                        $('#newCommentText').val('');
+                        loadComments(planId);
+                    },
+                    error: function(err) {
+                        console.error(err);
+                    }
+                });
+            });
+                    $(document).on('click', '.reply-btn', function() {
+            const commentId = $(this).data('comment-id');
+            const parentComment = $(this).closest('.comment-item');
+            const repliesContainer = parentComment.find('> .replies-container');
+
+            // Ako već postoji input, ne dodaj ponovo
+            if (repliesContainer.find('.reply-input').length) return;
+
+            const inputHtml = $(`
+                <div class="reply-input mt-1 d-flex">
+                    <input type="text" class="form-control form-control-sm me-1" placeholder="@localizer["Type reply"]...">
+                    <button class="btn btn-sm btn-primary btn-save-reply">@localizer["Save"]</button>
+                </div>
+            `);
+            repliesContainer.prepend(inputHtml);
+            inputHtml.find('input').focus();
+        });
+
+            $(document).on('click', '.btn-save-reply', function() {
+                const input = $(this).siblings('input');
+                const text = input.val().trim();
+                if (!text) return;
+
+                const parentComment = $(this).closest('.comment-item');
+                const parentId = parentComment.data('comment-id');
+                const planId = $('#commentsModal').data('plan-id');
+
+                $.ajax({
+                    url: '@Url.RouteUrl(RouteNames.TasksPlanningComments_Save)',
+                    method: 'POST',
+                    data: {
+                        taskPlanningId: planId,
+                        comment: text,
+                        parentTaskPlanningCommentId: parentId
+                    },
+                    success: function(newReply) {
+                        // Ukloni input posle čuvanja
+                        input.closest('.reply-input').remove();
+
+                        // Ponovo učitaj sve komentare za taj plan
+                        loadComments(planId);
+                    },
+                    error: function(err) {
+                        console.error(err);
+                    }
+                });
+            });
+           
+        });
+    </script>
+}   

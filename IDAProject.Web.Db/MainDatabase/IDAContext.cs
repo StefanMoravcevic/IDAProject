@@ -141,7 +141,11 @@ public partial class IdaContext : DbContext
 
     public virtual DbSet<TasksPlanning> TasksPlannings { get; set; }
 
+    public virtual DbSet<TasksPlanningComment> TasksPlanningComments { get; set; }
+
     public virtual DbSet<TasksRealization> TasksRealizations { get; set; }
+
+    public virtual DbSet<TasksRealizationComment> TasksRealizationComments { get; set; }
 
     public virtual DbSet<UserLog> UserLogs { get; set; }
 
@@ -1217,6 +1221,29 @@ public partial class IdaContext : DbContext
                 .HasConstraintName("FK_TasksPlanning_AspNetUsers1");
         });
 
+        modelBuilder.Entity<TasksPlanningComment>(entity =>
+        {
+            entity.Property(e => e.Comment).HasMaxLength(500);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.TasksPlanningCommentDeletedByNavigations)
+                .HasForeignKey(d => d.DeletedBy)
+                .HasConstraintName("FK_TasksPlanningComments_AspNetUsers");
+
+            entity.HasOne(d => d.ParentTaskPlanningComment).WithMany(p => p.InverseParentTaskPlanningComment)
+                .HasForeignKey(d => d.ParentTaskPlanningCommentId)
+                .HasConstraintName("FK_TasksPlanningComments_TasksPlanningComments1");
+
+            entity.HasOne(d => d.TaskPlanning).WithMany(p => p.TasksPlanningComments)
+                .HasForeignKey(d => d.TaskPlanningId)
+                .HasConstraintName("FK_TasksPlanningComments_TasksPlanning");
+
+            entity.HasOne(d => d.User).WithMany(p => p.TasksPlanningCommentUsers)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_TasksPlanningComments_AspNetUsers1");
+        });
+
         modelBuilder.Entity<TasksRealization>(entity =>
         {
             entity.ToTable("TasksRealization");
@@ -1253,6 +1280,29 @@ public partial class IdaContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.TasksRealizationUsers)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_TasksRealization_AspNetUsers1");
+        });
+
+        modelBuilder.Entity<TasksRealizationComment>(entity =>
+        {
+            entity.Property(e => e.Comment).HasMaxLength(500);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.TasksRealizationCommentDeletedByNavigations)
+                .HasForeignKey(d => d.DeletedBy)
+                .HasConstraintName("FK_TasksRealizationComments_AspNetUsers");
+
+            entity.HasOne(d => d.ParentTaskRealizationComment).WithMany(p => p.InverseParentTaskRealizationComment)
+                .HasForeignKey(d => d.ParentTaskRealizationCommentId)
+                .HasConstraintName("FK_TasksRealizationComments_TasksRealizationComments1");
+
+            entity.HasOne(d => d.TaskRealization).WithMany(p => p.TasksRealizationComments)
+                .HasForeignKey(d => d.TaskRealizationId)
+                .HasConstraintName("FK_TasksRealizationComments_TasksRealization");
+
+            entity.HasOne(d => d.User).WithMany(p => p.TasksRealizationCommentUsers)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_TasksRealizationComments_AspNetUsers1");
         });
 
         modelBuilder.Entity<UserLog>(entity =>

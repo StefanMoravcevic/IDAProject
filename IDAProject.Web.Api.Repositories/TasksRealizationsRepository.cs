@@ -54,6 +54,16 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.UserId == searchParams.UserId);
                 }
+                if (!string.IsNullOrEmpty(searchParams.StartDate) && !string.IsNullOrEmpty(searchParams.EndDate))
+                {
+                    if (DateTime.TryParseExact(searchParams.StartDate, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var start) &&
+                        DateTime.TryParseExact(searchParams.EndDate, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var end))
+                    {
+                        query = query.Where(x => x.CreatedDate.HasValue &&
+                                                 x.CreatedDate.Value.Date >= start.Date &&
+                                                 x.CreatedDate.Value.Date <= end.Date);
+                    }
+                }
             }
 
             result = await query.OrderBy(x => x.TimeFrom).Select(a => new TasksRealizationDto

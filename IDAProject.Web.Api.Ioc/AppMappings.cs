@@ -57,6 +57,8 @@ namespace IDAProject.Web.Api.Ioc
             serviceCollection.AddScoped<ITasksPlanningsRepository, TasksPlanningsRepository>();
             serviceCollection.AddScoped<IEmployeeAbsencesRepository, EmployeeAbsencesRepository>();
             serviceCollection.AddScoped<ITasksRealizationsRepository, TasksRealizationsRepository>();
+            serviceCollection.AddScoped<ITasksPlanningCommentsRepository, TasksPlanningCommentsRepository>();
+            serviceCollection.AddScoped<ITasksRealizationCommentsRepository, TasksRealizationCommentsRepository>();
 
    
             serviceCollection.AddSingleton<IMasterDataProvidersFactory, MasterDataProvidersFactory>();            
@@ -83,6 +85,8 @@ namespace IDAProject.Web.Api.Ioc
             serviceCollection.AddScoped<IRegularActivitiesManager, RegularActivitiesManager>();
             serviceCollection.AddScoped<ITasksPlanningsManager, TasksPlanningsManager>();
             serviceCollection.AddScoped<ITasksRealizationsManager, TasksRealizationsManager>();
+            serviceCollection.AddScoped<ITasksPlanningCommentsManager, TasksPlanningCommentsManager>();
+            serviceCollection.AddScoped<ITasksRealizationCommentsManager, TasksRealizationCommentsManager>();
         }
 
         private static void MapReports(IServiceCollection serviceCollection)
