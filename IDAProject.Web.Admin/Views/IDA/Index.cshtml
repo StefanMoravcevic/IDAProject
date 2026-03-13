@@ -84,82 +84,33 @@
 		pointer-events: none;
 		white-space: nowrap;
 	}
+	#manualTable select.form-select {
+		width: 100%;
+	}
 
-	/* Modernija tabela */
-	
 
-		#manualTable th,
-		#manualTable td {
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-		}
 
-			/* Širine po kolonama */
-			#manualTable th:nth-child(1),
-			#manualTable td:nth-child(1) {
-				width: 15%;
-			}
 
-			#manualTable th:nth-child(2),
-			#manualTable td:nth-child(2) {
-				width: 15%;
-			}
 
-			#manualTable th:nth-child(3),
-			#manualTable td:nth-child(3) {
-				width: 15%;
-			}
-
-			/* Od */
-			#manualTable th:nth-child(4),
-			#manualTable td:nth-child(4) {
-				width: 8%;
-			}
-
-			/* Do */
-			#manualTable th:nth-child(5),
-			#manualTable td:nth-child(5) {
-				width: 8%;
-			}
-
-			/* Trajanje */
-			#manualTable th:nth-child(6),
-			#manualTable td:nth-child(6) {
-				width: 8%;
-			}
-
-			/* Redni broj */
-			#manualTable th:nth-child(7),
-			#manualTable td:nth-child(7) {
-				width: 15%;
-			}
-
-		#manualTable select.form-select {
-			width: 100%;
-		}
-
-		#manualTable td {
-			padding: 4px;
-		}
 </style>
 <tms-modal id="editAbsenceModal" title="@localizer["Absences"]" save-button="false" modal-size="@ModalSize.Large" />
 <div class="container-fluid mt-1">
 
 	<!-- ========================= -->
-	<!-- GORNJI DEO: SLIKA + PLAN TABELA -->
+	<!-- GORNJI DEO -->
 	<!-- ========================= -->
 	<div class="row g-2 align-items-stretch">
-		<!-- stretch sve kolone na istu visinu -->
+
 		<!-- SLIKA -->
-		<div class="col-md-2 d-flex">
-			<!-- d-flex da card zauzme punu visinu -->
+		<div class="col-12 col-lg-2 d-flex">
 			<div class="card shadow-sm mb-3 flex-fill h-100">
-				<!-- flex-fill i h-100 -->
+
 				<div class="card-header bg-light fw-bold">
 					@localizer["Users photo"]
 				</div>
+
 				<div class="card-body text-center">
+
 					@if (!string.IsNullOrEmpty(Model.ImageSource))
 					{
 						<img src="@Model.ImageSource"
@@ -171,82 +122,131 @@
 					{
 						<p class="text-muted">@localizer["No image available"]</p>
 					}
+
 				</div>
+
 			</div>
 		</div>
 
-		<!-- PLAN TABELA (FULL WIDTH OSTATAK) -->
-		<div class="col-md-10 d-flex">
-			<!-- d-flex da card zauzme punu visinu -->
+
+		<!-- PLAN TABELA -->
+		<div class="col-12 col-lg-10 d-flex">
+
 			<div class="card shadow-lg border-0 rounded-3 flex-fill h-100">
-				<!-- flex-fill i h-100 -->
-				<div class="card-header bg-primary text-white fw-bold d-flex justify-content-between align-items-center">
+
+				<div class="card-header bg-primary text-white fw-bold d-flex flex-wrap justify-content-between align-items-center">
+
 					<span>📅 @localizer["Plans for day"] @Model.Today</span>
 
-					<select id="activityMode" name="ActivityTypePlanId" class="form-select form-select-sm w-auto">
-						<option value="">@localizer["Select activity type"]</option>
+					<select id="activityMode"
+							name="ActivityTypePlanId"
+							class="form-select form-select-sm w-auto mt-2 mt-lg-0">
+
+						<option value="">
+							@localizer["Select activity type"]
+						</option>
+
 						<option value="1">@localizer["Project"]</option>
 						<option value="2">@localizer["Task"]</option>
 						<option value="3">@localizer["Regular activity"]</option>
+
 					</select>
+
 				</div>
 
+
 				<div class="card-body p-3 d-flex flex-column">
-					<!-- flex-column da table + button lepo stoje -->
-					<div class="table-responsive flex-grow-1">
-						<table class="table table-hover table-bordered align-middle" id="manualTable">
+
+					<div class="table-responsive flex-grow-1"  style="overflow-x:auto !important;">
+
+						<table class="table table-hover table-bordered align-middle"
+							   id="manualTable">
+
 							<thead id="dynamicTableHead" class="table-light">
+
 								<tr>
 									<th class="text-center text-muted">
 										@localizer["Select activity type to generate table"]
 									</th>
 								</tr>
+
 							</thead>
+
 							<tbody></tbody>
+
 						</table>
+
 					</div>
 
-					<button class="btn btn-success btn-sm px-3 mt-2 align-self-start" id="btnAddRow">
+
+					<button class="btn btn-success btn-sm px-3 mt-2 align-self-start"
+							id="btnAddRow">
+
 						➕ @localizer["Add row"]
+
 					</button>
+
 				</div>
+
 			</div>
+
 		</div>
 
 	</div>
 
+
 	<!-- ========================= -->
-	<!-- ACTIVITIES (BUTTONS + PLAN/REAL) -->
+	<!-- ACTIVITIES -->
 	<!-- ========================= -->
 	<div class="card shadow-sm mt-3">
 
-		<div class="card-header fw-bold" id="activityHeader"style="background-color:#fabb3e; color:white; cursor:pointer;">
+		<div class="card-header fw-bold"
+			 id="activityHeader"
+			 style="background-color:#fabb3e;color:white;cursor:pointer;">
+
 			📝 @localizer["Activities"]
+
 		</div>
+
 
 		<div class="card-body" id="activitiesBody">
 
-			<!-- DUGMAD IZNAD KOLONA -->
-			<div class="d-flex gap-2 mb-3">
-				<button class="btn btn-primary btn-sm" id="btnPlanNewDay">
+			<!-- BUTTONS -->
+			<div class="d-flex flex-column flex-sm-row flex-wrap gap-2 mb-3">
+
+				<button class="btn btn-primary btn-sm"
+						id="btnPlanNewDay">
+
 					🔄 @localizer["Plan new day"]
+
 				</button>
 
-				<button class="btn btn-primary btn-sm" id="btnEnterAbsence">
+				<button class="btn btn-primary btn-sm"
+						id="btnEnterAbsence">
+
 					📊 @localizer["Enter absence"]
+
 				</button>
+
 			</div>
 
-			<div class="row">
+
+			<div class="row g-3">
 
 				<!-- PLAN -->
-				<div class="col-md-5">
-					<h6 class="fw-bold">📌 @localizer["Yours today plans"]</h6>
+				<div class="col-12 col-xl-5">
+
+					<h6 class="fw-bold">
+						📌 @localizer["Yours today plans"]
+					</h6>
 
 					<div class="table-responsive">
-						<table class="table table-modern" id="plannedTable">
+
+						<table class="table table-modern"id="plannedTable">
+
 							<thead>
 								<tr>
+
 									<th>@localizer["Your task"]</th>
 									<th>@localizer["Plan no"]</th>
 									<th>@localizer["Activity"]</th>
@@ -255,91 +255,155 @@
 									<th>@localizer["Duration"]</th>
 									<th>@localizer["Status"]</th>
 									<th>@localizer["Finished"]</th>
+
 								</tr>
 							</thead>
+
 							<tbody></tbody>
+
 						</table>
+
 					</div>
 
+
 					<div class="mt-3 d-flex justify-content-center">
-						<div style="width: 320px;">
+
+						<div class="w-100" style="max-width:320px;">
+
 							<canvas id="planPieChart"></canvas>
+
 						</div>
+
 					</div>
+
 				</div>
+
+
 
 				<!-- REALISATION -->
-				<div class="col-md-7 border-start" style="border-color:#ddd !important;">
-					<h6 class="fw-bold">✅ @localizer["Yours today realisation"]</h6>
+				<div class="col-12 col-xl-7 border-start"
+					 style="border-color:#ddd !important;">
+
+					<h6 class="fw-bold">
+						✅ @localizer["Yours today realisation"]
+					</h6>
+
 
 					<div class="table-responsive">
-						<table class="table table-modern" id="realizedTable">
+
+						<table class="table table-modern"
+							   id="realizedTable">
+
 							<thead class="table-light">
+
 								<tr>
-									<tr>
-										<th>@localizer["Plan no"]</th>
-										<th class="col-activityType">@localizer["Activity type"]</th>
-										<th class="col-taskName">@localizer["Task"]</th>
 
-										<th class="col-project" style="display:none;">@localizer["Project"]</th>
-										<th class="col-task" style="display:none;">@localizer["Task"]</th>
-										<th class="col-regular" style="display:none;">@localizer["Regular activity"]</th>
+									<th>@localizer["Plan no"]</th>
 
-										<th>@localizer["Activity"]</th>
-										<th>@localizer["Time from"]</th>
-										<th>@localizer["Time to"]</th>
-										<th>@localizer["Duration"]</th>
-										<th>@localizer["Report"]</th>
-										<th>@localizer["Finished"]</th>
-										<th class="col-actions" style="display:none;">@localizer["Actions"]</th>
-									</tr>
+									<th class="col-activityType">
+										@localizer["Activity type"]
+									</th>
+
+									<th class="col-taskName">
+										@localizer["Task"]
+									</th>
+
+									<th class="col-project"
+										style="display:none;">
+										@localizer["Project"]
+									</th>
+
+									<th class="col-task"
+										style="display:none;">
+										@localizer["Task"]
+									</th>
+
+									<th class="col-regular"
+										style="display:none;">
+										@localizer["Regular activity"]
+									</th>
+
+									<th>@localizer["Activity"]</th>
+
+									<th>@localizer["Time from"]</th>
+									<th>@localizer["Time to"]</th>
+
+									<th>@localizer["Duration"]</th>
+
+									<th>@localizer["Report"]</th>
+
+									<th>@localizer["Finished"]</th>
+
+									<th class="col-actions"
+										style="display:none;">
+										@localizer["Actions"]
+									</th>
+
 								</tr>
+
 							</thead>
+
 							<tbody></tbody>
+
 						</table>
+
 					</div>
 
-					<button class="btn btn-primary btn-sm mt-2" id="btnAddRealRow">
+
+					<button class="btn btn-primary btn-sm mt-2"
+							id="btnAddRealRow">
+
 						➕ @localizer["Add row"]
+
 					</button>
+
+
 					<div class="mt-3 d-flex justify-content-center">
-						<div style="width: 320px;">
+
+						<div class="w-100"
+							 style="max-width:320px;">
+
 							<canvas id="realizationPieChart"></canvas>
+
 						</div>
+
 					</div>
+
 				</div>
-									
 
 			</div>
+
 		</div>
+
 	</div>
 
-	<!-- ========================= -->
-	<!-- TASK SEKCIJE ISPOD -->
-	<!-- ========================= -->
-	<div class="row g-4">
 
-		<!-- NOVI ZADATAK + tabela -->
-		<div class="col-12 col-md-4" id="taskDataContainer">
+	<!-- ========================= -->
+	<!-- DONJI DEO -->
+	<!-- ========================= -->
+	<div class="row g-4 mt-1">
+
+		<div class="col-12 col-lg-4" id="taskDataContainer">
 			<div class="card shadow-sm p-3 mb-3">
-				<!-- Forma -->
 				<h5>@localizer["Enter new task"]</h5>
 				<tms-input type="Text" name="Name" id="taskName" class="form-control mb-2"
-						   label="@localizer["Task name"]:" placeholder="@localizer["Enter task name"]..." />
+						   label="@localizer["Task name"]:"
+						   placeholder="@localizer["Enter task name"]..." />
 				<tms-input type="Date" name="DueDate" id="taskDueDate" class="form-control mb-2"
-						   label="@localizer["Task due date"]:" placeholder="@localizer["Enter task due date"]..." />
-				<button id="saveTask" class="btn btn-success w-100 mb-2">@localizer["Save"]</button>
+						   label="@localizer["Task due date"]:"
+						   placeholder="@localizer["Enter task due date"]..." />
+				<button id="saveTask" class="btn btn-success w-100 mb-2">
+					@localizer["Save"]
+				</button>
 
-				<!-- Tabela ispod forme -->
 				<div class="card shadow-sm p-2 mt-2">
 					<h6>@localizer["Tasks list"]</h6>
-					<div class="table-responsive" style="max-height:200px; overflow-y:auto;">
+					<div class="table-responsive" style="max-height:200px;overflow-y:auto;">
 						<table class="table table-sm table-striped" id="tasksTable">
 							<thead>
 								<tr>
 									<th>@localizer["Name"]</th>
 									<th>@localizer["Due Date"]</th>
-									<th>@localizer["Actions"]</th>
 								</tr>
 							</thead>
 							<tbody></tbody>
@@ -349,30 +413,31 @@
 			</div>
 		</div>
 
-		<!-- PROJECT TASK + tabela -->
-		<div class="col-12 col-md-4">
+		<div class="col-12 col-lg-4">
 			<div class="card shadow-sm p-3 mb-3" id="projectTaskDataContainer">
-				<!-- Forma -->
 				<h5>@localizer["Enter new project task"]</h5>
 				<tms-select name="ProjectId" id="ProjectId" options="@Model.Projects" class="mb-2"
-							label="@localizer["Project"]:" empty-option-text="@localizer["Select project"]..." />
+							label="@localizer["Project"]:"
+							empty-option-text="@localizer["Select project"]..." />
 				<tms-input type="Text" name="Name" id="projectTaskName" class="form-control mb-2"
-						   label="@localizer["Task name"]:" placeholder="@localizer["Enter task name"]..." />
+						   label="@localizer["Task name"]:"
+						   placeholder="@localizer["Enter task name"]..." />
 				<tms-input type="Date" name="DueDate" id="projectTaskDueDate" class="form-control mb-2"
-						   label="@localizer["Task due date"]:" placeholder="@localizer["Enter task due date"]..." />
-				<button id="saveProjectTask" class="btn btn-success w-100 mb-2">@localizer["Save"]</button>
+						   label="@localizer["Task due date"]:"
+						   placeholder="@localizer["Enter task due date"]..." />
+				<button id="saveProjectTask" class="btn btn-success w-100 mb-2">
+					@localizer["Save"]
+				</button>
 
-				<!-- Tabela ispod forme -->
 				<div class="card shadow-sm p-2 mt-2">
 					<h6>@localizer["Project tasks list"]</h6>
-					<div class="table-responsive" style="max-height:200px; overflow-y:auto;">
+					<div class="table-responsive" style="max-height:200px;overflow-y:auto;">
 						<table class="table table-sm table-striped" id="projectTasksTable">
 							<thead>
 								<tr>
 									<th>@localizer["Project"]</th>
 									<th>@localizer["Task"]</th>
 									<th>@localizer["Due Date"]</th>
-									<th>@localizer["Actions"]</th>
 								</tr>
 							</thead>
 							<tbody></tbody>
@@ -382,21 +447,22 @@
 			</div>
 		</div>
 
-		<!-- REGULAR ACTIVITY + tabela -->
-		<div class="col-12 col-md-4">
+		<div class="col-12 col-lg-4">
 			<div class="card shadow-sm p-3 mb-3" id="regularActivityDataContainer">
-				<!-- Forma -->
 				<h5>@localizer["Enter new regular activity"]</h5>
 				<tms-input type="Text" name="Name" id="regularActivityName" class="form-control mb-2"
-						   label="@localizer["Regular activity name"]:" placeholder="@localizer["Enter regular activity name"]..." />
+						   label="@localizer["Regular activity name"]:"
+						   placeholder="@localizer["Enter regular activity name"]..." />
 				<tms-input type="Text" name="Description" id="Description" class="form-control mb-2"
-						   label="@localizer["Description"]:" placeholder="@localizer["Enter description"]..." />
-				<button id="saveRegularActivity" class="btn btn-success w-100 mb-2">@localizer["Save"]</button>
+						   label="@localizer["Description"]:"
+						   placeholder="@localizer["Enter description"]..." />
+				<button id="saveRegularActivity" class="btn btn-success w-100 mb-2">
+					@localizer["Save"]
+				</button>
 
-				<!-- Tabela ispod forme -->
 				<div class="card shadow-sm p-2 mt-2">
 					<h6>@localizer["Regular activities list"]</h6>
-					<div class="table-responsive" style="max-height:200px; overflow-y:auto;">
+					<div class="table-responsive" style="max-height:200px;overflow-y:auto;">
 						<table class="table table-sm table-striped" id="regularActivitiesTable">
 							<thead>
 								<tr>
@@ -1219,7 +1285,6 @@
 							  rows += "<tr>";
 							  rows += "<td>" + task.name + "</td>";
 							  rows += "<td>" + dueDate + "</td>";
-							  rows += '<td style="text-align:center;"><i class="fa fa-comment" style="cursor:pointer;"></i></td>';
 							  rows += "</tr>";
 						  });
 
@@ -1281,7 +1346,6 @@
 							  rows += "<td>" + (task.project ? task.project : "") + "</td>";
 							  rows += "<td>" + task.name + "</td>";
 							  rows += "<td>" + dueDate + "</td>";
-							  rows += '<td style="text-align:center;"><i class="fa fa-comment" style="cursor:pointer;"></i></td>';
 							  rows += "</tr>";
 						  });
 

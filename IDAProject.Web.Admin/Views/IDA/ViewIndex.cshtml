@@ -213,7 +213,7 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="commentsModalLabel">@localizer["Plan comments"]</h5>
+                <h5 class="modal-title" id="commentsModalLabel">@localizer["Comment plan"]</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -237,21 +237,21 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="commentsModalLabel">@localizer["Realization comments"]</h5>
+                <h5 class="modal-title" id="commentsModalLabel">@localizer["Comment realization"]</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
-                <div id="commentsContainer">
+                <div id="relizationCommentsContainer">
                 </div>
 
                 <hr>
                 <div class="mb-3">
-                    <label for="newCommentText" class="form-label">@localizer["Leave comment"]</label>
-                    <textarea class="form-control" id="newCommentText" rows="2"></textarea>
+                    <label for="newRealizationText" class="form-label">@localizer["Leave comment"]</label>
+                    <textarea class="form-control" id="newRealizationText" rows="2"></textarea>
                 </div>
 
-                <button type="button" class="btn btn-primary" id="saveCommentBtn">@localizer["Save"]</button>
+                <button type="button" class="btn btn-primary" id="saveRelizationCommentBtn">@localizer["Save"]</button>
             </div>
 
         </div>
@@ -742,6 +742,70 @@
 
             return `${day}.${month}.${year} ${hours}:${minutes}:${seconds}`;
         }
+          function loadRealizationComments(planId) {
+             const container = $('#relizationCommentsContainer');
+             container.empty();
+
+             $.ajax({
+                 url: '@Url.RouteUrl(RouteNames.TasksRealizationComments_Search)',
+                 method: 'POST',
+                 data: { realizationId: planId },
+                 success: function(comments) {
+                     if (comments.length === 0) {
+                         container.html('<p>@localizer["No comments yet"]</p>');
+                     } else {
+                         // Prvo filtriramo root komentare
+                         comments.filter(c => !c.parentTaskRealizationCommentId).forEach(c => {
+                             appendRealizationCommentRecursive(c, comments, container, 0);
+                         });
+                     }
+                 },
+                 error: function(err) {
+                     console.error(err);
+                 }
+             });
+         }
+
+         function renderRealizationCommentHtml(comment, level = 0) {
+             const indent = level * 20; // 20px po nivou uvlačenja
+             return $(`
+                 <div class="comment-item ${level > 0 ? 'reply-item' : ''}" data-comment-id="${comment.id}" style="margin-left: ${indent}px; display:none;">
+                     <div class="d-flex align-items-center mb-1">
+                         <img src="${comment.photo}" alt="Photo" class="rounded-circle me-2" width="32" height="32">
+                         <strong>${comment.username}</strong>
+                     </div>
+                     <div class="small text-muted mb-1">${formatDateTime(comment.createdAt)}</div>
+                     <div class="comment-text mb-1">${comment.comment}</div>
+                     <button class="reply-btn" data-comment-id="${comment.id}" style="
+                         display: inline-flex;
+                         align-items: center;
+                         gap: 3px;
+                         padding: 0 4px;
+                         font-size: 0.7rem;
+                         border: none;
+                         background: none;
+                         color: #0d6efd;
+                         cursor: pointer;
+                     ">
+                         <i class="fa fa-reply" style="font-size:0.75rem;"></i> @localizer["Reply"]
+                     </button>
+                     <div class="replies-container"></div>
+                 </div>
+             `).fadeIn(300); // fadeIn efekt
+         }
+         function appendRealizationCommentRecursive(comment, allComments, container, level) {
+             const $comment = renderRealizationCommentHtml(comment, level);
+             container.append($comment);
+
+             // Tražimo sve reply-jeve za ovaj komentar
+             const replies = allComments.filter(r => r.parentTaskRealizationCommentId === comment.id);
+             if (replies.length) {
+                 const $repliesContainer = $comment.find('.replies-container');
+                 replies.forEach(r => {
+                      appendRealizationCommentRecursive(r, allComments, $repliesContainer, level + 1); // level +1 za uvlačenje
+                 });
+             }
+         }
         $(document).ready(function () {
             $("#dateFromId, #dateToId").blur(function () {
 
@@ -882,6 +946,81 @@
                     }
                 });
             });
+
+
+             $(document).on('click', '#realizedTablesContainer td .fa-comment', function() {
+                const realizationId = $(this).closest('tr').data('id');
+                $('#realizationCommentsModal').data('plan-id', realizationId);
+                $('#newRealizationText').val('');
+
+                loadRealizationComments(realizationId);
+
+                 $('#realizationCommentsModal').modal('show');
+            });
+
+              $('#saveRelizationCommentBtn').click(function() {
+                    const planId = $('#realizationCommentsModal').data('plan-id');
+                    const text = $('#newRealizationText').val().trim();
+                    if(!text) return;
+
+                    $.ajax({
+                        url: '@Url.RouteUrl(RouteNames.TasksRealizationComments_Save)',
+                        method: 'POST',
+                        data: { taskRealizationId: planId, comment: text },
+                        success: function(newComment) {
+                             $('#newRealizationText').val('');
+                            loadRealizationComments(planId);
+                        },
+                        error: function(err) {
+                            console.error(err);
+                        }
+                    });
+                });
+                
+                $(document).on('click', '.reply-btn', function() {
+                    const commentId = $(this).data('comment-id');
+                    const parentComment = $(this).closest('.comment-item');
+                    const repliesContainer = parentComment.find('> .replies-container');
+
+                    // Ako već postoji input, ne dodaj ponovo
+                    if (repliesContainer.find('.reply-input').length) return;
+
+                    const inputHtml = $(`
+                        <div class="reply-input mt-1 d-flex">
+                            <input type="text" class="form-control form-control-sm me-1" placeholder="@localizer["Type reply"]...">
+                            <button class="btn btn-sm btn-primary btn-save-reply">@localizer["Save"]</button>
+                        </div>
+                    `);
+                    repliesContainer.prepend(inputHtml);
+                    inputHtml.find('input').focus();
+                });
+
+                $(document).on('click', '.btn-save-reply', function() {
+                    const input = $(this).siblings('input');
+                    const text = input.val().trim();
+                    if (!text) return;
+
+                    const parentComment = $(this).closest('.comment-item');
+                    const parentId = parentComment.data('comment-id');
+                    const planId = $('#realizationCommentsModal').data('plan-id');
+
+                    $.ajax({
+                        url: '@Url.RouteUrl(RouteNames.TasksRealizationComments_Save)',
+                        method: 'POST',
+                        data: {
+                            taskRealizationId : planId,
+                            comment: text,
+                            ParentTaskRealizationCommentId: parentId
+                        },
+                        success: function(newReply) {
+                            input.closest('.reply-input').remove();
+                            loadRealizationComments(planId);
+                        },
+                        error: function(err) {
+                            console.error(err);
+                        }
+                    });
+                });
            
         });
     </script>

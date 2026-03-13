@@ -68,6 +68,9 @@ namespace IDAProject.Web.Admin.Controllers
         [HttpPost("save", Name = RouteNames.TasksRealizationComments_Save)]
         public async Task<IActionResult> SaveTasksRealizationCommentAsync(SaveTasksRealizationCommentRequestModel requestModel)
         {
+            var user = GetCurrentUser();
+            requestModel.UserId = user.Id;
+            requestModel.CreatedAt = DateTime.Now;
             var responseModel = await _TasksRealizationCommentsManager.SaveTasksRealizationCommentAsync(requestModel);
             if (responseModel.Valid)
             {

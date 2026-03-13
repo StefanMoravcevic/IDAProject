@@ -261,6 +261,12 @@
   <data name="Columns" xml:space="preserve">
     <value>Kolone</value>
   </data>
+  <data name="Comment plan" xml:space="preserve">
+    <value>Prokomentarišite plan</value>
+  </data>
+  <data name="Comment realization" xml:space="preserve">
+    <value>Prokomentarišite realizaciju</value>
+  </data>
   <data name="Comments" xml:space="preserve">
     <value>Komentari</value>
   </data>

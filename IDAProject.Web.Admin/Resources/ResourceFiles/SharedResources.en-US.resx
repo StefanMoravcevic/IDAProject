@@ -1127,4 +1127,10 @@
   <data name="Type reply" xml:space="preserve">
     <value>Type reply</value>
   </data>
+  <data name="Comment plan" xml:space="preserve">
+    <value>Comment plan</value>
+  </data>
+  <data name="Comment realization" xml:space="preserve">
+    <value>Comment realization</value>
+  </data>
 </root>
