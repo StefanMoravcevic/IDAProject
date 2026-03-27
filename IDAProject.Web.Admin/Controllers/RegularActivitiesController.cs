@@ -1,10 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
+using IDAProject.Web.Admin.Managers;
 using IDAProject.Web.Admin.Models.Common;
 using IDAProject.Web.Admin.Models.Interfaces.Managers;
+using IDAProject.Web.Admin.Models.ViewModels.IdaTasks;
 using IDAProject.Web.Admin.Models.ViewModels.RegularActivities;
 using IDAProject.Web.Models.Dto.RegularActivities;
 using IDAProject.Web.Models.General.Enums;
+using IDAProject.Web.Models.RequestModels.IdaTasks;
 using IDAProject.Web.Models.RequestModels.RegularActivities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IDAProject.Web.Admin.Controllers
 {
@@ -51,18 +54,18 @@ namespace IDAProject.Web.Admin.Controllers
             return View("EditRegularActivity", viewModel);
         }
 
-        [HttpGet("edit/{id}", Name = RouteNames.RegularActivities_Edit)]
-        public async Task<IActionResult> EditRegularActivityAsync(int id)
-        {
-            var viewModel = new RegularActivityViewModel();
+        //[HttpGet("edit/{id}", Name = RouteNames.RegularActivities_Edit)]
+        //public async Task<IActionResult> EditRegularActivityAsync(int id)
+        //{
+        //    var viewModel = new RegularActivityViewModel();
 
-            var RegularActivityResponse = await _RegularActivitiesManager.GetRegularActivityByIdAsync(id);
+        //    var RegularActivityResponse = await _RegularActivitiesManager.GetRegularActivityByIdAsync(id);
 
-            viewModel.RegularActivity = RegularActivityResponse.Payload!;
-            viewModel.User = GetCurrentUser();
+        //    viewModel.RegularActivity = RegularActivityResponse.Payload!;
+        //    viewModel.User = GetCurrentUser();
 
-            return View("EditRegularActivity", viewModel);
-        }
+        //    return View("EditRegularActivity", viewModel);
+        //}
 
         //controller method for saving RegularActivity
         [HttpPost("save", Name = RouteNames.RegularActivities_Save)]
@@ -86,6 +89,26 @@ namespace IDAProject.Web.Admin.Controllers
                 responseModel.Message = Url.RouteUrl(RouteNames.RegularActivities_List, new { Id = "111" })!;
             }
             return Json(responseModel);
+        }
+
+        [HttpGet("regularActivities/{userId}", Name = RouteNames.RegularActivities_GetByEmployeeId)]
+        public async Task<IActionResult> RegularActivitiesByEmployeeId(int userId)
+        {
+            var regularActivities = await _RegularActivitiesManager.SearchRegularActivitiesAsync(new SearchRegularActivitiesParams { UserId = userId });
+
+            var viewModel = new RegularActivityViewModel
+            {
+                UserId = userId,
+                RegularActivity = regularActivities.Payload!,
+            };
+            return PartialView("EditRegularActivitiesModal", viewModel);
+        }
+
+        [HttpGet("regularActivities/records/{userId}", Name = RouteNames.RegularActivities_RecordsByEmployeeId)]
+        public async Task<IActionResult> IdaTasksRecordsByEmployeeId(int userId)
+        {
+            var responseModel = await _RegularActivitiesManager.SearchRegularActivitiesAsync(new SearchRegularActivitiesParams { UserId = userId });
+            return PartialView("EditRegularActivitiesRecords", responseModel.Payload);
         }
     }
 }

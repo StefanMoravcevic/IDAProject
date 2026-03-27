@@ -1133,4 +1133,22 @@
   <data name="Comment realization" xml:space="preserve">
     <value>Comment realization</value>
   </data>
+  <data name="Projects and tasks overview" xml:space="preserve">
+    <value>Projects and tasks overview</value>
+  </data>
+  <data name="Add project task" xml:space="preserve">
+    <value>Add project task</value>
+  </data>
+  <data name="Add regular activity" xml:space="preserve">
+    <value>Add regular activity</value>
+  </data>
+  <data name="Add task" xml:space="preserve">
+    <value>Add task</value>
+  </data>
+  <data name="Enter task" xml:space="preserve">
+    <value>Enter task</value>
+  </data>
+  <data name="Regular activities" xml:space="preserve">
+    <value>Regular activities</value>
+  </data>
 </root>

@@ -71,9 +71,32 @@ namespace IDAProject.Web.Admin.Controllers
         public async Task<IActionResult> SaveTasksPlanningAsync(SaveTasksPlanningRequestModel requestModel)
         {
             var user = GetCurrentUser();
+            if (!string.IsNullOrEmpty(requestModel.PlanDateForSave))
+            {
+                string[] formats = { "dd.MM.yyyy.", "d.M.yyyy" };
+                if (DateTime.TryParseExact(requestModel.PlanDateForSave, formats,
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out DateTime planDate))
+                {
+                    requestModel.PlanDate = planDate;
+                }
+                else
+                {
+                    throw new ArgumentException($"Neispravan format datuma: {requestModel.PlanDateForSave}");
+                }
+            }
             requestModel.UserId = user.Id;
-            requestModel.CreatedAt = DateTime.Now;
-            requestModel.EmployeeId = user.EmployeeId;
+            if (requestModel.Id == 0)
+            {
+                requestModel.CreatedAt = DateTime.Now;
+            }
+            else
+            {
+                var taskplanning = await _TasksPlanningsManager.GetTasksPlanningByIdAsync(requestModel.Id);
+                requestModel.CreatedAt = taskplanning.Payload.CreatedAt;
+            }
+                requestModel.EmployeeId = user.EmployeeId;
             var responseModel = await _TasksPlanningsManager.SaveTasksPlanningAsync(requestModel);
             return Json(responseModel);
         }

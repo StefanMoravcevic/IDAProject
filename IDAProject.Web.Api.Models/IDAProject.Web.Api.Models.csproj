@@ -31,6 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Auth" Version="1.63.0" />
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.63.0.3171" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.1" />
   </ItemGroup>
 

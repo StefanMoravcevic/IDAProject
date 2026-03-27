@@ -41,6 +41,10 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.TaskPlanningId == searchParams.PlanId);
                 }
+                if (searchParams.UserId.HasValue)
+                {
+                    query = query.Where(x => x.TaskPlanning.UserId == searchParams.UserId);
+                }
             }
 
             result = await query.Select(a => new TasksPlanningCommentDto

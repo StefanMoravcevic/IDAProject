@@ -20,6 +20,7 @@ namespace IDAProject.Web.Models.Dto.TasksRealizations
         public TimeOnly? TimeTo { get; set; }
         public TimeOnly? Duration { get; set; }
         public DateTime? CreatedDate { get; set; }
+        public DateTime? RealizationDate { get; set; }
         public Boolean Finished { get; set; }
         public int? PlanNo { get; set; }        
         public int? UserId { get; set; }

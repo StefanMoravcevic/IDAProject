@@ -15,6 +15,7 @@ namespace IDAProject.Web.Api.Infrastructure
             _configuration = configuration;
 
             AddOrUpdateJob<INotificationsManager>("email-queue", repo => repo.SendQueuedEmailsAsync());
+            AddOrUpdateJob<IGoogleManager>("saveEvents", repo => repo.SyncFutureEventsForAllEmployeesAsync());
         }
 
         private static void AddOrUpdateJob<T>(string jobId, Expression<Func<T, Task>> methodCall)

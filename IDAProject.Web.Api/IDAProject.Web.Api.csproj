@@ -29,7 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Apis.Auth" Version="1.65.0" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.63.0" />
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.63.0" />
+    <PackageReference Include="Google.Apis.Core" Version="1.63.0" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.7" />
     <PackageReference Include="Hangfire.Core" Version="1.8.7" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.8.7" />

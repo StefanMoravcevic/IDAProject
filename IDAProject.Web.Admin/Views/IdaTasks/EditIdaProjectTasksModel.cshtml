@@ -1,0 +1,243 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.IdaTasks.IdaTaskViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Helpers;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@{
+
+	var id = DataHelpers.GetRandomHtmlId();
+	var getUrl = Url.RouteUrl(RouteNames.IdaProjectTasks_RecordsByEmployeeId, new { userId = Model.UserId });
+	var delUrl = Url.RouteUrl(RouteNames.IdaTasks_Delete, new { id = 111 });
+}
+<style>
+	#tableVehicleAssignmentsByVehicle tbody tr td:first-child {
+		cursor: pointer;
+	}
+</style>
+<div id="@id">
+	<div class="card">
+		<div class="card-body">
+			<div class="panel panel-primary">
+				@* <div class="row">
+					<div class="col-md-12 text-end">
+						<button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#absenceCollapse" aria-expanded="true" aria-controls="absenceCollapse" style="background-color:white;">
+							<i class="fa fa-expand" id="showContext" style="color:black;"></i>
+						</button>
+					</div>
+				</div> *@
+				<div class="row collapse show" id="idaProjectTaskCollapse">
+					<div class="col-lg-12 col-md-12" id="idaProjectTaskDataContainer">
+						<div class="card">
+							<div class="card-header border-bottom">
+								<h4 class="mb-0">@localizer["Enter task"]</h4>
+							</div>
+							<tms-input type="Hidden" name="UserId" id="idaProjectTaskEmployeeId" value="@Model.UserId" />
+							<tms-input type="Hidden" name="Id" id="idaProjectTaskId" />
+							<div class="card-body p-0 task-edit-main">
+								<div class="row p-5 border-bottom">
+									<div class="row search-params-wrapper">
+										<div class="col-sm-12 col-md-12 col-xl-12">
+											<tms-select name="ProjectId" id="NewIdaTaskProjectId" options="@Model.Projects" label="@localizer["Project"]" empty-option-text="@localizer["Select project"]..." />
+										</div>
+										<div class="col-sm-12 col-md-12 col-xl-12">
+											<tms-input type="Text" name="Name" id="ProjectIdaTaskNameId" label="@localizer["Task name"]" placeholder="@localizer["Enter task name"]..." />
+										</div>
+										<div class="col-sm-12 col-md-12 col-xl-12">
+											<tms-input type="Date" name="DueDate" id="ProjectIdaTaskDueDateId" label="@localizer["Task due date"]" placeholder="@localizer["Enter task due date"]..." />
+										</div>
+										@* <div class="col-sm-12 col-md-3 col-xl-2 pt-5">
+											<tms-input type="CheckBox" name="AllDay" id="AllDayId" value="true" label="@localizer["All day"]" />
+										</div>
+										<div class="col-sm-12 col-md-3 col-xl-2">
+											<tms-input type="Text" name="TimeFromFormatted" id="TimeFromFormattedId" label="@localizer["Time from"]" />
+										</div>
+										<div class="col-sm-12 col-md-3 col-xl-2">
+											<tms-input type="Text" name="TimeToFormatted" id="TimeToFormattedId" label="@localizer["Time to"]" />
+										</div>
+										<div class="col-sm-12 col-md-3 col-xl-6">
+											<div class="form-group">
+												<label class="form-label text-muted">@localizer["Note"]:</label>
+												<div class="input-group">
+													<textarea name="Comment" id="NoteId" class="form-control text-dark" style="height:80px;"></textarea>
+												</div>
+											</div>
+										</div> *@
+									</div>
+								</div>
+								<div class="row p-2">
+									<div class="btn-list text-end">
+										<button type="button" class="btn btn-primary" id="saveId" name="save">@localizer["Save"]</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-body">
+					<div class="panel panel-primary" id="idaProjectTasksWrapper">
+						<partial name="EditIdaProjectTasksRecords" model="@Model.IdaTask" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+
+<script type="text/javascript">
+	var tableParams = {
+		"searching": false,
+		"fixedColumns": true,
+		"autoWidth": true,
+		"columnDefs": [
+			{ "orderable": false, "targets": [3] }
+		],
+		"language": {
+			"sEmptyTable": "Nema podataka u tabeli",
+			"sInfo": "Prikazano _START_ do _END_ od _TOTAL_ unosa",
+			"sInfoEmpty": "Prikazano 0 do 0 od 0 unosa",
+			"sInfoFiltered": "(filtrirano od _MAX_ unosa)",
+			"sInfoPostFix": "",
+			"sSearch": "Pretraga:",
+			"sUrl": "",
+			"sLengthMenu": "Prikazivanje _MENU_ unosa",
+			"oPaginate": {
+				"sFirst": "Prva",
+				"sPrevious": "Prethodna",
+				"sNext": "Sledeća",
+				"sLast": "Poslednja"
+			}
+		}
+	};
+
+
+	function bindIdaProjectTasksTable()
+	{
+		$("#tableIdaProjectTasks").on("click", "button[name='edit']", function () {
+
+			var $row = $(this).closest("tr");
+
+			var id = $(this).val();
+			var project = $row.find("td:nth-child(1)").text();
+			var name = $row.find("td:nth-child(2)").text();
+			var dueDate = $row.find("td:nth-child(3)").text();
+
+			var projectId = $("#NewIdaTaskProjectId option").filter(function() {
+				return $(this).text().trim() === project.trim();
+			}).val();
+
+			$("#NewIdaTaskProjectId").val(projectId).trigger("change");
+
+			 $("#idaProjectTaskId").val(id);
+			 $("#ProjectIdaTaskNameId").val(name);
+			 $("#ProjectIdaTaskDueDateId").val(dueDate);
+			 $("#idaProjectTaskEmployeeId").val(@Model.UserId);
+
+		});
+
+
+		$("#tableIdaProjectTasks").on("click", "button[name='delete']", function () {
+
+			var id = $(this).val();
+
+			Swal.fire({
+				title: '@localizer["DeleteQuestion"]',
+				showCancelButton: true,
+				confirmButtonText: '@localizer["DeleteConfirmation"]'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					$.ajax({
+						url: "@delUrl".replace("111", id),
+						method: "DELETE",
+						success: function (response) {
+
+							handleActionResponseMessage(response, ajaxReloadIdaProjectTaskTable, '@localizer["Error"]', '@localizer["DeletedMsg"]');
+						},
+					});
+				}
+			});
+		});
+
+	}
+
+	function reloadIdaProjectTaskTable() {
+		$('#tableIdaProjectTasks').DataTable(tableParams);
+	}
+
+	function ajaxReloadIdaProjectTaskTable()
+	{
+
+		$.ajax({
+			url: "@getUrl",
+			method: "GET",
+			success: function (htmlResponse) {
+				$('#tableIdaProjectTasks').DataTable().clear().destroy();
+				$('#idaProjectTasksWrapper').html(htmlResponse);
+				setTimeout(reloadIdaProjectTaskTable, 1000);
+				bindIdaProjectTasksTable();
+				$("#idaProjectTaskEmployeeId").val(@Model.UserId);
+			}
+		});
+	}
+
+
+
+	$(document).ready(function () {
+		$("#NewIdaTaskProjectId").select2({
+			dropdownParent: $("#idaProjectTaskDataContainer")
+		});
+		//  var input = document.getElementById('DateFromVehicleYellowCardId');
+		// 	 var im = new Inputmask("99.99.9999");
+		// 	 im.mask(input);
+		// 	 var inputExDate = document.getElementById('DateToVehicleYellowCardId');
+		// 	 var ed = new Inputmask("99.99.9999");
+		// 	 ed.mask(inputExDate);
+		// requiredSelect2('NewDriverYellowCardId');
+		reloadIdaProjectTaskTable();
+		bindIdaProjectTasksTable();
+		 $("#@id input[type='text'][data-date='auto']").each(function (_, datePickerElement) {
+			initDefaultDatePicker(datePickerElement);
+		 });
+
+		$("#idaProjectTaskDataContainer button[name='save']").click(function () {
+		$("#saveId").prop("disabled",true);
+		var $inputsContainer = $("#idaProjectTaskDataContainer");
+
+		if (validateRequiredFields($inputsContainer, '@localizer["ValidationMsg"]')) {
+
+			var jsonData = serializeJSON($inputsContainer);
+
+			$.ajax({
+				url: "@Url.RouteUrl(RouteNames.IdaTasks_Save)",
+				method: "POST",
+				data: jsonData,
+				success: function (response) {
+					searchNotFinishedProjectTasks();
+					handleActionResponseMessage(response, ajaxReloadIdaProjectTaskTable, '@localizer["Error"]', '@localizer["SavedMsg"]');
+
+
+					$inputsContainer.find("input, select, textarea").val('');
+
+
+					$inputsContainer.find("tms-input").each(function() {
+						$(this).val('');
+					});
+				}
+				});
+			}
+			setInterval(function() {
+				$("#saveId").prop("disabled", false);
+			}, 2000);
+		});
+
+	});
+</script>

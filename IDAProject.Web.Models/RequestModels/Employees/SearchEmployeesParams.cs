@@ -16,6 +16,7 @@ namespace IDAProject.Web.Models.RequestModels.Employees
         public int? Id { get; set; } 
         public bool? Blocked { get; set; }
         public string? Keyword { get; set; }
+        public string? Email { get; set; }
         public int? Active { get; set; }
         public int? CommpanyId { get; set; }
 		public int? OrgUnitId { get; set; }

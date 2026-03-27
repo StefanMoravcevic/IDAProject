@@ -40,5 +40,8 @@
         public string? EmployeeNumber { get; set; }
         public string? Photo { get; set; }
         public int? SectorId { get; set; }
+        public string? GoogleEmail { get; set; }
+        public string? GoogleAccessToken { get; set; }
+        public string? GoogleRefreshToken { get; set; }
     }
 }

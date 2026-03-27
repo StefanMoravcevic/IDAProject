@@ -39,6 +39,10 @@ public partial class TasksPlanning
 
     public int? EmployeeId { get; set; }
 
+    public DateTime? PlanDate { get; set; }
+
+    public string? GoogleEventId { get; set; }
+
     public virtual ActivityType? ActivityType { get; set; }
 
     public virtual AspNetUser? DeletedByNavigation { get; set; }

@@ -54,6 +54,30 @@ namespace IDAProject.Web.Api.Repositories
                                                  x.CreatedAt.Value.Date == parsedDate.Date);
                     }
                 }
+                if (!string.IsNullOrEmpty(searchParams.PlanDate))
+                {
+                    if (DateTime.TryParseExact(searchParams.PlanDate,
+                                               "dd.MM.yyyy",
+                                               CultureInfo.InvariantCulture,
+                                               DateTimeStyles.None,
+                                               out var parsedDate))
+                    {
+                        query = query.Where(x => x.PlanDate.HasValue &&
+                                                 x.PlanDate.Value.Date == parsedDate.Date);
+                    }
+                }
+                if (!string.IsNullOrEmpty(searchParams.PlanDateForRowNumber))
+                {
+                    if (DateTime.TryParseExact(searchParams.PlanDateForRowNumber,
+                                               "dd.MM.yyyy",
+                                               CultureInfo.InvariantCulture,
+                                               DateTimeStyles.None,
+                                               out var parsedDate))
+                    {
+                        query = query.Where(x => x.PlanDate.HasValue &&
+                                                 x.PlanDate.Value.Date == parsedDate.Date);
+                    }
+                }
                 if (searchParams.UserId.HasValue)
                 {
                     query = query.Where(x => x.UserId == searchParams.UserId);
@@ -63,9 +87,9 @@ namespace IDAProject.Web.Api.Repositories
                     if (DateTime.TryParseExact(searchParams.StartDate, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var start) &&
                         DateTime.TryParseExact(searchParams.EndDate, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var end))
                     {
-                        query = query.Where(x => x.CreatedAt.HasValue &&
-                                                 x.CreatedAt.Value.Date >= start.Date &&
-                                                 x.CreatedAt.Value.Date <= end.Date);
+                        query = query.Where(x => x.PlanDate.HasValue &&
+                                                 x.PlanDate.Value.Date >= start.Date &&
+                                                 x.PlanDate.Value.Date <= end.Date);
                     }
                 }
                 if (searchParams.Finished.HasValue)
@@ -73,6 +97,10 @@ namespace IDAProject.Web.Api.Repositories
                     query = query.Where(x =>
                         !x.TasksRealizations.Any() ||
                         x.TasksRealizations.Any(r => r.Finished == searchParams.Finished));
+                }
+                if (!string.IsNullOrEmpty(searchParams.GoogleEventId))
+                {
+                    query = query.Where(x => x.GoogleEventId.ToLower() == searchParams.GoogleEventId.ToLower());
                 }
             }
 
@@ -105,7 +133,10 @@ namespace IDAProject.Web.Api.Repositories
                 : a.RegularActivityId != null
                     ? a.RegularActivity.Name
                     : "",
-                IsFinished = a.TasksRealizations.FirstOrDefault().Finished
+                IsFinished = a.TasksRealizations.FirstOrDefault().Finished,
+                PlanDate = a.PlanDate,
+                GoogleEventId = a.GoogleEventId
+
 
             }).ToListAsync();
             return result;

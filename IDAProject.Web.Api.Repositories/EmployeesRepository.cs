@@ -82,6 +82,11 @@ namespace IDAProject.Web.Api.Repositories
                     query = query.Where(x => x.CompanyId == searchParams.CommpanyId.Value);
                 }
 
+                if (!string.IsNullOrEmpty(searchParams.Email))
+                {
+                    query = query.Where(x => x.Email.ToLower() == searchParams.Email.ToLower());
+                }
+
 				if (searchParams.OrgUnitId.HasValue)
 				{
 					query = query.Where(x => x.OrgUnitId == searchParams.OrgUnitId);
@@ -175,7 +180,10 @@ namespace IDAProject.Web.Api.Repositories
                                 Photo = emp.Photo,
                                 SectorId = emp.SectorId,
                                 Sector = emp.Sector!.Name,
-                                UserId = emp.AspNetUsers.FirstOrDefault().Id
+                                UserId = emp.AspNetUsers.FirstOrDefault().Id,
+                                GoogleAccessToken = emp.GoogleAccessToken,
+                                GoogleRefreshToken = emp.GoogleRefreshToken,
+                                GoogleEmail = emp.GoogleEmail
 
                             }).ToListAsync();
 

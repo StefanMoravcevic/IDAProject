@@ -602,6 +602,9 @@ public partial class IdaContext : DbContext
                 .HasColumnName("EMail");
             entity.Property(e => e.EmployeeNumber).HasMaxLength(50);
             entity.Property(e => e.FederalNumber).HasMaxLength(50);
+            entity.Property(e => e.GoogleAccessToken).HasMaxLength(500);
+            entity.Property(e => e.GoogleEmail).HasMaxLength(500);
+            entity.Property(e => e.GoogleRefreshToken).HasMaxLength(500);
             entity.Property(e => e.HousePhoneNumber).HasMaxLength(50);
             entity.Property(e => e.InsuranceNumber).HasMaxLength(50);
             entity.Property(e => e.MiddleName).HasMaxLength(50);
@@ -772,13 +775,17 @@ public partial class IdaContext : DbContext
             entity.Property(e => e.DueDate).HasColumnType("datetime");
             entity.Property(e => e.Name).HasMaxLength(200);
 
-            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.IdaTasks)
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.IdaTaskDeletedByNavigations)
                 .HasForeignKey(d => d.DeletedBy)
                 .HasConstraintName("FK_IdaTasks_AspNetUsers");
 
             entity.HasOne(d => d.Project).WithMany(p => p.IdaTasks)
                 .HasForeignKey(d => d.ProjectId)
                 .HasConstraintName("FK_IdaTasks_Projects");
+
+            entity.HasOne(d => d.User).WithMany(p => p.IdaTaskUsers)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_IdaTasks_AspNetUsers1");
         });
 
         modelBuilder.Entity<Integration>(entity =>
@@ -1090,9 +1097,13 @@ public partial class IdaContext : DbContext
             entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.Name).HasMaxLength(500);
 
-            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.RegularActivities)
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.RegularActivityDeletedByNavigations)
                 .HasForeignKey(d => d.DeletedBy)
                 .HasConstraintName("FK_RegularActivities_AspNetUsers");
+
+            entity.HasOne(d => d.User).WithMany(p => p.RegularActivityUsers)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_RegularActivities_AspNetUsers1");
         });
 
         modelBuilder.Entity<Relationship>(entity =>
@@ -1187,6 +1198,7 @@ public partial class IdaContext : DbContext
             entity.Property(e => e.ActivityName).HasMaxLength(100);
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.PlanDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.ActivityType).WithMany(p => p.TasksPlannings)
                 .HasForeignKey(d => d.ActivityTypeId)
@@ -1251,6 +1263,7 @@ public partial class IdaContext : DbContext
             entity.Property(e => e.Activity).HasMaxLength(100);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.RealizationDate).HasColumnType("datetime");
             entity.Property(e => e.Report).HasMaxLength(100);
 
             entity.HasOne(d => d.ActivityType).WithMany(p => p.TasksRealizations)

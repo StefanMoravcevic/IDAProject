@@ -9,6 +9,7 @@ namespace IDAProject.Web.Models.RequestModels.RegularActivities
     public class SearchRegularActivitiesParams
     {
         public int? Id { get; set; }
+        public int? UserId { get; set; }
         //<<SearchParams>>
     }
 }

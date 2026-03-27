@@ -83,6 +83,12 @@ public partial class Employee
 
     public int? SectorId { get; set; }
 
+    public string? GoogleEmail { get; set; }
+
+    public string? GoogleAccessToken { get; set; }
+
+    public string? GoogleRefreshToken { get; set; }
+
     public virtual ICollection<AspNetUser> AspNetUsers { get; set; } = new List<AspNetUser>();
 
     public virtual City? City { get; set; }

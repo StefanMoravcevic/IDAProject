@@ -24,6 +24,8 @@ namespace IDAProject.Web.Admin.Models.ViewModels.IDA
         public IEnumerable<ISelectOption> RegularActivities { get; set; }
         public IEnumerable<ISelectOption> TaskPlannings { get; set; }
         public string? Today { get; set; }
+        public string? TodayForActivityTable { get; set; }
         public string? ImageSource { get; set; }
+        public DateTime? NextDay { get; set; }
     }
 }

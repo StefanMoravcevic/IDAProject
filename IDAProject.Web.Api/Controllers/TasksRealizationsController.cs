@@ -48,6 +48,7 @@ namespace IDAProject.Web.Api.Controllers
             if (requestModel.Finished)
             {
                 var taskPlanningId = await _tasksPlanningsManager.GetTasksPlanningByIdAsync(requestModel.TasksPlanningId.Value);
+                requestModel.RealizationDate = taskPlanningId.Payload.PlanDate;
                 taskPlanningId.Payload.PlanStatusId = 2;
                 await _tasksPlanningsManager.SaveTasksPlanningAsync(taskPlanningId.Payload);
 

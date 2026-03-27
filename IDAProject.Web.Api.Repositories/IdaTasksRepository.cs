@@ -52,6 +52,10 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.ProjectId == searchParams.ProjectId);
                 }
+                if (searchParams.UserId.HasValue)
+                {
+                    query = query.Where(x => x.UserId == searchParams.UserId);
+                }
             }
 
             result = await query.Select(a => new IdaTaskDto
@@ -62,7 +66,8 @@ namespace IDAProject.Web.Api.Repositories
                 IsCompleted = a.IsCompleted,
                 Name = a.Name,
                 ProjectId = a.ProjectId,
-                Project = a.Project.Description
+                Project = a.Project.Description,
+                UserId = a.UserId
 
             }).ToListAsync();
             return result;

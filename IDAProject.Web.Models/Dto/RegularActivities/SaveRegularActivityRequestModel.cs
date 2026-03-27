@@ -11,6 +11,7 @@ namespace IDAProject.Web.Models.Dto.RegularActivities
         public Int32 Id { get; set; }
 public String? Name { get; set; }
 public String? Description { get; set; }
+        public int? UserId { get; set; }
 
     }
 }

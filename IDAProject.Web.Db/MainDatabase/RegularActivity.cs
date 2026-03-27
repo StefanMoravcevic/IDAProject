@@ -17,9 +17,13 @@ public partial class RegularActivity
 
     public string? Description { get; set; }
 
+    public int? UserId { get; set; }
+
     public virtual AspNetUser? DeletedByNavigation { get; set; }
 
     public virtual ICollection<TasksPlanning> TasksPlannings { get; set; } = new List<TasksPlanning>();
 
     public virtual ICollection<TasksRealization> TasksRealizations { get; set; } = new List<TasksRealization>();
+
+    public virtual AspNetUser? User { get; set; }
 }

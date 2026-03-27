@@ -114,6 +114,7 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\FebiItemsController.cs" />
+    <Compile Remove="Controllers\GoogleController.cs" />
     <Compile Remove="Controllers\OrderHeaderArchivesController.cs" />
     <Compile Remove="Controllers\OrderHeadersController.cs" />
     <Compile Remove="Controllers\OrderLineArchivesController.cs" />

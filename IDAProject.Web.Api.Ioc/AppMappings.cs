@@ -87,6 +87,7 @@ namespace IDAProject.Web.Api.Ioc
             serviceCollection.AddScoped<ITasksRealizationsManager, TasksRealizationsManager>();
             serviceCollection.AddScoped<ITasksPlanningCommentsManager, TasksPlanningCommentsManager>();
             serviceCollection.AddScoped<ITasksRealizationCommentsManager, TasksRealizationCommentsManager>();
+            serviceCollection.AddScoped<IGoogleManager, GoogleManager>();
         }
 
         private static void MapReports(IServiceCollection serviceCollection)

@@ -10,6 +10,7 @@ namespace IDAProject.Web.Models.RequestModels.TasksRealizations
     {
         public int? Id { get; set; }
         public string? CreatedDate { get; set; }
+        public string? RealizationDate { get; set; }
         public int? UserId { get; set; }
         public string? StartDate { get; set; }  // dd.MM.yyyy
         public string? EndDate { get; set; }    // dd.MM.yyyy

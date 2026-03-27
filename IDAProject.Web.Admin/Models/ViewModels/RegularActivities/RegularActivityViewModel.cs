@@ -8,9 +8,11 @@ namespace IDAProject.Web.Admin.Models.ViewModels.RegularActivities
     {
         public RegularActivityViewModel()
         {
-            RegularActivity = new RegularActivityDto();
+            RegularActivity = new List<RegularActivityDto>();
         }
-        public RegularActivityDto RegularActivity { get; set; }
+        public List<RegularActivityDto> RegularActivity { get; set; }
+
+        public int? UserId { get; set; }
 
     }
 }

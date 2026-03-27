@@ -17,7 +17,7 @@ namespace IDAProject.Web.Admin.Ioc
         }
 
         private static void MapManagers(IServiceCollection serviceCollection)
-        {
+        {   
             serviceCollection.AddScoped<IAddressesManager, AddressesManager>();
             serviceCollection.AddScoped<IAccountManager, AccountManager>();
             serviceCollection.AddScoped<IMasterDataManager, MasterDataManager>();
@@ -38,6 +38,7 @@ namespace IDAProject.Web.Admin.Ioc
             serviceCollection.AddScoped<ITasksRealizationsManager, TasksRealizationsManager>();
             serviceCollection.AddScoped<ITasksPlanningCommentsManager, TasksPlanningCommentsManager>();
             serviceCollection.AddScoped<ITasksRealizationCommentsManager, TasksRealizationCommentsManager>();
+            serviceCollection.AddScoped<IGoogleManager, GoogleManager>();
 
             serviceCollection.AddScoped<AuthorizationService>();
             serviceCollection.AddScoped<AuthorizationHelpers>();

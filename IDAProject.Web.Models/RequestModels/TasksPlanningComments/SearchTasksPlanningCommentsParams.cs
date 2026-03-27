@@ -10,6 +10,7 @@ namespace IDAProject.Web.Models.RequestModels.TasksPlanningComments
     {
         public int? Id { get; set; }
         public int? PlanId { get; set; }
+        public int? UserId { get; set; }
         //<<SearchParams>>
     }
 }

@@ -1,10 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
+using IDAProject.Web.Admin.Managers;
 using IDAProject.Web.Admin.Models.Common;
 using IDAProject.Web.Admin.Models.Interfaces.Managers;
+using IDAProject.Web.Admin.Models.ViewModels.EmployeeAbsences;
 using IDAProject.Web.Admin.Models.ViewModels.IdaTasks;
 using IDAProject.Web.Models.Dto.IdaTasks;
 using IDAProject.Web.Models.General.Enums;
+using IDAProject.Web.Models.RequestModels.EmployeeAbsences;
 using IDAProject.Web.Models.RequestModels.IdaTasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IDAProject.Web.Admin.Controllers
 {
@@ -48,18 +51,18 @@ namespace IDAProject.Web.Admin.Controllers
             return View("EditIdaTask", viewModel);
         }
 
-        [HttpGet("edit/{id}", Name = RouteNames.IdaTasks_Edit)]
-        public async Task<IActionResult> EditIdaTaskAsync(int id)
-        {
-            var viewModel = new IdaTaskViewModel();
+        //[HttpGet("edit/{id}", Name = RouteNames.IdaTasks_Edit)]
+        //public async Task<IActionResult> EditIdaTaskAsync(int id)
+        //{
+        //    var viewModel = new IdaTaskViewModel();
 
-            var IdaTaskResponse = await _IdaTasksManager.GetIdaTaskByIdAsync(id);
+        //    var IdaTaskResponse = await _IdaTasksManager.GetIdaTaskByIdAsync(id);
 
-            viewModel.IdaTask = IdaTaskResponse.Payload!;
-            viewModel.User = GetCurrentUser();
+        //    viewModel.IdaTask = IdaTaskResponse.Payload!;
+        //    viewModel.User = GetCurrentUser();
 
-            return View("EditIdaTask", viewModel);
-        }
+        //    return View("EditIdaTask", viewModel);
+        //}
 
         [HttpPost("save", Name = RouteNames.IdaTasks_Save)]
         public async Task<IActionResult> SaveIdaTaskAsync(SaveIdaTaskRequestModel requestModel)
@@ -78,6 +81,46 @@ namespace IDAProject.Web.Admin.Controllers
                 responseModel.Message = Url.RouteUrl(RouteNames.IdaTasks_List, new { Id = "111" })!;
             }
             return Json(responseModel);
+        }
+
+        [HttpGet("idaTasks/{userId}", Name = RouteNames.IdaTasks_GetByEmployeeId)]
+        public async Task<IActionResult> IdaTasksByEmployeeId(int userId)
+        {
+            var idaTasks = await _IdaTasksManager.SearchIdaTasksAsync(new SearchIdaTasksParams { UserId = userId, HasProject = false });
+
+            var viewModel = new IdaTaskViewModel
+            {
+                UserId = userId,
+                IdaTask = idaTasks.Payload!,
+            };
+            return PartialView("EditIdaTasksModel", viewModel);
+        }
+
+        [HttpGet("idaTasks/records/{userId}", Name = RouteNames.IdaTasks_RecordsByEmployeeId)]
+        public async Task<IActionResult> IdaTasksRecordsByEmployeeId(int userId)
+        {
+            var responseModel = await _IdaTasksManager.SearchIdaTasksAsync(new SearchIdaTasksParams { UserId = userId, HasProject = false });
+            return PartialView("EditIdaTasksRecords", responseModel.Payload);
+        }
+        [HttpGet("idaProjectTasks/{userId}", Name = RouteNames.IdaProjectTasks_GetByEmployeeId)]
+        public async Task<IActionResult> IdaProjectTasksByEmployeeId(int userId)
+        {
+            var idaTasks = await _IdaTasksManager.SearchIdaTasksAsync(new SearchIdaTasksParams { UserId = userId, HasProject = true });
+
+            var viewModel = new IdaTaskViewModel
+            {
+                UserId = userId,
+                IdaTask = idaTasks.Payload!,
+            };
+            viewModel.Projects = await _masterDataManager.GetSelectOptionsByTableAsync("Projects", "Description");
+            return PartialView("EditIdaProjectTasksModel", viewModel);
+        }
+
+        [HttpGet("idaProjectTasks/records/{userId}", Name = RouteNames.IdaProjectTasks_RecordsByEmployeeId)]
+        public async Task<IActionResult> IdaProjectTasksRecordsByEmployeeId(int userId)
+        {
+            var responseModel = await _IdaTasksManager.SearchIdaTasksAsync(new SearchIdaTasksParams { UserId = userId, HasProject = true });
+            return PartialView("EditIdaProjectTasksRecords", responseModel.Payload);
         }
     }
 }

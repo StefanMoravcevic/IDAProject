@@ -36,15 +36,19 @@ namespace IDAProject.Web.Api.Repositories
                 query = query.Where(x => x.Id == searchParams.Id);
             }
             else
-            {  
-
+            {
+                if (searchParams.UserId.HasValue)
+                {
+                    query = query.Where(x => x.UserId == searchParams.UserId);
+                }
             }
 
             result = await query.Select(a => new RegularActivityDto
             {
                 Id = a.Id,
                 Description = a.Description,
-                Name = a.Name
+                Name = a.Name,
+                UserId = a.UserId
 
             }).ToListAsync();
             return result;

@@ -41,6 +41,8 @@ public partial class TasksRealization
 
     public int? UserId { get; set; }
 
+    public DateTime? RealizationDate { get; set; }
+
     public virtual ActivityType? ActivityType { get; set; }
 
     public virtual AspNetUser? DeletedByNavigation { get; set; }

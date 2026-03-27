@@ -159,6 +159,10 @@
         public const string IdaTasks_Search = "IdaTasks_Search";
         public const string IdaTasks_New = "IdaTasks_New";
         public const string IdaTasks_Edit = "IdaTasks_Edit";
+        public const string IdaTasks_GetByEmployeeId = "IdaTasks_GetByEmployeeId";
+        public const string IdaProjectTasks_GetByEmployeeId = "IdaProjectTasks_GetByEmployeeId";
+        public const string IdaTasks_RecordsByEmployeeId = "IdaTasks_RecordsByEmployeeId";
+        public const string IdaProjectTasks_RecordsByEmployeeId = "IdaProjectTasks_RecordsByEmployeeId";
         public const string IdaTasks_Save = "IdaTasks_Save";
         public const string IdaTasks_Delete = "IdaTasks_Delete";
 
@@ -168,6 +172,8 @@
         public const string RegularActivities_Edit = "RegularActivities_Edit";
         public const string RegularActivities_Save = "RegularActivities_Save";
         public const string RegularActivities_Delete = "RegularActivities_Delete";
+        public const string RegularActivities_GetByEmployeeId = "RegularActivities_GetByEmployeeId";
+        public const string RegularActivities_RecordsByEmployeeId = "RegularActivities_RecordsByEmployeeId";
 
         public const string TasksPlannings_List = "TasksPlannings_List";
         public const string TasksPlannings_Search = "TasksPlannings_Search";
@@ -202,6 +208,7 @@
         public const string TasksRealizationComments_Delete = "TasksRealizationComments_Delete";
 
         public const string IDA_Index = "IDA_Index";
+        public const string IDA_OverviewIndex = "IDA_OverviewIndex";
         public const string IDA_IndexView = "IDA_IndexView";
         public const string IDA_PlanNewDay = "IDA_PlanNewDay";
 

@@ -35,12 +35,13 @@ namespace IDAProject.Web.Admin.Controllers
         {
             var viewModel = new IDAViewModel();
             var user = GetCurrentUser();
+
             var today = DateTime.Now.Date.ToString("dd.MM.yyyy");
             var taskPlannings = await _tasksPlanningsManager.SearchTasksPlanningsAsync(
     new Web.Models.RequestModels.TasksPlannings.SearchTasksPlanningsParams
     {
         UserId = user.Id,
-        CreatedDate = today,
+        PlanDateForRowNumber = today,
         Finished = false
     }
 );
@@ -64,15 +65,25 @@ namespace IDAProject.Web.Admin.Controllers
             // Postavi svojstvo na novu listu
             viewModel.TaskPlannings = taskPlanningsList;
             viewModel.Projects = await _masterDataManager.GetSelectOptionsByTableAsync("Projects", "Description");
-            viewModel.Tasks = await _idaTasksManager.GetUncompletedTasks(false);
-            viewModel.ProjectTasks = await _idaTasksManager.GetUncompletedTasks(true);
+            viewModel.Tasks = await _idaTasksManager.GetUncompletedTasks(false,user.Id);
+            viewModel.ProjectTasks = await _idaTasksManager.GetUncompletedTasks(true, user.Id);
             viewModel.ActivityTypes = await _masterDataManager.GetSelectOptionsByTableAsync("ActivityTypes", "Name");
             viewModel.PlanStatuses = await _masterDataManager.GetSelectOptionsByTableAsync("PlanStatuses", "Name");
             viewModel.RegularActivities = await _masterDataManager.GetSelectOptionsByTableAsync("RegularActivities", "Name");
             viewModel.User = user;
             var employeePhoto = (await _employeesManager.GetEmployeeByIdAsync(user.EmployeeId)).Payload.Photo;
             viewModel.ImageSource = employeePhoto;
-            viewModel.Today = DateTime.Now.Date.ToString("dd.MM.yyyy");
+            viewModel.TodayForActivityTable = DateTime.Now.Date.ToString("dd.MM.yyyy");
+            var nextDay = DateTime.Now.Date.AddDays(1);
+
+            // preskoči vikend
+            while (nextDay.DayOfWeek == DayOfWeek.Saturday || nextDay.DayOfWeek == DayOfWeek.Sunday)
+            {
+                nextDay = nextDay.AddDays(1);
+            }
+
+            viewModel.Today = DateTime.Now.ToString("dd.MM.yyyy");
+            viewModel.NextDay = nextDay;
             return View(viewModel);
         }
         [HttpGet("indexView", Name = RouteNames.IDA_IndexView)]
@@ -109,8 +120,8 @@ namespace IDAProject.Web.Admin.Controllers
             // Postavi svojstvo na novu listu
             viewModel.TaskPlannings = taskPlanningsList;
             viewModel.Projects = await _masterDataManager.GetSelectOptionsByTableAsync("Projects", "Description");
-            viewModel.Tasks = await _idaTasksManager.GetUncompletedTasks(false);
-            viewModel.ProjectTasks = await _idaTasksManager.GetUncompletedTasks(true);
+            viewModel.Tasks = await _idaTasksManager.GetUncompletedTasks(false,user.Id);
+            viewModel.ProjectTasks = await _idaTasksManager.GetUncompletedTasks(true, user.Id);
             viewModel.ActivityTypes = await _masterDataManager.GetSelectOptionsByTableAsync("ActivityTypes", "Name");
             viewModel.PlanStatuses = await _masterDataManager.GetSelectOptionsByTableAsync("PlanStatuses", "Name");
             viewModel.RegularActivities = await _masterDataManager.GetSelectOptionsByTableAsync("RegularActivities", "Name");
@@ -127,8 +138,8 @@ namespace IDAProject.Web.Admin.Controllers
             viewModel.Projects = await _masterDataManager.GetSelectOptionsByTableAsync("Projects", "Description");
             var user = GetCurrentUser();
             viewModel.ProjectTasks = await _masterDataManager.GetSelectOptionsByTableAsync("IdaTasks", "Name");
-            viewModel.Tasks = await _idaTasksManager.GetUncompletedTasks(false);
-            viewModel.ProjectTasks = await _idaTasksManager.GetUncompletedTasks(true);
+            viewModel.Tasks = await _idaTasksManager.GetUncompletedTasks(false, user.Id);
+            viewModel.ProjectTasks = await _idaTasksManager.GetUncompletedTasks(true, user.Id);
             viewModel.ActivityTypes = await _masterDataManager.GetSelectOptionsByTableAsync("ActivityTypes", "Name");
             viewModel.PlanStatuses = await _masterDataManager.GetSelectOptionsByTableAsync("PlanStatuses", "Name");
             viewModel.RegularActivities = await _masterDataManager.GetSelectOptionsByTableAsync("RegularActivities", "Name");

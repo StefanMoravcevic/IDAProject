@@ -14,6 +14,13 @@
 	var planNewDay = Url.RouteUrl(RouteNames.IDA_PlanNewDay);
 	var employeePlaceholderParam = new { employeeId = 111 };
 	var urlPatternAbsences = Url.RouteUrl(RouteNames.EmployeeAbsences_ListByEmployeeId, employeePlaceholderParam);
+	var urlPatternIdaTasks = Url.RouteUrl(RouteNames.IdaTasks_GetByEmployeeId, new { userId = "111"});
+	var urlPatternIdaProjectTasks = Url.RouteUrl(RouteNames.IdaProjectTasks_GetByEmployeeId, new { userId = "111"});
+	var urlPatternRegularActivities = Url.RouteUrl(RouteNames.RegularActivities_GetByEmployeeId, new { userId = "111"});
+	var date = Model.NextDay; // tvoj datum
+	var danUNedelji = date.Value.ToString("dddd", new System.Globalization.CultureInfo("sr-Latn-RS"));
+	var datumFormatirano = date.Value.ToString("dd.MM.yyyy");
+
 }
 <style>
 	.page-main::before {
@@ -88,13 +95,45 @@
 		width: 100%;
 	}
 
+	.col-from, .col-to {
+		width: 70px;
+	}
+
+	.col-duration {
+		width: 70px;
+	}
+
+	.col-order {
+		width: 50px;
+	}
+	.col-actions {
+		width: 50px;
+	}
+
+	.col-status {
+		width: 85px;
+	}
 
 
+	/* Osnovna visina inputa */
+	td input[name="Activity"],
+	td input[name="Report"] {
+		transition: height 0.3s ease; /* glatka promena visine */
+	}
+
+		/* Kad input dobije fokus */
+		td input[name="Activity"]:focus,
+		td input[name="Report"]:focus {
+			height: 75px; /* povećava se visina na fokus */
+		}
 
 
 </style>
 <tms-modal id="editAbsenceModal" title="@localizer["Absences"]" save-button="false" modal-size="@ModalSize.Large" />
-<div class="container-fluid mt-1">
+<tms-modal id="editIdaTasksModal" title="@localizer["Tasks"]" save-button="false" modal-size="@ModalSize.Default" />
+<tms-modal id="editIdaProjectTasksModal" title="@localizer["Project tasks"]" save-button="false" modal-size="@ModalSize.Default" />
+<tms-modal id="editRegularActivitiesModal" title="@localizer["Regular activities"]" save-button="false" modal-size="@ModalSize.Default" />
+<div class="container-fluid mt-1 min-vh-100 d-flex flex-column">
 
 	<!-- ========================= -->
 	<!-- GORNJI DEO -->
@@ -136,7 +175,14 @@
 
 				<div class="card-header bg-primary text-white fw-bold d-flex flex-wrap justify-content-between align-items-center">
 
-					<span>📅 @localizer["Plans for day"] @Model.Today</span>
+					<div class="d-flex align-items-center gap-2">
+						<span id="planDayDisplay">📅 @localizer["Plans for day"] - @danUNedelji – @datumFormatirano</span>
+
+						<tms-input type="Date"
+								   id="planDate"
+								   class="form-control form-control-sm w-auto"
+								   value="@Model.NextDay" />
+					</div>
 
 					<select id="activityMode"
 							name="ActivityTypePlanId"
@@ -198,7 +244,7 @@
 	<!-- ========================= -->
 	<!-- ACTIVITIES -->
 	<!-- ========================= -->
-	<div class="card shadow-sm mt-3">
+	<div class="card shadow-sm mt-3 flex-grow-1 d-flex flex-column">
 
 		<div class="card-header fw-bold"
 			 id="activityHeader"
@@ -212,21 +258,42 @@
 		<div class="card-body" id="activitiesBody">
 
 			<!-- BUTTONS -->
-			<div class="d-flex flex-column flex-sm-row flex-wrap gap-2 mb-3">
+			<div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2 mb-3">
 
-				<button class="btn btn-primary btn-sm"
-						id="btnPlanNewDay">
+				<!-- LEFT BUTTONS -->
+				<div class="d-flex flex-wrap gap-2">
 
-					🔄 @localizer["Plan new day"]
+@* 					<button class="btn btn-primary btn-sm"
+							id="btnPlanNewDay">
+						🔄 @localizer["Plan new day"]
+					</button> *@
 
-				</button>
+					<button class="btn btn-primary btn-sm"
+							id="btnEnterAbsence">
+						📊 @localizer["Enter absence"]
+					</button>
 
-				<button class="btn btn-primary btn-sm"
-						id="btnEnterAbsence">
+				</div>
 
-					📊 @localizer["Enter absence"]
+				<!-- RIGHT BUTTONS -->
+				<div class="d-flex flex-wrap gap-2 ms-sm-auto">
 
-				</button>
+					<button class="btn btn-primary btn-sm"
+							id="btnAddTask">
+						➕ @localizer["Add task"]
+					</button>
+
+					<button class="btn btn-primary btn-sm"
+							id="btnAddProjectTask">
+						📁 @localizer["Add project task"]
+					</button>
+
+					<button class="btn btn-primary btn-sm"
+							id="btnAddRegularActivity">
+						🔁 @localizer["Add regular activity"]
+					</button>
+
+				</div>
 
 			</div>
 
@@ -237,7 +304,7 @@
 				<div class="col-12 col-xl-5">
 
 					<h6 class="fw-bold">
-						📌 @localizer["Yours today plans"]
+						📌 @localizer["Yours today plans"] - @Model.TodayForActivityTable
 					</h6>
 
 					<div class="table-responsive">
@@ -247,14 +314,14 @@
 							<thead>
 								<tr>
 
-									<th>@localizer["Your task"]</th>
-									<th>@localizer["Plan no"]</th>
-									<th>@localizer["Activity"]</th>
-									<th>@localizer["Time from"]</th>
-									<th>@localizer["Time to"]</th>
-									<th>@localizer["Duration"]</th>
-									<th>@localizer["Status"]</th>
-									<th>@localizer["Finished"]</th>
+									<th class="col-activity">@localizer["Your task"]</th>
+									<th class="col-activity">@localizer["Activity"]</th>
+									<th class="col-from">@localizer["Time from"]</th>
+									<th class="col-to">@localizer["Time to"]</th>
+									<th class="col-duration">@localizer["Duration"]</th>
+									<th class="col-status">@localizer["Status"]</th>
+									<th class="col-order">@localizer["Id"]</th>
+									<th style="width:30px;">@localizer["Finished"]</th>
 
 								</tr>
 							</thead>
@@ -285,7 +352,7 @@
 					 style="border-color:#ddd !important;">
 
 					<h6 class="fw-bold">
-						✅ @localizer["Yours today realisation"]
+						✅ @localizer["Yours today realisation"]  - @Model.TodayForActivityTable
 					</h6>
 
 
@@ -298,17 +365,17 @@
 
 								<tr>
 
-									<th>@localizer["Plan no"]</th>
+									<th class="col-order">@localizer["Id"]</th>
 
-									<th class="col-activityType">
+									<th class="col-activityType col-activity">
 										@localizer["Activity type"]
 									</th>
 
-									<th class="col-taskName">
+									<th class="col-taskName col-activity">
 										@localizer["Task"]
 									</th>
 
-									<th class="col-project"
+									<th class="col-project col-activity"
 										style="display:none;">
 										@localizer["Project"]
 									</th>
@@ -325,14 +392,16 @@
 
 									<th>@localizer["Activity"]</th>
 
-									<th>@localizer["Time from"]</th>
-									<th>@localizer["Time to"]</th>
-
-									<th>@localizer["Duration"]</th>
+									
 
 									<th>@localizer["Report"]</th>
 
-									<th>@localizer["Finished"]</th>
+									<th class="col-from">@localizer["Time from"]</th>
+									<th class="col-to">@localizer["Time to"]</th>
+
+									<th class="col-duration">@localizer["Duration"]</th>
+
+									<th style="width:30px;">@localizer["Finished"]</th>
 
 									<th class="col-actions"
 										style="display:none;">
@@ -378,106 +447,6 @@
 	</div>
 
 
-	<!-- ========================= -->
-	<!-- DONJI DEO -->
-	<!-- ========================= -->
-	<div class="row g-4 mt-1">
-
-		<div class="col-12 col-lg-4" id="taskDataContainer">
-			<div class="card shadow-sm p-3 mb-3">
-				<h5>@localizer["Enter new task"]</h5>
-				<tms-input type="Text" name="Name" id="taskName" class="form-control mb-2"
-						   label="@localizer["Task name"]:"
-						   placeholder="@localizer["Enter task name"]..." />
-				<tms-input type="Date" name="DueDate" id="taskDueDate" class="form-control mb-2"
-						   label="@localizer["Task due date"]:"
-						   placeholder="@localizer["Enter task due date"]..." />
-				<button id="saveTask" class="btn btn-success w-100 mb-2">
-					@localizer["Save"]
-				</button>
-
-				<div class="card shadow-sm p-2 mt-2">
-					<h6>@localizer["Tasks list"]</h6>
-					<div class="table-responsive" style="max-height:200px;overflow-y:auto;">
-						<table class="table table-sm table-striped" id="tasksTable">
-							<thead>
-								<tr>
-									<th>@localizer["Name"]</th>
-									<th>@localizer["Due Date"]</th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-12 col-lg-4">
-			<div class="card shadow-sm p-3 mb-3" id="projectTaskDataContainer">
-				<h5>@localizer["Enter new project task"]</h5>
-				<tms-select name="ProjectId" id="ProjectId" options="@Model.Projects" class="mb-2"
-							label="@localizer["Project"]:"
-							empty-option-text="@localizer["Select project"]..." />
-				<tms-input type="Text" name="Name" id="projectTaskName" class="form-control mb-2"
-						   label="@localizer["Task name"]:"
-						   placeholder="@localizer["Enter task name"]..." />
-				<tms-input type="Date" name="DueDate" id="projectTaskDueDate" class="form-control mb-2"
-						   label="@localizer["Task due date"]:"
-						   placeholder="@localizer["Enter task due date"]..." />
-				<button id="saveProjectTask" class="btn btn-success w-100 mb-2">
-					@localizer["Save"]
-				</button>
-
-				<div class="card shadow-sm p-2 mt-2">
-					<h6>@localizer["Project tasks list"]</h6>
-					<div class="table-responsive" style="max-height:200px;overflow-y:auto;">
-						<table class="table table-sm table-striped" id="projectTasksTable">
-							<thead>
-								<tr>
-									<th>@localizer["Project"]</th>
-									<th>@localizer["Task"]</th>
-									<th>@localizer["Due Date"]</th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-12 col-lg-4">
-			<div class="card shadow-sm p-3 mb-3" id="regularActivityDataContainer">
-				<h5>@localizer["Enter new regular activity"]</h5>
-				<tms-input type="Text" name="Name" id="regularActivityName" class="form-control mb-2"
-						   label="@localizer["Regular activity name"]:"
-						   placeholder="@localizer["Enter regular activity name"]..." />
-				<tms-input type="Text" name="Description" id="Description" class="form-control mb-2"
-						   label="@localizer["Description"]:"
-						   placeholder="@localizer["Enter description"]..." />
-				<button id="saveRegularActivity" class="btn btn-success w-100 mb-2">
-					@localizer["Save"]
-				</button>
-
-				<div class="card shadow-sm p-2 mt-2">
-					<h6>@localizer["Regular activities list"]</h6>
-					<div class="table-responsive" style="max-height:200px;overflow-y:auto;">
-						<table class="table table-sm table-striped" id="regularActivitiesTable">
-							<thead>
-								<tr>
-									<th>@localizer["Name"]</th>
-									<th>@localizer["Description"]</th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-
-	</div>
 
 </div>
 <div id="customTooltip" class="custom-tooltip"></div>
@@ -499,7 +468,9 @@
 			const regularActivities = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.RegularActivities));
 			var plannedTasks = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.TaskPlannings));
 
+			const daniUNedelji = ["Nedelja", "Ponedeljak", "Utorak", "Sreda", "Četvrtak", "Petak", "Subota"];
 
+			
 
 			function searchTaskPlanningsNumbersForRealization() {
 
@@ -507,7 +478,7 @@
 					url: "@Url.RouteUrl(RouteNames.TasksPlannings_Search)",
 					method: "POST",
 					data: {
-						createdDate: "@Model.Today",
+						planDate: "@Model.Today",
 						userId: "@Model.User.Id",
 						finished : false
 					},
@@ -543,21 +514,42 @@
 					url: "@Url.RouteUrl(RouteNames.IdaTasks_Search)",
 					method: "POST",
 					data: {
-						isCompleted : false,
-						hasProject : false
+						isCompleted: false,
+						hasProject: false,
+						userId: '@Model.User.Id'
 					},
 					success: function (data) {
 
-						tasks.length = 0; // očisti prethodne
+						tasks.length = 0; // očisti niz
 
-						// Popuni sa stvarnim planovima
-						data.forEach(item => {
+						var $select = $("#TaskId"); // <-- stavi ID tvog select-a ovde
+						$select.empty(); // očisti dropdown
+
+						// Dodaj praznu opciju (ako želiš)
+						$select.append(
+							$('<option>', {
+								value: '',
+								text: '-- Select task --'
+							})
+						);
+
+						data.forEach(function (item) {
+
 							tasks.push({
 								Value: item.id,
 								Description: item.name
 							});
+
+							$select.append(
+								$('<option>', {
+									value: item.id,
+									text: item.name
+								})
+							);
 						});
 
+
+						$select.trigger('change');
 					},
 					error: function (err) {
 						console.log(err);
@@ -572,7 +564,8 @@
 					method: "POST",
 					data: {
 						isCompleted : false,
-						hasProject : true
+						hasProject : true,
+						userId : '@Model.User.Id'
 					},
 					success: function (data) {
 
@@ -584,7 +577,49 @@
 								Value: item.id,
 								Description: item.name
 							});
+
+							$select.append(
+								$('<option>', {
+									value: item.id,
+									text: item.name
+								})
+							);
 						});
+
+					},
+					error: function (err) {
+						console.log(err);
+					}
+				});
+			}
+			function searchRegularActivitiesForUpdate() {
+
+				$.ajax({
+					url: "@Url.RouteUrl(RouteNames.RegularActivities_Search)",
+					method: "POST",
+					data: {
+						userId : '@Model.User.Id'
+					},
+					success: function (data) {
+
+						regularActivities.length = 0; // očisti prethodne
+						var $select = $("#RegularActivityId"); // <-- stavi ID tvog select-a ovde
+						$select.empty(); // očisti dropdown
+
+						// Popuni sa stvarnim planovima
+						data.forEach(item => {
+							regularActivities.push({
+								Value: item.id,
+								Description: item.name
+							});
+							$select.append(
+								$('<option>', {
+									value: item.id,
+									text: item.name
+								})
+							);
+						});
+						$select.trigger('change');
 
 					},
 					error: function (err) {
@@ -600,7 +635,8 @@
 					data: {
 						isCompleted: false,
 						hasProject: true,
-						projectId: projectId
+						projectId: projectId,
+						userId : '@Model.User.Id'
 					},
 					success: function (data) {
 
@@ -640,7 +676,8 @@
 					data: {
 						isCompleted: false,
 						hasProject: true,
-						projectId: projectId
+						projectId: projectId,
+						userId : '@Model.User.Id'
 					},
 					success: function (data) {
 
@@ -672,74 +709,179 @@
 					}
 				});
 			}
+		function loadTasksForManualTable() {
 
-			  $("#activityMode").change(function () {
+			let mode = $("#activityMode").val();
+			let date = $("#planDate").val();
 
-				  let mode = $(this).val();
-				  let thead = $("#dynamicTableHead");
-				  let tbody = $("#manualTable tbody");
+			if (!mode || !date) {
+				return;
+			}
 
-				  thead.empty();
-				  tbody.empty();
+			let parts = date.split(".");
+			let selectedDate = new Date(parts[2], parts[1]-1, parts[0]);
 
-				  if (!mode) {
-					  thead.append(`
-						  <tr>
-							  <th class="text-center text-muted">
-								  @localizer["Select activity type to generate table"]
-							  </th>
-						  </tr>
-					  `);
-					  return;
-				  }
+			let today = new Date();
+			today.setHours(0,0,0,0);
 
-				  if (mode === "1") {
-					  thead.append(`
-						  <tr>
-							  <th>@localizer["Project"]</th>
-							  <th>@localizer["Task"]</th>
-							  <th>@localizer["Activity"]</th>
-							  <th>@localizer["From"]</th>
-							  <th>@localizer["to"]</th>
-							  <th>@localizer["Duration"]</th>
-							  <th>@localizer["Order number"]</th>
-							  <th>@localizer["Status"]</th>
-							  <th>@localizer["Actions"]</th>
-						  </tr>
-					  `);
-				  }
+			let allowEdit = selectedDate > today;
 
-				  if (mode === "2") {
-					  thead.append(`
-						  <tr>
-							  <th>@localizer["Task"]</th>
-							  <th>@localizer["Activity"]</th>
-							  <th>@localizer["From"]</th>
-							  <th>@localizer["to"]</th>
-							  <th>@localizer["Duration"]</th>
-							  <th>@localizer["Order number"]</th>
-							  <th>@localizer["Status"]</th>
-							  <th>@localizer["Actions"]</th>
-						  </tr>
-					  `);
-				  }
+			if (allowEdit) {
+				$("#btnAddRow").show();
+			} else {
+				$("#btnAddRow").hide();
+			}
 
-				  if (mode === "3") {
-					  thead.append(`
-						  <tr>
-							  <th>@localizer["Regular activity"]</th>
-							  <th>@localizer["Activity"]</th>
-							  <th>@localizer["From"]</th>
-							  <th>@localizer["to"]</th>
-							  <th>@localizer["Duration"]</th>
-							  <th>@localizer["Order number"]</th>
-							  <th>@localizer["Status"]</th>
-							  <th>@localizer["Actions"]</th>
-						  </tr>
-					  `);
-				  }
+			$.ajax({
+				url: "@Url.RouteUrl(RouteNames.TasksPlannings_Search)",
+				method: "POST",
+				data: {
+					activityTypeId: mode,
+					planDate: date
+				},
+				success: function (tasks) {
 
-			  });
+					let tbody = $("#manualTable tbody");
+					tbody.empty();
+
+					tasks.forEach(function (task) {
+
+						let editBtn = allowEdit
+							? `<button class="btn btn-sm btn-primary editTaskBtn"><i class="fa fa-pencil"></i></button>`
+							: `<button class="btn btn-sm btn-primary" disabled><i class="fa fa-pencil"></i></button>`;
+
+						let rowHtml = "";
+
+						if (mode === "1") {
+							rowHtml = `
+								<tr data-id="${task.id}">
+									<td class="col-project">${task.project}</td>
+									<td class="col-task">${task.task}</td>
+									<td class="col-activity">${task.activityName}</td>
+									<td class="col-from">${task.timeFromFormatted}</td>
+									<td class="col-to">${task.timeToFormatted}</td>
+									<td class="col-duration">${task.durationFormatted}</td>
+									<td class="col-order">${task.planNo}</td>
+									<td class="col-status">${task.planStatus}</td>
+									<td class="col-actions">
+										${editBtn}
+									</td>
+								</tr>
+							`;
+						}
+
+						if (mode === "2") {
+							rowHtml = `
+								<tr data-id="${task.id}">
+									<td class="col-task">${task.task}</td>
+									<td class="col-activity">${task.activityName}</td>
+									<td class="col-from">${task.timeFromFormatted}</td>
+									<td class="col-to">${task.timeToFormatted}</td>
+									<td class="col-duration">${task.durationFormatted}</td>
+									<td class="col-order">${task.planNo}</td>
+									<td class="col-status">${task.planStatus}</td>
+									<td class="col-actions">
+										${editBtn}
+									</td>
+								</tr>
+							`;
+						}
+
+						if (mode === "3") {
+							rowHtml = `
+								<tr data-id="${task.id}">
+									<td class="col-regular-activity">${task.regularActivity}</td>
+									<td class="col-activity">${task.activityName}</td>
+									<td class="col-from">${task.timeFromFormatted}</td>
+									<td class="col-to">${task.timeToFormatted}</td>
+									<td class="col-duration">${task.durationFormatted}</td>
+									<td class="col-order">${task.planNo}</td>
+									<td class="col-status">${task.planStatus}</td>
+									<td class="col-actions">
+										${editBtn}
+									</td>
+								</tr>
+							`;
+						}
+
+						tbody.append(rowHtml);
+
+					});
+
+				},
+				error: function (err) {
+					console.error(err);
+				}
+			});
+		}
+		$("#activityMode").change(function () {
+
+			let mode = $(this).val();
+			let thead = $("#dynamicTableHead");
+			let tbody = $("#manualTable tbody");
+
+			thead.empty();
+			tbody.empty();
+
+			if (!mode) {
+				thead.append(`
+					<tr>
+						<th class="text-center text-muted">
+							@localizer["Select activity type to generate table"]
+						</th>
+					</tr>
+				`);
+				return;
+			}
+
+			if (mode === "1") {
+				thead.append(`
+					<tr>
+						<th class="col-project">@localizer["Project"]</th>
+						<th class="col-task">@localizer["Task"]</th>
+						<th class="col-activity">@localizer["Activity"]</th>
+						<th class="col-from">@localizer["From"]</th>
+						<th class="col-to">@localizer["to"]</th>
+						<th class="col-duration">@localizer["Duration"]</th>
+						<th class="col-order">@localizer["Order number"]</th>
+						<th class="col-status">@localizer["Status"]</th>
+						<th class="col-actions">@localizer["Actions"]</th>
+					</tr>
+				`);
+			}
+
+			if (mode === "2") {
+				thead.append(`
+					<tr>
+						<th class="col-task">@localizer["Task"]</th>
+						<th class="col-activity">@localizer["Activity"]</th>
+						<th class="col-from">@localizer["From"]</th>
+						<th class="col-to">@localizer["to"]</th>
+						<th class="col-duration">@localizer["Duration"]</th>
+						<th class="col-order">@localizer["Order number"]</th>
+						<th class="col-status">@localizer["Status"]</th>
+						<th class="col-actions">@localizer["Actions"]</th>
+					</tr>
+				`);
+			}
+
+			if (mode === "3") {
+				thead.append(`
+					<tr>
+						<th class="col-regular-activity">@localizer["Regular activity"]</th>
+						<th class="col-activity">@localizer["Activity"]</th>
+						<th class="col-from">@localizer["From"]</th>
+						<th class="col-to">@localizer["to"]</th>
+						<th class="col-duration">@localizer["Duration"]</th>
+						<th class="col-order">@localizer["Order number"]</th>
+						<th class="col-status">@localizer["Status"]</th>
+						<th class="col-actions">@localizer["Actions"]</th>
+					</tr>
+				`);
+			}
+
+			loadTasksForManualTable();
+		});
 
 			$("#btnAddRow").click(function () {
 
@@ -811,7 +953,7 @@
 				newRowHtml = `
 				<tr>
 					<td>
-						<select class="form-select form-select-sm" name="TaskId">
+						<select class="form-select form-select-sm" name="TaskId" id="TaskId">
 							<option value="">@localizer["Select task"]</option>
 							${tasks.map(x =>
 								`<option value="${x.Value}">${x.Description}</option>`
@@ -850,7 +992,7 @@
 				newRowHtml = `
 				<tr>
 					<td>
-						<select class="form-select form-select-sm" name="RegularActivityId">
+						<select class="form-select form-select-sm" name="RegularActivityId" id="RegularActivityId">
 							<option value="">@localizer["Select regular activity"]</option>
 							@foreach (var r in Model.RegularActivities)
 							{
@@ -1303,6 +1445,10 @@
 				  $.ajax({
 					  url: "@Url.RouteUrl(RouteNames.RegularActivities_Search)",
 					  method: "POST",
+					  data : 
+					  {
+						  userId : '@Model.User.Id'
+					  },
 					  success: function (response) {
 
 						  var rows = "";
@@ -1362,7 +1508,7 @@
 					url: "@Url.RouteUrl(RouteNames.TasksPlannings_Search)",
 					method: "POST",
 					data: {
-						createdDate: "@Model.Today",
+						planDateForRowNumber: $("#planDate").val(),
 						userId: "@Model.User.Id"
 					},
 					success: function (data) {
@@ -1387,7 +1533,7 @@
 					url: "@Url.RouteUrl(RouteNames.TasksPlannings_Search)",
 					method: "POST",
 					data: {
-						createdDate: "@Model.Today",
+						planDate: "@Model.Today",
 						userId: "@Model.User.Id"
 					},
 					success: function (data) {
@@ -1413,14 +1559,14 @@
 							}
 
 							let row = `
-							<tr data-id="${item.id}" class="tooltip-target" data-tooltip="@localizer["Click for change"]">
+							<tr data-id="${item.id}" class="tooltip-target">
 								<td>${item.displayTask ?? ""}</td>
-								<td>${item.planNo ?? ""}</td>
 								<td>${item.activityName ?? ""}</td>
 								<td>${item.timeFromFormatted}</td>
 								<td>${item.timeToFormatted}</td>
 								<td>${item.durationFormatted ?? ""}</td>
 								<td>${item.planStatus}</td>
+								<td>${item.planNo ?? ""}</td>
 								<td class="text-center">${finishedIcon}</td>
 							</tr>`;
 
@@ -1449,7 +1595,7 @@
 						url: "@Url.RouteUrl(RouteNames.TasksRealizations_Search)",
 						method: "POST",
 						data: {
-							createdDate: "@Model.Today",
+							realizationDate: "@Model.Today",
 							userId: "@Model.User.Id"
 						},
 						success: function (data) {
@@ -1480,10 +1626,11 @@
 									<td>${item.planNo ?? ""}</td>
 									<td>${item.displayTask ?? ""}</td>
 									<td>${item.activity ?? ""}</td>
+									
+									<td>${item.report ?? ""}</td>
 									<td>${item.timeFromFormattedForTable ?? ""}</td>
 									<td>${item.timeToFormattedForTable ?? ""}</td>
 									<td>${item.durationFormattedForTable ?? ""}</td>
-									<td>${item.report ?? ""}</td>
 									<td class="text-center">${finishedIcon}</td>
 
 
@@ -1502,6 +1649,25 @@
 				}
 
 			  $(document).ready(function () {
+				$(document).on("blur", "#planDate", function () {
+					const dateValue = $(this).val(); // npr. "30.03.2026"
+					if (!dateValue) return;
+
+					// Parse dd.MM.yyyy
+					const parts = dateValue.split(".");
+					if (parts.length !== 3) return;
+
+					const dateObj = new Date(parts[2], parts[1]-1, parts[0]); // yyyy, month-1, dd
+
+					const dan = daniUNedelji[dateObj.getDay()];
+
+					// Formatiramo datum
+					const formattedDate = `${("0"+dateObj.getDate()).slice(-2)}.${("0"+(dateObj.getMonth()+1)).slice(-2)}.${dateObj.getFullYear()}`;
+
+					// Prikaži u span/div
+					$("#planDayDisplay").text(`📅 Planiranje za dan - ${dan} – ${formattedDate}`);
+
+				});
 				  $(document).on("blur", ".from-time, .to-time", function () {
 					calculateRowDuration($(this).closest("tr"));
 				  });
@@ -1572,6 +1738,7 @@
 					let row = $(this).closest("tr");
 					let data = serializeJSON(row);
 					data.ActivityTypeId = $("#activityMode").val();
+					data.PlanDateForSave = $("#planDate").val();
 
 					let button = $(this);
 					button.prop("disabled", true);
@@ -1586,6 +1753,7 @@
 
 								searchTaskPlanningsPopulateTable();
 								searchTaskPlanningsNumbersForRealization();
+								loadTasksForManualTable();
 							},'@localizer["Error"]', '@localizer["SavedMsg"]');
 							searchTaskPlanningsNumbersForRealization();
 						},
@@ -1595,35 +1763,35 @@
 						}
 					});
 				});
-			$(document).on("click", "#plannedTable tbody tr", function () {
+			// $(document).on("click", "#plannedTable tbody tr", function () {
 
-				let id = $(this).data("id");
+			// 	let id = $(this).data("id");
 
-				if (!id) return;
+			// 	if (!id) return;
 
-				$.ajax({
-					url: "@Url.RouteUrl(RouteNames.TasksPlannings_Search)",
-					method: "POST",
-					data: {
-						id: id
-					},
-					success: function (data) {
+			// 	$.ajax({
+			// 		url: "@Url.RouteUrl(RouteNames.TasksPlannings_Search)",
+			// 		method: "POST",
+			// 		data: {
+			// 			id: id
+			// 		},
+			// 		success: function (data) {
 
-						if (!data || data.length === 0) return;
+			// 			if (!data || data.length === 0) return;
 
-						let item = data[0];
+			// 			let item = data[0];
 
-						// 🔥 postavi activity type i trigger change
-						$("#activityMode").val(item.activityTypeId).trigger("change");
+			// 			// 🔥 postavi activity type i trigger change
+			// 			$("#activityMode").val(item.activityTypeId).trigger("change");
 
-						// sačuvaj ID reda koji se edituje (za save)
-						$("#manualTable").attr("data-edit-id", item.id);
+			// 			// sačuvaj ID reda koji se edituje (za save)
+			// 			$("#manualTable").attr("data-edit-id", item.id);
 
-						// sad ćemo popuniti red (posle change-a)
-						populateEditRow(item);
-					}
-				});
-			});
+			// 			// sad ćemo popuniti red (posle change-a)
+			// 			populateEditRow(item);
+			// 		}
+			// 	});
+			// });
 			$(document).on('mouseenter', '.tooltip-target', function (e) {
 				let text = $(this).data('tooltip');
 				if (!text) return;
@@ -1671,6 +1839,45 @@
 				});
 			});
 
+			$("#btnAddTask").click(function () {
+				var userId = '@Model.User.Id';
+				$.ajax({
+					url: '@urlPatternIdaTasks'.replace("111", userId),
+					method: 'GET',
+					success: function (response) {
+						$("#editIdaTasksModal .modal-body").html(response);
+						var editModal = new bootstrap.Modal(document.getElementById('editIdaTasksModal'));
+						editModal.show();
+					}
+				});
+			});
+
+			$("#btnAddProjectTask").click(function () {
+				var userId = '@Model.User.Id';
+				$.ajax({
+					url: '@urlPatternIdaProjectTasks'.replace("111", userId),
+					method: 'GET',
+					success: function (response) {
+						$("#editIdaProjectTasksModal .modal-body").html(response);
+						var editModal = new bootstrap.Modal(document.getElementById('editIdaProjectTasksModal'));
+						editModal.show();
+					}
+				});
+			});
+
+			$("#btnAddRegularActivity").click(function () {
+				var userId = '@Model.User.Id';
+				$.ajax({
+					url: '@urlPatternRegularActivities'.replace("111", userId),
+					method: 'GET',
+					success: function (response) {
+						$("#editRegularActivitiesModal .modal-body").html(response);
+						var editModal = new bootstrap.Modal(document.getElementById('editRegularActivitiesModal'));
+						editModal.show();
+					}
+				});
+			});
+
 			$("#btnAddRealRow").click(function () {
 
 				// sakrij display task kolonu
@@ -1697,7 +1904,7 @@
 					</td>
 
 					<td>
-						<select id="activityMode" name="ActivityTypeId" class="form-select form-select-sm">
+						<select id="activityMode" name="ActivityTypeId" class="form-select form-select-sm w-100">
 							<option value="">@localizer["Select activity type"]</option>
 							<option value="1">@localizer["Project"]</option>
 							<option value="2">@localizer["Task"]</option>
@@ -1706,7 +1913,7 @@
 					</td>
 
 					<td class="col-project" style="display:none;">
-						<select class="form-select form-select-sm" name="ProjectId">
+						<select class="form-select form-select-sm w-100" name="ProjectId">
 							<option value="">@localizer["Select project"]</option>
 							@foreach (var p in Model.Projects)
 							{
@@ -1717,7 +1924,7 @@
 
 
 					<td class="col-task" style="display:none;">
-						<select class="form-select form-select-sm" name="IdaTaskId" id="SelectRealizationProjectTaskId">
+						<select class="form-select form-select-sm w-100" name="IdaTaskId" id="SelectRealizationProjectTaskId">
 							<option value="">Select task</option>
 							${tasks.map(x =>
 								`<option value="${x.Value}">${x.Description}</option>`
@@ -1726,7 +1933,7 @@
 					</td>
 
 					<td class="col-regular" style="display:none;">
-						<select class="form-select form-select-sm" name="RegularActivityId">
+						<select class="form-select form-select-sm w-100" name="RegularActivityId">
 							<option value="">@localizer["Select regular activity"]</option>
 							@foreach (var r in Model.RegularActivities)
 							{
@@ -1736,9 +1943,14 @@
 					</td>
 
 					<td>
-						<input class="form-control form-control-sm" name="Activity" placeholder="@localizer["Activity"]">
+						<textarea name="Activity" placeholder="@localizer["Activity"]" class="form-control"
+							style="height: 40px; transition: height 0.3s ease; resize: vertical;"></textarea>
 					</td>
 
+					<td>
+						<textarea name="Report" placeholder="@localizer["Report"]" class="form-control"
+							style="height: 40px; transition: height 0.3s ease; resize: vertical;"></textarea>
+					</td>
 					<td>
 						<input type="text" class="form-control form-control-sm from-time timepicker" name="TimeFromFormatted">
 					</td>
@@ -1749,10 +1961,6 @@
 
 					<td>
 						<input class="form-control form-control-sm duration" readonly name="DurationFormatted">
-					</td>
-
-					<td>
-						<input class="form-control form-control-sm" name="Report" placeholder="@localizer["Report"]">
 					</td>
 
 					<td class="text-center">
@@ -1827,7 +2035,6 @@
 				searchNotFinishedProjectTasksByProjectId(projectId);
 				searchNotFinishedProjectTasksRealizationByProjectId(projectId);
 			});
-
 			$(document).on("click", ".saveRealRow", function () {
 
 					let row = $(this).closest("tr");
@@ -1869,6 +2076,44 @@
 				loadRealizationForEdit(id, row);
 
 			});
+
+			// $(document).on("click", ".editTaskBtn", function () {
+			// 	let row = $(this).closest("tr");
+			// 	let id = row.data("id");
+			// 	loadRealizationForEdit(id, row);
+			// });
+
+			$(document).on("click", ".editTaskBtn", function () {
+
+				let row = $(this).closest("tr");
+				let id = row.data("id");
+
+				if (!id) return;
+
+				$.ajax({
+					url: "@Url.RouteUrl(RouteNames.TasksPlannings_Search)",
+					method: "POST",
+					data: {
+						id: id
+					},
+					success: function (data) {
+
+						if (!data || data.length === 0) return;
+
+						let item = data[0];
+
+						// 🔥 postavi activity type i trigger change
+						$("#activityMode").val(item.activityTypeId);
+
+						// sačuvaj ID reda koji se edituje (za save)
+						$("#manualTable").attr("data-edit-id", item.id);
+
+						// sad ćemo popuniti red (posle change-a)
+						populateEditRow(item);
+					}
+				});
+			});
+
 		});
 	</script>
 }

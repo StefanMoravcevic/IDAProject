@@ -41,9 +41,9 @@ namespace IDAProject.Web.Admin.Managers
             return result;
         }
 
-        public async Task<IEnumerable<ISelectOption>> GetUncompletedTasks(bool hasProjectId)
+        public async Task<IEnumerable<ISelectOption>> GetUncompletedTasks(bool hasProjectId, int userId)
         {
-            var searchParams = new SearchIdaTasksParams { HasProject = hasProjectId, IsCompleted = false};
+            var searchParams = new SearchIdaTasksParams { HasProject = hasProjectId, IsCompleted = false, UserId = userId};
             var tasksResponse = await SearchIdaTasksAsync(searchParams);
             var tasksList = tasksResponse.Payload.OrderBy(x => x.Id).ThenBy(y => y.Name);
 

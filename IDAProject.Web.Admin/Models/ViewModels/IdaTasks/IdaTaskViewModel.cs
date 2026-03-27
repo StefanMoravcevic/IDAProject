@@ -8,9 +8,14 @@ namespace IDAProject.Web.Admin.Models.ViewModels.IdaTasks
     {
         public IdaTaskViewModel()
         {
-            IdaTask = new IdaTaskDto();
+            IdaTask = new List<IdaTaskDto>();
+            Projects = new List<GenericSelectOption>();
         }
-        public IdaTaskDto IdaTask { get; set; }
+
+        public List<IdaTaskDto> IdaTask { get; set; }
+        public IEnumerable<ISelectOption> Projects { get; set; }
+
+        public int? UserId { get; set; }
 
     }
 }

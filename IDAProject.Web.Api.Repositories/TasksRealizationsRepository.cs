@@ -50,6 +50,18 @@ namespace IDAProject.Web.Api.Repositories
                                                  x.CreatedDate.Value.Date == parsedDate.Date);
                     }
                 }
+                if (!string.IsNullOrEmpty(searchParams.RealizationDate))
+                {
+                    if (DateTime.TryParseExact(searchParams.RealizationDate,
+                                               "dd.MM.yyyy",
+                                               CultureInfo.InvariantCulture,
+                                               DateTimeStyles.None,
+                                               out var parsedDate))
+                    {
+                        query = query.Where(x => x.RealizationDate.HasValue &&
+                                                 x.RealizationDate.Value.Date == parsedDate.Date);
+                    }
+                }
                 if (searchParams.UserId.HasValue)
                 {
                     query = query.Where(x => x.UserId == searchParams.UserId);
@@ -59,9 +71,9 @@ namespace IDAProject.Web.Api.Repositories
                     if (DateTime.TryParseExact(searchParams.StartDate, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var start) &&
                         DateTime.TryParseExact(searchParams.EndDate, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var end))
                     {
-                        query = query.Where(x => x.CreatedDate.HasValue &&
-                                                 x.CreatedDate.Value.Date >= start.Date &&
-                                                 x.CreatedDate.Value.Date <= end.Date);
+                        query = query.Where(x => x.RealizationDate.HasValue &&
+                                                 x.RealizationDate.Value.Date >= start.Date &&
+                                                 x.RealizationDate.Value.Date <= end.Date);
                     }
                 }
             }
@@ -84,6 +96,7 @@ namespace IDAProject.Web.Api.Repositories
                 TimeTo = a.TimeTo,
                 PlanNo = a.TasksPlanning.PlanNo,
                 UserId = a.UserId,
+                RealizationDate = a.RealizationDate,
                 DisplayTask =
         a.ProjectId != null && a.IdaTaskId != null
             ? a.Project.Description + " - " + a.IdaTask.Name

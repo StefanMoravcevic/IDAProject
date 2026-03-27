@@ -24,16 +24,18 @@ namespace IDAProject.Web.Admin.Controllers
     public class AccountsController : BaseController
     {
         private readonly IAccountManager _accountManager;
+        private readonly IGoogleManager _googleManager;
         private readonly IEmployeesManager _employeesManager;
         private readonly IUsersManager _userManager;
 
         public AccountsController(ILogger<AccountsController> logger,
-            IUsersManager userManager, IAccountManager accountManager, IEmployeesManager employeesManager)
+            IUsersManager userManager, IAccountManager accountManager, IEmployeesManager employeesManager, IGoogleManager googleManager)
             : base(accountManager, logger)
         {
             _accountManager = accountManager;
             _userManager = userManager;
             _employeesManager = employeesManager;
+            _googleManager = googleManager;
         }
 
         [AllowAnonymous]
@@ -77,48 +79,67 @@ namespace IDAProject.Web.Admin.Controllers
         public async Task<IActionResult> DoLoginAsync(LoginModel model)
         {
             SaveUserLogRequestModel saveModel;
-            var viewModel = new NavigationBaseViewModel();
             if (ModelState.IsValid)
             {
                 var tokenResponse = await _accountManager.GenerateTokenAsync(model);
                 if (tokenResponse.Valid)
                 {
+                    // Postavljanje JWT cookie
                     var tokenCookie = Request.Cookies[Constants.AdminCookieToken];
-
-                    var cookieOptions = new CookieOptions()
+                    var cookieOptions = new CookieOptions
                     {
                         IsEssential = true,
-                        //Expires = DateTime.UtcNow.AddMinutes(Constants.ShortLivedTokenExpirationInMinutes),
                         Expires = DateTime.UtcNow.AddDays(Constants.LongLivedTokenExpirationInDays),
                         SameSite = SameSiteMode.Strict
                     };
-
-                    if (tokenCookie != null)
-                    {
-                        Response.Cookies.Delete(Constants.AdminCookieToken);
-                    }
-
+                    if (tokenCookie != null) Response.Cookies.Delete(Constants.AdminCookieToken);
                     Response.Cookies.Append(Constants.AdminCookieToken, tokenResponse.Payload!, cookieOptions);
+
                     saveModel = await LogLoginDetails(HttpContext, model.Username);
                     var user = _accountManager.GetUserFromJwt(tokenResponse.Payload!);
                     saveModel.Note = "Successfull login";
                     saveModel.AspNetUserId = user.Id;
-                    await _userManager.SaveUserLogAsync(saveModel);
-                    return RedirectToAction("Index", "Home");
+                        await _userManager.SaveUserLogAsync(saveModel);
+
+
+
+                    // Ako korisnik već ima token, ide u Home
+                    return RedirectToAction("PostLogin", "Accounts");
                 }
 
-                viewModel.Notification = new NotificationViewModel
-                {
-                    Type = NotificationType.Error,
-                    Message = tokenResponse.Message
-                };
+                // Login nije uspeo
                 saveModel = await LogLoginDetails(HttpContext, model.Username);
                 saveModel.Note = "Unsuccessfull login! - " + NotificationType.Error + "/" + tokenResponse.Message;
                 await _userManager.SaveUserLogAsync(saveModel);
             }
+
             return RedirectToAction("Login");
-            //return View("Login", viewModel);
         }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> PostLogin()
+        {
+            var token = Request.Cookies[Constants.AdminCookieToken];
+            var user = _accountManager.GetUserFromJwt(token);
+
+            var employee = await _employeesManager.SearchEmployeesAsync(
+                new Web.Models.RequestModels.Employees.SearchEmployeesParams { Id = user.EmployeeId });
+
+            var emp = employee.Payload.FirstOrDefault();
+
+            if (emp != null && string.IsNullOrEmpty(emp.GoogleRefreshToken))
+            {
+                var oAuthUrlResponse = await _googleManager.GetOAuthUrl(user.EmployeeId);
+
+                if (oAuthUrlResponse.Valid && !string.IsNullOrEmpty(oAuthUrlResponse.Payload))
+                {
+                    return Redirect(oAuthUrlResponse.Payload);
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
         [AllowAnonymous]
         [HttpGet("accounts/logout", Name = RouteNames.Accounts_Logout)]
         public async Task<IActionResult> Logout()

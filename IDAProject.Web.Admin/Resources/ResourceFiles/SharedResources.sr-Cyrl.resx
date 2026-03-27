@@ -1188,4 +1188,22 @@
   <data name="Comment realization" xml:space="preserve">
     <value>Прокоментаришите реализацију</value>
   </data>
+  <data name="Projects and tasks overview" xml:space="preserve">
+    <value>Преглед пројеката и задатака</value>
+  </data>
+  <data name="Add project task" xml:space="preserve">
+    <value>Додај пројектни задатак</value>
+  </data>
+  <data name="Add regular activity" xml:space="preserve">
+    <value>Додај редовну активност</value>
+  </data>
+  <data name="Add task" xml:space="preserve">
+    <value>Додај задатак</value>
+  </data>
+  <data name="Enter task" xml:space="preserve">
+    <value>Унесите задатак</value>
+  </data>
+  <data name="Regular activities" xml:space="preserve">
+    <value>Редовне активности</value>
+  </data>
 </root>

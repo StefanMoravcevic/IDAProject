@@ -14,6 +14,7 @@ public String? Description { get; set; }
 public DateTime? DueDate { get; set; }
 public Int32? ProjectId { get; set; }
 public Boolean IsCompleted { get; set; }
+        public int? UserId { get; set; }
 
     }
 }

@@ -96,7 +96,9 @@ public partial class AspNetUser
 
     public virtual ICollection<HierarchyLevel> HierarchyLevels { get; set; } = new List<HierarchyLevel>();
 
-    public virtual ICollection<IdaTask> IdaTasks { get; set; } = new List<IdaTask>();
+    public virtual ICollection<IdaTask> IdaTaskDeletedByNavigations { get; set; } = new List<IdaTask>();
+
+    public virtual ICollection<IdaTask> IdaTaskUsers { get; set; } = new List<IdaTask>();
 
     public virtual ICollection<Integration> Integrations { get; set; } = new List<Integration>();
 
@@ -124,7 +126,9 @@ public partial class AspNetUser
 
     public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
 
-    public virtual ICollection<RegularActivity> RegularActivities { get; set; } = new List<RegularActivity>();
+    public virtual ICollection<RegularActivity> RegularActivityDeletedByNavigations { get; set; } = new List<RegularActivity>();
+
+    public virtual ICollection<RegularActivity> RegularActivityUsers { get; set; } = new List<RegularActivity>();
 
     public virtual ICollection<Relationship> Relationships { get; set; } = new List<Relationship>();
 
