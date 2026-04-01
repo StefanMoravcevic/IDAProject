@@ -54,7 +54,11 @@ namespace IDAProject.Web.Admin.Controllers
             var user = GetCurrentUser();
             viewModel.User = user;
             var employeePhoto = (await _employeesManager.GetEmployeeByIdAsync(user.EmployeeId)).Payload.Photo;
+            var employeeJobTypeId = (await _employeesManager.GetEmployeeByIdAsync(user.EmployeeId)).Payload.JobTypeId;
             viewModel.EmployeePhoto = employeePhoto;
+            viewModel.EmployeeId = user.EmployeeId;
+            viewModel.EmployeeJobTypeId = employeeJobTypeId;
+            viewModel.Today = DateTime.Now.ToString("dd.MM.yyyy");
             return View(viewModel);
         }
 

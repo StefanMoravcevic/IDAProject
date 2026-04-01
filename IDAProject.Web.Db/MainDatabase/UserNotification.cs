@@ -23,7 +23,11 @@ public partial class UserNotification
 
     public string? Note { get; set; }
 
+    public int? JobTypeId { get; set; }
+
     public virtual AspNetUser? DeletedByNavigation { get; set; }
+
+    public virtual JobType? JobType { get; set; }
 
     public virtual Sector? Sector { get; set; }
 }

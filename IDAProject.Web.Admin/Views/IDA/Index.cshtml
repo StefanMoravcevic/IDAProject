@@ -133,6 +133,23 @@
 <tms-modal id="editIdaTasksModal" title="@localizer["Tasks"]" save-button="false" modal-size="@ModalSize.Default" />
 <tms-modal id="editIdaProjectTasksModal" title="@localizer["Project tasks"]" save-button="false" modal-size="@ModalSize.Default" />
 <tms-modal id="editRegularActivitiesModal" title="@localizer["Regular activities"]" save-button="false" modal-size="@ModalSize.Default" />
+<div class="modal fade" id="addRowModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">@localizer["Add Activity"]</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<!-- Dinamički popunjavamo sa JS -->
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@localizer["Cancel"]</button>
+				<button type="button" class="btn btn-primary" id="modalSaveRow">@localizer["Save"]</button>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="container-fluid mt-1 min-vh-100 d-flex flex-column">
 
 	<!-- ========================= -->
@@ -470,7 +487,154 @@
 
 			const daniUNedelji = ["Nedelja", "Ponedeljak", "Utorak", "Sreda", "Četvrtak", "Petak", "Subota"];
 
-			
+		function openAddRowModal(mode, item = null) {
+
+			let modalBody = $("#addRowModal .modal-body");
+			modalBody.empty();
+
+			let commonFields = `
+				<div class="mb-3">
+					<label>@localizer["Activity"]</label>
+					<input type="text" class="form-control"
+						   name="ActivityName"
+						   placeholder="@localizer["Activity"]">
+				</div>
+
+				<div class="mb-3">
+					<label>@localizer["Time from"]</label>
+					<input type="text"
+						   class="form-control timepicker from-time"
+						   name="TimeFromFormatted">
+				</div>
+
+				<div class="mb-3">
+					<label>@localizer["Time to"]</label>
+					<input type="text"
+						   class="form-control timepicker to-time"
+						   name="TimeToFormatted">
+				</div>
+
+				<div class="mb-3">
+					<label>@localizer["Duration"]</label>
+					<input type="text"
+						   class="form-control duration"
+						   name="DurationFormatted"
+						   readonly>
+				</div>
+
+				<div class="mb-3">
+					<label>@localizer["Id"]</label>
+					<input type="number"
+						   class="form-control"
+						   name="PlanNo"
+						   readonly>
+				</div>
+
+				<div class="mb-3">
+					<label>@localizer["Status"]</label>
+					<select class="form-select"
+							name="PlanStatusId">
+						@foreach (var s in Model.PlanStatuses)
+						{
+									<option value="@s.Value">@s.Description</option>
+						}
+					</select>
+				</div>
+			`;
+
+			// === generi HTML polja po tipu aktivnosti ===
+			if (mode === "1" || mode === 1) {
+				modalBody.html(`
+					<div class="mb-3">
+						<label>@localizer["Project"]</label>
+						<select class="form-select" name="ProjectId">
+							<option value="">@localizer["Select project"]</option>
+							@foreach (var p in Model.Projects)
+							{
+									<option value="@p.Value">@p.Description</option>
+							}
+						</select>
+					</div>
+					<div class="mb-3">
+						<label>@localizer["Task"]</label>
+						<select class="form-select" name="TaskId">
+							<option value="">@localizer["Select task"]</option>
+							${projectTasks.map(x => `<option value="${x.Value}">${x.Description}</option>`).join('')}
+						</select>
+					</div>
+					${commonFields}
+				`);
+			} else if (mode === "2" || mode === 2) {
+				modalBody.html(`
+					<div class="mb-3">
+						<label>@localizer["Task"]</label>
+						<select class="form-select" name="TaskId">
+							<option value="">@localizer["Select task"]</option>
+							${tasks.map(x => `<option value="${x.Value}">${x.Description}</option>`).join('')}
+						</select>
+					</div>
+					${commonFields}
+				`);
+			} else if (mode === "3" || mode === 3) {
+				modalBody.html(`
+					<div class="mb-3">
+						<label>@localizer["Regular activity"]</label>
+						<select class="form-select" name="RegularActivityId">
+							<option value="">@localizer["Select regular activity"]</option>
+							@foreach (var r in Model.RegularActivities)
+							{
+									<option value="@r.Value">@r.Description</option>
+							}
+						</select>
+					</div>
+					${commonFields}
+				`);
+			}
+
+			initTimePickers(modalBody);
+
+			// === default vrednosti ===
+			modalBody.find("select[name='PlanStatusId']").val("1");
+			getLastPlanNo(function(lastNo) {
+				modalBody.find("input[name='PlanNo']").val(lastNo + 1);
+			});
+
+			// === ako postoji item, popuni polja ===
+			if (item) {
+				if (mode === "1" || mode === 1) {
+					modalBody.find("select[name='ProjectId']").val(item.projectId);
+					modalBody.find("select[name='TaskId']").val(item.taskId);
+				} else if (mode === "2" || mode === 2) {
+					modalBody.find("select[name='TaskId']").val(item.taskId);
+				} else if (mode === "3" || mode === 3) {
+					modalBody.find("select[name='RegularActivityId']").val(item.regularActivityId);
+				}
+
+				modalBody.find("input[name='ActivityName']").val(item.activityName);
+				modalBody.find("input[name='TimeFromFormatted']").val(item.timeFromFormatted);
+				modalBody.find("input[name='TimeToFormatted']").val(item.timeToFormatted);
+				modalBody.find("input[name='DurationFormatted']").val(item.durationFormatted);
+				modalBody.find("input[name='PlanNo']").val(item.planNo);
+				modalBody.find("select[name='PlanStatusId']").val(item.planStatusId);
+
+				// Sačuvaj ID za save
+				$("#addRowModal").attr("data-edit-id", item.id);
+			} else {
+				$("#addRowModal").removeAttr("data-edit-id");
+			}
+
+			// === automatsko računanje trajanja ===
+			$(document)
+				.off("change.modalDuration")
+				.on("change.modalDuration", "input[name='TimeFromFormatted'], input[name='TimeToFormatted']", function() {
+					let from = modalBody.find("input[name='TimeFromFormatted']").val();
+					let to = modalBody.find("input[name='TimeToFormatted']").val();
+					modalBody.find("input[name='DurationFormatted']").val(calculateModalDuration(from, to));
+				});
+
+			// === prikaži modal ===
+			$("#addRowModal").modal("show");
+		}
 
 			function searchTaskPlanningsNumbersForRealization() {
 
@@ -883,10 +1047,8 @@
 			loadTasksForManualTable();
 		});
 
-			$("#btnAddRow").click(function () {
-
+		$("#btnAddRow").click(function () {
 			let mode = $("#activityMode").val();
-			let tbody = $("#manualTable tbody");
 
 			if (!mode) {
 				Swal.fire({
@@ -897,11 +1059,18 @@
 				return;
 			}
 
+			// ✅ Ako je mobilni uređaj, otvori modal i izađi
+			if ($(window).width() < 768) {
+				openAddRowModal(mode);
+				return;
+			}
+
+			// ===================== Desktop logika =====================
+			let tbody = $("#manualTable tbody");
 			let newRowHtml = "";
 
 			// ================= MODE 1 =================
 			if (mode === "1") {
-
 				newRowHtml = `
 				<tr>
 					<td>
@@ -916,22 +1085,16 @@
 					<td>
 						<select class="form-select form-select-sm" name="TaskId" id="SelectActivityTypeProjectId">
 							<option value="">@localizer["Select task"]</option>
-							${projectTasks.map(x =>
-								`<option value="${x.Value}">${x.Description}</option>`
-							).join('')}
+							${projectTasks.map(x => `<option value="${x.Value}">${x.Description}</option>`).join('')}
 						</select>
 					</td>
 					<td>
-						<input class="form-control form-control-sm" name="ActivityName"
-							   placeholder="@localizer["Activity"]">
+						<input class="form-control form-control-sm" name="ActivityName" placeholder="@localizer["Activity"]">
 					</td>
 					<td><input type="text" class="form-control form-control-sm from-time timepicker" name="TimeFromFormatted"></td>
 					<td><input type="text" class="form-control form-control-sm to-time timepicker" name="TimeToFormatted"></td>
 					<td><input class="form-control form-control-sm duration" readonly name="DurationFormatted"></td>
-
-					<!-- 🔥 AUTOMATSKI REDNI BROJ -->
 					<td><input type="number" class="form-control form-control-sm" name="PlanNo" readonly></td>
-
 					<td>
 						<select class="form-select form-select-sm" name="PlanStatusId">
 							<option value="">@localizer["Select status"]</option>
@@ -949,28 +1112,21 @@
 
 			// ================= MODE 2 =================
 			if (mode === "2") {
-
 				newRowHtml = `
 				<tr>
 					<td>
 						<select class="form-select form-select-sm" name="TaskId" id="TaskId">
 							<option value="">@localizer["Select task"]</option>
-							${tasks.map(x =>
-								`<option value="${x.Value}">${x.Description}</option>`
-							).join('')}
+							${tasks.map(x => `<option value="${x.Value}">${x.Description}</option>`).join('')}
 						</select>
 					</td>
 					<td>
-						<input class="form-control form-control-sm" name="ActivityName"
-							   placeholder="@localizer["Activity"]">
+						<input class="form-control form-control-sm" name="ActivityName" placeholder="@localizer["Activity"]">
 					</td>
 					<td><input type="text" class="form-control form-control-sm from-time timepicker" name="TimeFromFormatted"></td>
 					<td><input type="text" class="form-control form-control-sm to-time timepicker" name="TimeToFormatted"></td>
 					<td><input class="form-control form-control-sm duration" readonly name="DurationFormatted"></td>
-
-					<!-- 🔥 AUTOMATSKI REDNI BROJ -->
 					<td><input type="number" class="form-control form-control-sm" name="PlanNo" readonly></td>
-
 					<td>
 						<select class="form-select form-select-sm" name="PlanStatusId">
 							<option value="">@localizer["Select status"]</option>
@@ -988,7 +1144,6 @@
 
 			// ================= MODE 3 =================
 			if (mode === "3") {
-
 				newRowHtml = `
 				<tr>
 					<td>
@@ -1001,16 +1156,12 @@
 						</select>
 					</td>
 					<td>
-						<input class="form-control form-control-sm" name="ActivityName"
-							   placeholder="@localizer["Activity"]">
+						<input class="form-control form-control-sm" name="ActivityName" placeholder="@localizer["Activity"]">
 					</td>
 					<td><input type="text" class="form-control form-control-sm from-time timepicker" name="TimeFromFormatted"></td>
 					<td><input type="text" class="form-control form-control-sm to-time timepicker" name="TimeToFormatted"></td>
 					<td><input class="form-control form-control-sm duration" readonly name="DurationFormatted"></td>
-
-					<!-- 🔥 AUTOMATSKI REDNI BROJ -->
 					<td><input type="number" class="form-control form-control-sm" name="PlanNo" readonly></td>
-
 					<td>
 						<select class="form-select form-select-sm" name="PlanStatusId">
 							<option value="">@localizer["Select status"]</option>
@@ -1026,10 +1177,10 @@
 				</tr>`;
 			}
 
-			// APPEND ROW
+			// ✅ Append red u tabelu
 			tbody.append(newRowHtml);
 
-			// INIT TIMEPICKER NA NOVOM REDU
+			// ✅ Init timepickere i redni broj
 			let newRow = tbody.find("tr:last");
 			initTimePickers(newRow);
 			newRow.find("select[name='PlanStatusId']").val("1");
@@ -1366,6 +1517,37 @@
 				tbody.append(row);
 				initTimePickers(tbody.find("tr:last"));
 			}
+			
+			function populateEditModal(item) {
+			// Activity type je već postavljen
+			let modalBody = $("#addRowModal .modal-body");
+
+			// Popuni zajednička polja
+			if (item.activityTypeId == "1") {
+				$("#modalProjectId").val(item.projectId);
+				$("#modalTaskId").val(item.taskId);
+			} else if (item.activityTypeId == "2") {
+				$("#modalTaskId").val(item.taskId);
+			} else if (item.activityTypeId == "3") {
+				$("#modalRegularActivityId").val(item.regularActivityId);
+			}
+
+			$("#modalActivityName").val(item.activityName);
+			$("#modalTimeFrom").val(item.timeFromFormatted);
+			$("#modalTimeTo").val(item.timeToFormatted);
+			$("#modalDuration").val(item.durationFormatted);
+			$("#modalPlanNo").val(item.planNo);
+			$("#modalPlanStatus").val(item.planStatusId);
+
+			// Sačuvaj ID reda za modal save
+			$("#addRowModal").attr("data-edit-id", item.id);
+
+			// Reinit timepickers
+			initTimePickers(modalBody);
+
+			// Prikaži modal
+			$("#addRowModal").modal("show");
+		}
 			function calculateRowDuration(row) {
 
 				let from = row.find(".from-time").val();
@@ -1404,6 +1586,33 @@
 
 				row.find(".duration").val(formatted);
 			}
+
+					function calculateModalDuration(from, to) {
+
+			if (!from || !to)
+				return "";
+
+			let fromParts = from.split(":");
+			let toParts = to.split(":");
+
+			if (fromParts.length !== 2 || toParts.length !== 2)
+				return "";
+
+			let fromMinutes = parseInt(fromParts[0]) * 60 + parseInt(fromParts[1]);
+			let toMinutes = parseInt(toParts[0]) * 60 + parseInt(toParts[1]);
+
+			let diff = toMinutes - fromMinutes;
+
+			if (diff < 0)
+				return "";
+
+			let hours = Math.floor(diff / 60);
+			let minutes = diff % 60;
+
+			return String(hours).padStart(2, '0') +
+				   ":" +
+				   String(minutes).padStart(2, '0');
+		}
 
 			  function searchTasks() {
 				  $.ajax({
@@ -1667,6 +1876,8 @@
 					// Prikaži u span/div
 					$("#planDayDisplay").text(`📅 Planiranje za dan - ${dan} – ${formattedDate}`);
 
+					// Pozovi funkciju za učitavanje tabela
+					loadTasksForManualTable();
 				});
 				  $(document).on("blur", ".from-time, .to-time", function () {
 					calculateRowDuration($(this).closest("tr"));
@@ -2084,32 +2295,67 @@
 			// });
 
 			$(document).on("click", ".editTaskBtn", function () {
-
 				let row = $(this).closest("tr");
 				let id = row.data("id");
-
 				if (!id) return;
 
 				$.ajax({
 					url: "@Url.RouteUrl(RouteNames.TasksPlannings_Search)",
 					method: "POST",
-					data: {
-						id: id
-					},
-					success: function (data) {
-
+					data: { id: id },
+					success: function(data) {
 						if (!data || data.length === 0) return;
 
 						let item = data[0];
 
-						// 🔥 postavi activity type i trigger change
+						// 🔥 postavi activity type
 						$("#activityMode").val(item.activityTypeId);
 
-						// sačuvaj ID reda koji se edituje (za save)
-						$("#manualTable").attr("data-edit-id", item.id);
+						if ($(window).width() < 768) {
+							// mobilni: modal
+							openAddRowModal(item.activityTypeId, item);
+						} else {
+							// desktop
+							$("#manualTable").attr("data-edit-id", item.id);
+							populateEditRow(item);
+						}
+					}
+				});
+			});
 
-						// sad ćemo popuniti red (posle change-a)
-						populateEditRow(item);
+			$(document).on("click", "#modalSaveRow", function () {
+
+				let modalBody = $("#addRowModal .modal-body");
+				let data = serializeJSON(modalBody);
+
+				data.ActivityTypeId = $("#activityMode").val();
+				data.PlanDateForSave = $("#planDate").val();
+
+				let button = $(this);
+				button.prop("disabled", true);
+
+				$.ajax({
+					url: "@Url.RouteUrl(RouteNames.TasksPlannings_Save)",
+					method: "POST",
+					data: data,
+					success: function (response) {
+
+						handleActionResponseMessage(response, function () {
+
+							searchTaskPlanningsPopulateTable();
+							searchTaskPlanningsNumbersForRealization();
+							loadTasksForManualTable();
+
+						}, '@localizer["Error"]', '@localizer["SavedMsg"]');
+
+						searchTaskPlanningsNumbersForRealization();
+
+						// zatvori modal nakon uspešnog snimanja
+						$("#addRowModal").modal("hide");
+					},
+					error: function () {
+						alert("Error saving row");
+						button.prop("disabled", false);
 					}
 				});
 			});

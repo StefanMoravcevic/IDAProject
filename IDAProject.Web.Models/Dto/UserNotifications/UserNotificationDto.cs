@@ -15,6 +15,7 @@ namespace IDAProject.Web.Models.Dto.UserNotifications
         #region Basic data
 
         public string? Sector { get; set; }
+        public string? JobType { get; set; }
 
         public string? DateFromFormatted
         {

@@ -91,6 +91,7 @@ namespace IDAProject.Web.Api.Repositories
                 ProjectId  = a.ProjectId,
                 RegularActivityId = a.RegularActivityId,
                 Report = a.Report,
+                Employee = a.TasksPlanning.Employee.Name + " " + a.TasksPlanning.Employee.Surname,
                 TasksPlanningId = a.TasksPlanningId,
                 TimeFrom  = a.TimeFrom,
                 TimeTo = a.TimeTo,

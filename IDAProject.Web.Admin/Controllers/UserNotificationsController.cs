@@ -42,6 +42,12 @@ namespace IDAProject.Web.Admin.Controllers
             var responseModel = await _UserNotificationsManager.SearchUserNotificationsAsync(searchParams);
             return Json(responseModel.Payload);
         }
+        [HttpPost("searchForHomePage", Name = RouteNames.UserNotifications_SearchForHomePage)]
+        public async Task<IActionResult> SearchUserNotificationsForHomePage(SearchUserNotificationsParams searchParams)
+        {
+            var responseModel = await _UserNotificationsManager.SearchUserNotificationsForHomePageAsync(searchParams);
+            return Json(responseModel.Payload);
+        }
 
         [HttpGet("new", Name = RouteNames.UserNotifications_New)]
         public async Task<IActionResult> NewUserNotificationAsync(int Id)
@@ -50,6 +56,7 @@ namespace IDAProject.Web.Admin.Controllers
 
             viewModel.User = GetCurrentUser();
             viewModel.Sectors = await _masterDataManager.GetSelectOptionsByTableAsync("Sectors", "Name");
+            viewModel.JobTypes = await _masterDataManager.GetSelectOptionsByTableAsync("JobTypes", "Name");
             return View("EditUserNotification", viewModel);
         }
 
@@ -62,6 +69,7 @@ namespace IDAProject.Web.Admin.Controllers
 
             viewModel.UserNotification = UserNotificationResponse.Payload!;
             viewModel.Sectors = await _masterDataManager.GetSelectOptionsByTableAsync("Sectors", "Name");
+            viewModel.JobTypes = await _masterDataManager.GetSelectOptionsByTableAsync("JobTypes", "Name");
             viewModel.User = GetCurrentUser();
 
             return View("EditUserNotification", viewModel);

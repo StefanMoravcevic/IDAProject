@@ -88,6 +88,8 @@ public partial class AspNetUser
 
     public virtual ICollection<EmployeeAbsence> EmployeeAbsences { get; set; } = new List<EmployeeAbsence>();
 
+    public virtual ICollection<EmployeeViewTracking> EmployeeViewTrackings { get; set; } = new List<EmployeeViewTracking>();
+
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 
     public virtual ICollection<EmploymentType> EmploymentTypes { get; set; } = new List<EmploymentType>();

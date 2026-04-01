@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IDAProject.Web.Helpers;
 
 namespace IDAProject.Web.Models.Dto.TasksRealizationComments
 {
@@ -15,6 +16,19 @@ namespace IDAProject.Web.Models.Dto.TasksRealizationComments
 
         public string? Username { get; set; }
         public string? Photo { get; set; }
+        public string? DisplayTask { get; set; }
+        public string? Activity { get; set; }
+        public int? EmployeeId { get; set; }
+        public DateTime? RealizationDate { get; set; }
+
+        public string CreatedAtFormatted
+        {
+            get { return DisplayFormatHelpers.FormatDateTime(CreatedAt); }
+        }
+        public string RealizationDateFormatted
+        {
+            get { return DisplayFormatHelpers.FormatDateTime(RealizationDate); }
+        }
 
         #endregion
     }

@@ -37,6 +37,12 @@ namespace IDAProject.Web.Api.Controllers
             var response = await _UserNotificationsManager.SearchUserNotificationsAsync(searchParams);
             return response;
         }
+        [HttpPost("searchForHomePage")]
+        public async Task<ResponseModelList<UserNotificationDto>> SearchUserNotificationsForHomePageAsync(SearchUserNotificationsParams searchParams)
+        {
+            var response = await _UserNotificationsManager.SearchUserNotificationsForHomePageAsync(searchParams);
+            return response;
+        }
 
         [HttpPost]
         public async Task<ResponseModel<int>> SaveUserNotificationAsync(SaveUserNotificationRequestModel requestModel)

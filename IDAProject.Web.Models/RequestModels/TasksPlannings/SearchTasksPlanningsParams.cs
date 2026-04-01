@@ -15,6 +15,7 @@ namespace IDAProject.Web.Models.RequestModels.TasksPlannings
         public string? PlanDateForRowNumber { get; set; }
         public string? GoogleEventId { get; set; }
         public int? UserId { get; set; }
+        public int? EmployeeId { get; set; }
         public bool? Finished { get; set; }
         public string? StartDate { get; set; }  // dd.MM.yyyy
         public string? EndDate { get; set; }    // dd.MM.yyyy

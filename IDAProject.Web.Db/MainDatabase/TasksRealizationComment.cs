@@ -23,6 +23,8 @@ public partial class TasksRealizationComment
 
     public int? ParentTaskRealizationCommentId { get; set; }
 
+    public bool HiddenFromHomePage { get; set; }
+
     public virtual AspNetUser? DeletedByNavigation { get; set; }
 
     public virtual ICollection<TasksRealizationComment> InverseParentTaskRealizationComment { get; set; } = new List<TasksRealizationComment>();

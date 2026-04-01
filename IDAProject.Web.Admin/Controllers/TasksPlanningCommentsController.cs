@@ -78,6 +78,19 @@ namespace IDAProject.Web.Admin.Controllers
             }
             return Json(responseModel);
         }
+        [HttpPost("hide", Name = RouteNames.TasksPlanningComments_Hide)]
+        public async Task<IActionResult> HideTasksPlanningCommentAsync(SaveTasksPlanningCommentRequestModel requestModel)
+        {
+            var user = GetCurrentUser();
+            var comment = await _TasksPlanningCommentsManager.GetTasksPlanningCommentByIdAsync(requestModel.Id);
+            comment.Payload.HiddenFromHomePage = true;
+            var responseModel = await _TasksPlanningCommentsManager.SaveTasksPlanningCommentAsync(comment.Payload);
+            if (responseModel.Valid)
+            {
+                responseModel.Message = Url.RouteUrl(RouteNames.TasksPlanningComments_List, new { Id = "111" })!;
+            }
+            return Json(responseModel);
+        }
 
         [HttpPost("delete/{id}", Name = RouteNames.TasksPlanningComments_Delete)]
         public async Task<IActionResult> DeleteTasksPlanningCommentAsync(int id)

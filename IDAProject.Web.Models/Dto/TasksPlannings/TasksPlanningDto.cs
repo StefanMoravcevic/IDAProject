@@ -20,6 +20,7 @@ namespace IDAProject.Web.Models.Dto.TasksPlannings
         public string? RegularActivity { get; set; }
         public string? DisplayTask { get; set; }
         public string? PlanStatus { get; set; }
+        public string? Employee { get; set; }
         public bool? IsFinished { get; set; }
 
         public string? TimeFromFormatted
@@ -29,6 +30,10 @@ namespace IDAProject.Web.Models.Dto.TasksPlannings
         public string? TimeToFormatted
         {
             get { return TimeTo.Value.ToString("HH:mm"); }
+        }
+        public string? PlanDateFormatted
+        {
+            get { return DisplayFormatHelpers.FormatDate(PlanDate); }
         }
         public string? DurationFormatted
         {

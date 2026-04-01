@@ -90,5 +90,22 @@ namespace IDAProject.Web.Api.Managers
             }
             return result;
         }
+
+        public async Task<ResponseModelList<UserNotificationDto>> SearchUserNotificationsForHomePageAsync(SearchUserNotificationsParams searchParams)
+        {
+            var result = new ResponseModelList<UserNotificationDto>();
+            try
+            {
+                result.Payload = await _UserNotificationsRepository.SearchUserNotificationsForHomePageAsync(searchParams);
+                result.Valid = true;
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                var reqModel = JsonConvert.SerializeObject(searchParams);
+                _logger.LogError(e, $"request model: {reqModel}");
+            }
+            return result;
+        }
     }
 }

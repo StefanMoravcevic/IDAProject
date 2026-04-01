@@ -33,10 +33,10 @@
 									<tms-input type="CheckBox" name="ForAllUsers" id="ForAllUsersId" value="true" label="@localizer["For all users"]" checked="@notification.ForAllUsers" />
 								</div>
 								<div class="col-sm-12 col-md-6 col-xl-3" id="sectorWrapper">
-									<tms-select name="SectorId"
-												id="SectorId"
-												options="@Model.Sectors"
-												selected-option="@notification.SectorId"
+									<tms-select name="JobTypeId"
+												id="JobTypeId"
+												options="@Model.JobTypes"
+												selected-option="@notification.JobTypeId"
 												label="@localizer["Group"]:"
 												empty-option-text="@localizer["Select group"]..." />
 								</div>

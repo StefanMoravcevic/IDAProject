@@ -14,6 +14,7 @@ public String Comment { get; set; }
 public Int32? TaskRealizationId { get; set; }
 public DateTime? CreatedAt { get; set; }
 public Int32? ParentTaskRealizationCommentId { get; set; }
+        public bool HiddenFromHomePage { get; set; }
 
     }
 }

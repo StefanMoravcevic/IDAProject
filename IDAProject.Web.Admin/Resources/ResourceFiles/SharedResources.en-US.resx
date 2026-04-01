@@ -1148,7 +1148,44 @@
   <data name="Enter task" xml:space="preserve">
     <value>Enter task</value>
   </data>
+  <data name="Add Activity" xml:space="preserve">
+    <value>Add Activity</value>
+  </data>
+  <data name="Plan comments" xml:space="preserve">
+    <value>Plan comments</value>
+  </data>
+  <data name="Plan date" xml:space="preserve">
+    <value>Plan date</value>
+  </data>
+  <data name="Realization comments" xml:space="preserve">
+    <value>Realization comments</value>
+  </data>
+  <data name="Realization date" xml:space="preserve">
+    <value>Realization date</value>
+  </data>
   <data name="Regular activities" xml:space="preserve">
     <value>Regular activities</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="Bookmarked employees" xml:space="preserve">
+    <value>Bookmarked employees</value>
+  </data>
+  <data name="Log out" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="Notifications for all users" xml:space="preserve">
+    <value>Notifications for all users</value>
+  </data>
+  <data name="Notifications for your group" xml:space="preserve">
+    <value>Notifications for your group</value>
+  </data>
+  <data name="Planned/Realized for today" xml:space="preserve">
+    <value>Planned/Realized for today</value>
+    <comment> </comment>
   </data>
 </root>

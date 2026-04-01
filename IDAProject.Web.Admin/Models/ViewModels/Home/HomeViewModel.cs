@@ -15,5 +15,8 @@ namespace IDAProject.Web.Admin.Models.ViewModels.Home
 
 
         public string? EmployeePhoto { get; internal set; }
+        public int? EmployeeId { get; set; }
+        public int? EmployeeJobTypeId { get; set; }
+        public string? Today { get; set; }
     }
 }

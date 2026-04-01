@@ -15,7 +15,7 @@ namespace IDAProject.Web.Admin.Models.ViewModels.UserNotifications
                 new ColumnDefinition("DateFromFormatted", _localizer["Date from"]),
                 new ColumnDefinition("DateToFormatted", _localizer["Date to"]),
                 new ColumnDefinition("ForAllUsers",_localizer["For all users"]),
-                new ColumnDefinition("Sector",_localizer["Group"]),
+                new ColumnDefinition("JobType",_localizer["Group"]),
                 new ColumnDefinition("Note", _localizer["Note"])
             };
         }

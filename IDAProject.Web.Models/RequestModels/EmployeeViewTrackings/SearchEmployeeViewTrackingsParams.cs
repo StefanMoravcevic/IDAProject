@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IDAProject.Web.Models.RequestModels.TasksRealizationComments
+namespace IDAProject.Web.Models.RequestModels.EmployeeViewTrackings
 {
-    public class SearchTasksRealizationCommentsParams
+    public class SearchEmployeeViewTrackingsParams
     {
         public int? Id { get; set; }
-        public int? RealizationId { get; set; }
         public int? EmployeeId { get; set; }
-        public bool? HideFromHomePage { get; set; }
+        public bool? IsBookmarked { get; set; }
         //<<SearchParams>>
     }
 }

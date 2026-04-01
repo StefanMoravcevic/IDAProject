@@ -17,6 +17,7 @@ namespace IDAProject.Web.Models.Dto.UserNotifications
         public Int32? SectorId { get; set; }
         public Boolean ForAllUsers { get; set; }
         public String? Note { get; set; }
+        public int? JobTypeId { get; set; }
 
     }
 }

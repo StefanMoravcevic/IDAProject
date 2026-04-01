@@ -1,0 +1,92 @@
+using Microsoft.AspNetCore.Mvc;
+using IDAProject.Web.Admin.Models.Common;
+using IDAProject.Web.Admin.Models.Interfaces.Managers;
+using IDAProject.Web.Models.Dto.EmployeeViewTrackings;
+using IDAProject.Web.Models.General.Enums;
+using IDAProject.Web.Models.RequestModels.EmployeeViewTrackings;
+
+namespace IDAProject.Web.Admin.Controllers
+{
+    [Route("[controller]")]
+    public class EmployeeViewTrackingsController : BaseController
+    {
+        private readonly IEmployeeViewTrackingsManager _EmployeeViewTrackingsManager;
+        private readonly IMasterDataManager _masterDataManager;
+
+        public EmployeeViewTrackingsController(
+            ILogger<EmployeeViewTrackingsController> logger,
+            IAccountManager accountManager,
+            IEmployeeViewTrackingsManager EmployeeViewTrackingsManager,
+            IMasterDataManager masterDataManager)
+            : base(accountManager, logger)
+        {
+            _EmployeeViewTrackingsManager = EmployeeViewTrackingsManager;
+            _masterDataManager = masterDataManager;
+        }
+        //[HttpGet("EmployeeViewTrackingsList", Name = RouteNames.EmployeeViewTrackings_List)]
+        //public async Task<IActionResult> Index()
+        //{
+        //    var viewModel = new EmployeeViewTrackingsViewModel();
+        //    await UpdateNavigationWithAjaxTableViewModel(viewModel, _masterDataManager, "EmployeeViewTrackings");
+        //    //var responseModel = await _EmployeeViewTrackingsManager.SearchEmployeeViewTrackingsAsync();
+        //    //viewModel = EmployeeViewTrackings.Payload;
+        //    //return Json(responseModel.Payload);
+        //    return View(viewModel);
+        //}
+
+        [HttpPost("search", Name = RouteNames.EmployeeViewTrackings_Search)]
+        public async Task<IActionResult> SearchEmployeeViewTrackings(SearchEmployeeViewTrackingsParams searchParams)
+        {
+            var responseModel = await _EmployeeViewTrackingsManager.SearchEmployeeViewTrackingsAsync(searchParams);
+            return Json(responseModel.Payload);
+        }
+
+        //[HttpGet("new/{Id}", Name = RouteNames.EmployeeViewTrackings_New)]
+        //public async Task<IActionResult> NewEmployeeViewTrackingAsync(int Id)
+        //{
+        //    var viewModel = new EmployeeViewTrackingViewModel();
+
+        //    viewModel.User = GetCurrentUser();
+        //    return View("EditEmployeeViewTracking", viewModel);
+        //}
+
+        //[HttpGet("edit/{id}", Name = RouteNames.EmployeeViewTrackings_Edit)]
+        //public async Task<IActionResult> EditEmployeeViewTrackingAsync(int id)
+        //{
+        //    var viewModel = new EmployeeViewTrackingViewModel();
+
+        //    var EmployeeViewTrackingResponse = await _EmployeeViewTrackingsManager.GetEmployeeViewTrackingByIdAsync(id);
+
+        //    viewModel.EmployeeViewTracking = EmployeeViewTrackingResponse.Payload!;
+        //    viewModel.User = GetCurrentUser();
+
+        //    return View("EditEmployeeViewTracking", viewModel);
+        //}
+
+        //controller method for saving EmployeeViewTracking
+        [HttpPost("save", Name = RouteNames.EmployeeViewTrackings_Save)]
+        public async Task<IActionResult> SaveEmployeeViewTrackingAsync([FromBody] SaveEmployeeViewTrackingRequestModel requestModel)
+        {
+            var user = GetCurrentUser();
+            requestModel.ViewerEmployeeId = user.EmployeeId;
+            var responseModel = await _EmployeeViewTrackingsManager.SaveEmployeeViewTrackingAsync(requestModel);
+            if (responseModel.Valid)
+            {
+                responseModel.Message = Url.RouteUrl(RouteNames.EmployeeViewTrackings_List, new { Id = "111" })!;
+            }
+            return Json(responseModel);
+        }
+
+        [HttpPost("delete/{id}", Name = RouteNames.EmployeeViewTrackings_Delete)]
+        public async Task<IActionResult> DeleteEmployeeViewTrackingAsync(int id)
+        {
+            var user = GetCurrentUser();
+            var responseModel = await _EmployeeViewTrackingsManager.DeleteEmployeeViewTrackingAsync(id, user.Id);
+            if (responseModel.Valid)
+            {
+                responseModel.Message = Url.RouteUrl(RouteNames.EmployeeViewTrackings_List, new { Id = "111" })!;
+            }
+            return Json(responseModel);
+        }
+    }
+}

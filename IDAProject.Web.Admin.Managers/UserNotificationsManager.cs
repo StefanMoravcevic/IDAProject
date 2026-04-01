@@ -38,5 +38,13 @@ namespace IDAProject.Web.Admin.Managers
             var result = await PostAsync<SaveUserNotificationRequestModel, ResponseModel<int>>($"api/UserNotifications", requestModel);
             return result;
         }
+
+        public async Task<ResponseModelList<UserNotificationDto>> SearchUserNotificationsForHomePageAsync(SearchUserNotificationsParams searchParams)
+        {
+            var result =
+                await PostAsync<SearchUserNotificationsParams, ResponseModelList<UserNotificationDto>>($"api/UserNotifications/searchForHomePage",
+                    searchParams);
+            return result;
+        }
     }
 }

@@ -45,13 +45,23 @@ namespace IDAProject.Web.Api.Controllers
         [HttpPost]
         public async Task<ResponseModel<int>> SaveTasksRealizationAsync(SaveTasksRealizationRequestModel requestModel)
         {
+            if(requestModel.TasksPlanningId == 0)
+            {
+                requestModel.TasksPlanningId = null;
+            }
             if (requestModel.Finished)
             {
-                var taskPlanningId = await _tasksPlanningsManager.GetTasksPlanningByIdAsync(requestModel.TasksPlanningId.Value);
-                requestModel.RealizationDate = taskPlanningId.Payload.PlanDate;
-                taskPlanningId.Payload.PlanStatusId = 2;
-                await _tasksPlanningsManager.SaveTasksPlanningAsync(taskPlanningId.Payload);
-
+                if (requestModel.TasksPlanningId > 0)
+                {
+                    var taskPlanningId = await _tasksPlanningsManager.GetTasksPlanningByIdAsync(requestModel.TasksPlanningId.Value);
+                    requestModel.RealizationDate = taskPlanningId.Payload.PlanDate;
+                    taskPlanningId.Payload.PlanStatusId = 2;
+                    await _tasksPlanningsManager.SaveTasksPlanningAsync(taskPlanningId.Payload);
+                }
+                else
+                {
+                    requestModel.RealizationDate = DateTime.Now;
+                }
 
             }
             if (TimeOnly.TryParse(requestModel.TimeFromFormatted, out var tf))

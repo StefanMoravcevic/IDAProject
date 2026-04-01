@@ -141,6 +141,9 @@
   <data name="Activity types" xml:space="preserve">
     <value>Vrste aktivnosti</value>
   </data>
+  <data name="Add Activity" xml:space="preserve">
+    <value>Dodaj aktivnost</value>
+  </data>
   <data name="Add project task" xml:space="preserve">
     <value>Dodaj projektni zadatak</value>
   </data>
@@ -212,6 +215,9 @@
   </data>
   <data name="Blocked" xml:space="preserve">
     <value>Blokiran</value>
+  </data>
+  <data name="Bookmarked employees" xml:space="preserve">
+    <value>Označeni zaposleni za praćenje</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Odustani</value>
@@ -654,6 +660,9 @@
   <data name="Lines archive" xml:space="preserve">
     <value>Arhiva linija</value>
   </data>
+  <data name="Log out" xml:space="preserve">
+    <value>Izlogujte se </value>
+  </data>
   <data name="Login" xml:space="preserve">
     <value>Uloguj me</value>
   </data>
@@ -671,6 +680,9 @@
   </data>
   <data name="Manage roles" xml:space="preserve">
     <value>Upravljanje ulogama</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>Preuzmite uputstvo</value>
   </data>
   <data name="Master data" xml:space="preserve">
     <value>Matični podaci</value>
@@ -704,6 +716,12 @@
   </data>
   <data name="Notes" xml:space="preserve">
     <value>Beleške</value>
+  </data>
+  <data name="Notifications for all users" xml:space="preserve">
+    <value>Obaveštenja za sve korisnike</value>
+  </data>
+  <data name="Notifications for your group" xml:space="preserve">
+    <value>Оbaveštenja za vašu grupu</value>
   </data>
   <data name="NumberOfInstallments" xml:space="preserve">
     <value>Broj rata</value>
@@ -801,6 +819,12 @@
   <data name="Photo" xml:space="preserve">
     <value>Slika</value>
   </data>
+  <data name="Plan comments" xml:space="preserve">
+    <value>Komentari plana</value>
+  </data>
+  <data name="Plan date" xml:space="preserve">
+    <value>Datum plana</value>
+  </data>
   <data name="Plan for" xml:space="preserve">
     <value>Plan za</value>
   </data>
@@ -809,6 +833,9 @@
   </data>
   <data name="Plan no" xml:space="preserve">
     <value>Redni broj</value>
+  </data>
+  <data name="Planned/Realized for today" xml:space="preserve">
+    <value>Planirano/Realizovano za današnji dan</value>
   </data>
   <data name="Plans for day" xml:space="preserve">
     <value>Planiranje za dan</value>
@@ -854,6 +881,12 @@
   </data>
   <data name="Quantity" xml:space="preserve">
     <value>Količina</value>
+  </data>
+  <data name="Realization comments" xml:space="preserve">
+    <value>Komentari realizacije</value>
+  </data>
+  <data name="Realization date" xml:space="preserve">
+    <value>Datum realizacije</value>
   </data>
   <data name="Realization for" xml:space="preserve">
     <value>Realizacija za</value>
@@ -1091,6 +1124,9 @@
   </data>
   <data name="TickerMessage" xml:space="preserve">
     <value>Poruka za slajder</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Vreme</value>
   </data>
   <data name="Time from" xml:space="preserve">
     <value>Vreme od</value>

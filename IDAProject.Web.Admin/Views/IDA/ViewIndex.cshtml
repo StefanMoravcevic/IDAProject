@@ -59,7 +59,7 @@
 
     .matrix-employee {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
         justify-content: center;
         border: 1px solid #f08418;
@@ -218,8 +218,8 @@
             </div>
 
             <div class="modal-body">
-                <div id="commentsContainer">
-                </div>
+                <div id="planInfo" class="mb-3 p-2"></div>
+                <div id="commentsContainer"></div>
 
                 <hr>
                 <div class="mb-3">
@@ -242,6 +242,7 @@
             </div>
 
             <div class="modal-body">
+                <div id="realizationInfo" class="mb-3 p-2"></div>
                 <div id="relizationCommentsContainer">
                 </div>
 
@@ -525,14 +526,23 @@
                     html += `<div class="matrix-job">
                                 <div class="matrix-job-title">${job}</div>
                                 <div class="matrix-employees">`;
+                groups[sector][job].forEach(emp => {
+            html += `
+            <div class="matrix-employee d-flex align-items-center mb-1" data-id="${emp.id}">
 
-                                    groups[sector][job].forEach(emp => {
-                        html += `
-                        <div class="matrix-employee" data-id="${emp.id}">
-                            ${emp.name} ${emp.surname}
-                        </div>
-                        `;
-                    });
+                <input type="checkbox"
+                       class="employee-checkbox me-2"
+                       data-id="${emp.id}"
+                       onclick="event.stopPropagation();"
+                       style="margin-top:0;" />
+
+                <span class="employee-name flex-grow-1">
+                    ${emp.name} ${emp.surname}
+                </span>
+
+            </div>
+            `;
+        });
 
                     html += `</div></div>`; // kraj matrix-employees + matrix-job
                 }
@@ -688,6 +698,80 @@
             });
         }
 
+        function setPlanInfo(plan) {
+            const infoContainer = $('#planInfo');
+            infoContainer.empty();
+
+            const html = `
+                <div class="mb-3 p-2 border rounded" style="background-color: #f9f9f9;">
+                    <div class="d-flex align-items-center mb-1">
+                        <i class="fa fa-clipboard me-2" style="width: 20px;"></i>
+                        <span class="fw-bold me-1">@localizer["Task"]:</span>
+                        <span>${plan.displayTask || '-'}</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-1">
+                        <i class="fa fa-list-alt me-2" style="width: 20px;"></i>
+                        <span class="fw-bold me-1">@localizer["Activity"]:</span>
+                        <span>${plan.activityName || '-'}</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-1">
+                        <i class="fa fa-user me-2" style="width: 20px;"></i>
+                        <span class="fw-bold me-1">@localizer["Employee"]:</span>
+                        <span>${plan.employee || '-'}</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-1">
+                        <i class="fa fa-calendar me-2" style="width: 20px;"></i>
+                        <span class="fw-bold me-1">@localizer["Plan date"]:</span>
+                        <span>${plan.planDateFormatted || '-'}</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-1">
+                        <i class="fa fa-clock-o me-2" style="width: 20px;"></i>
+                        <span class="fw-bold me-1">@localizer["Time"]:</span>
+                        <span>${plan.timeFromFormatted || '-'} - ${plan.timeToFormatted || '-'}</span>
+                    </div>
+                </div>
+            `;
+
+            infoContainer.html(html);
+        }
+        function setRealizationInfo(plan) {
+            const infoContainer = $('#realizationInfo');
+            infoContainer.empty();
+
+            const html = `
+                <div class="mb-3 p-2 border rounded" style="background-color: #f9f9f9;">
+                    <div class="d-flex align-items-center mb-1">
+                        <i class="fa fa-clipboard me-2" style="width: 20px;"></i>
+                        <span class="fw-bold me-1">@localizer["Task"]:</span>
+                        <span>${plan.displayTask || '-'}</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-1">
+                        <i class="fa fa-list-alt me-2" style="width: 20px;"></i>
+                        <span class="fw-bold me-1">@localizer["Activity"]:</span>
+                        <span>${plan.activity || '-'}</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-1">
+                        <i class="fa fa-user me-2" style="width: 20px;"></i>
+                        <span class="fw-bold me-1">@localizer["Employee"]:</span>
+                        <span>${plan.employee || '-'}</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-1">
+                        <i class="fa fa-calendar me-2" style="width: 20px;"></i>
+                        <span class="fw-bold me-1">@localizer["Realization date"]:</span>
+                        <span>${plan.realizationDateFormatted || '-'}</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-1">
+                        <i class="fa fa-clock-o me-2" style="width: 20px;"></i>
+                        <span class="fw-bold me-1">@localizer["Time"]:</span>
+                        <span>${plan.timeFromFormattedForTable || '-'} - ${plan.timeToFormattedForTable || '-'}</span>
+                    </div>
+                </div>
+            `;
+
+            infoContainer.html(html);
+        }
+
+
         function renderCommentHtml(comment, level = 0) {
             const indent = level * 20; // 20px po nivou uvlačenja
             return $(`
@@ -827,22 +911,21 @@
             });
             loadEmployeesMatrix();
             $(document).on('click', '#employeesMatrix .matrix-employee', function() {
+                var $employeeRow = $(this);
+                selectedEmployeeId = $employeeRow.data('id');
 
-                selectedEmployeeId = $(this).data('id');
-
+                // Obeleži selektovanog
                 $('#employeesMatrix .matrix-employee').removeClass('selected');
-                $(this).addClass('selected');
+                $employeeRow.addClass('selected');
 
-                // AJAX za dobijanje userId
+                // AJAX za dobijanje userId i prikaz slike
                 $.ajax({
                     url: '@Url.RouteUrl(RouteNames.Employees_Search)',
                     method: 'POST',
                     data: { id: selectedEmployeeId },
                     success: function(result) {
-
                         selectedUserId = result[0].userId;
-                        if (result[0].photo) 
-                        {
+                        if (result[0].photo) {
                             $("#employeePhoto").attr('src', result[0].photo);
                         }
                     },
@@ -851,6 +934,27 @@
                     }
                 });
 
+                // --- ovde dodajemo save za IsBookmarked false ---
+                var payload = {
+                    ViewerEmployeeId: null, // backend popunjava
+                    IsBookmarked: false,
+                    ViewedEmployeeId: selectedEmployeeId,
+                    ViewedFrom: new Date(),
+                    ViewedUntil: null
+                };
+
+                $.ajax({
+                    url: '@Url.RouteUrl(RouteNames.EmployeeViewTrackings_Save)',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(payload),
+                    success: function(resp) {
+                        console.log('Evidencija sačuvana (false):', payload);
+                    },
+                    error: function(err) {
+                        console.error('Greška pri čuvanju evidencije:', err);
+                    }
+                });
             });
 
             const periodButtons = ['#prevDay', '#currentWeek', '#prevWeek'];
@@ -874,10 +978,26 @@
                 $('#commentsModal').data('plan-id', planId);
                 $('#newCommentText').val('');
 
-                // Učitaj komentare
+                $.ajax({
+                    url: '@Url.RouteUrl(RouteNames.TasksPlannings_Search)',
+                    method: 'POST',
+                    data: { id: planId },
+                    success: function(response) {
+                        if (response && response.length > 0) {
+                            const plan = response[0];
+                            setPlanInfo(plan);
+                        } else {
+                            console.warn("Plan not found for id:", planId);
+                            setPlanInfo({});
+                        }
+                    },
+                    error: function(err) {
+                        console.error(err);
+                    }
+                });
+
                 loadComments(planId);
 
-                // Prikaži modal
                 $('#commentsModal').modal('show');
             });
 
@@ -953,6 +1073,24 @@
                 $('#realizationCommentsModal').data('plan-id', realizationId);
                 $('#newRealizationText').val('');
 
+                $.ajax({
+                    url: '@Url.RouteUrl(RouteNames.TasksRealizations_Search)',
+                    method: 'POST',
+                     data: { id: realizationId },
+                    success: function(response) {
+                        if (response && response.length > 0) {
+                            const realization = response[0];
+                            setRealizationInfo(realization);
+                        } else {
+                            console.warn("Plan not found for id:", planId);
+                            setRealizationInfo({});
+                        }
+                    },
+                    error: function(err) {
+                        console.error(err);
+                    }
+                });
+
                 loadRealizationComments(realizationId);
 
                  $('#realizationCommentsModal').modal('show');
@@ -1018,6 +1156,38 @@
                         },
                         error: function(err) {
                             console.error(err);
+                        }
+                    });
+                });
+
+                $(document).on('change', '.employee-checkbox', function() {
+                    var checkbox = $(this);
+                    var viewedEmployeeId = checkbox.data('id');
+                    var isChecked = checkbox.is(':checked');
+
+                    // Pripremi payload
+                    var payload = {
+                        ViewerEmployeeId: null, // backend popunjava
+                        IsBookmarked : true,
+                        ViewedEmployeeId: viewedEmployeeId,
+                        ViewedFrom: isChecked ? new Date() : null,
+                        ViewedUntil: !isChecked ? new Date() : null
+                    };
+
+                    $.ajax({
+                        url: '@Url.RouteUrl(RouteNames.EmployeeViewTrackings_Save)',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(payload),
+                        success: function(response) {
+                            if (response.valid) {
+                                console.log('Evidencija sačuvana:', payload);
+                            } else {
+                                console.error('Greška pri čuvanju:', response.message);
+                            }
+                        },
+                        error: function(err) {
+                            console.error('Greška u AJAX pozivu:', err);
                         }
                     });
                 });

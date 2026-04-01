@@ -25,6 +25,8 @@ namespace IDAProject.Web.Api.Managers
     public class NotificationsManager : INotificationsManager
     {
         private readonly INotificationsRepository _notificationsRepository;
+        private readonly ITasksPlanningCommentsRepository _tasksPlanningCommentsRepository;
+        private readonly ITasksRealizationCommentsRepository _tasksRealizationCommentsRepository;
         private readonly IEmailJobSettingsRepository _emailJobSettingsRepository;
         private readonly IMasterDataRepository _masterDataRepository;
         private readonly IQueueRepository _queueRepository;
@@ -41,6 +43,8 @@ namespace IDAProject.Web.Api.Managers
             ILogger<NotificationsManager> logger,
             IOptions<EmailQueueSettings> options,
             IQueueRepository queueRepository,
+            ITasksPlanningCommentsRepository tasksPlanningCommentsRepository,
+            ITasksRealizationCommentsRepository tasksRealizationCommentsRepository,
             IDocumentsManager documentsRepository,
             IMasterDataRepository masterDataRepository,
             ICompaniesRepository companiesRepository,
@@ -56,6 +60,8 @@ namespace IDAProject.Web.Api.Managers
             _companiesRepository = companiesRepository;
             _employeesRepository = employeesRepository;
             _usersRepository = usersRepository;
+            _tasksPlanningCommentsRepository = tasksPlanningCommentsRepository;
+            _tasksRealizationCommentsRepository = tasksRealizationCommentsRepository;
         }
 
 
@@ -310,5 +316,134 @@ namespace IDAProject.Web.Api.Managers
             return result;
         }
 
+        public async Task<ResponseModelBase> SendCommentPlanNotification(int? taskPlanCommentId)
+        {
+            var result = new ResponseModelBase();
+
+            if (!taskPlanCommentId.HasValue)
+            {
+                result.Valid = false;
+                result.Message = "Komentar ID nije prosleđen";
+                return result;
+            }
+
+            var comment = await _tasksPlanningCommentsRepository.GetTasksPlanningCommentByIdAsync(taskPlanCommentId.Value);
+            if (comment == null)
+            {
+                result.Valid = false;
+                result.Message = "Komentar nije pronađen";
+                return result;
+            }
+
+            var employee = await _employeesRepository.GetEmployeeByIdAsync(comment.EmployeeId.Value);
+            if (employee == null)
+            {
+                result.Valid = false;
+                result.Message = "Zaposleni nije pronađen";
+                return result;
+            }
+
+            var textTitle = $"Novi komentar na vaš plan za {comment.PlanDateFormatted}";
+
+            var mailTo = employee.Email;
+
+            var templateBody = $@"
+                <p>Poštovani/na,</p>
+                <p>Obaveštavamo vas da je zaposleni <strong>{comment.Username}</strong> uneo komentar na vaš plan za dan <strong>{comment.PlanDateFormatted}</strong> ({comment.CreatedAtFormatted}).</p>
+
+                <p><strong>Zadatak:</strong> {comment.DisplayTask}<br/>
+                <strong>Aktivnost:</strong> {comment.Activity}</p>
+
+                <p><strong>Tekst komentara:</strong></p>
+                <div style='padding:10px; background-color:#f8f9fa; border-left:4px solid #0d6efd; border-radius:4px;'>{comment.Comment}</div>
+                ";
+
+            try
+            {
+                await _queueRepository.AddEmailQueueAsync(
+                    textTitle,
+                    mailTo,
+                    _emailQueueSettings.From,
+                    templateBody,
+                    true
+                );
+
+                result.Valid = true;
+                result.Message = "Email obaveštenje uspešno stavljeno u queue.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Greška prilikom dodavanja emaila u queue");
+                result.Valid = false;
+                result.Message = "Došlo je do greške prilikom dodavanja emaila u queue.";
+            }
+
+            return result;
+        }
+
+        public async Task<ResponseModelBase> SendCommentRealizationNotification(int? taskRealizationCommentId)
+        {
+            var result = new ResponseModelBase();
+
+            if (!taskRealizationCommentId.HasValue)
+            {
+                result.Valid = false;
+                result.Message = "Komentar ID nije prosleđen";
+                return result;
+            }
+
+            var comment = await _tasksRealizationCommentsRepository.GetTasksRealizationCommentByIdAsync(taskRealizationCommentId.Value);
+            if (comment == null)
+            {
+                result.Valid = false;
+                result.Message = "Komentar nije pronađen";
+                return result;
+            }
+
+            var employee = await _employeesRepository.GetEmployeeByIdAsync(comment.EmployeeId.Value);
+            if (employee == null)
+            {
+                result.Valid = false;
+                result.Message = "Zaposleni nije pronađen";
+                return result;
+            }
+
+            var textTitle = $"Novi komentar na vašu realizaciju za {comment.RealizationDateFormatted}";
+
+            var mailTo = employee.Email;
+
+            var templateBody = $@"
+                <p>Poštovani/na,</p>
+                <p>Obaveštavamo vas da je zaposleni <strong>{comment.Username}</strong> uneo komentar na vašu realizaciju za dan <strong>{comment.RealizationDateFormatted}</strong> ({comment.CreatedAtFormatted}).</p>
+
+                <p><strong>Zadatak:</strong> {comment.DisplayTask}<br/>
+                <strong>Aktivnost:</strong> {comment.Activity}</p>
+
+                <p><strong>Tekst komentara:</strong></p>
+                <div style='padding:10px; background-color:#f8f9fa; border-left:4px solid #0d6efd; border-radius:4px;'>{comment.Comment}</div>
+                ";
+
+            try
+            {
+                await _queueRepository.AddEmailQueueAsync(
+                    textTitle,
+                    mailTo,
+                    _emailQueueSettings.From,
+                    templateBody,
+                    true
+                );
+
+                result.Valid = true;
+                result.Message = "Email obaveštenje uspešno stavljeno u queue.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Greška prilikom dodavanja emaila u queue");
+                result.Valid = false;
+                result.Message = "Došlo je do greške prilikom dodavanja emaila u queue.";
+            }
+
+            return result;
+        }
     }
 }

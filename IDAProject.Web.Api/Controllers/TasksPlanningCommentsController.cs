@@ -11,10 +11,12 @@ namespace IDAProject.Web.Api.Controllers
     public class TasksPlanningCommentsController : ControllerBase
     {
         private readonly ITasksPlanningCommentsManager _TasksPlanningCommentsManager;
+        private readonly INotificationsManager _notificationsManager;
 
-        public TasksPlanningCommentsController(ITasksPlanningCommentsManager TasksPlanningCommentsManager)
+        public TasksPlanningCommentsController(ITasksPlanningCommentsManager TasksPlanningCommentsManager, INotificationsManager notificationsManager)
         {
             _TasksPlanningCommentsManager = TasksPlanningCommentsManager;
+            _notificationsManager = notificationsManager;
         }
 
         [HttpGet("{id}")]
@@ -42,6 +44,10 @@ namespace IDAProject.Web.Api.Controllers
         public async Task<ResponseModel<int>> SaveTasksPlanningCommentAsync(SaveTasksPlanningCommentRequestModel requestModel)
         {
             var response = await _TasksPlanningCommentsManager.SaveTasksPlanningCommentAsync(requestModel);
+            if (response.Valid)
+            {
+                await _notificationsManager.SendCommentPlanNotification(response.Payload);
+            }
             return response;
         }
     }

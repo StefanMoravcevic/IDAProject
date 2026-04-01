@@ -9,6 +9,7 @@ namespace IDAProject.Web.Models.RequestModels.UserNotifications
     public class SearchUserNotificationsParams
     {
         public int? Id { get; set; }
+        public int? JobTypeId { get; set; }
         //<<SearchParams>>
     }
 }

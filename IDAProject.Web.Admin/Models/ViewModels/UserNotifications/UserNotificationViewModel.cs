@@ -10,9 +10,11 @@ namespace IDAProject.Web.Admin.Models.ViewModels.UserNotifications
         {
             UserNotification = new UserNotificationDto();
             Sectors = new List<GenericSelectOption>();
+            JobTypes = new List<GenericSelectOption>();
         }
         public UserNotificationDto UserNotification { get; set; }
         public IEnumerable<ISelectOption> Sectors { get; set; }
+        public IEnumerable<ISelectOption> JobTypes { get; set; }
         public int ReadOnly { get; set; }
     }
 }

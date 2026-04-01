@@ -13,6 +13,7 @@
     <Compile Remove="Models\ViewModels\AccountingPeriods\**" />
     <Compile Remove="Models\ViewModels\Costs\**" />
     <Compile Remove="Models\ViewModels\Deductions\**" />
+    <Compile Remove="Models\ViewModels\EmployeeViewTrackings\**" />
     <Compile Remove="Models\ViewModels\EscrowDeposits\**" />
     <Compile Remove="Models\ViewModels\FebiItems\**" />
     <Compile Remove="Models\ViewModels\Fuels\**" />
@@ -38,6 +39,7 @@
     <Content Remove="Models\ViewModels\AccountingPeriods\**" />
     <Content Remove="Models\ViewModels\Costs\**" />
     <Content Remove="Models\ViewModels\Deductions\**" />
+    <Content Remove="Models\ViewModels\EmployeeViewTrackings\**" />
     <Content Remove="Models\ViewModels\EscrowDeposits\**" />
     <Content Remove="Models\ViewModels\FebiItems\**" />
     <Content Remove="Models\ViewModels\Fuels\**" />
@@ -63,6 +65,7 @@
     <EmbeddedResource Remove="Models\ViewModels\AccountingPeriods\**" />
     <EmbeddedResource Remove="Models\ViewModels\Costs\**" />
     <EmbeddedResource Remove="Models\ViewModels\Deductions\**" />
+    <EmbeddedResource Remove="Models\ViewModels\EmployeeViewTrackings\**" />
     <EmbeddedResource Remove="Models\ViewModels\EscrowDeposits\**" />
     <EmbeddedResource Remove="Models\ViewModels\FebiItems\**" />
     <EmbeddedResource Remove="Models\ViewModels\Fuels\**" />
@@ -88,6 +91,7 @@
     <None Remove="Models\ViewModels\AccountingPeriods\**" />
     <None Remove="Models\ViewModels\Costs\**" />
     <None Remove="Models\ViewModels\Deductions\**" />
+    <None Remove="Models\ViewModels\EmployeeViewTrackings\**" />
     <None Remove="Models\ViewModels\EscrowDeposits\**" />
     <None Remove="Models\ViewModels\FebiItems\**" />
     <None Remove="Models\ViewModels\Fuels\**" />

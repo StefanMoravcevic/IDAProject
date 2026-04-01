@@ -130,6 +130,7 @@
 
         public const string UserNotifications_List = "UserNotifications_List";
         public const string UserNotifications_Search = "UserNotifications_Search";
+        public const string UserNotifications_SearchForHomePage = "UserNotifications_SearchForHomePage";
         public const string UserNotifications_New = "UserNotifications_New";
         public const string UserNotifications_Edit = "UserNotifications_Edit";
         public const string UserNotifications_Save = "UserNotifications_Save";
@@ -154,6 +155,13 @@
         public const string Projects_Edit = "Projects_Edit";
         public const string Projects_Save = "Projects_Save";
         public const string Projects_Delete = "Projects_Delete";
+
+        public const string EmployeeViewTrackings_List = "EmployeeViewTrackings_List";
+        public const string EmployeeViewTrackings_Search = "EmployeeViewTrackings_Search";
+        public const string EmployeeViewTrackings_New = "EmployeeViewTrackings_New";
+        public const string EmployeeViewTrackings_Edit = "EmployeeViewTrackings_Edit";
+        public const string EmployeeViewTrackings_Save = "EmployeeViewTrackings_Save";
+        public const string EmployeeViewTrackings_Delete = "EmployeeViewTrackings_Delete";
 
         public const string IdaTasks_List = "IdaTasks_List";
         public const string IdaTasks_Search = "IdaTasks_Search";
@@ -198,6 +206,7 @@
         public const string TasksPlanningComments_Edit = "TasksPlanningComments_Edit";
         public const string TasksPlanningComments_Save = "TasksPlanningComments_Save";
         public const string TasksPlanningComments_Delete = "TasksPlanningComments_Delete";
+        public const string TasksPlanningComments_Hide = "TasksPlanningComments_Hide";
 
 
         public const string TasksRealizationComments_List = "TasksRealizationComments_List";
@@ -206,6 +215,7 @@
         public const string TasksRealizationComments_Edit = "TasksRealizationComments_Edit";
         public const string TasksRealizationComments_Save = "TasksRealizationComments_Save";
         public const string TasksRealizationComments_Delete = "TasksRealizationComments_Delete";
+        public const string TasksRealizationComments_Hide = "TasksRealizationComments_Hide";
 
         public const string IDA_Index = "IDA_Index";
         public const string IDA_OverviewIndex = "IDA_OverviewIndex";

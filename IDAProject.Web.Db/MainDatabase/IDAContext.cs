@@ -75,6 +75,8 @@ public partial class IdaContext : DbContext
 
     public virtual DbSet<EmployeeAbsence> EmployeeAbsences { get; set; }
 
+    public virtual DbSet<EmployeeViewTracking> EmployeeViewTrackings { get; set; }
+
     public virtual DbSet<EmploymentType> EmploymentTypes { get; set; }
 
     public virtual DbSet<ExchangeRate> ExchangeRates { get; set; }
@@ -680,6 +682,25 @@ public partial class IdaContext : DbContext
             entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeAbsences)
                 .HasForeignKey(d => d.EmployeeId)
                 .HasConstraintName("FK_EmployeeAbsences_Employees");
+        });
+
+        modelBuilder.Entity<EmployeeViewTracking>(entity =>
+        {
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.ViewedFrom).HasColumnType("datetime");
+            entity.Property(e => e.ViewedUntil).HasColumnType("datetime");
+
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.EmployeeViewTrackings)
+                .HasForeignKey(d => d.DeletedBy)
+                .HasConstraintName("FK_EmployeeViewTrackings_AspNetUsers");
+
+            entity.HasOne(d => d.ViewedEmployee).WithMany(p => p.EmployeeViewTrackingViewedEmployees)
+                .HasForeignKey(d => d.ViewedEmployeeId)
+                .HasConstraintName("FK_EmployeeViewTrackings_Employees1");
+
+            entity.HasOne(d => d.ViewerEmployee).WithMany(p => p.EmployeeViewTrackingViewerEmployees)
+                .HasForeignKey(d => d.ViewerEmployeeId)
+                .HasConstraintName("FK_EmployeeViewTrackings_Employees");
         });
 
         modelBuilder.Entity<EmploymentType>(entity =>
@@ -1370,6 +1391,10 @@ public partial class IdaContext : DbContext
             entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.UserNotifications)
                 .HasForeignKey(d => d.DeletedBy)
                 .HasConstraintName("FK_Notifications_AspNetUsers");
+
+            entity.HasOne(d => d.JobType).WithMany(p => p.UserNotifications)
+                .HasForeignKey(d => d.JobTypeId)
+                .HasConstraintName("FK_UserNotifications_JobTypes");
 
             entity.HasOne(d => d.Sector).WithMany(p => p.UserNotifications)
                 .HasForeignKey(d => d.SectorId)

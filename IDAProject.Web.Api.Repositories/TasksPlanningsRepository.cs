@@ -82,6 +82,10 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.UserId == searchParams.UserId);
                 }
+                if (searchParams.EmployeeId.HasValue)
+                {
+                    query = query.Where(x => x.User.EmployeeId == searchParams.EmployeeId);
+                }
                 if (!string.IsNullOrEmpty(searchParams.StartDate) && !string.IsNullOrEmpty(searchParams.EndDate))
                 {
                     if (DateTime.TryParseExact(searchParams.StartDate, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var start) &&
@@ -124,6 +128,7 @@ namespace IDAProject.Web.Api.Repositories
                 TaskId = a.TaskId,
                 Task = a.Task.Name,
                 TimeFrom = a.TimeFrom,
+                Employee = a.Employee.Name + " " + a.Employee.Surname,
                 TimeTo = a.TimeTo,
                 DisplayTask =
         a.ProjectId != null && a.TaskId != null

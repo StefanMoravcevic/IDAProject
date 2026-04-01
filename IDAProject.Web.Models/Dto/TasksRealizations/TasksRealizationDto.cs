@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IDAProject.Web.Helpers;
 
 namespace IDAProject.Web.Models.Dto.TasksRealizations
 {
@@ -15,11 +16,16 @@ namespace IDAProject.Web.Models.Dto.TasksRealizations
 
         public string? DisplayTask { get; set; }
         public string? ActivityType { get; set; }
+        public string? Employee { get; set; }
         public bool? IsFinished { get; set; }
 
         public string? TimeFromFormattedForTable
         {
             get { return TimeFrom.Value.ToString("HH:mm"); }
+        }
+        public string? RealizationDateFormatted
+        {
+            get { return DisplayFormatHelpers.FormatDate(RealizationDate); }
         }
         public string? TimeToFormattedForTable
         {

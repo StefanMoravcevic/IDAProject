@@ -1203,7 +1203,43 @@
   <data name="Enter task" xml:space="preserve">
     <value>Унесите задатак</value>
   </data>
+  <data name="Add Activity" xml:space="preserve">
+    <value>Додај активност</value>
+  </data>
+  <data name="Plan comments" xml:space="preserve">
+    <value>Коментари плана</value>
+  </data>
+  <data name="Plan date" xml:space="preserve">
+    <value>Датум плана</value>
+  </data>
+  <data name="Realization comments" xml:space="preserve">
+    <value>Коментари реализације</value>
+  </data>
+  <data name="Realization date" xml:space="preserve">
+    <value>Датум реализације</value>
+  </data>
   <data name="Regular activities" xml:space="preserve">
     <value>Редовне активности</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Време</value>
+  </data>
+  <data name="Bookmarked employees" xml:space="preserve">
+    <value>Означени запослени за праћење</value>
+  </data>
+  <data name="Log out" xml:space="preserve">
+    <value>Излогујте се</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>Преузмите упутство</value>
+  </data>
+  <data name="Notifications for all users" xml:space="preserve">
+    <value>Обавештења за све кориснике</value>
+  </data>
+  <data name="Notifications for your group" xml:space="preserve">
+    <value>Обавештења за вашу групу</value>
+  </data>
+  <data name="Planned/Realized for today" xml:space="preserve">
+    <value>Планирано/Реализовано за данашњи дан</value>
   </data>
 </root>

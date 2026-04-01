@@ -45,6 +45,15 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.TaskPlanning.UserId == searchParams.UserId);
                 }
+                if (searchParams.EmployeeId.HasValue)
+                {
+                    query = query.Where(x => x.TaskPlanning.EmployeeId == searchParams.EmployeeId);
+                }
+                if (searchParams.HideFromHomePage.HasValue)
+                {
+                    query = query.Where(x => x.HiddenFromHomePage == searchParams.HideFromHomePage);
+                }
+
             }
 
             result = await query.Select(a => new TasksPlanningCommentDto
@@ -56,10 +65,22 @@ namespace IDAProject.Web.Api.Repositories
                 TaskPlanningId = a.TaskPlanningId,
                 UserId = a.UserId,
                 Username = a.User.Employee.Name + " " + a.User.Employee.Surname,
-                ParentTaskPlanningCommentId = a.ParentTaskPlanningCommentId
+                ParentTaskPlanningCommentId = a.ParentTaskPlanningCommentId,
+                DisplayTask =
+        a.TaskPlanning.ProjectId != null && a.TaskPlanning.TaskId != null
+            ? a.TaskPlanning.Project.Description + " - " + a.TaskPlanning.Task.Name
+            : a.TaskPlanning.TaskId != null
+                ? a.TaskPlanning.Task.Name
+                : a.TaskPlanning.RegularActivityId != null
+                    ? a.TaskPlanning.RegularActivity.Name
+                    : "",
+                Activity = a.TaskPlanning.ActivityName,
+                HiddenFromHomePage =a .HiddenFromHomePage,
+                EmployeeId = a.TaskPlanning.Employee.Id,
+                PlanDate = a.TaskPlanning.PlanDate
 
             }).ToListAsync();
-            return result;
+            return result;  
 
         }
 

@@ -41,6 +41,14 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.TaskRealizationId == searchParams.RealizationId);
                 }
+                if (searchParams.HideFromHomePage.HasValue)
+                {
+                    query = query.Where(x => x.HiddenFromHomePage == searchParams.HideFromHomePage);
+                }
+                if (searchParams.EmployeeId.HasValue)
+                {
+                    query = query.Where(x => x.TaskRealization.TasksPlanning.User.EmployeeId == searchParams.EmployeeId);
+                }
             }
 
             result = await query.Select(a => new TasksRealizationCommentDto
@@ -52,7 +60,19 @@ namespace IDAProject.Web.Api.Repositories
                 TaskRealizationId = a.TaskRealizationId,
                 UserId = a.UserId,
                 Username = a.User.Employee.Name + " " + a.User.Employee.Surname,
-                ParentTaskRealizationCommentId = a.ParentTaskRealizationCommentId
+                ParentTaskRealizationCommentId = a.ParentTaskRealizationCommentId,
+                DisplayTask =
+        a.TaskRealization.TasksPlanning.ProjectId != null && a.TaskRealization.TasksPlanning.TaskId != null
+            ? a.TaskRealization.TasksPlanning.Project.Description + " - " + a.TaskRealization.TasksPlanning.Task.Name
+            : a.TaskRealization.TasksPlanning.TaskId != null
+                ? a.TaskRealization.TasksPlanning.Task.Name
+                : a.TaskRealization.TasksPlanning.RegularActivityId != null
+                    ? a.TaskRealization.TasksPlanning.RegularActivity.Name
+                    : "",
+                Activity = a.TaskRealization.TasksPlanning.ActivityName,
+                HiddenFromHomePage = a.HiddenFromHomePage,
+                EmployeeId = a.User.EmployeeId,
+                RealizationDate = a.TaskRealization.RealizationDate
 
             }).ToListAsync();
             return result;

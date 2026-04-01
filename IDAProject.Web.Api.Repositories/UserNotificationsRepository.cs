@@ -83,6 +83,32 @@ namespace IDAProject.Web.Api.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<List<UserNotificationDto>> SearchUserNotificationsForHomePageAsync(SearchUserNotificationsParams searchParams)
+        {
+            var today = DateTime.Today;
+
+            IQueryable<UserNotification> query = _dbContext.UserNotifications
+                .Where(x => x.IsDeleted == false &&
+                           x.DateFrom <= today &&
+                           x.DateTo >= today &&
+                           (x.ForAllUsers || (searchParams.JobTypeId.HasValue && x.JobTypeId == searchParams.JobTypeId)));
+
+            var result = await query.Select(a => new UserNotificationDto
+            {
+                Id = a.Id,
+                SectorId = a.SectorId,
+                DateFrom = a.DateFrom,
+                DateTo = a.DateTo,
+                ForAllUsers = a.ForAllUsers,
+                Note = a.Note,
+                Sector = a.Sector.Name,
+                JobTypeId = a.JobTypeId,
+                JobType = a.JobType.Name
+
+            }).ToListAsync();
+
+            return result;
+        }
     }
 }
     

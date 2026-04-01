@@ -99,6 +99,10 @@ public partial class Employee
 
     public virtual ICollection<EmployeeAbsence> EmployeeAbsences { get; set; } = new List<EmployeeAbsence>();
 
+    public virtual ICollection<EmployeeViewTracking> EmployeeViewTrackingViewedEmployees { get; set; } = new List<EmployeeViewTracking>();
+
+    public virtual ICollection<EmployeeViewTracking> EmployeeViewTrackingViewerEmployees { get; set; } = new List<EmployeeViewTracking>();
+
     public virtual JobType? JobType { get; set; }
 
     public virtual NoticeType? NoticeType { get; set; }
