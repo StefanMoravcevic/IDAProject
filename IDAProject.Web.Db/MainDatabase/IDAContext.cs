@@ -75,6 +75,10 @@ public partial class IdaContext : DbContext
 
     public virtual DbSet<EmployeeAbsence> EmployeeAbsences { get; set; }
 
+    public virtual DbSet<EmployeeGoal> EmployeeGoals { get; set; }
+
+    public virtual DbSet<EmployeeJobTypeControl> EmployeeJobTypeControls { get; set; }
+
     public virtual DbSet<EmployeeViewTracking> EmployeeViewTrackings { get; set; }
 
     public virtual DbSet<EmploymentType> EmploymentTypes { get; set; }
@@ -157,10 +161,12 @@ public partial class IdaContext : DbContext
 
     public virtual DbSet<UserSetting> UserSettings { get; set; }
 
+    public virtual DbSet<Year> Years { get; set; }
+
     public virtual DbSet<ZipCode> ZipCodes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultDatabase");
+        => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultDatabase", o => o.UseCompatibilityLevel(110));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -682,6 +688,41 @@ public partial class IdaContext : DbContext
             entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeAbsences)
                 .HasForeignKey(d => d.EmployeeId)
                 .HasConstraintName("FK_EmployeeAbsences_Employees");
+        });
+
+        modelBuilder.Entity<EmployeeGoal>(entity =>
+        {
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.Goal).HasMaxLength(500);
+
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.EmployeeGoals)
+                .HasForeignKey(d => d.DeletedBy)
+                .HasConstraintName("FK_EmployeeGoals_AspNetUsers");
+
+            entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeGoals)
+                .HasForeignKey(d => d.EmployeeId)
+                .HasConstraintName("FK_EmployeeGoals_Employees");
+
+            entity.HasOne(d => d.Year).WithMany(p => p.EmployeeGoals)
+                .HasForeignKey(d => d.YearId)
+                .HasConstraintName("FK_EmployeeGoals_EmployeeGoals");
+        });
+
+        modelBuilder.Entity<EmployeeJobTypeControl>(entity =>
+        {
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.EmployeeJobTypeControls)
+                .HasForeignKey(d => d.DeletedBy)
+                .HasConstraintName("FK_EmployeeJobTypeControls_AspNetUsers");
+
+            entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeJobTypeControls)
+                .HasForeignKey(d => d.EmployeeId)
+                .HasConstraintName("FK_EmployeeJobTypeControls_Employees");
+
+            entity.HasOne(d => d.JobType).WithMany(p => p.EmployeeJobTypeControls)
+                .HasForeignKey(d => d.JobTypeId)
+                .HasConstraintName("FK_EmployeeJobTypeControls_JobTypes");
         });
 
         modelBuilder.Entity<EmployeeViewTracking>(entity =>
@@ -1419,6 +1460,12 @@ public partial class IdaContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserSettings_AspNetUsers");
+        });
+
+        modelBuilder.Entity<Year>(entity =>
+        {
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+            entity.Property(e => e.Year1).HasColumnName("Year");
         });
 
         modelBuilder.Entity<ZipCode>(entity =>

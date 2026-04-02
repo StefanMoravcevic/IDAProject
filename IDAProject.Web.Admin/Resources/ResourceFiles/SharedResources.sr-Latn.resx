@@ -216,6 +216,9 @@
   <data name="Blocked" xml:space="preserve">
     <value>Blokiran</value>
   </data>
+  <data name="Bookmarked" xml:space="preserve">
+    <value>Označeni</value>
+  </data>
   <data name="Bookmarked employees" xml:space="preserve">
     <value>Označeni zaposleni za praćenje</value>
   </data>
@@ -245,6 +248,9 @@
   </data>
   <data name="Checked quantity" xml:space="preserve">
     <value>Čekirana količina</value>
+  </data>
+  <data name="Choose employe to see which IDAs he followed" xml:space="preserve">
+    <value>Izaberite zaposlenog za kojeg želite da pratite kome je gledao IDU</value>
   </data>
   <data name="Choose logo" xml:space="preserve">
     <value>Izaberite logo</value>
@@ -312,6 +318,9 @@
   <data name="CreateQuestion" xml:space="preserve">
     <value>Da li ste sigurni da želite da kreirate odluku o rati?</value>
   </data>
+  <data name="Current month" xml:space="preserve">
+    <value>Tekući mesec</value>
+  </data>
   <data name="Current week" xml:space="preserve">
     <value>Tekuća nedelja</value>
   </data>
@@ -335,6 +344,9 @@
   </data>
   <data name="Day" xml:space="preserve">
     <value>Dan</value>
+  </data>
+  <data name="Days with realization" xml:space="preserve">
+    <value>Broj dana sa realizacijom</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Obriši</value>
@@ -387,11 +399,26 @@
   <data name="Emloyee basic info" xml:space="preserve">
     <value>Osnovne informacije o zaposlenom</value>
   </data>
+  <data name="Employe goal basic info" xml:space="preserve">
+    <value>Osnovne informacije o ciljevima zaposlenih</value>
+  </data>
+  <data name="Employe job type control basic info" xml:space="preserve">
+    <value>Osnovne informacije o podešavanju pregleda IDA</value>
+  </data>
   <data name="Employee" xml:space="preserve">
     <value>Radnik</value>
   </data>
+  <data name="Employee goals" xml:space="preserve">
+    <value>Ciljevi zaposlenih</value>
+  </data>
   <data name="EmployeeNumber" xml:space="preserve">
     <value>Šifra zaposlenog</value>
+  </data>
+  <data name="Employees" xml:space="preserve">
+    <value>Zaposleni</value>
+  </data>
+  <data name="Employees view" xml:space="preserve">
+    <value>Pregled zaposlenih</value>
   </data>
   <data name="Enter absence" xml:space="preserve">
     <value>Unesite odsustvo</value>
@@ -582,6 +609,9 @@
   <data name="General" xml:space="preserve">
     <value>Opšte</value>
   </data>
+  <data name="Goal" xml:space="preserve">
+    <value>Cilj</value>
+  </data>
   <data name="Group" xml:space="preserve">
     <value>Grupa</value>
   </data>
@@ -599,6 +629,12 @@
   </data>
   <data name="IDA View" xml:space="preserve">
     <value>Pregled IDA</value>
+  </data>
+  <data name="IDA view configuration" xml:space="preserve">
+    <value>Podešavanje pregleda IDA</value>
+  </data>
+  <data name="IDA viewers" xml:space="preserve">
+    <value>Praćenje pregleda IDA</value>
   </data>
   <data name="Installment" xml:space="preserve">
     <value>Rate</value>
@@ -807,6 +843,12 @@
   <data name="Personal data" xml:space="preserve">
     <value>Lični podaci</value>
   </data>
+  <data name="Personal goals" xml:space="preserve">
+    <value>Lični ciljevi</value>
+  </data>
+  <data name="Personal statistic last 30 days" xml:space="preserve">
+    <value>Sopstvena statistika prethodnih 30 dana</value>
+  </data>
   <data name="PersonalBankAccount" xml:space="preserve">
     <value>Broj tekućeg računa</value>
   </data>
@@ -834,6 +876,18 @@
   <data name="Plan no" xml:space="preserve">
     <value>Redni broj</value>
   </data>
+  <data name="Plan statistics" xml:space="preserve">
+    <value>Statistika planiranja</value>
+  </data>
+  <data name="Planned" xml:space="preserve">
+    <value>Ukupno planirano</value>
+  </data>
+  <data name="Planned % from sum" xml:space="preserve">
+    <value>% planiranja na vreme</value>
+  </data>
+  <data name="Planned on time" xml:space="preserve">
+    <value>Planirano na vreme</value>
+  </data>
   <data name="Planned/Realized for today" xml:space="preserve">
     <value>Planirano/Realizovano za današnji dan</value>
   </data>
@@ -848,6 +902,9 @@
   </data>
   <data name="Previous day" xml:space="preserve">
     <value>Prethodni dan</value>
+  </data>
+  <data name="Previous month" xml:space="preserve">
+    <value>Prethodni mesec</value>
   </data>
   <data name="Previous week" xml:space="preserve">
     <value>Prethodna nedelja</value>
@@ -890,6 +947,12 @@
   </data>
   <data name="Realization for" xml:space="preserve">
     <value>Realizacija za</value>
+  </data>
+  <data name="Realization statistics" xml:space="preserve">
+    <value>Statistika realizacije</value>
+  </data>
+  <data name="Regular" xml:space="preserve">
+    <value>Redovne aktivnosti</value>
   </data>
   <data name="Regular activities" xml:space="preserve">
     <value>Redovne aktivnosti</value>
@@ -1065,6 +1128,9 @@
   <data name="Select task" xml:space="preserve">
     <value>Izaberite zadatak</value>
   </data>
+  <data name="Select year" xml:space="preserve">
+    <value>Izaberite godinu</value>
+  </data>
   <data name="Select zip code" xml:space="preserve">
     <value>Izaberite poštanski broj</value>
   </data>
@@ -1091,6 +1157,9 @@
   </data>
   <data name="State" xml:space="preserve">
     <value>Država</value>
+  </data>
+  <data name="Statistic" xml:space="preserve">
+    <value>Statistika</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>Status</value>
@@ -1140,6 +1209,15 @@
   <data name="to" xml:space="preserve">
     <value>Do</value>
   </data>
+  <data name="Total logged hours" xml:space="preserve">
+    <value>Ukupno ulogovanih sati</value>
+  </data>
+  <data name="Total work hours" xml:space="preserve">
+    <value>Radno vreme</value>
+  </data>
+  <data name="Total working days" xml:space="preserve">
+    <value>Broj radnih dana</value>
+  </data>
   <data name="TotalAmount" xml:space="preserve">
     <value>Ukupan iznos</value>
   </data>
@@ -1151,6 +1229,9 @@
   </data>
   <data name="UICulture" xml:space="preserve">
     <value>Jezik</value>
+  </data>
+  <data name="Unplanned" xml:space="preserve">
+    <value>Ukupno neplanirano</value>
   </data>
   <data name="Uploaded by" xml:space="preserve">
     <value>Postavio korisnik</value>
@@ -1190,6 +1271,9 @@
   </data>
   <data name="Write a reply" xml:space="preserve">
     <value>Napišite odgovor</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Godina</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Da</value>

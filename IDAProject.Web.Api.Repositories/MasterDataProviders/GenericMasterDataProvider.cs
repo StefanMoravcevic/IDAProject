@@ -56,7 +56,8 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
                 new MasterDataTableInfo("IdaTasks","Tasks"),
                 new MasterDataTableInfo("PlanStatuses","Plan statuses"),
                 new MasterDataTableInfo("RegularActivities","Regular activities"),
-                new MasterDataTableInfo("AbsenceTypes","Absence type")
+                new MasterDataTableInfo("AbsenceTypes","Absence type"),
+                new MasterDataTableInfo("Years","Years")
    
             };
         }

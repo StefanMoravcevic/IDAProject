@@ -1227,6 +1227,9 @@
   <data name="Bookmarked employees" xml:space="preserve">
     <value>Означени запослени за праћење</value>
   </data>
+  <data name="IDA view configuration" xml:space="preserve">
+    <value>Подешавање прегледа ИДА</value>
+  </data>
   <data name="Log out" xml:space="preserve">
     <value>Излогујте се</value>
   </data>
@@ -1241,5 +1244,86 @@
   </data>
   <data name="Planned/Realized for today" xml:space="preserve">
     <value>Планирано/Реализовано за данашњи дан</value>
+  </data>
+  <data name="Days with realization" xml:space="preserve">
+    <value>Број дана са реализацијом</value>
+  </data>
+  <data name="Employe goal basic info" xml:space="preserve">
+    <value>Основне информације о циљевима запослених</value>
+  </data>
+  <data name="Employe job type control basic info" xml:space="preserve">
+    <value>Основне информације о подешавању прегледа ИДА</value>
+  </data>
+  <data name="Employee goals" xml:space="preserve">
+    <value>Циљеви запослених</value>
+  </data>
+  <data name="Goal" xml:space="preserve">
+    <value>Циљ</value>
+  </data>
+  <data name="Personal goals" xml:space="preserve">
+    <value>Лични циљеви</value>
+  </data>
+  <data name="Personal statistic last 30 days" xml:space="preserve">
+    <value>Сопствена статистика претходних 30 дана</value>
+  </data>
+  <data name="Plan statistics" xml:space="preserve">
+    <value>Статистика планирања</value>
+  </data>
+  <data name="Planned" xml:space="preserve">
+    <value>Укупно планирано</value>
+  </data>
+  <data name="Planned % from sum" xml:space="preserve">
+    <value>% планирања на време</value>
+  </data>
+  <data name="Planned on time" xml:space="preserve">
+    <value>Планирано на време</value>
+  </data>
+  <data name="Realization statistics" xml:space="preserve">
+    <value>Статистика реализације</value>
+  </data>
+  <data name="Regular" xml:space="preserve">
+    <value>Редовне активности</value>
+  </data>
+  <data name="Select year" xml:space="preserve">
+    <value>Изаберите годину</value>
+  </data>
+  <data name="Statistic" xml:space="preserve">
+    <value>Статистика</value>
+  </data>
+  <data name="Total logged hours" xml:space="preserve">
+    <value>Укупно улогованих сати</value>
+  </data>
+  <data name="Total work hours" xml:space="preserve">
+    <value>Радно време</value>
+  </data>
+  <data name="Total working days" xml:space="preserve">
+    <value>Број радних дана</value>
+  </data>
+  <data name="Unplanned" xml:space="preserve">
+    <value>Укупно непланирано</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Година</value>
+  </data>
+  <data name="Bookmarked" xml:space="preserve">
+    <value>Означени</value>
+  </data>
+  <data name="Choose employe to see which IDAs he followed" xml:space="preserve">
+    <value>Изаберите запосленог за којег желите да пратите коме је гледао ИДУ</value>
+  </data>
+  <data name="Current month" xml:space="preserve">
+    <value>Текући месец</value>
+  </data>
+  <data name="Employees" xml:space="preserve">
+    <value>Запослени</value>
+  </data>
+  <data name="Employees view" xml:space="preserve">
+    <value>Преглед запослених</value>
+  </data>
+  <data name="IDA viewers" xml:space="preserve">
+    <value>Праћење прегледа ИДА</value>
+  </data>
+  <data name="Previous month" xml:space="preserve">
+    <value>Претходни месец</value>
   </data>
 </root>

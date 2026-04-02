@@ -7,6 +7,8 @@ namespace IDAProject.Web.Api.Models.Interfaces.Repositories
     public interface ITasksRealizationsRepository
     {
         Task<TasksRealizationDto> GetTasksRealizationByIdAsync(int id);
+        Task<EmployeeRealizationStatsDto> GetLast30DaysRealizationStats(int employeeId);
+        Task<EmployeeRealizationStatsDto> GetGenericStats(int employeeId, DateTime? from, DateTime? to);
         Task<int> SaveTasksRealizationAsync(SaveTasksRealizationRequestModel requestModel);
         Task<List<TasksRealizationDto>> SearchTasksRealizationsAsync(SearchTasksRealizationsParams searchParams);
         Task DeleteTasksRealizationAsync(int id, int? userId);

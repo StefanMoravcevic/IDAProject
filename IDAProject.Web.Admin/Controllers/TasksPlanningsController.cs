@@ -1,10 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using IDAProject.Web.Admin.Models.Common;
 using IDAProject.Web.Admin.Models.Interfaces.Managers;
 using IDAProject.Web.Admin.Models.ViewModels.TasksPlannings;
 using IDAProject.Web.Models.Dto.TasksPlannings;
 using IDAProject.Web.Models.General.Enums;
 using IDAProject.Web.Models.RequestModels.TasksPlannings;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IDAProject.Web.Admin.Controllers
 {
@@ -35,6 +36,24 @@ namespace IDAProject.Web.Admin.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var responseModel = await _TasksPlanningsManager.GetTasksPlanningByIdAsync(id);
+            return Json(responseModel.Payload);
+        }
+        [HttpGet("stats/{employeeId}", Name = RouteNames.TasksPlannings_GetStatsByEmployeeId)]
+        public async Task<IActionResult> TasksPlanningsGetStatsByEmployeeId(int employeeId)
+        {
+            var responseModel = await _TasksPlanningsManager.GetLast30DaysStats(employeeId);
+            return Json(responseModel.Payload);
+        }
+        [HttpGet("statsGeneric/{employeeId}", Name = RouteNames.TasksPlannings_GetStatsGenericByEmployeeId)]
+        public async Task<IActionResult> TasksPlanningsGetStatsByEmployeeId(
+     int employeeId,
+     [FromQuery] string from,
+     [FromQuery] string to)
+        {
+            DateTime fromDate = DateTime.ParseExact(from, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            DateTime toDate = DateTime.ParseExact(to, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+            var responseModel = await _TasksPlanningsManager.GetStatsGeneric(employeeId, from, to);
             return Json(responseModel.Payload);
         }
 

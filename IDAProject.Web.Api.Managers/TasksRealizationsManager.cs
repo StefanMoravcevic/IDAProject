@@ -90,5 +90,51 @@ namespace IDAProject.Web.Api.Managers
             }
             return result;
         }
+
+        public async Task<ResponseModel<EmployeeRealizationStatsDto>> GetLast30DaysRealizationStats(int employeeId)
+        {
+            var result = new ResponseModel<EmployeeRealizationStatsDto>();
+            try
+            {
+                result.Payload = await _TasksRealizationsRepository.GetLast30DaysRealizationStats(employeeId);
+                if (result.Payload == null)
+                {
+                    result.Message = "The TasksRealization  with the specified id could not be found.";
+                }
+                else
+                {
+                    result.Valid = true;
+                }
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                _logger.LogError(e, $"id: {employeeId}");
+            }
+            return result;
+        }
+
+        public async Task<ResponseModel<EmployeeRealizationStatsDto>> GetGenericStats(int employeeId, DateTime? from, DateTime? to)
+        {
+            var result = new ResponseModel<EmployeeRealizationStatsDto>();
+            try
+            {
+                result.Payload = await _TasksRealizationsRepository.GetGenericStats(employeeId,from,to);
+                if (result.Payload == null)
+                {
+                    result.Message = "The TasksRealization  with the specified id could not be found.";
+                }
+                else
+                {
+                    result.Valid = true;
+                }
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                _logger.LogError(e, $"id: {employeeId}");
+            }
+            return result;
+        }
     }
 }

@@ -90,5 +90,51 @@ namespace IDAProject.Web.Api.Managers
             }
             return result;
         }
+
+        public async Task<ResponseModel<EmployeePlanningStatsDto>> GetLast30DaysStats(int employeeId)
+        {
+            var result = new ResponseModel<EmployeePlanningStatsDto>();
+            try
+            {
+                result.Payload = await _TasksPlanningsRepository.GetLast30DaysStats(employeeId);
+                if (result.Payload == null)
+                {
+                    result.Message = "The TasksPlanning  with the specified id could not be found.";
+                }
+                else
+                {
+                    result.Valid = true;
+                }
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                _logger.LogError(e, $"id: {employeeId}");
+            }
+            return result;
+        }
+
+        public async Task<ResponseModel<EmployeePlanningStatsDto>> GetStatsGeneric(int employeeId, DateTime? from, DateTime? to)
+        {
+            var result = new ResponseModel<EmployeePlanningStatsDto>();
+            try
+            {
+                result.Payload = await _TasksPlanningsRepository.GetStatsGeneric(employeeId,from,to);
+                if (result.Payload == null)
+                {
+                    result.Message = "The TasksPlanning  with the specified id could not be found.";
+                }
+                else
+                {
+                    result.Valid = true;
+                }
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                _logger.LogError(e, $"id: {employeeId}");
+            }
+            return result;
+        }
     }
 }

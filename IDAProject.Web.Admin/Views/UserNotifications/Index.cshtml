@@ -12,7 +12,7 @@
 @{
 
     ViewData["Title"] = $"User notifications";
-
+    var localizedPagination = @Html.Raw(Json.Serialize(new PaginationLocalizerModel(localizer)));
     var urlDeleteNotification = Url.RouteUrl(RouteNames.UserNotifications_Delete, new { id = 111 });
 }
 
@@ -48,7 +48,7 @@
          
                 },
                 success: function (response) {
-                    loadJson("tableUserNotifications", response);
+                    loadJson("tableUserNotifications", response, @localizedPagination);
                 }
             });
         }

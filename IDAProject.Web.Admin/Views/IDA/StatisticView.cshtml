@@ -1,0 +1,453 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.IDA.IDAViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Helpers;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using IDAProject.Web.Admin.Models.TagHelpers.Base;
+@using IDAProject.Web.Admin.TagHelpers.Base;
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@{
+	ViewData["Title"] = "View IDA";
+}
+<style>
+    #employeesMatrix {
+        padding: 10px;
+        font-family: Arial, sans-serif;
+    }
+
+    .matrix-group {
+        margin-bottom: 20px;
+    }
+
+    .matrix-group-title {
+        font-weight: bold;
+        font-size: 1.3em;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 5px;
+    }
+
+    .matrix-job {
+        margin-left: 30px; /* uvlačenje ispod sektora */
+        margin-bottom: 10px;
+        padding-left: 10px;
+        border-left: 2px solid #aaa;
+    }
+
+    button.selected {
+        background-color: #f08418 !important; /* Narandžasta pozadina */
+        color: white !important; /* Beli tekst */
+        border-color: #f08418 !important; /* Narandžasti border */
+    }
+
+    .matrix-job-title {
+        font-style: italic;
+        margin-bottom: 5px;
+        color: #555;
+        font-weight: 500;
+    }
+
+    .matrix-employees {
+        display: flex;
+        flex-direction: column; /* ovo je ključno da budu jedan ispod drugog */
+        gap: 5px;
+        margin-left: 20px; /* uvlačenje ispod jobType */
+    }
+
+    .matrix-employee {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #f08418;
+
+        background-color: #ffffff;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .matrix-employee:hover {
+        background-color: #d0e0ff;
+        transform: scale(1.05);
+    }
+    #employeesHeader{
+        background-color:#f08418;
+        color:white;
+    }
+
+    .matrix-employee.selected {
+        background-color: #36A2EB;
+        color: white;
+        font-weight: bold;
+        border-radius: 4px;
+    }
+
+    .comment-item {
+        border-bottom: 1px solid #eee;
+        padding: 8px 0;
+    }
+
+    .comment-reply {
+        margin-left: 20px;
+        border-left: 2px solid #ddd;
+        padding-left: 10px;
+        margin-top: 5px;
+    }
+</style>
+<div class="container-fluid mt-1">
+
+    <div class="row g-2">
+
+        <!-- LEVI DEO: EMPLOYEES MATRIX -->
+        <div class="col-xl-2 col-lg-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header fw-bold" id="employeesHeader">
+                    @localizer["Stuff"]
+                </div>
+                <div class="card-body p-2" style="max-height:650px; overflow-y:auto; background-color:#FFFCF5;">
+                    <div id="employeesMatrix">
+                        <!-- AJAX puni -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DESNI DEO: CONTROLS + DINAMIČKE TABELA -->
+        <div class="col-xl-10 col-lg-9">
+
+            <!-- CONTROLS CARD -->
+            <div class="card shadow-sm border-0 mb-2">
+                <div class="card-body" style="border: 2px solid #f08418; background-color: #FFFCF5;">
+                    <div class="row align-items-center g-2">
+
+                        <div class="col-auto text-center">
+                                <img src=""
+                                     class="rounded-circle border"
+                                     style="width:70px;height:70px;object-fit:cover;" id="employeePhoto"/>
+                        </div>
+
+                        <div class="col-xl-2 col-md-3">
+                            <button class="btn btn-outline-primary w-100 btn-sm month-button" id="currentMonth">
+                                @localizer["Current month"]
+                            </button>
+                        </div>
+
+                        <div class="col-xl-2 col-md-3">
+                            <button class="btn btn-outline-primary w-100 btn-sm month-button" id="previousMonth">
+                                @localizer["Previous month"]
+                            </button>
+                        </div>
+
+                        <!-- OD -->
+                        <div class="col-auto">
+                            <label class="small text-muted mb-0">@localizer["Date from"]</label>
+                        </div>
+                        <div class="col-xl-2 col-md-2">
+                            <tms-input type="Date" class="form-control form-control-sm" id="dateFromId" name="DateFrom" />
+                        </div>
+
+                        <!-- DO -->
+                        <div class="col-auto">
+                            <label class="small text-muted mb-0">@localizer["Date to"]</label>
+                        </div>
+                        <div class="col-xl-2 col-md-2">
+                            <tms-input type="Date" class="form-control form-control-sm" id="dateToId" name="DateTo" />
+                        </div>
+                        @* <div class="col-auto">
+                            <button class="btn btn-outline-primary btn-sm" id="searchByDate">
+                                @localizer["Search"]
+                            </button>
+                        </div> *@
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLES CARD -->
+            <div class="card shadow-sm mt-3">
+
+                <div class="card-header fw-bold" id="activityHeader"
+                     style="background-color:#FA690C; color:white; cursor:pointer;">
+                    📝 @localizer["Activities"]
+                </div>
+
+                <div class="card-body" id="activitiesBody">
+
+                    <div class="row g-3">
+
+                        <div class="col-md-4 border-end pe-3" style="border-right:2px solid #eb3838 !important;">
+                            <h6>@localizer["Plan statistics"]</h6>
+                            <div id="planStatisticContainer"></div>
+                        </div>
+                        <div class="col-md-8 ps-3">
+                            <h6>@localizer["Realization statistics"]</h6>
+                            <div id="realizationStatisticContainer"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+@section Styles {
+	<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+	<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+	<script type="text/javascript">
+        function loadEmployeesMatrix() {
+            const currentEmployeeId = @Model.User.EmployeeId;
+                $.ajax({
+                        url: "@Url.RouteUrl(RouteNames.Employees_Search)",
+                        method: "POST",
+                        data: {},
+                        success: function(employeesData) {
+                            buildEmployeesMatrix(employeesData);
+                        },
+                        error: function() {
+                            console.error("Greška pri učitavanju zaposlenih");
+                        }
+                    });      
+        }
+        function buildEmployeesMatrix(data) {
+            let html = "";
+            let groups = {};
+
+            data.forEach(e => {
+                if (!groups[e.sector]) groups[e.sector] = {};
+                if (!groups[e.sector][e.jobType]) groups[e.sector][e.jobType] = [];
+                groups[e.sector][e.jobType].push(e);
+            });
+
+            for (let sector in groups) {
+                html += `<div class="matrix-group">
+                            <div class="matrix-group-title">${sector}</div>`;
+
+                for (let job in groups[sector]) {
+                    html += `<div class="matrix-job">
+                                <div class="matrix-job-title">${job}</div>
+                                <div class="matrix-employees">`;
+                groups[sector][job].forEach(emp => {
+            html += `
+            <div class="matrix-employee d-flex align-items-center mb-1" data-id="${emp.id}">
+
+                <span class="employee-name flex-grow-1">
+                    ${emp.name} ${emp.surname}
+                </span>
+
+            </div>
+            `;
+        });
+
+                    html += `</div></div>`; // kraj matrix-employees + matrix-job
+                }
+
+                html += `</div>`; // kraj matrix-group
+            }
+
+            $("#employeesMatrix").html(html);
+        }
+
+        function loadPlanStatistics(employeeId, from, to) {
+            $.ajax({
+                url: '@Url.RouteUrl(RouteNames.TasksPlannings_GetStatsGenericByEmployeeId, new { employeeId = "XXX" })'
+                        .replace("XXX", employeeId)
+                        + `?from=${from}&to=${to}`,
+                method: 'GET',
+                success: function(stats) {
+                    if (!stats) {
+                        $('#planStatisticContainer').html('<div class="text-muted">Nema statistike.</div>');
+                        return;
+                    }
+
+                    let percentage = stats.totalPlannedDays > 0
+                        ? ((stats.plannedOnTimeDays / stats.totalPlannedDays) * 100).toFixed(2)
+                        : 0;
+
+                    // Odredi boju procenta
+                    let percColor = percentage >= 80 ? 'text-success' :
+                                    percentage >= 50 ? 'text-warning' : 'text-danger';
+
+                    let html = `
+                        <table class="table table-bordered table-striped mb-2 shadow-sm">
+                            <thead class="table-light">
+                                <tr class="text-center">
+                                    <th style="background-color:#e07b00; color:white;">@localizer["Planned on time"]</th>
+                                    <th style="background-color:#e07b00; color:white;">@localizer["Planned"]</th>
+                                    <th style="background-color:#e07b00; color:white;">@localizer["Planned % from sum"]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center align-middle">
+                                    <td class="fw-bold">${stats.plannedOnTimeDays}</td>
+                                    <td class="fw-bold">${stats.totalPlannedDays}</td>
+                                    <td class="${percColor} fw-bold">${percentage}%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `;
+
+                    $('#planStatisticContainer').html(html);
+                },
+                error: function(err) {
+                    console.error('Greška pri učitavanju statistike:', err);
+                    $('#planStatisticContainer').html('<div class="text-danger">Greška pri učitavanju statistike.</div>');
+                }
+            });
+        }
+        function loadRealizationStatistics(employeeId, from, to) {
+            $.ajax({
+                url: '@Url.RouteUrl(RouteNames.TasksRealizations_GenericStatsByEmployeeId, new { employeeId = "XXX" })'
+                        .replace("XXX", employeeId)
+                        + `?from=${from}&to=${to}`,
+                method: 'GET',
+                success: function(stats) {
+                    if (!stats) {
+                        $('#realizationStatisticContainer').html('<div class="text-muted">Nema statistike.</div>');
+                        return;
+                    }
+
+                    let html = `
+                        <table class="table table-bordered table-striped mb-2 shadow-sm">
+                            <thead class="table-light text-center">
+                                <tr>
+                                    <th style="background-color:#e07b00; color:white;">@localizer["Total working days"]</th>
+                                    <th style="background-color:#e07b00; color:white;">@localizer["Days with realization"]</th>
+                                    <th style="background-color:#e07b00; color:white;">@localizer["Total work hours"]</th>
+                                    <th style="background-color:#e07b00; color:white;">@localizer["Total logged hours"]</th>
+                                    <th style="background-color:#e07b00; color:white;">@localizer["Planned"]</th>
+                                    <th style="background-color:#e07b00; color:white;">@localizer["Unplanned"]</th>
+                                    <th style="background-color:#e07b00; color:white;">@localizer["Projects"]</th>
+                                    <th style="background-color:#e07b00; color:white;">@localizer["Tasks"]</th>
+                                    <th style="background-color:#e07b00; color:white;">@localizer["Regular"]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center align-middle">
+                                    <td class="fw-bold">${stats.totalWorkingDays}</td>
+                                    <td class="fw-bold">${stats.daysWithRealization}</td>
+                                    <td class="fw-bold">${stats.totalWorkHours}</td>
+                                    <td class="fw-bold">${stats.totalLoggedHours}</td>
+                                    <td class="fw-bold">${stats.plannedCount} (${stats.plannedPercentage}%)</td>
+                                    <td class="fw-bold">${stats.unplannedCount} (${stats.unplannedPercentage}%)</td>
+                                    <td class="fw-bold">${stats.projectCount} (${stats.projectPercentage}%)</td>
+                                    <td class="fw-bold">${stats.taskCount} (${stats.taskPercentage}%)</td>
+                                    <td class="fw-bold">${stats.regularCount} (${stats.regularPercentage}%)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `;
+
+                    $('#realizationStatisticContainer').html(html);
+                },
+                error: function(err) {
+                    console.error('Greška pri učitavanju statistike:', err);
+                    $('#realizationStatisticContainer').html('<div class="text-danger">Greška pri učitavanju statistike.</div>');
+                }
+            });
+            }
+            function loadEmployeeStatsByPeriod(employeeId, from, to) {
+                loadPlanStatisticsForPeriod(employeeId, from, to);
+                loadRealizationStatisticsForPeriod(employeeId, from, to);
+            }
+        $(document).ready(function () {
+           $("#dateFromId, #dateToId").blur(function () {
+
+                const fromRaw = $('#dateFromId').val();
+                const toRaw = $('#dateToId').val();
+
+                if (!selectedUserId) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '@localizer["Please select employee"]',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                if (!fromRaw || !toRaw) return;
+
+                function convertToIso(dateString) {
+                    if (dateString.includes('.')) {
+                        var parts = dateString.split('.');
+                        return parts[2] + '-' + parts[1] + '-' + parts[0];
+                    }
+                    return dateString; // ako je već yyyy-MM-dd
+                }
+
+                const from = convertToIso(fromRaw);
+                const to = convertToIso(toRaw);
+
+                loadPlanStatistics(selectedEmployeeId, from, to);
+                loadRealizationStatistics(selectedEmployeeId, from, to);
+            });
+            loadEmployeesMatrix();
+            $(document).on('click', '#employeesMatrix .matrix-employee', function() {
+                var $employeeRow = $(this);
+                selectedEmployeeId = $employeeRow.data('id');
+
+                $('#employeesMatrix .matrix-employee').removeClass('selected');
+                $employeeRow.addClass('selected');
+
+                $.ajax({
+                    url: '@Url.RouteUrl(RouteNames.Employees_Search)',
+                    method: 'POST',
+                    data: { id: selectedEmployeeId },
+                    success: function(result) {
+                        selectedUserId = result[0].userId;
+                        if (result[0].photo) {
+                            $("#employeePhoto").attr('src', result[0].photo);
+                        }
+                    },
+                    error: function(err) {
+                        console.error('Error fetching userId for employee:', err);
+                    }
+                });
+
+            });
+
+            $('#previousMonth').click(function() {
+                let start = moment().subtract(1, 'months').startOf('month').format('YYYY-MM-DD');
+                let end = moment().subtract(1, 'months').endOf('month').format('YYYY-MM-DD');
+
+                loadPlanStatistics(selectedEmployeeId, start, end);
+                loadRealizationStatistics(selectedEmployeeId, start, end);
+
+                // Oznaci dugme kao selektovano
+                $('.month-button').removeClass('selected'); // ukloni sa svih
+                $(this).addClass('selected');               // dodaj na kliknuto
+            });
+
+            $('#currentMonth').click(function() {
+                let start = moment().startOf('month').format('YYYY-MM-DD');
+                let end = moment().endOf('month').format('YYYY-MM-DD');
+
+                loadPlanStatistics(selectedEmployeeId, start, end);
+                loadRealizationStatistics(selectedEmployeeId, start, end);
+
+                $('.month-button').removeClass('selected');
+                $(this).addClass('selected');
+            });
+
+            $('#searchByDate').click(function() {
+                let start = $('#dateFromId').val();
+                let end = $('#dateToId').val();
+                loadPlanStatistics(selectedEmployeeId, start, end);
+                loadRealizationStatistics(selectedEmployeeId, start, end);
+            });
+        });
+    </script>
+}   

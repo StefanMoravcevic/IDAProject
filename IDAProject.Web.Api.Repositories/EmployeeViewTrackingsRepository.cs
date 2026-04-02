@@ -45,6 +45,14 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.IsBookmarked == searchParams.IsBookmarked);
                 }
+                if (searchParams.HideFromHomePage.HasValue)
+                {
+                    query = query.Where(x => x.HideFromHomePage == searchParams.HideFromHomePage);
+                }
+                if (searchParams.Date.HasValue)
+                {
+                    query = query.Where(x => x.ViewedFrom.Value.Date == searchParams.Date.Value.Date);
+                }
             }
 
             result = await query.Select(a => new EmployeeViewTrackingDto
@@ -55,7 +63,8 @@ namespace IDAProject.Web.Api.Repositories
                 ViewedUntil = a.ViewedUntil,
                 ViewerEmployeeId = a.ViewerEmployeeId,
                 ViewedEmployee = a.ViewedEmployee.Name + " " + a.ViewedEmployee.Surname,
-                IsBookmarked = a.IsBookmarked
+                IsBookmarked = a.IsBookmarked,
+                HideFromHomePage  = a.HideFromHomePage
 
             }).ToListAsync();
             return result;

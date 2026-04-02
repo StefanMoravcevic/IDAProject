@@ -10,6 +10,8 @@ namespace IDAProject.Web.Admin.Models.Interfaces.Managers
         Task<ResponseModel<TasksPlanningDto>> GetTasksPlanningByIdAsync(int id);
         Task<ResponseModelBase> DeleteTasksPlanningAsync(int id, int? userId);
         Task<ResponseModel<int>> SaveTasksPlanningAsync(SaveTasksPlanningRequestModel requestModel);
+        Task<ResponseModel<EmployeePlanningStatsDto>> GetLast30DaysStats(int employeeId);
+        Task<ResponseModel<EmployeePlanningStatsDto>> GetStatsGeneric(int employeeId, string? from, string? to);
     }
 }
 

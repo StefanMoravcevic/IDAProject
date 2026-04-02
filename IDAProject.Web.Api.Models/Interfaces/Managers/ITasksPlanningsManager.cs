@@ -8,6 +8,8 @@ namespace IDAProject.Web.Api.Models.Interfaces.Managers
     {
         Task<ResponseModelList<TasksPlanningDto>> SearchTasksPlanningsAsync(SearchTasksPlanningsParams searchParams);
         Task<ResponseModel<TasksPlanningDto>> GetTasksPlanningByIdAsync(int id);
+        Task<ResponseModel<EmployeePlanningStatsDto>> GetLast30DaysStats(int employeeId);
+        Task<ResponseModel<EmployeePlanningStatsDto>> GetStatsGeneric(int employeeId, DateTime? from, DateTime? to);
         Task<ResponseModelBase> DeleteTasksPlanningAsync(int id, int? userId);
         Task<ResponseModel<int>> SaveTasksPlanningAsync(SaveTasksPlanningRequestModel requestModel);
     }

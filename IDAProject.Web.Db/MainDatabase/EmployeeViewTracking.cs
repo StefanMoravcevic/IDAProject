@@ -23,6 +23,8 @@ public partial class EmployeeViewTracking
 
     public bool IsBookmarked { get; set; }
 
+    public bool HideFromHomePage { get; set; }
+
     public virtual AspNetUser? DeletedByNavigation { get; set; }
 
     public virtual Employee? ViewedEmployee { get; set; }

@@ -176,6 +176,116 @@ namespace IDAProject.Web.Api.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<EmployeePlanningStatsDto> GetLast30DaysStats(int employeeId)
+        {
+            var to = DateTime.Today;
+            var from = to.AddDays(-30);
+
+            var plans = await _dbContext.TasksPlannings
+                .Where(x => x.EmployeeId == employeeId
+                         && x.PlanDate >= from
+                         && x.PlanDate < to
+                         && !x.IsDeleted)
+                .ToListAsync();
+
+            var groupedByDay = plans
+                .GroupBy(x => x.PlanDate.Value.Date);
+
+            int totalPlannedDays = 0;
+            int plannedOnTimeDays = 0;
+
+            foreach (var day in groupedByDay)
+            {
+                totalPlannedDays++;
+
+                var totalDuration = day
+                    .Select(x => TimeSpan.FromHours(x.Duration.Value.Hour)
+                                      + TimeSpan.FromMinutes(x.Duration.Value.Minute))
+                    .Aggregate(TimeSpan.Zero, (sum, t) => sum + t);
+
+                var totalHours = totalDuration.TotalHours;
+
+                bool allCreatedBeforeDeadline = day.All(x =>
+                {
+                    var deadline = x.CreatedAt.Value.Date.AddHours(12);
+                    return x.CreatedAt <= deadline;
+                });
+
+                if ((decimal)totalHours >= 7.25m && allCreatedBeforeDeadline)
+                {
+                    plannedOnTimeDays++;
+                }
+            }
+
+            decimal percentage = 0;
+
+            if (totalPlannedDays > 0)
+            {
+                percentage = Math.Round(
+                    (decimal)plannedOnTimeDays / totalPlannedDays * 100, 2);
+            }
+
+            return new EmployeePlanningStatsDto
+            {
+                TotalPlannedDays = totalPlannedDays,
+                PlannedOnTimeDays = plannedOnTimeDays,
+                Percentage = percentage
+            };
+        }
+
+        public async Task<EmployeePlanningStatsDto> GetStatsGeneric(int employeeId, DateTime? from, DateTime? to)
+        {
+            var plans = await _dbContext.TasksPlannings
+        .Where(x => x.EmployeeId == employeeId
+                 && x.PlanDate >= from
+                 && x.PlanDate < to
+                 && !x.IsDeleted)
+        .ToListAsync();
+
+            var groupedByDay = plans
+                .GroupBy(x => x.PlanDate.Value.Date);
+
+            int totalPlannedDays = 0;
+            int plannedOnTimeDays = 0;
+
+            foreach (var day in groupedByDay)
+            {
+                totalPlannedDays++;
+
+                var totalDuration = day
+                    .Select(x => TimeSpan.FromHours(x.Duration.Value.Hour)
+                                      + TimeSpan.FromMinutes(x.Duration.Value.Minute))
+                    .Aggregate(TimeSpan.Zero, (sum, t) => sum + t);
+
+                var totalHours = totalDuration.TotalHours;
+
+                bool allCreatedBeforeDeadline = day.All(x =>
+                {
+                    var deadline = x.CreatedAt.Value.Date.AddHours(12);
+                    return x.CreatedAt <= deadline;
+                });
+
+                if ((decimal)totalHours >= 7.25m && allCreatedBeforeDeadline)
+                {
+                    plannedOnTimeDays++;
+                }
+            }
+
+            decimal percentage = 0;
+
+            if (totalPlannedDays > 0)
+            {
+                percentage = Math.Round(
+                    (decimal)plannedOnTimeDays / totalPlannedDays * 100, 2);
+            }
+
+            return new EmployeePlanningStatsDto
+            {
+                TotalPlannedDays = totalPlannedDays,
+                PlannedOnTimeDays = plannedOnTimeDays,
+                Percentage = percentage
+            };
+        }
     }
 }
     

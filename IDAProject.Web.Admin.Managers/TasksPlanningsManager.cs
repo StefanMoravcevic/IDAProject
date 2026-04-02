@@ -38,5 +38,17 @@ namespace IDAProject.Web.Admin.Managers
             var result = await PostAsync<SaveTasksPlanningRequestModel, ResponseModel<int>>($"api/TasksPlannings", requestModel);
             return result;
         }
+
+        public async Task<ResponseModel<EmployeePlanningStatsDto>> GetLast30DaysStats(int employeeId)
+        {
+            var result = await GetAsync<ResponseModel<EmployeePlanningStatsDto>>($"api/TasksPlannings/stats/{employeeId}");
+            return result;
+        }
+
+        public async Task<ResponseModel<EmployeePlanningStatsDto>> GetStatsGeneric(int employeeId, string from, string to)
+        {
+            var result = await GetAsync<ResponseModel<EmployeePlanningStatsDto>>($"api/TasksPlannings/statsGeneric/{employeeId}/{from}/{to}");
+            return result;
+        }
     }
 }

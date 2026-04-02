@@ -1,9 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
+using IDAProject.Web.Admin.Managers;
 using IDAProject.Web.Admin.Models.Common;
 using IDAProject.Web.Admin.Models.Interfaces.Managers;
 using IDAProject.Web.Models.Dto.EmployeeViewTrackings;
+using IDAProject.Web.Models.Dto.TasksPlanningComments;
 using IDAProject.Web.Models.General.Enums;
 using IDAProject.Web.Models.RequestModels.EmployeeViewTrackings;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IDAProject.Web.Admin.Controllers
 {
@@ -39,7 +41,7 @@ namespace IDAProject.Web.Admin.Controllers
         {
             var responseModel = await _EmployeeViewTrackingsManager.SearchEmployeeViewTrackingsAsync(searchParams);
             return Json(responseModel.Payload);
-        }
+            }
 
         //[HttpGet("new/{Id}", Name = RouteNames.EmployeeViewTrackings_New)]
         //public async Task<IActionResult> NewEmployeeViewTrackingAsync(int Id)
@@ -68,6 +70,7 @@ namespace IDAProject.Web.Admin.Controllers
         public async Task<IActionResult> SaveEmployeeViewTrackingAsync([FromBody] SaveEmployeeViewTrackingRequestModel requestModel)
         {
             var user = GetCurrentUser();
+            requestModel.ViewedFrom = DateTime.Now;
             requestModel.ViewerEmployeeId = user.EmployeeId;
             var responseModel = await _EmployeeViewTrackingsManager.SaveEmployeeViewTrackingAsync(requestModel);
             if (responseModel.Valid)
@@ -82,6 +85,21 @@ namespace IDAProject.Web.Admin.Controllers
         {
             var user = GetCurrentUser();
             var responseModel = await _EmployeeViewTrackingsManager.DeleteEmployeeViewTrackingAsync(id, user.Id);
+            if (responseModel.Valid)
+            {
+                responseModel.Message = Url.RouteUrl(RouteNames.EmployeeViewTrackings_List, new { Id = "111" })!;
+            }
+            return Json(responseModel);
+        }
+
+        [HttpPost("hide", Name = RouteNames.EmployeeViewTrackings_Hide)]
+        public async Task<IActionResult> HideEmployeeViewTrackingFromHomePageAsync(SaveEmployeeViewTrackingRequestModel requestModel)
+        {
+            var user = GetCurrentUser();
+            var view = await _EmployeeViewTrackingsManager.GetEmployeeViewTrackingByIdAsync(requestModel.Id);
+            view.Payload.HideFromHomePage = true;
+            view.Payload.ViewedUntil = DateTime.Now;
+            var responseModel = await _EmployeeViewTrackingsManager.SaveEmployeeViewTrackingAsync(view.Payload);
             if (responseModel.Valid)
             {
                 responseModel.Message = Url.RouteUrl(RouteNames.EmployeeViewTrackings_List, new { Id = "111" })!;

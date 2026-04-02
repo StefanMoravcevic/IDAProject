@@ -1,0 +1,102 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.EmployeeJobTypeControls.EmployeeJobTypeControlViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Helpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@inject IStringLocalizer<SharedResources> localizer
+@{
+	var control = Model.EmployeeJobTypeControl;
+	var urlList = Url.RouteUrl(RouteNames.EmployeeJobTypeControls_List);
+
+}
+<div class="card">
+	<div class="card-body">
+		<div class="panel panel-primary">
+			<div class="row">
+				<div class="col-lg-12 col-md-12" id="controlContainer">
+					<div class="card">
+						<div class="card-header border-bottom">
+							<h4 class="mb-0">@localizer["Employe job type control basic info"]</h4>
+							<tms-input type="Hidden" name="Id" id="controlId" value="@control.Id" />
+						</div>
+						<div class="card-body p-0 task-edit-main">
+							<div class="row p-5 border-bottom">
+								<div class="col-sm-12 col-md-6 col-xl-3">
+									<tms-select name="EmployeeId"
+												id="EmployeeId"
+												options="@Model.Employees"
+												selected-option="@control.EmployeeId"
+												label="@localizer["Employee"]:"
+												empty-option-text="@localizer["Select employee"]..." />
+								</div>
+								<div class="col-sm-12 col-md-6 col-xl-3">
+									<tms-select name="JobTypeId"
+												id="JobTypeId"
+												options="@Model.JobTypes"
+												selected-option="@control.JobTypeId"
+												label="@localizer["Group"]:"
+												empty-option-text="@localizer["Select group"]..." />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="row p-5">
+					<div class="btn-list text-end">
+						<button class="btn btn-outline-danger" id="buttonCancel">@localizer["Cancel"]</button>
+						<button class="btn btn-primary" id="buttonSave">@localizer["Save"]</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section Styles {
+	<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+	<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+	<script type="text/javascript">
+
+		$(document).ready(function () {;
+			if (@Model.ReadOnly == 1) {
+				$("#controlContainer :input").prop("disabled", true);
+				$("#buttonSave").prop("disabled", true);
+			}
+
+			$("#buttonSave").click(function () {
+				var $inputsContainer = $("#controlContainer");
+
+				if (validateRequiredFields($inputsContainer, '@localizer["ValidationMsg"]')) {
+					var jsonData = serializeJSON($inputsContainer);
+
+					$.ajax({
+						url: "@Url.RouteUrl(RouteNames.EmployeeJobTypeControls_Save)",
+						method: "POST",
+						data: jsonData,
+						success: function (response) {
+							handleActionResponseMessage(response, function () {
+								location = response.message;
+							}, '@localizer["Error"]', '@localizer["SavedMsg"]');
+						}
+					});
+				}
+			});
+
+			$("#buttonCancel").click(function () {
+				document.location = '@urlList';
+			});
+
+			$("#EmployeeId").select2({});
+			$("#JobTypeId").select2({});
+		});
+	</script>
+}

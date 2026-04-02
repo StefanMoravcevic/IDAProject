@@ -356,20 +356,32 @@
             });
         }
         function loadEmployeesMatrix() {
+            const currentEmployeeId = @Model.User.EmployeeId;
 
             $.ajax({
-                url: "@Url.RouteUrl(RouteNames.Employees_Search)",
+                url: "@Url.RouteUrl(RouteNames.EmployeeJobTypeControls_Search)",
                 method: "POST",
-                success: function (data) {
+                data: { employeeId: currentEmployeeId },
+                success: function(jobTypeControls) {
 
-                    buildEmployeesMatrix(data);
+                    const allowedJobTypeIds = jobTypeControls.map(j => j.jobTypeId);
 
+                    $.ajax({
+                        url: "@Url.RouteUrl(RouteNames.Employees_Search)",
+                        method: "POST",
+                        data: { jobTypes : allowedJobTypeIds },
+                        success: function(employeesData) {
+                            buildEmployeesMatrix(employeesData);
+                        },
+                        error: function() {
+                            console.error("Greška pri učitavanju zaposlenih");
+                        }
+                    });
                 },
-                error: function () {
-                    console.error("Greška pri učitavanju zaposlenih");
+                error: function() {
+                    console.error("Greška pri učitavanju job type kontrole");
                 }
             });
-
         }
         function renderPlanPieChart(stats, canvasId) {
             const ctx = document.getElementById(canvasId)?.getContext('2d');
@@ -914,11 +926,9 @@
                 var $employeeRow = $(this);
                 selectedEmployeeId = $employeeRow.data('id');
 
-                // Obeleži selektovanog
                 $('#employeesMatrix .matrix-employee').removeClass('selected');
                 $employeeRow.addClass('selected');
 
-                // AJAX za dobijanje userId i prikaz slike
                 $.ajax({
                     url: '@Url.RouteUrl(RouteNames.Employees_Search)',
                     method: 'POST',
@@ -934,13 +944,13 @@
                     }
                 });
 
-                // --- ovde dodajemo save za IsBookmarked false ---
                 var payload = {
-                    ViewerEmployeeId: null, // backend popunjava
+                    ViewerEmployeeId: null,
                     IsBookmarked: false,
                     ViewedEmployeeId: selectedEmployeeId,
-                    ViewedFrom: new Date(),
-                    ViewedUntil: null
+                    ViewedFrom: null,
+                    ViewedUntil: null,
+                    HideFromHomePage : false
                 };
 
                 $.ajax({
@@ -1170,8 +1180,9 @@
                         ViewerEmployeeId: null, // backend popunjava
                         IsBookmarked : true,
                         ViewedEmployeeId: viewedEmployeeId,
-                        ViewedFrom: isChecked ? new Date() : null,
-                        ViewedUntil: !isChecked ? new Date() : null
+                        ViewedFrom: null,
+                        ViewedUntil: !isChecked ? new Date() : null,
+                        HideFromHomePage : false
                     };
 
                     $.ajax({

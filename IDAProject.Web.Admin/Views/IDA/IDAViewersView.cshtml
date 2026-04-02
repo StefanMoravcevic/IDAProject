@@ -1,0 +1,149 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.IDA.IDAViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Helpers;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using IDAProject.Web.Admin.Models.TagHelpers.Base;
+@using IDAProject.Web.Admin.TagHelpers.Base;
+@inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@{
+	ViewData["Title"] = "IDA Viewers";
+}
+<style>
+    #activityTable thead 
+        {
+            background-color: #FA690C;
+            color: white !important;
+        }
+    #activityTable thead tr th
+        {
+            color: white !important;
+            font-weight:800;
+        }
+    
+</style>
+
+<div class="container mt-2">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <!-- Card -->
+            <div class="card shadow-sm p-4" style="border: 2px solid red !important;">
+                <div class="card-body" id="container">
+                    <!-- Naslov -->
+                    <h5 class="card-title mb-4 text-center">
+                        @localizer["Choose employe to see which IDAs he followed"]
+                    </h5>
+
+                    <!-- Forma: select + date + radio -->
+                    <div class="d-flex justify-content-center align-items-start gap-3 flex-wrap">
+                        <div class="col-sm-12 col-md-4 col-xl-4">
+                            <tms-select name="EmployeeId"
+                                        id="EmployeeId"
+                                        options="@Model.Employees"
+                                        label="@localizer["Employees"]:"
+                                        empty-option-text="@localizer["Select employee"]..." />
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 col-xl-4">
+                            <tms-input type="Date" name="Date" id="Date" label="@localizer["Date"]" placeholder="@localizer["Select date"]..." />
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 col-xl-4">
+                            <div class="form-group">
+                                <label class="form-label text-muted">@localizer["Bookmarked"]?</label>
+                                <div class="d-flex align-items-center mt-2 gap-5">
+                                    <tms-input type="Radio" name="IsBookmarked" id="IsBookmarkedYes" value="true" label="@localizer["Yes"]" />
+                                    <tms-input type="Radio" name="IsBookmarked" id="IsBookmarkedNo" value="false" label="@localizer["No"]" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card shadow-sm p-4 mb-4" id="activityTableCard" style="display:none; border: 2px solid red !important; background-color: #fff;">
+            <div class="card-body">
+                <h5 class="card-title mb-3">@localizer["Employees view"]</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped mb-0" id="activityTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th>@localizer["Employees"]</th>
+                                <th>@localizer["Time"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Popuniće se kroz AJAX -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+     
+@section Styles {
+	<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+	<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+	<script type="text/javascript">
+        function loadTrackedEmployees() {
+            var $inputsContainer = $("#container");
+            var jsonData = serializeJSON($inputsContainer);
+
+            $.ajax({
+                url: '@Url.RouteUrl(RouteNames.EmployeeViewTrackings_Search)',
+                method: 'POST',
+                data: jsonData,
+                success: function(response) {
+                    let $tableBody = $('#activityTable tbody');
+                    $tableBody.empty();
+
+                    if (response && response.length) {
+                        response.forEach(e => {
+                            $tableBody.append(`
+                                <tr data-id="${e.viewedEmployeeId}" data-trackingid="${e.id}">
+                                    <td>${e.viewedEmployee}</td>
+                                    <td>${e.dateAndTimeFormatted || '-'}</td>
+                                </tr>
+                            `);
+                        });
+
+                        $('#activityTableCard').fadeIn();
+                    } else {
+                        $tableBody.append(`<tr><td colspan="2" class="text-center">Nema označenih zaposlenih.</td></tr>`);
+                        $('#activityTableCard').fadeIn();
+                    }
+                },
+                error: function(err) {
+                    console.error('Greška pri učitavanju označenih:', err);
+                }
+            });
+        }
+        $(document).ready(function () {
+           $("#EmployeeId").select2({});
+           function triggerLoad() {
+                var selectedEmployee = $('#EmployeeId').val();
+                var selectedDate = $('#Date').val();
+
+                if (selectedEmployee && selectedDate) {
+                    loadTrackedEmployees();
+                }
+            }
+
+            $(document).on('change', '#EmployeeId', triggerLoad);
+
+            // Date input: okida na blur
+            $(document).on('blur', '#Date', triggerLoad);
+
+            $(document).on('change', 'input[name="IsBookmarked"]', triggerLoad);
+        });
+    </script>
+}   

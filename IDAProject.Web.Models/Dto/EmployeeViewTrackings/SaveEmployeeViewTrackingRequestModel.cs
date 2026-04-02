@@ -14,6 +14,7 @@ public Int32? ViewedEmployeeId { get; set; }
 public DateTime? ViewedFrom { get; set; }
 public DateTime? ViewedUntil { get; set; }
         public bool IsBookmarked { get; set; }
+        public bool HideFromHomePage { get; set; }
 
     }
 }

@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using IDAProject.Web.Api.Models.Interfaces.Managers;
 using IDAProject.Web.Models.Dto.TasksPlannings;
 using IDAProject.Web.Models.General;
 using IDAProject.Web.Models.RequestModels.TasksPlannings;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IDAProject.Web.Api.Controllers
 {
@@ -21,6 +22,20 @@ namespace IDAProject.Web.Api.Controllers
         public async Task<ResponseModel<TasksPlanningDto>> GetTasksPlanningByIdAsync(int id)
         {
             var response = await _TasksPlanningsManager.GetTasksPlanningByIdAsync(id);
+            return response;
+        }
+        [HttpGet("stats/{employeeId}")]
+        public async Task<ResponseModel<EmployeePlanningStatsDto>> GetEmployeePlanningStatsAsync(int employeeId)
+        {
+            var response = await _TasksPlanningsManager.GetLast30DaysStats(employeeId);
+            return response;
+        }
+        [HttpGet("statsGeneric/{employeeId}/{from}/{to}")]
+        public async Task<ResponseModel<EmployeePlanningStatsDto>> GetEmployeePlanningStatsGenericAsync(int employeeId, string? from, string? to)
+        {
+            DateTime fromDate = DateTime.ParseExact(from, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            DateTime toDate = DateTime.ParseExact(to, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var response = await _TasksPlanningsManager.GetStatsGeneric(employeeId, fromDate, toDate);
             return response;
         }
 

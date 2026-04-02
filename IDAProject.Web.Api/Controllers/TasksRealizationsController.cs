@@ -1,10 +1,13 @@
+using System.Globalization;
 using IDAProject.Web.Api.Managers;
 using IDAProject.Web.Api.Models.Interfaces.Managers;
+using IDAProject.Web.Models.Dto.TasksPlannings;
 using IDAProject.Web.Models.Dto.TasksRealizations;
 using IDAProject.Web.Models.General;
 using IDAProject.Web.Models.General.Enums;
 using IDAProject.Web.Models.RequestModels.TasksRealizations;
 using Microsoft.AspNetCore.Mvc;
+using SixLabors.ImageSharp.ColorSpaces;
 
 namespace IDAProject.Web.Api.Controllers
 {
@@ -73,6 +76,21 @@ namespace IDAProject.Web.Api.Controllers
             if (TimeOnly.TryParse(requestModel.DurationFormatted, out var td))
                 requestModel.Duration = td;
             var response = await _TasksRealizationsManager.SaveTasksRealizationAsync(requestModel);
+            return response;
+        }
+
+        [HttpGet("stats/{employeeId}")]
+        public async Task<ResponseModel<EmployeeRealizationStatsDto>> GetEmployeeRealizationStatsAsync(int employeeId)
+        {
+            var response = await _TasksRealizationsManager.GetLast30DaysRealizationStats(employeeId);
+            return response;
+        }
+        [HttpGet("statsGeneric/{employeeId}/{from}/{to}")]
+        public async Task<ResponseModel<EmployeeRealizationStatsDto>> GetEmployeeRealizationStatsAsync(int employeeId, string? from, string? to)
+        {
+            DateTime fromDate = DateTime.ParseExact(from, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            DateTime toDate = DateTime.ParseExact(to, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var response = await _TasksRealizationsManager.GetGenericStats(employeeId, fromDate, toDate);
             return response;
         }
     }

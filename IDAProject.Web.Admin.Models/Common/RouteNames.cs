@@ -162,6 +162,7 @@
         public const string EmployeeViewTrackings_Edit = "EmployeeViewTrackings_Edit";
         public const string EmployeeViewTrackings_Save = "EmployeeViewTrackings_Save";
         public const string EmployeeViewTrackings_Delete = "EmployeeViewTrackings_Delete";
+        public const string EmployeeViewTrackings_Hide = "EmployeeViewTrackings_Hide";
 
         public const string IdaTasks_List = "IdaTasks_List";
         public const string IdaTasks_Search = "IdaTasks_Search";
@@ -190,6 +191,8 @@
         public const string TasksPlannings_Save = "TasksPlannings_Save";
         public const string TasksPlannings_Delete = "TasksPlannings_Delete";
         public const string TasksPlannings_GetById = "TasksPlannings_GetById";
+        public const string TasksPlannings_GetStatsByEmployeeId = "TasksPlannings_GetStatsByEmployeeId";
+        public const string TasksPlannings_GetStatsGenericByEmployeeId = "TasksPlannings_GetStatsGenericByEmployeeId";
 
 
         public const string TasksRealizations_List = "TasksRealizations_List";
@@ -198,6 +201,8 @@
         public const string TasksRealizations_Edit = "TasksRealizations_Edit";
         public const string TasksRealizations_Save = "TasksRealizations_Save";
         public const string TasksRealizations_Delete = "TasksRealizations_Delete";
+        public const string TasksRealizations_StatsByEmployeeId = "TasksRealizations_StatsByEmployeeId";
+        public const string TasksRealizations_GenericStatsByEmployeeId = "TasksRealizations_GenericStatsByEmployeeId";
 
 
         public const string TasksPlanningComments_List = "TasksPlanningComments_List";
@@ -217,9 +222,28 @@
         public const string TasksRealizationComments_Delete = "TasksRealizationComments_Delete";
         public const string TasksRealizationComments_Hide = "TasksRealizationComments_Hide";
 
+        public const string EmployeeJobTypeControls_List = "EmployeeJobTypeControls_List";
+        public const string EmployeeJobTypeControls_Search = "EmployeeJobTypeControls_Search";
+        public const string EmployeeJobTypeControls_New = "EmployeeJobTypeControls_New";
+        public const string EmployeeJobTypeControls_Edit = "EmployeeJobTypeControls_Edit";
+        public const string EmployeeJobTypeControls_Save = "EmployeeJobTypeControls_Save";
+        public const string EmployeeJobTypeControls_Delete = "EmployeeJobTypeControls_Delete";
+        public const string EmployeeJobTypeControls_View = "EmployeeJobTypeControls_View";
+
+        public const string EmployeeGoals_List = "EmployeeGoals_List";
+        public const string EmployeeGoals_Search = "EmployeeGoals_Search";
+        public const string EmployeeGoals_New = "EmployeeGoals_New";
+        public const string EmployeeGoals_Edit = "EmployeeGoals_Edit";
+        public const string EmployeeGoals_Save = "EmployeeGoals_Save";
+        public const string EmployeeGoals_Delete = "EmployeeGoals_Delete";
+        public const string EmployeeGoals_View = "EmployeeGoals_View";
+
+
         public const string IDA_Index = "IDA_Index";
         public const string IDA_OverviewIndex = "IDA_OverviewIndex";
         public const string IDA_IndexView = "IDA_IndexView";
+        public const string IDA_StatisticView = "IDA_StatisticView";
+        public const string IDA_Viewers = "IDA_Viewers";
         public const string IDA_PlanNewDay = "IDA_PlanNewDay";
 
 

@@ -1,10 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
+using IDAProject.Web.Admin.Managers;
 using IDAProject.Web.Admin.Models.Common;
 using IDAProject.Web.Admin.Models.Interfaces.Managers;
 using IDAProject.Web.Admin.Models.ViewModels.TasksRealizations;
 using IDAProject.Web.Models.Dto.TasksRealizations;
 using IDAProject.Web.Models.General.Enums;
 using IDAProject.Web.Models.RequestModels.TasksRealizations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IDAProject.Web.Admin.Controllers
 {
@@ -55,6 +56,19 @@ namespace IDAProject.Web.Admin.Controllers
 
             viewModel.User = GetCurrentUser();
             return View("EditTasksRealization", viewModel);
+        }
+        [HttpGet("stats/{employeeId}", Name = RouteNames.TasksRealizations_StatsByEmployeeId)]
+        public async Task<IActionResult> TasksRealizationsGetStatsByEmployeeId(int employeeId)
+        {
+            var responseModel = await _TasksRealizationsManager.GetLast30DaysRealizationStats(employeeId);
+            return Json(responseModel.Payload);
+        }
+        [HttpGet("statsGeneric/{employeeId}", Name = RouteNames.TasksRealizations_GenericStatsByEmployeeId)]
+        public async Task<IActionResult> TasksRealizationsGetGenericStatsByEmployeeId(int employeeId, [FromQuery] string? from = null,
+    [FromQuery] string? to = null)
+        {
+            var responseModel = await _TasksRealizationsManager.GetGenericStats(employeeId, from, to);
+            return Json(responseModel.Payload);
         }
 
         [HttpGet("edit/{id}", Name = RouteNames.TasksRealizations_Edit)]

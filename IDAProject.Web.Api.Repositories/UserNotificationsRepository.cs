@@ -48,7 +48,9 @@ namespace IDAProject.Web.Api.Repositories
                 DateTo = a.DateTo,
                 ForAllUsers = a.ForAllUsers,
                 Note = a.Note,
-                Sector = a.Sector.Name
+                Sector = a.Sector.Name,
+                JobTypeId = a.JobTypeId,
+                JobType = a.JobType.Name
 
             }).ToListAsync();
             return result;
