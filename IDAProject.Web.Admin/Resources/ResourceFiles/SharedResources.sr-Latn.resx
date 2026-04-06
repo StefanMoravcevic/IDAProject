@@ -144,6 +144,9 @@
   <data name="Add Activity" xml:space="preserve">
     <value>Dodaj aktivnost</value>
   </data>
+  <data name="Add new choise" xml:space="preserve">
+    <value>Dodaj novi izbor</value>
+  </data>
   <data name="Add project task" xml:space="preserve">
     <value>Dodaj projektni zadatak</value>
   </data>
@@ -302,6 +305,9 @@
   </data>
   <data name="CompanyInfo" xml:space="preserve">
     <value>Podaci o kompaniji</value>
+  </data>
+  <data name="Completed date" xml:space="preserve">
+    <value>Datum rešavanja</value>
   </data>
   <data name="Contacts" xml:space="preserve">
     <value>Kontakti</value>
@@ -666,6 +672,9 @@
   <data name="IP address" xml:space="preserve">
     <value>IP adresa</value>
   </data>
+  <data name="IsCompleted" xml:space="preserve">
+    <value>Završen</value>
+  </data>
   <data name="Items" xml:space="preserve">
     <value>Artikli</value>
   </data>
@@ -734,6 +743,18 @@
   </data>
   <data name="MobilePhone" xml:space="preserve">
     <value>Broj telefona</value>
+  </data>
+  <data name="My finished project tasks" xml:space="preserve">
+    <value>Moji rešeni projektni zadaci</value>
+  </data>
+  <data name="My finished tasks" xml:space="preserve">
+    <value>Moji rešeni zadaci</value>
+  </data>
+  <data name="My unfinished project tasks" xml:space="preserve">
+    <value>Moji nerešeni projektni zadaci</value>
+  </data>
+  <data name="My unfinished tasks" xml:space="preserve">
+    <value>Moji nerešeni zadaci</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Ime</value>
@@ -927,6 +948,9 @@
   <data name="Project" xml:space="preserve">
     <value>Projekat</value>
   </data>
+  <data name="Project task" xml:space="preserve">
+    <value>Projektni zadatak</value>
+  </data>
   <data name="Project tasks list" xml:space="preserve">
     <value>Lista projektnih zadataka</value>
   </data>
@@ -934,6 +958,9 @@
     <value>Projekti</value>
   </data>
   <data name="Projects and tasks overview" xml:space="preserve">
+    <value>Pregled projekata i zadataka</value>
+  </data>
+  <data name="Projects and tasks view" xml:space="preserve">
     <value>Pregled projekata i zadataka</value>
   </data>
   <data name="Quantity" xml:space="preserve">
@@ -1074,6 +1101,9 @@
   <data name="Select employee" xml:space="preserve">
     <value>Izaberite radnika</value>
   </data>
+  <data name="Select employee and task you want to follow" xml:space="preserve">
+    <value>Izaberite zaposlenog i zadatak koji želite da pratite</value>
+  </data>
   <data name="Select feature" xml:space="preserve">
     <value>Izaberite svojstvo</value>
   </data>
@@ -1112,6 +1142,9 @@
   </data>
   <data name="Select project" xml:space="preserve">
     <value>Izaberite projekat</value>
+  </data>
+  <data name="Select project you want to follow" xml:space="preserve">
+    <value>Izaberite projekat koji želite da pratite</value>
   </data>
   <data name="Select regular activity" xml:space="preserve">
     <value>Izaberite redovnu aktivnost</value>

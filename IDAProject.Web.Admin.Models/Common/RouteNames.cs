@@ -166,6 +166,8 @@
 
         public const string IdaTasks_List = "IdaTasks_List";
         public const string IdaTasks_Search = "IdaTasks_Search";
+        public const string IdaTasks_GetTasksByProjectId = "IdaTasks_GetTasksByProjectId";
+        public const string IdaTasks_GetTasksByTaskId = "IdaTasks_GetTasksByTaskId";
         public const string IdaTasks_New = "IdaTasks_New";
         public const string IdaTasks_Edit = "IdaTasks_Edit";
         public const string IdaTasks_GetByEmployeeId = "IdaTasks_GetByEmployeeId";
@@ -244,6 +246,7 @@
         public const string IDA_IndexView = "IDA_IndexView";
         public const string IDA_StatisticView = "IDA_StatisticView";
         public const string IDA_Viewers = "IDA_Viewers";
+        public const string IDA_ProjectsAndTasksView = "IDA_ProjectsAndTasksView";
         public const string IDA_PlanNewDay = "IDA_PlanNewDay";
 
 

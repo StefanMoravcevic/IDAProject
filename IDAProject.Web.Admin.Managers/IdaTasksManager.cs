@@ -55,5 +55,17 @@ namespace IDAProject.Web.Admin.Managers
 
             return result;
         }
+
+        public async Task<ResponseModelList<IdaTaskDto>> GetTasksByProjectAsync(int projectId)
+        {
+            var result = await GetAsync<ResponseModelList<IdaTaskDto>>($"api/IdaTasks/getTasksByProjectId/{projectId}");
+            return result;
+        }
+
+        public async Task<ResponseModelList<IdaTaskDto>> GetTaskByTaskIdAsync(int taskId)
+        {
+            var result = await GetAsync<ResponseModelList<IdaTaskDto>>($"api/IdaTasks/getTasksByTaskId/{taskId}");
+            return result;
+        }
     }
 }

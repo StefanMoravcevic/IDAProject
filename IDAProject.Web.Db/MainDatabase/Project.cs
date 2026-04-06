@@ -17,6 +17,8 @@ public partial class Project
 
     public bool IsCompleted { get; set; }
 
+    public DateTime? DueDate { get; set; }
+
     public virtual AspNetUser? DeletedByNavigation { get; set; }
 
     public virtual ICollection<IdaTask> IdaTasks { get; set; } = new List<IdaTask>();

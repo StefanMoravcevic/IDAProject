@@ -23,6 +23,18 @@ namespace IDAProject.Web.Api.Controllers
             var response = await _IdaTasksManager.GetIdaTaskByIdAsync(id);
             return response;
         }
+        [HttpGet("getTasksByProjectId/{projectId}")]
+        public async Task<ResponseModelList<IdaTaskDto>> GetTasksByProjectId(int projectId)
+        {
+            var response = await _IdaTasksManager.GetTasksByProjectAsync(projectId);
+            return response;
+        }
+        [HttpGet("getTasksByTaskId/{taskId}")]
+        public async Task<ResponseModelList<IdaTaskDto>> GetTasksByTaskId(int taskId)
+        {
+            var response = await _IdaTasksManager.GetTaskByTaskIdAsync(taskId);
+            return response;
+        }
 
         [HttpDelete("delete/{id}/{userId}")]
         public async Task<ResponseModelBase> DeleteIdaTaskAsync(int id, int? userId)

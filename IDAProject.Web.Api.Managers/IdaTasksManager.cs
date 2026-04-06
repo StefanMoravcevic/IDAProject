@@ -1,10 +1,11 @@
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using IDAProject.Web.Api.Models.Interfaces.Managers;
 using IDAProject.Web.Api.Models.Interfaces.Repositories;
+using IDAProject.Web.Db.MainDatabase;
 using IDAProject.Web.Models.Dto.IdaTasks;
 using IDAProject.Web.Models.General;
 using IDAProject.Web.Models.RequestModels.IdaTasks;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace IDAProject.Web.Api.Managers
 {
@@ -86,6 +87,40 @@ namespace IDAProject.Web.Api.Managers
             {
                 result.Message = e.Message;
                 var reqModel = JsonConvert.SerializeObject(requestModel);
+                _logger.LogError(e, $"request model: {reqModel}");
+            }
+            return result;
+        }
+
+        public async Task<ResponseModelList<IdaTaskDto>> GetTasksByProjectAsync(int projectId)
+        {
+            var result = new ResponseModelList<IdaTaskDto>();
+            try
+            {
+                result.Payload = await _IdaTasksRepository.GetTasksByProjectAsync(projectId);
+                result.Valid = true;
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                var reqModel = JsonConvert.SerializeObject(projectId);
+                _logger.LogError(e, $"request model: {reqModel}");
+            }
+            return result;
+        }
+
+        public async Task<ResponseModelList<IdaTaskDto>> GetTaskByTaskIdAsync(int taskId)
+        {
+            var result = new ResponseModelList<IdaTaskDto>();
+            try
+            {
+                result.Payload = await _IdaTasksRepository.GetTaskByTaskIdAsync(taskId);
+                result.Valid = true;
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                var reqModel = JsonConvert.SerializeObject(taskId);
                 _logger.LogError(e, $"request model: {reqModel}");
             }
             return result;

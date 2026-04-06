@@ -832,6 +832,7 @@ public partial class IdaContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK_Tasks");
 
+            entity.Property(e => e.CompletedDate).HasColumnType("datetime");
             entity.Property(e => e.DeletedDate).HasColumnType("datetime");
             entity.Property(e => e.Description).HasMaxLength(200);
             entity.Property(e => e.DueDate).HasColumnType("datetime");
@@ -1147,6 +1148,7 @@ public partial class IdaContext : DbContext
         {
             entity.Property(e => e.DeletedDate).HasColumnType("datetime");
             entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.DueDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.DeletedBy)

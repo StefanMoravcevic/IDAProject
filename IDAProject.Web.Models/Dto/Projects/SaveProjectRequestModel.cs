@@ -9,8 +9,10 @@ namespace IDAProject.Web.Models.Dto.Projects
     public class SaveProjectRequestModel
     {
         public Int32 Id { get; set; }
-public String Description { get; set; }
+public String? Description { get; set; }
 public Boolean IsCompleted { get; set; }
+
+        public DateTime? DueDate { get; set; }
 
     }
 }

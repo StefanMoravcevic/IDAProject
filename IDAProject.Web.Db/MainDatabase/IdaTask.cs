@@ -25,6 +25,8 @@ public partial class IdaTask
 
     public int? UserId { get; set; }
 
+    public DateTime? CompletedDate { get; set; }
+
     public virtual AspNetUser? DeletedByNavigation { get; set; }
 
     public virtual Project? Project { get; set; }

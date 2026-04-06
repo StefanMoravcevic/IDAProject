@@ -42,8 +42,21 @@ namespace IDAProject.Web.Admin.Controllers
             return Json(responseModel.Payload);
         }
 
+        [HttpGet("getTasksByProjectId/{projectId}", Name = RouteNames.IdaTasks_GetTasksByProjectId)]
+        public async Task<IActionResult> GetTasksByProjectId(int projectId)
+        {
+            var responseModel = await _IdaTasksManager.GetTasksByProjectAsync(projectId);
+            return Json(responseModel.Payload);
+        }
+        [HttpGet("getTasksByTaskId/{taskId}", Name = RouteNames.IdaTasks_GetTasksByTaskId)]
+        public async Task<IActionResult> GetTasksByTaskId(int taskId)
+        {
+            var responseModel = await _IdaTasksManager.GetTaskByTaskIdAsync(taskId);
+            return Json(responseModel.Payload);
+        }
+
         [HttpGet("new", Name = RouteNames.IdaTasks_New)]
-        public async Task<IActionResult> NewIdaTaskAsync()
+        public async Task<IActionResult> NewIdaTaskAsync()      
         {
             var viewModel = new IdaTaskViewModel();
 

@@ -100,6 +100,7 @@ namespace IDAProject.Web.Admin.Controllers
                     {
                         var taskId = await _idaTasksManager.GetIdaTaskByIdAsync(requestModel.IdaTaskId.Value);
                         taskId.Payload.IsCompleted = true;
+                        taskId.Payload.CompletedDate = DateTime.Now;
                         await _idaTasksManager.SaveIdaTaskAsync(taskId.Payload);
                     }
                 }

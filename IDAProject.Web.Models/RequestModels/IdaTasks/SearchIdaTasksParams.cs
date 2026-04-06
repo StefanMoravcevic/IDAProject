@@ -14,6 +14,7 @@ namespace IDAProject.Web.Models.RequestModels.IdaTasks
         public bool? IsCompleted { get; set; }
         public int? ProjectId { get; set; }
         public int? UserId { get; set; }
+        public int? EmployeeId { get; set; }
         //<<SearchParams>>
     }
 }

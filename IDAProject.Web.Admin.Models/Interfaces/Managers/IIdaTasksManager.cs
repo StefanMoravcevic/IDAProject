@@ -12,6 +12,8 @@ namespace IDAProject.Web.Admin.Models.Interfaces.Managers
         Task<ResponseModelBase> DeleteIdaTaskAsync(int id, int? userId);
         Task<ResponseModel<int>> SaveIdaTaskAsync(SaveIdaTaskRequestModel requestModel);
         Task<IEnumerable<ISelectOption>> GetUncompletedTasks(bool hasProjectId, int userId);
+        Task<ResponseModelList<IdaTaskDto>> GetTasksByProjectAsync(int projectId);
+        Task<ResponseModelList<IdaTaskDto>> GetTaskByTaskIdAsync(int taskId);
     }
 }
 

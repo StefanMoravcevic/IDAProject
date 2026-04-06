@@ -1326,4 +1326,37 @@
   <data name="Previous month" xml:space="preserve">
     <value>Претходни месец</value>
   </data>
+  <data name="My finished project tasks" xml:space="preserve">
+    <value>Моји решени пројектни задаци</value>
+  </data>
+  <data name="My finished tasks" xml:space="preserve">
+    <value>Моји решени задаци</value>
+  </data>
+  <data name="My unfinished project tasks" xml:space="preserve">
+    <value>Моји нерешени пројектни задаци</value>
+  </data>
+  <data name="My unfinished tasks" xml:space="preserve">
+    <value>Моји нерешени задаци</value>
+  </data>
+  <data name="Projects and tasks view" xml:space="preserve">
+    <value>Преглед пројеката и задатака</value>
+  </data>
+  <data name="Completed date" xml:space="preserve">
+    <value>Датум решавања</value>
+  </data>
+  <data name="Project task" xml:space="preserve">
+    <value>Projektni zadatak</value>
+  </data>
+  <data name="Add new choise" xml:space="preserve">
+    <value>Додај нови избор</value>
+  </data>
+  <data name="IsCompleted" xml:space="preserve">
+    <value>Завршен</value>
+  </data>
+  <data name="Select employee and task you want to follow" xml:space="preserve">
+    <value>Изаберите запосленог и задатак који желите да пратите</value>
+  </data>
+  <data name="Select project you want to follow" xml:space="preserve">
+    <value>Изаберите пројекат који желите да пратите</value>
+  </data>
 </root>

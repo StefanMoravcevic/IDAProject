@@ -56,6 +56,10 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.UserId == searchParams.UserId);
                 }
+                if (searchParams.EmployeeId.HasValue)
+                {
+                    query = query.Where(x => x.User.EmployeeId == searchParams.EmployeeId);
+                }
             }
 
             result = await query.Select(a => new IdaTaskDto
@@ -67,7 +71,8 @@ namespace IDAProject.Web.Api.Repositories
                 Name = a.Name,
                 ProjectId = a.ProjectId,
                 Project = a.Project.Description,
-                UserId = a.UserId
+                UserId = a.UserId,
+                CompletedDate = a.CompletedDate
 
             }).ToListAsync();
             return result;
@@ -102,6 +107,72 @@ namespace IDAProject.Web.Api.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<List<IdaTaskDto>> GetTasksByProjectAsync(int projectId)
+        {
+            var query = _dbContext.IdaTasks
+                .Where(t => t.IsDeleted == false && t.ProjectId == projectId)
+                .Include(t => t.User)
+                .Include(t => t.Project)   
+                .Include(t => t.TasksPlannings)
+                .Include(t => t.TasksRealizations)
+                .AsQueryable();
+
+            var result = await query
+                .Select(t => new IdaTaskDto
+                {
+                    Id = t.Id,
+                    Description = t.Description,
+                    DueDate = t.DueDate,
+                    IsCompleted = t.IsCompleted,
+                    Name = t.Name,
+                    ProjectId = t.ProjectId,
+                    Project = t.Project.Description,
+                    UserId = t.UserId,
+                    Employee = t.User.Employee.Name + " " + t.User.Employee.Surname,
+                    CompletedDate = t.CompletedDate,
+                    Activity = t.TasksPlannings.FirstOrDefault().ActivityName,
+                    Report = t.TasksRealizations.FirstOrDefault().Report,
+                    Status = t.TasksPlannings.FirstOrDefault().PlanStatus.Name,
+                    //ProjectDueDate = t.Project.DueDate,
+                    PlanDate = t.TasksPlannings.FirstOrDefault().PlanDate
+                })
+                .ToListAsync();
+
+            return result;
+        }
+        public async Task<List<IdaTaskDto>> GetTaskByTaskIdAsync(int taskId)
+        {
+            var query = _dbContext.IdaTasks
+                .Where(t => t.IsDeleted == false && t.Id == taskId)
+                .Include(t => t.User)
+                .Include(t => t.Project)   
+                .Include(t => t.TasksPlannings)
+                .Include(t => t.TasksRealizations)
+                .AsQueryable();
+
+            var result = await query
+                .Select(t => new IdaTaskDto
+                {
+                    Id = t.Id,
+                    Description = t.Description,
+                    DueDate = t.DueDate,
+                    IsCompleted = t.IsCompleted,
+                    Name = t.Name,
+                    ProjectId = t.ProjectId,
+                    Project = t.Project.Description,
+                    UserId = t.UserId,
+                    Employee = t.User.Employee.Name + " " + t.User.Employee.Surname,
+                    CompletedDate = t.CompletedDate,
+                    Activity = t.TasksPlannings.FirstOrDefault().ActivityName,
+                    Report = t.TasksRealizations.FirstOrDefault().Report,
+                    Status = t.TasksPlannings.FirstOrDefault().PlanStatus.Name,
+                    //ProjectDueDate = t.Project.DueDate,
+                    PlanDate = t.TasksPlannings.FirstOrDefault().PlanDate
+                })
+                .ToListAsync();
+
+            return result;
+        }
     }
 }
-    
+        

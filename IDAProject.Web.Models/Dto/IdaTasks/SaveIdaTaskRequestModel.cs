@@ -16,5 +16,7 @@ public Int32? ProjectId { get; set; }
 public Boolean IsCompleted { get; set; }
         public int? UserId { get; set; }
 
+        public DateTime? CompletedDate { get; set; }
+
     }
 }
