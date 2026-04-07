@@ -35,6 +35,8 @@ namespace IDAProject.Web.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var viewModel = new EmployeeGoalsViewModel(_localizer);
+            viewModel.Employees = await _employeesManager.GetEmployeesAsSelectOptionsAsync();
+            viewModel.Years = await _masterDataManager.GetSelectOptionsByTableAsync("Years", "Year1");
             await UpdateNavigationWithAjaxTableViewModel(viewModel, _masterDataManager, "EmployeeGoals");
             return View(viewModel);
         }

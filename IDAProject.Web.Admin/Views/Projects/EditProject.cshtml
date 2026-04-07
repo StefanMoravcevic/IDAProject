@@ -1,0 +1,90 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Projects.ProjectViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Helpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@inject IStringLocalizer<SharedResources> localizer
+@{
+	var project = Model.Project;
+	var urlList = Url.RouteUrl(RouteNames.Projects_List);
+
+}
+<div class="card">
+	<div class="card-body">
+		<div class="panel panel-primary">
+			<div class="row">
+				<div class="col-lg-12 col-md-12" id="projectContainer">
+					<div class="card">
+						<div class="card-header border-bottom">
+							<h4 class="mb-0">@localizer["Project basic info"]</h4>
+							<tms-input type="Hidden" name="Id" id="projectId" value="@project.Id" />
+						</div>
+						<div class="card-body p-0 task-edit-main">
+							<div class="row p-5 border-bottom">
+								<div class="col-sm-12 col-md-12 col-xl-9 col-lg-9">
+									<div class="form-group">
+										<label class="form-label text-muted" for="Description">@localizer["Name"]:</label>
+										<div class="input-group">
+											<textarea name="Description" class="form-control text-dark" id="Description" style="height:120px;">@project.Description</textarea>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12 col-md-4 col-xl-3">
+									<tms-input type="Date" name="DueDate" id="DueDateId" value="@project.DueDate!" label="@localizer["Due Date"]" placeholder="@localizer["Enter due date"]" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="row p-5">
+					<div class="btn-list text-end">
+						<button class="btn btn-outline-danger" id="buttonCancel">@localizer["Cancel"]</button>
+						<button class="btn btn-primary" id="buttonSave">@localizer["Save"]</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section Styles {
+	<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+	<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+	<script type="text/javascript">
+
+		$(document).ready(function () {
+
+			$("#buttonSave").click(function () {
+				var $inputsContainer = $("#projectContainer");
+
+				if (validateRequiredFields($inputsContainer, '@localizer["ValidationMsg"]')) {
+					var jsonData = serializeJSON($inputsContainer);
+
+					$.ajax({
+						url: "@Url.RouteUrl(RouteNames.Projects_Save)",
+						method: "POST",
+						data: jsonData,
+						success: function (response) {
+							handleActionResponseMessage(response, function () {
+								location = response.message;
+							}, '@localizer["Error"]', '@localizer["SavedMsg"]');
+						}
+					});
+				}
+			});
+
+			$("#buttonCancel").click(function () {
+				document.location = '@urlList';
+			});
+		});
+	</script>
+}

@@ -17,6 +17,8 @@ public partial class JobType
 
     public virtual AspNetUser? DeletedByNavigation { get; set; }
 
+    public virtual ICollection<EmployeeAbsence> EmployeeAbsences { get; set; } = new List<EmployeeAbsence>();
+
     public virtual ICollection<EmployeeJobTypeControl> EmployeeJobTypeControls { get; set; } = new List<EmployeeJobTypeControl>();
 
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();

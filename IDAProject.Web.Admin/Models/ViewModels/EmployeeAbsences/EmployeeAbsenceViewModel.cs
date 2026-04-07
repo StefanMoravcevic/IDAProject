@@ -14,6 +14,7 @@ namespace IDAProject.Web.Admin.Models.ViewModels.EmployeeAbsences
         public List<EmployeeAbsenceDto> EmployeeAbsences { get; set; }
         public IEnumerable<ISelectOption> AbsenceTypes { get; set; }
         public int? EmployeeId { get; set; }
+        public int? JobTypeId { get; set; }
 
     }
 }

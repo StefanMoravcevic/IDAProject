@@ -5,6 +5,7 @@ using IDAProject.Web.Admin.Models.ViewModels.Projects;
 using IDAProject.Web.Models.Dto.Projects;
 using IDAProject.Web.Models.General.Enums;
 using IDAProject.Web.Models.RequestModels.Projects;
+using Microsoft.Extensions.Localization;
 
 namespace IDAProject.Web.Admin.Controllers
 {
@@ -13,25 +14,25 @@ namespace IDAProject.Web.Admin.Controllers
     {
         private readonly IProjectsManager _ProjectsManager;
         private readonly IMasterDataManager _masterDataManager;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public ProjectsController(
             ILogger<ProjectsController> logger,
             IAccountManager accountManager,
+            IStringLocalizer<SharedResources> localizer,
             IProjectsManager ProjectsManager,
             IMasterDataManager masterDataManager)
             : base(accountManager, logger)
         {
             _ProjectsManager = ProjectsManager;
             _masterDataManager = masterDataManager;
+            _localizer = localizer;
         }
         [HttpGet("ProjectsList", Name = RouteNames.Projects_List)]
         public async Task<IActionResult> Index()
         {
-            var viewModel = new ProjectsViewModel();
+            var viewModel = new ProjectsViewModel(_localizer);
             await UpdateNavigationWithAjaxTableViewModel(viewModel, _masterDataManager, "Projects");
-            //var responseModel = await _ProjectsManager.SearchProjectsAsync();
-            //viewModel = Projects.Payload;
-            //return Json(responseModel.Payload);
             return View(viewModel);
         }
 
@@ -42,8 +43,8 @@ namespace IDAProject.Web.Admin.Controllers
             return Json(responseModel.Payload);
         }
 
-        [HttpGet("new/{Id}", Name = RouteNames.Projects_New)]
-        public async Task<IActionResult> NewProjectAsync(int Id)
+        [HttpGet("new", Name = RouteNames.Projects_New)]
+        public async Task<IActionResult> NewProjectAsync()
         {
             var viewModel = new ProjectViewModel();
 
@@ -51,7 +52,7 @@ namespace IDAProject.Web.Admin.Controllers
             return View("EditProject", viewModel);
         }
 
-        [HttpGet("edit/{id}", Name = RouteNames.Projects_Edit)]
+        [HttpGet("edit", Name = RouteNames.Projects_Edit)]
         public async Task<IActionResult> EditProjectAsync(int id)
         {
             var viewModel = new ProjectViewModel();
@@ -64,7 +65,6 @@ namespace IDAProject.Web.Admin.Controllers
             return View("EditProject", viewModel);
         }
 
-        //controller method for saving Project
         [HttpPost("save", Name = RouteNames.Projects_Save)]
         public async Task<IActionResult> SaveProjectAsync(SaveProjectRequestModel requestModel)
         {

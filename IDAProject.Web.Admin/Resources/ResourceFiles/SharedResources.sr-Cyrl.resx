@@ -1350,6 +1350,9 @@
   <data name="Add new choise" xml:space="preserve">
     <value>Додај нови избор</value>
   </data>
+  <data name="Bookmarked employees without plan for next day" xml:space="preserve">
+    <value>Означени запослени без плана за следећи дан</value>
+  </data>
   <data name="IsCompleted" xml:space="preserve">
     <value>Завршен</value>
   </data>
@@ -1358,5 +1361,20 @@
   </data>
   <data name="Select project you want to follow" xml:space="preserve">
     <value>Изаберите пројекат који желите да пратите</value>
+  </data>
+  <data name="Employees on work trip" xml:space="preserve">
+    <value>Запослени на службеном путу</value>
+  </data>
+  <data name="Absence basic info" xml:space="preserve">
+    <value>Основне информације о одсуству</value>
+  </data>
+  <data name="Enter due date" xml:space="preserve">
+    <value>Унесите рок</value>
+  </data>
+  <data name="Project basic info" xml:space="preserve">
+    <value>Основне информације о пројекту</value>
+  </data>
+  <data name="Search for task name" xml:space="preserve">
+    <value>Претражите по имену пројекта</value>
   </data>
 </root>

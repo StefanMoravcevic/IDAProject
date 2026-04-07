@@ -1295,6 +1295,9 @@
   <data name="Add new choise" xml:space="preserve">
     <value>Add new choise</value>
   </data>
+  <data name="Bookmarked employees without plan for next day" xml:space="preserve">
+    <value>Bookmarked employees without plan for next day</value>
+  </data>
   <data name="IsCompleted" xml:space="preserve">
     <value>IsCompleted</value>
   </data>
@@ -1303,5 +1306,20 @@
   </data>
   <data name="Select project you want to follow" xml:space="preserve">
     <value>Select project you want to follow</value>
+  </data>
+  <data name="Employees on work trip" xml:space="preserve">
+    <value>Employees on work trip</value>
+  </data>
+  <data name="Absence basic info" xml:space="preserve">
+    <value>Absence basic info</value>
+  </data>
+  <data name="Enter due date" xml:space="preserve">
+    <value>Enter due date</value>
+  </data>
+  <data name="Project basic info" xml:space="preserve">
+    <value>Project basic info</value>
+  </data>
+  <data name="Search for task name" xml:space="preserve">
+    <value>Search for task name</value>
   </data>
 </root>

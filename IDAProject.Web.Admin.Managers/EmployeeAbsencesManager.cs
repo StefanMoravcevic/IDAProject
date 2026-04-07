@@ -35,7 +35,7 @@ namespace IDAProject.Web.Admin.Managers
 
         public async Task<ResponseModel<int>> SaveEmployeeAbsenceAsync(SaveEmployeeAbsenceRequestModel requestModel)
         {
-            var result = await PostAsync<SaveEmployeeAbsenceRequestModel, ResponseModel<int>>($"api/EmployeeAbsences", requestModel);
+            var result = await PostAsync<SaveEmployeeAbsenceRequestModel, ResponseModel<int>>($"api/EmployeeAbsences/save", requestModel);
             return result;
         }
     }

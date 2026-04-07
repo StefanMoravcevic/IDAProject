@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using IDAProject.Web.Api.Models.Interfaces.Managers;
 using IDAProject.Web.Models.Dto.EmployeeAbsences;
 using IDAProject.Web.Models.General;
@@ -11,10 +11,12 @@ namespace IDAProject.Web.Api.Controllers
     public class EmployeeAbsencesController : ControllerBase
     {
         private readonly IEmployeeAbsencesManager _EmployeeAbsencesManager;
+        private readonly IEmployeesManager _employeesManager;
 
-        public EmployeeAbsencesController(IEmployeeAbsencesManager EmployeeAbsencesManager)
+        public EmployeeAbsencesController(IEmployeeAbsencesManager EmployeeAbsencesManager, IEmployeesManager employeesManager)
         {
             _EmployeeAbsencesManager = EmployeeAbsencesManager;
+            _employeesManager = employeesManager;
         }
 
         [HttpGet("{id}")]
@@ -38,7 +40,7 @@ namespace IDAProject.Web.Api.Controllers
             return response;
         }
 
-        [HttpPost]
+        [HttpPost("save")]
         public async Task<ResponseModel<int>> SaveEmployeeAbsenceAsync(SaveEmployeeAbsenceRequestModel requestModel)
         {
             if (TimeOnly.TryParse(requestModel.TimeFromFormatted, out var tf))
@@ -46,6 +48,38 @@ namespace IDAProject.Web.Api.Controllers
 
             if (TimeOnly.TryParse(requestModel.TimeToFormatted, out var tt))
                 requestModel.TimeTo = tt;
+
+            // 🔴 ADMIN MODE
+            if (requestModel.IsFromAdmin == true && requestModel.JobTypeId.HasValue)
+            {
+                var employees = await _employeesManager.SearchEmployeesAsync(new Web.Models.RequestModels.Employees.SearchEmployeesParams { JobTypeId = requestModel.JobTypeId });
+
+                foreach (var employee in employees.Payload)
+                {
+                    var newRequest = new SaveEmployeeAbsenceRequestModel
+                    {
+                        EmployeeId = employee.Id,
+                        AbsenceTypeId = requestModel.AbsenceTypeId,
+                        DateFrom = requestModel.DateFrom,
+                        DateTo = requestModel.DateTo,
+                        TimeFrom = requestModel.TimeFrom,
+                        TimeTo = requestModel.TimeTo,
+                        AllDay = requestModel.AllDay,
+                        JobTypeId = requestModel.JobTypeId,
+                        Comment = requestModel.Comment
+                    };
+
+                    await _EmployeeAbsencesManager.SaveEmployeeAbsenceAsync(newRequest);
+                }
+
+                return new ResponseModel<int>
+                {
+                    Valid = true,
+                    Message = "Absence saved for all employees in selected job type."
+                };
+            }
+
+            // 🟢 NORMAL MODE
             var response = await _EmployeeAbsencesManager.SaveEmployeeAbsenceAsync(requestModel);
             return response;
         }

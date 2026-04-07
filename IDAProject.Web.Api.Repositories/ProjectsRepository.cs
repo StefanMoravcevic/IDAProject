@@ -37,12 +37,19 @@ namespace IDAProject.Web.Api.Repositories
             }
             else
             {
-                throw new System.NotImplementedException();     
+                if (!string.IsNullOrEmpty(searchParams.Keyword))
+                {
+                    var pattern = $"%{searchParams.Keyword}%";
+                    query = query.Where(x =>
+                    EF.Functions.Like(x.Description, pattern));
+                }
             }
 
             result = await query.Select(a => new ProjectDto
             {
-                Id = a.Id
+                Id = a.Id,
+                Description = a.Description,
+                DueDate = a.DueDate
 
             }).ToListAsync();
             return result;

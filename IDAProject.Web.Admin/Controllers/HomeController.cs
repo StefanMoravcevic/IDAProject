@@ -59,6 +59,7 @@ namespace IDAProject.Web.Admin.Controllers
             viewModel.EmployeeId = user.EmployeeId;
             viewModel.EmployeeJobTypeId = employeeJobTypeId;
             viewModel.Today = DateTime.Now.ToString("dd.MM.yyyy");
+            viewModel.TodayDate = DateTime.Now;
             return View(viewModel);
         }
 

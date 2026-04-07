@@ -1,9 +1,10 @@
-using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using IDAProject.Web.Api.Models.Interfaces.Repositories;
 using IDAProject.Web.Db.MainDatabase;
 using IDAProject.Web.Helpers;
 using IDAProject.Web.Models.Dto.EmployeeViewTrackings;
 using IDAProject.Web.Models.RequestModels.EmployeeViewTrackings;
+using Microsoft.EntityFrameworkCore;
 
 namespace IDAProject.Web.Api.Repositories
 {
@@ -97,6 +98,59 @@ namespace IDAProject.Web.Api.Repositories
             dbRecord.DeletedDate = DateTime.Now;
             _dbContext.EmployeeViewTrackings.Update(dbRecord);
             await _dbContext.SaveChangesAsync();
+        }
+
+        private DateTime GetNextWorkingDay()
+        {
+            var today = DateTime.Today;
+            var nextDay = today.AddDays(1);
+
+            if (today.DayOfWeek == DayOfWeek.Friday)
+                nextDay = today.AddDays(3);
+            else if (today.DayOfWeek == DayOfWeek.Saturday)
+                nextDay = today.AddDays(2);
+
+            return nextDay;
+        }
+
+        public async Task<List<EmployeeViewTrackingDto>> GetBookmarkedEmployeesWithoutPlanNextWorkingDayAsync(List<int> bookmarkedEmployeeIds)
+        {
+            if (bookmarkedEmployeeIds == null || !bookmarkedEmployeeIds.Any())
+                return new List<EmployeeViewTrackingDto>();
+
+            var nextWorkingDay = GetNextWorkingDay();
+
+            // 1?? Prvo u?itamo iz baze sve zapise koji zadovoljavaju filter
+            var employeeTrackings = await _dbContext.EmployeeViewTrackings
+                .Where(ev => bookmarkedEmployeeIds.Contains(ev.ViewedEmployeeId.Value) && !ev.IsDeleted)
+                .Where(ev => !_dbContext.TasksPlannings
+                    .Any(tp => tp.User.EmployeeId == ev.ViewedEmployeeId
+                               && tp.PlanDate.HasValue
+                               && tp.PlanDate.Value.Date == nextWorkingDay
+                               && !tp.IsDeleted))
+                .Include(ev => ev.ViewedEmployee) // obavezno Include za navigaciono svojstvo
+                .ToListAsync();
+
+            // 2?? Grupisanje po ViewedEmployeeId da uklonimo duplikate
+            var distinctEmployees = employeeTrackings
+                .GroupBy(ev => ev.ViewedEmployeeId)
+                .Select(g => g.First())
+                .ToList();
+
+            // 3?? Mapiranje u DTO
+            var result = distinctEmployees.Select(a => new EmployeeViewTrackingDto
+            {
+                Id = a.Id,
+                ViewedEmployeeId = a.ViewedEmployeeId,
+                ViewedFrom = a.ViewedFrom,
+                ViewedUntil = a.ViewedUntil,
+                ViewerEmployeeId = a.ViewerEmployeeId,
+                ViewedEmployee = a.ViewedEmployee.Name + " " + a.ViewedEmployee.Surname,
+                IsBookmarked = a.IsBookmarked,
+                HideFromHomePage = a.HideFromHomePage
+            }).ToList();
+
+            return result;
         }
 
     }

@@ -15,6 +15,8 @@ namespace IDAProject.Web.Models.Dto.EmployeeAbsences
         #region Basic data
 
         public string? AbsenceType { get; set; }
+        public string? Group { get; set; }
+        public string? Employee { get; set; }
 
         public string? DateFromFormatted
         {
@@ -28,11 +30,12 @@ namespace IDAProject.Web.Models.Dto.EmployeeAbsences
 
         public string? TimeFromForTableFormatted
         {
-            get { return TimeFrom.Value.ToString("HH:mm"); }
+            get { return TimeFrom.HasValue ? TimeFrom.Value.ToString("HH:mm") : null; }
         }
+
         public string? TimeToForTableFormatted
         {
-            get { return TimeTo.Value.ToString("HH:mm"); }
+            get { return TimeTo.HasValue ? TimeTo.Value.ToString("HH:mm") : null; }
         }
 
         #endregion

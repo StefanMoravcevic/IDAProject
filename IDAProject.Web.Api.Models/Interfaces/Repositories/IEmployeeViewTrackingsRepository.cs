@@ -9,6 +9,7 @@ namespace IDAProject.Web.Api.Models.Interfaces.Repositories
         Task<EmployeeViewTrackingDto> GetEmployeeViewTrackingByIdAsync(int id);
         Task<int> SaveEmployeeViewTrackingAsync(SaveEmployeeViewTrackingRequestModel requestModel);
         Task<List<EmployeeViewTrackingDto>> SearchEmployeeViewTrackingsAsync(SearchEmployeeViewTrackingsParams searchParams);
+        Task<List<EmployeeViewTrackingDto>> GetBookmarkedEmployeesWithoutPlanNextWorkingDayAsync(List<int> bookmarkedEmployeeIds);
         Task DeleteEmployeeViewTrackingAsync(int id, int? userId);
     }
 }

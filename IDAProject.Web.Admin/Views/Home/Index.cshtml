@@ -437,6 +437,43 @@
         </div>
     </div>
 </div>
+<div class="container-fluid mt-3">
+    <div class="row">
+
+        <!-- Leva tabela: Bookmarked employees without plan -->
+        <div class="col-md-6">
+            <div class="card" style="border:2px solid #eb3838 !important;">
+                <div class="card-header" style="background-color:#F2220F; color:white; font-weight:900; font-size:17px; cursor:pointer;"
+                     data-bs-toggle="collapse" data-bs-target="#collapseEmployeesWithoutPlan" aria-expanded="true" aria-controls="collapseEmployeesWithoutPlan">
+                    @localizer["Bookmarked employees without plan for next day"]
+                </div>
+                <div id="collapseEmployeesWithoutPlan" class="collapse show">
+                    <div class="card-body p-3">
+                        <div id="employeesWithoutPlanList">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desna tabela: Employees on work trip -->
+        <div class="col-md-6">
+            <div class="card" style="border:2px solid #eb3838 !important;">
+                <div class="card-header" style="background-color:#F2220F; color:white; font-weight:900; font-size:17px; cursor:pointer;"
+                     data-bs-toggle="collapse" data-bs-target="#collapseEmployeesOnRoadTrip" aria-expanded="true" aria-controls="collapseEmployeesOnRoadTrip">
+                    @localizer["Employees on work trip"]
+                </div>
+                <div id="collapseEmployeesOnRoadTrip" class="collapse show">
+                    <div class="card-body p-3">
+                        <div id="employeesOnRoadTrip">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 <div class="modal fade" id="personalGoalsModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -466,6 +503,117 @@
 <script>
     let planPieChart;
     let realizationPieChart;
+
+    function loadEmployeesOnRoadTrip(searchParams) {
+
+        var employeeId = @Model.User.EmployeeId;
+        var jobTypeId = @Model.EmployeeJobTypeId;
+
+        $.ajax({
+            url: '@Url.RouteUrl(RouteNames.EmployeeAbsences_Search)',
+            type: 'POST',
+            data: {
+                jobTypeId: jobTypeId,
+                isFromHomePage: true,
+                absenceTypeId: 6
+            },
+            success: function (data) {
+
+                if (data && data.length > 0) {
+
+                    // ✅ izbaci trenutno ulogovanog zaposlenog
+                    data = data.filter(x => x.employeeId !== employeeId);
+
+                    if (data.length === 0) {
+                        $('#employeesOnRoadTrip').html('<div>Nema podataka</div>');
+                        return;
+                    }
+
+                    let html = `
+        <div class="table-responsive">
+            <table class="table table-sm table-hover table-striped align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>@localizer["Employee"]</th>
+                        <th>@localizer["Date from"]</th>
+                        <th>@localizer["Date to"]</th>
+                        <th>@localizer["Note"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    data.forEach(emp => {
+        html += `
+            <tr>
+                <td class="fw-semibold">${emp.employee}</td>
+                <td>
+                    <span class="badge bg-light text-dark border">
+                        ${emp.dateFromFormatted || ''}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge bg-light text-dark border">
+                        ${emp.dateToFormatted || ''}
+                    </span>
+                </td>
+                <td class="text-muted">${emp.comment || '-'}</td>
+            </tr>
+        `;
+    });
+
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    $('#employeesOnRoadTrip').html(html);
+
+                } else {
+                    $('#employeesOnRoadTrip').html('<div>Nema podataka</div>');
+                }
+            },
+            error: function () {
+                $('#employeesOnRoadTrip').html('<div>Greška pri učitavanju podataka</div>');
+            }
+        });
+    }
+
+    function loadEmployeesWithoutPlanNextWorkingDay(bookmarkedEmployeeIds) {
+        if (!bookmarkedEmployeeIds || !bookmarkedEmployeeIds.length) {
+            $('#employeesWithoutPlanList').html('<div>Nema bookmarkovanih zaposlenih.</div>');
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.RouteUrl(RouteNames.EmployeeViewTrackings_GetBookmarkedEmployeesWithoutPlanNextWorkingDay)',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(bookmarkedEmployeeIds),
+            success: function(response) {
+                if (response && response.length) {
+                    let html = '';
+                    response.forEach(e => {
+                        html += `
+                            <div class="d-flex justify-content-between align-items-center"
+                                 data-id="${e.viewedEmployeeId}"
+                                 data-trackingid="${e.id}">
+                                <span>${e.viewedEmployee}</span>
+                            </div>
+                        `;
+                    });
+                    $('#employeesWithoutPlanList').html(html);
+                } else {
+                    $('#employeesWithoutPlanList').html('<div>Svi bookmarkovani imaju plan za sledeći radni dan.</div>');
+                }
+            },
+            error: function(err) {
+                console.error('Greška pri učitavanju zaposlenih bez plana:', err);
+                $('#employeesWithoutPlanList').html('<div>Došlo je do greške.</div>');
+            }
+        });
+    }
     function loadPlanStatistics() {
         var employeeId = @Model.User.EmployeeId;
         $.ajax({
@@ -619,23 +767,28 @@
         $.ajax({
             url: '@Url.RouteUrl(RouteNames.EmployeeViewTrackings_Search)',
             method: 'POST',
-            data: { employeeId: employeeId, isBookmarked : true, hideFromHomePage : false},
+            data: { employeeId: employeeId, isBookmarked: true, hideFromHomePage: false },
             success: function(response) {
                 if (response && response.length) {
                     let html = '';
+                    let bookmarkedIds = [];
                     response.forEach(e => {
+                        bookmarkedIds.push(e.viewedEmployeeId);
                         html += `
                             <div class="tracked-employee d-flex justify-content-between align-items-center"
                                  data-id="${e.viewedEmployeeId}"
-                                 data-trackingid="${e.id}">      
+                                 data-trackingid="${e.id}">
                                 <span>${e.viewedEmployee}</span>
                                 <i class="fa fa-times remove-employee" style="cursor:pointer; color:#ff4d4d;"></i>
                             </div>
                         `;
                     });
                     $('#trackedEmployeesList').html(html);
+
+                    loadEmployeesWithoutPlanNextWorkingDay(bookmarkedIds);
                 } else {
                     $('#trackedEmployeesList').html('<div>Nema označenih zaposlenih.</div>');
+                    $('#employeesWithoutPlanList').html('<div>Nema bookmarkovanih zaposlenih.</div>');
                 }
             },
             error: function(err) {
@@ -1009,6 +1162,7 @@
         loadTrackedEmployees();
         loadPlanStatistics();
         loadRealizationStatistics();
+        loadEmployeesOnRoadTrip();
         $('#personalGoalsModal').on('shown.bs.modal', function () {
             searchEmployeeGoals();
         });

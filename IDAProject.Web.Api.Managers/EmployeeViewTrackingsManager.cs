@@ -90,5 +90,22 @@ namespace IDAProject.Web.Api.Managers
             }
             return result;
         }
+
+        public async Task<ResponseModelList<EmployeeViewTrackingDto>> GetBookmarkedEmployeesWithoutPlanNextWorkingDayAsync(List<int> bookmarkedEmployeeIds)
+        {
+            var result = new ResponseModelList<EmployeeViewTrackingDto>();
+            try
+            {
+                result.Payload = await _EmployeeViewTrackingsRepository.GetBookmarkedEmployeesWithoutPlanNextWorkingDayAsync(bookmarkedEmployeeIds);
+                result.Valid = true;
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                var reqModel = JsonConvert.SerializeObject(bookmarkedEmployeeIds);
+                _logger.LogError(e, $"request model: {reqModel}");
+            }
+            return result;
+        }
     }
 }

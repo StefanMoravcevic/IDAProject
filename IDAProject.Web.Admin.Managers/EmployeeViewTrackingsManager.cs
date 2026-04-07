@@ -38,5 +38,13 @@ namespace IDAProject.Web.Admin.Managers
             var result = await PostAsync<SaveEmployeeViewTrackingRequestModel, ResponseModel<int>>($"api/EmployeeViewTrackings", requestModel);
             return result;
         }
+
+        public async Task<ResponseModelList<EmployeeViewTrackingDto>> GetBookmarkedEmployeesWithoutPlanNextWorkingDayAsync(List<int> bookmarkedEmployeeIds)
+        {
+            var result =
+                await PostAsync<List<int>, ResponseModelList <EmployeeViewTrackingDto>>($"api/EmployeeViewTrackings/getBookmarkedEmployeesWithoutPlanNextWorkingDay",
+                    bookmarkedEmployeeIds);
+            return result;
+        }
     }
 }

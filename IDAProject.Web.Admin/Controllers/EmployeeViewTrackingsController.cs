@@ -41,7 +41,13 @@ namespace IDAProject.Web.Admin.Controllers
         {
             var responseModel = await _EmployeeViewTrackingsManager.SearchEmployeeViewTrackingsAsync(searchParams);
             return Json(responseModel.Payload);
-            }
+        }
+        [HttpPost("getBookmarkedEmployeesWithoutPlanNextWorkingDay", Name = RouteNames.EmployeeViewTrackings_GetBookmarkedEmployeesWithoutPlanNextWorkingDay)]
+        public async Task<IActionResult> GetBookmarkedEmployeesWithoutPlanNextWorkingDay([FromBody] List<int> bookmarkedEmployeeIds)
+        {
+            var responseModel = await _EmployeeViewTrackingsManager.GetBookmarkedEmployeesWithoutPlanNextWorkingDayAsync(bookmarkedEmployeeIds);
+            return Json(responseModel.Payload);
+        }
 
         //[HttpGet("new/{Id}", Name = RouteNames.EmployeeViewTrackings_New)]
         //public async Task<IActionResult> NewEmployeeViewTrackingAsync(int Id)

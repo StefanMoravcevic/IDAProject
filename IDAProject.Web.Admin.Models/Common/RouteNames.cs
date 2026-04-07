@@ -158,6 +158,7 @@
 
         public const string EmployeeViewTrackings_List = "EmployeeViewTrackings_List";
         public const string EmployeeViewTrackings_Search = "EmployeeViewTrackings_Search";
+        public const string EmployeeViewTrackings_GetBookmarkedEmployeesWithoutPlanNextWorkingDay = "EmployeeViewTrackings_GetBookmarkedEmployeesWithoutPlanNextWorkingDay";
         public const string EmployeeViewTrackings_New = "EmployeeViewTrackings_New";
         public const string EmployeeViewTrackings_Edit = "EmployeeViewTrackings_Edit";
         public const string EmployeeViewTrackings_Save = "EmployeeViewTrackings_Save";

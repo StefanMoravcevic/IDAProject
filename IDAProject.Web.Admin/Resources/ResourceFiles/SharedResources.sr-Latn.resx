@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Absence basic info" xml:space="preserve">
+    <value>Osnovne informacije o odsustvu</value>
+  </data>
   <data name="Absence type" xml:space="preserve">
     <value>Vrsta odsustva</value>
   </data>
@@ -224,6 +227,9 @@
   </data>
   <data name="Bookmarked employees" xml:space="preserve">
     <value>Označeni zaposleni za praćenje</value>
+  </data>
+  <data name="Bookmarked employees without plan for next day" xml:space="preserve">
+    <value>Označeni zaposleni bez plana za sledeći dan</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Odustani</value>
@@ -423,6 +429,9 @@
   <data name="Employees" xml:space="preserve">
     <value>Zaposleni</value>
   </data>
+  <data name="Employees on work trip" xml:space="preserve">
+    <value>Zaposleni na službenom putu</value>
+  </data>
   <data name="Employees view" xml:space="preserve">
     <value>Pregled zaposlenih</value>
   </data>
@@ -449,6 +458,9 @@
   </data>
   <data name="Enter description" xml:space="preserve">
     <value>Unesite opis</value>
+  </data>
+  <data name="Enter due date" xml:space="preserve">
+    <value>Unesite rok</value>
   </data>
   <data name="Enter e-mail" xml:space="preserve">
     <value>Unesite e-mail</value>
@@ -948,6 +960,9 @@
   <data name="Project" xml:space="preserve">
     <value>Projekat</value>
   </data>
+  <data name="Project basic info" xml:space="preserve">
+    <value>Osnovne informacije o projektu</value>
+  </data>
   <data name="Project task" xml:space="preserve">
     <value>Projektni zadatak</value>
   </data>
@@ -1070,6 +1085,9 @@
   </data>
   <data name="Search for customer order number, febi article number" xml:space="preserve">
     <value>Pretražite po broju poružbine, šifri artikla</value>
+  </data>
+  <data name="Search for task name" xml:space="preserve">
+    <value>Pretražite po imenu projekta</value>
   </data>
   <data name="Segment" xml:space="preserve">
     <value>Segment</value>

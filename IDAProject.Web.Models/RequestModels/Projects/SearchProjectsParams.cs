@@ -9,6 +9,7 @@ namespace IDAProject.Web.Models.RequestModels.Projects
     public class SearchProjectsParams
     {
         public int? Id { get; set; }
+        public string? Keyword { get; set; }
         //<<SearchParams>>
     }
 }

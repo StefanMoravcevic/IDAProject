@@ -7,6 +7,7 @@ namespace IDAProject.Web.Admin.Models.Interfaces.Managers
     public interface IEmployeeViewTrackingsManager
     {
         Task<ResponseModelList<EmployeeViewTrackingDto>> SearchEmployeeViewTrackingsAsync(SearchEmployeeViewTrackingsParams searchParams);
+        Task<ResponseModelList<EmployeeViewTrackingDto>> GetBookmarkedEmployeesWithoutPlanNextWorkingDayAsync(List<int> bookmarkedEmployeeIds);
         Task<ResponseModel<EmployeeViewTrackingDto>> GetEmployeeViewTrackingByIdAsync(int id);
         Task<ResponseModelBase> DeleteEmployeeViewTrackingAsync(int id, int? userId);
         Task<ResponseModel<int>> SaveEmployeeViewTrackingAsync(SaveEmployeeViewTrackingRequestModel requestModel);

@@ -37,7 +37,10 @@ namespace IDAProject.Web.Api.Repositories
             }
             else
             {
- 
+                if (searchParams.JobTypeId.HasValue)
+                {
+                    query = query.Where(x => x.JobTypeId == searchParams.JobTypeId);
+                }
             }
 
             result = await query.Select(a => new UserNotificationDto

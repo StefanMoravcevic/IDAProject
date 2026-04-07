@@ -45,7 +45,8 @@
                 url: "@Url.RouteUrl(RouteNames.EmployeeJobTypeControls_Search)",
                 method: "POST",
                 data: {
-
+                    employeeId : $("#EmployeeId").val(),
+                    jobTypeId  : $("#JobTypeId").val()
                 },
                 success: function (response) {
                     loadJson("tableEmployeeJobTypeControls", response, @localizedPagination);
@@ -82,6 +83,17 @@
                 })
             });
 
+            $("#EmployeeId").select2({});
+            $("#JobTypeId").select2({});
+
+            $("#buttonSearch").click(function(){
+                searchEmployeeJobTypeControls();
+            });
+            $("#buttonResetSearch").click(function(){
+                $("#EmployeeId").val(null).trigger("change");
+                $("#JobTypeId").val(null).trigger("change");
+                searchEmployeeJobTypeControls();
+            });
             searchEmployeeJobTypeControls();
         });
     </script>

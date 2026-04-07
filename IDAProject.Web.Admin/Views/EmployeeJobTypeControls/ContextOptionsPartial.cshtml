@@ -38,5 +38,28 @@
 				</div>
 			</div>
 		</div>
+		<div class="row search-params-wrapper">
+			<div class="col-md-12">
+				<div class="collapse show" id="searchContext">
+					<div class="col-md-12">
+						<div class="d-flex">
+							<div class="col-sm-6 col-md-6 col-lg-4" id="selectBUC">
+								<tms-select type="Hidden" name="EmployeeId" id="EmployeeId" options="@Model.Employees" empty-option-text="@localizer["Select employee"]" label="@localizer["Employee"]" />
+								
+							</div>
+							<div class="col-sm-6 col-md-6 col-lg-4" id="selectBUC">
+								<tms-select type="Hidden" name="JobTypeId" id="JobTypeId" options="@Model.JobTypes" empty-option-text="@localizer["Select group"]" label="@localizer["Group"]" />
+							</div>
+						</div>
+						<div class="btn-list text-end search-button-wrapper">
+							<div class="form-group">
+								<button class="btn btn-primary" id="buttonSearch">@localizer["Search"]</button>
+								<button class="btn btn-primary" id="buttonResetSearch">@localizer["ResetSearch"]</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>

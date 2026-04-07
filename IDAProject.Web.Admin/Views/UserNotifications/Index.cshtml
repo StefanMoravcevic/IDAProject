@@ -45,7 +45,7 @@
                 url: "@Url.RouteUrl(RouteNames.UserNotifications_Search)",
                 method: "POST",
                 data: {
-         
+                      jobTypeId : $("#JobTypeId").val()
                 },
                 success: function (response) {
                     loadJson("tableUserNotifications", response, @localizedPagination);
@@ -102,7 +102,14 @@
 
 
             // $("#buttonSearchPartners").click(searchPartners);
-
+            $("#JobTypeId").select2({});
+            $("#buttonSearch").click(function(){
+                searchUserNotifications();
+            });
+            $("#buttonResetSearch").click(function(){
+                $("#JobTypeId").val(null).trigger("change");
+                searchUserNotifications();
+            });
             searchUserNotifications();
         });
     </script>

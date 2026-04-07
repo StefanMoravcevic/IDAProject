@@ -17,8 +17,10 @@ public Boolean AllDay { get; set; }
 public String? Comment { get; set; }
 public TimeOnly? TimeFrom { get; set; }
 public TimeOnly? TimeTo { get; set; }
+        public int? JobTypeId { get; set; }
 
         public string? TimeFromFormatted { get; set; }
         public string? TimeToFormatted { get; set; }
+        public bool? IsFromAdmin { get; set; }
     }
 }

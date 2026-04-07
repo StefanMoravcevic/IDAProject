@@ -10,6 +10,7 @@ namespace IDAProject.Web.Models.RequestModels.EmployeeJobTypeControls
     {
         public int? Id { get; set; }
         public int? EmployeeId { get; set; }
+        public int? JobTypeId { get; set; }
         //<<SearchParams>>
     }
 }

@@ -18,9 +18,9 @@
             <th>@localizer["Absence type"]</th>
             <th>@localizer["Date from"]</th>
             <th>@localizer["Date to"]</th>
-            <th>@localizer["All day"]</th>
+           @*  <th>@localizer["All day"]</th>
             <th>@localizer["Time from"]</th>
-            <th>@localizer["Time to"]</th>
+            <th>@localizer["Time to"]</th> *@
             <th>@localizer["Note"]</th>
             <th style="text-align:center;">@localizer["Options"]</th>
         </tr>
@@ -33,7 +33,7 @@
                 <td>@record.AbsenceType</td>
                 <td>@record.DateFromFormatted</td>
                 <td>@record.DateToFormatted</td>
-                <td style="text-align:center;">
+               @*  <td style="text-align:center;">
                     @if (record.AllDay)
                     {
                         <i class="fa fa-check-circle" style="color: green;"></i>
@@ -44,7 +44,7 @@
                     }
                 </td>
                 <td>@record.TimeFromForTableFormatted</td>
-                <td>@record.TimeToForTableFormatted</td>
+                <td>@record.TimeToForTableFormatted</td> *@
                 <td>@record.Comment</td>
                 <td style="text-align:center;">
                     <button type="button" name="delete" data-id="@record.Id" class="align-items-center justify-content-center" value="@record.Id">

@@ -37,6 +37,12 @@ namespace IDAProject.Web.Api.Controllers
             var response = await _EmployeeViewTrackingsManager.SearchEmployeeViewTrackingsAsync(searchParams);
             return response;
         }
+        [HttpPost("getBookmarkedEmployeesWithoutPlanNextWorkingDay")]
+        public async Task<ResponseModelList<EmployeeViewTrackingDto>> GetBookmarkedEmployeesWithoutPlanNextWorkingDayAsync([FromBody] List<int> bookmarkedEmployeeIds)
+        {
+            var response = await _EmployeeViewTrackingsManager.GetBookmarkedEmployeesWithoutPlanNextWorkingDayAsync(bookmarkedEmployeeIds);
+            return response;
+        }
 
         [HttpPost]
         public async Task<ResponseModel<int>> SaveEmployeeViewTrackingAsync(SaveEmployeeViewTrackingRequestModel requestModel)

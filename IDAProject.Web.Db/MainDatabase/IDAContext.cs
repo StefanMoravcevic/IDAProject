@@ -688,6 +688,10 @@ public partial class IdaContext : DbContext
             entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeAbsences)
                 .HasForeignKey(d => d.EmployeeId)
                 .HasConstraintName("FK_EmployeeAbsences_Employees");
+
+            entity.HasOne(d => d.JobType).WithMany(p => p.EmployeeAbsences)
+                .HasForeignKey(d => d.JobTypeId)
+                .HasConstraintName("FK_EmployeeAbsences_JobTypes");
         });
 
         modelBuilder.Entity<EmployeeGoal>(entity =>

@@ -1,4 +1,4 @@
-﻿@model IDAProject.Web.Admin.Models.ViewModels.EmployeeGoals.EmployeeGoalsViewModel;
+﻿@model IDAProject.Web.Admin.Models.ViewModels.Projects.ProjectsViewModel;
 @using IDAProject.Web.Admin.Models.Common;
 @using IDAProject.Web.Models.General.Enums;
 @using IDAProject.Web.Admin.Models.TagHelpers;
@@ -16,7 +16,7 @@
 					<div class="col-md-12">
 						<div class="context-panel">
 							<div class="card-body tab-option-container" style="overflow-x:auto">
-								<a href="@Url.RouteUrl(RouteNames.EmployeeGoals_New)">
+								<a href="@Url.RouteUrl(RouteNames.Projects_New)">
 									<i class="fa fa-plus" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
 									<div>@localizer["AddNew"]</div>
 								</a>
@@ -24,14 +24,12 @@
 									<i class="fa fa-pencil-square-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
 									<div>@localizer["Edit"]</div>
 								</button>
-								<button id="view">
-									<i class="fa fa-eye" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
-									<div>@localizer["View"]</div>
-								</button>
 								<button id="delete">
 									<i class="fa fa-trash-o" data-bs-toggle="tooltip" title="" data-bs-original-title="fa fa-folder-open-o" aria-label="fa fa-folder-open-o"></i>
 									<div>@localizer["Delete"]</div>
 								</button>
+
+
 							</div>
 						</div>
 					</div>
@@ -43,13 +41,8 @@
 				<div class="collapse show" id="searchContext">
 					<div class="col-md-12">
 						<div class="d-flex">
-							<div class="col-sm-6 col-md-6 col-lg-4" id="selectBUC">
-								<tms-select type="Hidden" name="EmployeeId" id="EmployeeId" options="@Model.Employees" empty-option-text="@localizer["Select employee"]" label="@localizer["Employee"]" />
-
-							</div>
-							<div class="col-sm-6 col-md-6 col-lg-4" id="selectBUC">
-								<tms-select type="Hidden" name="YearId" id="YearId" options="@Model.Years" empty-option-text="@localizer["Select year"]" label="@localizer["Year"]" />
-
+							<div class="col-sm-6 col-md-6 col-lg-3" id="selectBUC">
+								<tms-input type="Text" name="Keyword" id="empSearchKeyword" label="@localizer["Keyword"]" placeholder="@localizer["Search for task name"]"/>
 							</div>
 						</div>
 						<div class="btn-list text-end search-button-wrapper">

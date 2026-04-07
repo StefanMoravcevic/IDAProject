@@ -29,9 +29,13 @@ public partial class EmployeeAbsence
 
     public TimeOnly? TimeTo { get; set; }
 
+    public int? JobTypeId { get; set; }
+
     public virtual AbsenceType? AbsenceType { get; set; }
 
     public virtual AspNetUser? DeletedByNavigation { get; set; }
 
     public virtual Employee? Employee { get; set; }
+
+    public virtual JobType? JobType { get; set; }
 }

@@ -40,7 +40,21 @@ namespace IDAProject.Web.Api.Repositories
                 if(searchParams.EmployeeId.HasValue)
                 {
                     query = query.Where(x => x.EmployeeId == searchParams.EmployeeId);
-                }    
+                }
+
+                if (searchParams.JobTypeId.HasValue)
+                {
+                    query = query.Where(x => x.Employee.JobTypeId == searchParams.JobTypeId);
+                }
+
+                if (searchParams.Date.HasValue)
+                {
+                    query = query.Where(x => x.DateFrom.Value.Date <= searchParams.Date.Value.Date && x.DateTo.Value.Date >= searchParams.Date.Value.Date);
+                }
+                if (searchParams.AbsenceTypeId.HasValue)
+                {
+                    query = query.Where(x => x.AbsenceTypeId == searchParams.AbsenceTypeId);
+                }
             }
 
             result = await query.Select(a => new EmployeeAbsenceDto
@@ -49,12 +63,15 @@ namespace IDAProject.Web.Api.Repositories
                 AbsenceTypeId = a.AbsenceTypeId,
                 AllDay = a.AllDay,
                 Comment = a.Comment,
+                Employee = a.Employee.Name + " " + a.Employee.Surname,
                 DateFrom = a.DateFrom,
                 DateTo = a.DateTo,
                 EmployeeId = a.EmployeeId,
                 TimeFrom = a.TimeFrom,
                 TimeTo = a.TimeTo,
-                AbsenceType = a.AbsenceType.Name
+                AbsenceType = a.AbsenceType.Name,
+                JobTypeId = a.JobTypeId,
+                Group = a.JobType.Name
 
             }).ToListAsync();
             return result;

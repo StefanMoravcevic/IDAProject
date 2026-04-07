@@ -10,6 +10,7 @@ namespace IDAProject.Web.Models.RequestModels.EmployeeGoals
     {
         public int? Id { get; set; }
         public int? EmployeeId { get; set; }
+        public int? YearId { get; set; }
         public bool? IsActive { get; set; }
         //<<SearchParams>>
     }

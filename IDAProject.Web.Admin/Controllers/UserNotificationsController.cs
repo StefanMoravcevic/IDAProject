@@ -32,6 +32,7 @@ namespace IDAProject.Web.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var viewModel = new UserNotificationsViewModel(_localizer);
+            viewModel.JobTypes = await _masterDataManager.GetSelectOptionsByTableAsync("JobTypes", "Name");
             await UpdateNavigationWithAjaxTableViewModel(viewModel, _masterDataManager, "UserNotifications");
             return View(viewModel);
         }

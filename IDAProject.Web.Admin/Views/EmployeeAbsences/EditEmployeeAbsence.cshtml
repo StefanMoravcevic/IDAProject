@@ -1,0 +1,111 @@
+﻿@model IDAProject.Web.Admin.Models.ViewModels.EmployeeAbsences.EmployeeAbsencesEditViewModel
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Helpers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@inject IStringLocalizer<SharedResources> localizer
+@{
+	var absence = Model.Absence;
+	var urlListNotification = Url.RouteUrl(RouteNames.EmployeeAbsences_List);
+
+}
+<div class="card">
+	<div class="card-body">
+		<div class="panel panel-primary">
+			<div class="row">
+				<div class="col-lg-12 col-md-12" id="absenceContainer">
+					<div class="card">
+						<div class="card-header border-bottom">
+							<h4 class="mb-0">@localizer["Absence basic info"]</h4>
+							<tms-input type="Hidden" name="Id" id="absenceId" value="@absence.Id" />
+						</div>
+						<div class="card-body p-0 task-edit-main">
+							<div class="row p-5 border-bottom">
+								<div class="col-sm-12 col-md-6 col-xl-3">
+									<tms-select name="AbsenceTypeId"
+												id="AbsenceTypeId"
+												options="@Model.AbsenceTypes"
+												selected-option="@absence.AbsenceTypeId"
+												label="@localizer["Absence type"]:"
+												empty-option-text="@localizer["Select absence type"]..." />
+								</div>
+								<div class="col-sm-12 col-md-6 col-xl-3">
+									<tms-select name="JobTypeId"
+												id="JobTypeId"
+												options="@Model.JobTypes"
+												selected-option="@absence.JobTypeId"
+												label="@localizer["Group"]:"
+												empty-option-text="@localizer["Select group"]..." />
+								</div>
+								
+								<div class="col-sm-12 col-md-4 col-xl-3">
+									<tms-input type="Date" name="DateFrom" id="DateFromId" value="@absence.DateFrom!" label="@localizer["Date from"]" placeholder="@localizer["Enter date from"]" />
+								</div>
+								<div class="col-sm-12 col-md-4 col-xl-3">
+									<tms-input type="Date" name="DateTo" id="DateToId" value="@absence.DateTo!" label="@localizer["Date to"]" placeholder="@localizer["Enter date to"]" />
+								</div>
+	
+								<div class="col-sm-12 col-md-12 col-xl-12 col-lg-12">
+									<div class="form-group">
+										<label class="form-label text-muted" for="Comment">@localizer["Description"]:</label>
+										<div class="input-group">
+											<textarea name="Comment" class="form-control text-dark" id="NoteId" style="height:120px;">@absence.Comment</textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="row p-5">
+					<div class="btn-list text-end">
+						<button class="btn btn-outline-danger" id="buttonCancel">@localizer["Cancel"]</button>
+						<button class="btn btn-primary" id="buttonSave">@localizer["Save"]</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section Styles {
+	<link rel="stylesheet" type="text/css" href="~/lib/select2/select2.min.css" />
+}
+@section Scripts {
+
+	<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
+
+	<script type="text/javascript">
+
+		$(document).ready(function () {
+
+			$("#buttonSave").click(function () {
+				var $inputsContainer = $("#absenceContainer");
+
+				if (validateRequiredFields($inputsContainer, '@localizer["ValidationMsg"]')) {
+					var jsonData = serializeJSON($inputsContainer);
+					jsonData.IsFromAdmin = true;
+					$.ajax({
+						url: "@Url.RouteUrl(RouteNames.EmployeeAbsences_Save)",
+						method: "POST",
+						data: jsonData,
+						success: function (response) {
+							handleActionResponseMessage(response, function () {
+								location = response.message;
+							}, '@localizer["Error"]', '@localizer["SavedMsg"]');
+						}
+					});
+				}
+			});
+
+			$("#buttonCancel").click(function () {
+				document.location = '@urlListNotification';
+			});
+		});
+	</script>
+}
