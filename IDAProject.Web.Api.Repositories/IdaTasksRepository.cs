@@ -133,7 +133,7 @@ namespace IDAProject.Web.Api.Repositories
                     Activity = t.TasksPlannings.FirstOrDefault().ActivityName,
                     Report = t.TasksRealizations.FirstOrDefault().Report,
                     Status = t.TasksPlannings.FirstOrDefault().PlanStatus.Name,
-                    //ProjectDueDate = t.Project.DueDate,
+                    ProjectDueDate = t.Project.DueDate,
                     PlanDate = t.TasksPlannings.FirstOrDefault().PlanDate
                 })
                 .ToListAsync();

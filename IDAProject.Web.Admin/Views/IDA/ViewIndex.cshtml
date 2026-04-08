@@ -98,6 +98,11 @@
         padding-left: 10px;
         margin-top: 5px;
     }
+
+    .scrollable-x {
+        overflow-x: auto; /* horizontalni scroll kada tabela izlazi */
+        width: 100%; /* da wrapper zauzima celu širinu kolone */
+    }
 </style>
 <div class="container-fluid mt-1">
 
@@ -181,26 +186,17 @@
             <!-- TABLES CARD -->
             <div class="card shadow-sm mt-3">
 
+                <!-- CARD HEADER -->
                 <div class="card-header fw-bold" id="activityHeader"
                      style="background-color:#FA690C; color:white; cursor:pointer;">
                     📝 @localizer["Activities"]
                 </div>
 
+                <!-- CARD BODY -->
                 <div class="card-body" id="activitiesBody">
 
-                    <div class="row g-3">
-
-                        <!-- Dinamičke tabele -->
-                        <div class="col-12 col-md-6 col-xl-6">
-                            <div id="plannedTablesContainer"></div>
-                            <div id="plannedChartsContainer"></div>
-                        </div>
-                        <div class="col-12 col-md-6 col-xl-6">
-                            <div id="realizedTablesContainer"></div>
-                            <div id="realizedChartsContainer"></div>
-                        </div>
-
-                    </div>
+                    <!-- GLAVNI CONTAINER ZA SVE DATUME -->
+                    <div id="activitiesContainer"></div>
 
                 </div>
             </div>
@@ -297,7 +293,7 @@
                                 <td>${item.durationFormatted ?? ""}</td>
                                 <td>${item.planStatus ?? ""}</td>
                                 <td class="text-center">${finishedIcon}</td>
-                                <td style="text-align:center;"><i class="fa fa-comment" style="cursor:pointer;"></i></td>
+                                <td style="text-align:center;"><i class="fa fa-comment" style="cursor:pointer;" data-type="plan"></i></td>
                             </tr>
                         `;
                         tbody.append(row);
@@ -339,7 +335,7 @@
                                 <td>${item.durationFormattedForTable ?? ""}</td>
                                 <td>${item.report ?? ""}</td>
                                 <td class="text-center">${finishedIcon}</td>
-                                <td style="text-align:center;"><i class="fa fa-comment" style="cursor:pointer;"></i></td>
+                                <td style="text-align:center;"><i class="fa fa-comment" style="cursor:pointer;" data-type="realization"></i></td>
                             </tr>
                         `;
                         tbody.append(row);
@@ -564,7 +560,7 @@
 
             $("#employeesMatrix").html(html);
         }
-        function loadEmployeeTables(period, customStart, customEnd) {
+                function loadEmployeeTables(period, customStart, customEnd) {
             if (!selectedUserId) {
                 Swal.fire({
                     icon: 'warning',
@@ -577,12 +573,9 @@
             // Odredi period
             let range;
             if (period === 'custom' && customStart && customEnd) {
-                range = {
-                    startDate: customStart,
-                    endDate: customEnd
-                };
+                range = { startDate: customStart, endDate: customEnd };
             } else {
-                range = getDateRange(period); // postojeća logika za prevDay, currentWeek, prevWeek
+                range = getDateRange(period);
             }
 
             // Dobijamo sve datume u periodu
@@ -591,9 +584,8 @@
                 new Date(range.endDate.split('.').reverse().join('-'))
             ).reverse();
 
-            // Očisti prethodne tabele i chartove
-            $('#plannedTablesContainer').empty();
-            $('#realizedTablesContainer').empty();
+            // Očisti prethodne blokove
+            $('#activitiesContainer').empty();
 
             dates.forEach(date => {
                 const formattedDate = formatDate(date); // dd.MM.yyyy
@@ -602,64 +594,81 @@
                 const canvasIdPlanned = `planPieChart_${formattedDate.replace(/\./g, '-')}`;
                 const canvasIdReal = `realizationPieChart_${formattedDate.replace(/\./g, '-')}`;
 
-                // --- Planned HTML ---
-                const plannedHtml = `
-                <div class="card shadow-sm mt-3">
-                    <div class="card-header bg-warning text-white fw-bold">
-                        📌 @localizer["Plan for"] - ${formattedDate}
+                // --- Interleaved HTML za datum ---
+                const blockHtml = `
+                <div class="row g-3 interleaved-block">
+                    <!-- PLAN -->
+                    <div class="col-12 col-md-6">
+                        <div class="card shadow-sm mb-3">
+                            <div class="card-header bg-warning text-white fw-bold">
+                                📌 @localizer["Plan for"] - ${formattedDate}
+                            </div>
+                            <div class="card-body p-2 scrollable-x" style="overflow-x:auto;">
+                                <table class="table table-modern" id="${safeIdPlanned}">
+                                    <thead>
+                                        <tr>
+                                            <th>@localizer["Your task"]</th>
+                                            <th>@localizer["Plan no"]</th>
+                                            <th>@localizer["Activity"]</th>
+                                            <th>@localizer["Time from"]</th>
+                                            <th>@localizer["Time to"]</th>
+                                            <th>@localizer["Duration"]</th>
+                                            <th>Status</th>
+                                            <th>@localizer["Finished"]</th>
+                                            <th>@localizer["Comments"]</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <div class="mt-3 d-flex justify-content-center">
+                                    <div style="width:320px;">
+                                        <canvas id="${canvasIdPlanned}"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <table class="table table-modern" id="${safeIdPlanned}">
-                            <thead>
-                                <tr>
-                                    <th>@localizer["Your task"]</th><th>@localizer["Plan no"]</th><th>@localizer["Activity"]</th>
-                                    <th>@localizer["Time from"]</th><th>@localizer["Time to"]</th><th>@localizer["Duration"]</th>
-                                    <th>Status</th><th>@localizer["Finished"]</th><th>@localizer["Comments"]</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        <div class="mt-3 d-flex justify-content-center">
-                            <div style="width: 320px;">
-                                <canvas id="${canvasIdPlanned}"></canvas>
+
+                    <!-- REALIZACIJA -->
+                    <div class="col-12 col-md-6">
+                        <div class="card shadow-sm mb-3">
+                            <div class="card-header bg-success text-white fw-bold">
+                                ✅ @localizer["Realization for"] - ${formattedDate}
+                            </div>
+                            <div class="card-body p-2 scrollable-x" style="overflow-x:auto;">
+                                <table class="table table-modern" id="${safeIdReal}">
+                                    <thead>
+                                        <tr>
+                                            <th>@localizer["Your task"]</th>
+                                            <th>@localizer["Plan no"]</th>
+                                            <th>@localizer["Activity"]</th>
+                                            <th>@localizer["Time from"]</th>
+                                            <th>@localizer["Time to"]</th>
+                                            <th>@localizer["Duration"]</th>
+                                            <th>@localizer["Report"]</th>
+                                            <th>@localizer["Finished"]</th>
+                                            <th>@localizer["Comments"]</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <div class="mt-3 d-flex justify-content-center">
+                                    <div style="width:320px;">
+                                        <canvas id="${canvasIdReal}"></canvas>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>`;
-                $('#plannedTablesContainer').append(plannedHtml);
 
-                // --- Realized HTML ---
-                const realizedHtml = `
-                <div class="card shadow-sm mt-3">
-                    <div class="card-header bg-success text-white fw-bold">
-                        ✅ @localizer["Realization for"] - ${formattedDate}
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-modern" id="${safeIdReal}">
-                            <thead>
-                                <tr>
-                                    <th>@localizer["Your task"]</th><th>@localizer["Plan no"]</th><th>@localizer["Activity"]</th>
-                                    <th>@localizer["Time from"]</th><th>@localizer["Time to"]</th><th>@localizer["Duration"]</th>
-                                    <th>@localizer["Report"]</th><th>@localizer["Finished"]</th><th>@localizer["Comments"]</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        <div class="mt-3 d-flex justify-content-center">
-                            <div style="width: 320px;">
-                                <canvas id="${canvasIdReal}"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-                $('#realizedTablesContainer').append(realizedHtml);
+                $('#activitiesContainer').append(blockHtml);
 
-                // --- Popuni podatke i generiši chartove ---
+                // Popuni tabele i chartove
                 searchTaskPlanningsPopulateTable(selectedUserId, formattedDate, formattedDate, safeIdPlanned, canvasIdPlanned);
                 searchTaskRealizationPopulateTable(selectedUserId, formattedDate, formattedDate, safeIdReal, canvasIdReal);
             });
 
-            // Sinhronizuj visine tabela
             setTimeout(() => syncTableHeights(), 100);
         }
         function getDatesInRange(startDate, endDate) {
@@ -983,33 +992,36 @@
                 });
             });
 
-            $(document).on('click', '#plannedTablesContainer td .fa-comment', function() {
-                const planId = $(this).closest('tr').data('id');
-                $('#commentsModal').data('plan-id', planId);
-                $('#newCommentText').val('');
+                    // Plan comment handler
+            // $(document).off('click', '#activitiesContainer td .fa-comment')
+            //     .on('click', '#activitiesContainer td .fa-comment', function() {
+            //     const planId = $(this).closest('tr').data('id');
+            //     $('#commentsModal').data('plan-id', planId);
+            //     $('#newCommentText').val('');
+            //     debugger
 
-                $.ajax({
-                    url: '@Url.RouteUrl(RouteNames.TasksPlannings_Search)',
-                    method: 'POST',
-                    data: { id: planId },
-                    success: function(response) {
-                        if (response && response.length > 0) {
-                            const plan = response[0];
-                            setPlanInfo(plan);
-                        } else {
-                            console.warn("Plan not found for id:", planId);
-                            setPlanInfo({});
-                        }
-                    },
-                    error: function(err) {
-                        console.error(err);
-                    }
-                });
+            //     $.ajax({
+            //         url: '@Url.RouteUrl(RouteNames.TasksPlannings_Search)',
+            //         method: 'POST',
+            //         data: { id: planId },
+            //         success: function(response) {
+            //             if (response && response.length > 0) {
+            //                 const plan = response[0];
+            //                 setPlanInfo(plan);
+            //             } else {
+            //                 console.warn("Plan not found for id:", planId);
+            //                 setPlanInfo({});
+            //             }
+            //         },
+            //         error: function(err) {
+            //             console.error(err);
+            //         }
+            //     });
 
-                loadComments(planId);
+            //     loadComments(planId);
 
-                $('#commentsModal').modal('show');
-            });
+            //     $('#commentsModal').modal('show');
+            // });
 
             $('#saveCommentBtn').click(function() {
                 const planId = $('#commentsModal').data('plan-id');
@@ -1078,32 +1090,68 @@
             });
 
 
-             $(document).on('click', '#realizedTablesContainer td .fa-comment', function() {
-                const realizationId = $(this).closest('tr').data('id');
-                $('#realizationCommentsModal').data('plan-id', realizationId);
-                $('#newRealizationText').val('');
+        // Prvo "off" da uklonimo prethodni handler, pa "on"
+            // $(document).off('click', '#activitiesContainer td .fa-comment')
+            //            .on('click', '#activitiesContainer td .fa-comment', function() {
+            //     const realizationId = $(this).closest('tr').data('id');
+            //     $('#realizationCommentsModal').data('plan-id', realizationId);
+            //     $('#newRealizationText').val('');
 
-                $.ajax({
-                    url: '@Url.RouteUrl(RouteNames.TasksRealizations_Search)',
-                    method: 'POST',
-                     data: { id: realizationId },
-                    success: function(response) {
-                        if (response && response.length > 0) {
-                            const realization = response[0];
-                            setRealizationInfo(realization);
-                        } else {
-                            console.warn("Plan not found for id:", planId);
-                            setRealizationInfo({});
+            //     $.ajax({
+            //         url: '@Url.RouteUrl(RouteNames.TasksRealizations_Search)',
+            //         method: 'POST',
+            //         data: { id: realizationId },
+            //         success: function(response) {
+            //             if (response && response.length > 0) {
+            //                 const realization = response[0];
+            //                 setRealizationInfo(realization);
+            //             } else {
+            //                 console.warn("Realization not found for id:", realizationId);
+            //                 setRealizationInfo({});
+            //             }
+            //         },
+            //         error: function(err) {
+            //             console.error(err);
+            //         }
+            //     });
+
+            //     loadRealizationComments(realizationId);
+
+            //     $('#realizationCommentsModal').modal('show');
+            // });
+
+             $(document).off('click', '#activitiesContainer td .fa-comment')
+               .on('click', '#activitiesContainer td .fa-comment', function() {
+                const type = $(this).data('type'); // "plan" ili "realization"
+                const id = $(this).closest('tr').data('id');
+
+                if (type === "plan") {
+                    $('#commentsModal').data('plan-id', id);
+                    $('#newCommentText').val('');
+                    $.ajax({
+                        url: '@Url.RouteUrl(RouteNames.TasksPlannings_Search)',
+                        method: 'POST',
+                        data: { id: id },
+                        success: function(response) {
+                            setPlanInfo(response && response[0] ? response[0] : {});
                         }
-                    },
-                    error: function(err) {
-                        console.error(err);
-                    }
-                });
-
-                loadRealizationComments(realizationId);
-
-                 $('#realizationCommentsModal').modal('show');
+                    });
+                    loadComments(id);
+                    $('#commentsModal').modal('show');
+                } else if (type === "realization") {
+                    $('#realizationCommentsModal').data('plan-id', id);
+                    $('#newRealizationText').val('');
+                    $.ajax({
+                        url: '@Url.RouteUrl(RouteNames.TasksRealizations_Search)',
+                        method: 'POST',
+                        data: { id: id },
+                        success: function(response) {
+                            setRealizationInfo(response && response[0] ? response[0] : {});
+                        }
+                    });
+                    loadRealizationComments(id);
+                    $('#realizationCommentsModal').modal('show');
+                }
             });
 
               $('#saveRelizationCommentBtn').click(function() {

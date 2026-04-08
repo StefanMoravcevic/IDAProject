@@ -98,6 +98,11 @@
         padding-left: 10px;
         margin-top: 5px;
     }
+
+    .scrollable-x {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* za glatko skrolovanje na mobilnom */
+    }
 </style>
 <div class="container-fluid mt-1">
 
@@ -170,7 +175,6 @@
 
             <!-- TABLES CARD -->
             <div class="card shadow-sm mt-3">
-
                 <div class="card-header fw-bold" id="activityHeader"
                      style="background-color:#FA690C; color:white; cursor:pointer;">
                     📝 @localizer["Activities"]
@@ -182,11 +186,12 @@
 
                         <div class="col-md-4 border-end pe-3" style="border-right:2px solid #eb3838 !important;">
                             <h6>@localizer["Plan statistics"]</h6>
-                            <div id="planStatisticContainer"></div>
+                            <div id="planStatisticContainer" class="scrollable-x" style="overflow-x:auto;"></div>
                         </div>
+
                         <div class="col-md-8 ps-3">
                             <h6>@localizer["Realization statistics"]</h6>
-                            <div id="realizationStatisticContainer"></div>
+                            <div id="realizationStatisticContainer" class="scrollable-x" style="overflow-x:auto;"></div>
                         </div>
 
                     </div>

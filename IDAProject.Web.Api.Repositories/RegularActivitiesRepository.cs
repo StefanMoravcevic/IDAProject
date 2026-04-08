@@ -83,6 +83,27 @@ namespace IDAProject.Web.Api.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<int> GetOrCreateMeetingActivityId(int userId)
+        {
+            var activity = await _dbContext.RegularActivities
+            .FirstOrDefaultAsync(x =>
+                x.UserId == userId &&
+                EF.Functions.Like(x.Name.ToLower(), "%sastanak%"));
+
+            if (activity != null)
+                return activity.Id;
+
+            var newActivity = new RegularActivity
+            {
+                UserId = userId,
+                Name = "Sastanak"
+            };
+
+            _dbContext.RegularActivities.Add(newActivity);
+            await _dbContext.SaveChangesAsync();
+
+            return newActivity.Id;
+        }
     }
 }
     

@@ -76,6 +76,11 @@ namespace IDAProject.Web.Api.Repositories
                                                  x.RealizationDate.Value.Date <= end.Date);
                     }
                 }
+
+                if (!string.IsNullOrEmpty(searchParams.GoogleEventId))
+                {
+                    query = query.Where(x => x.GoogleEventId == searchParams.GoogleEventId);
+                }
             }
 
             result = await query.OrderBy(x => x.TimeFrom).Select(a => new TasksRealizationDto
@@ -95,7 +100,7 @@ namespace IDAProject.Web.Api.Repositories
                 TasksPlanningId = a.TasksPlanningId,
                 TimeFrom  = a.TimeFrom,
                 TimeTo = a.TimeTo,
-                PlanNo = a.TasksPlanning.PlanNo,
+                PlanNo = a.PlanNo,
                 UserId = a.UserId,
                 RealizationDate = a.RealizationDate,
                 DisplayTask =
@@ -109,7 +114,8 @@ namespace IDAProject.Web.Api.Repositories
                 IsFinished =
     a.Finished != null
         ? a.Finished
-        : (bool?)null
+        : (bool?)null,
+                GoogleEventId = a.GoogleEventId
 
 
             }).ToListAsync();
@@ -241,6 +247,9 @@ namespace IDAProject.Web.Api.Repositories
                 .Distinct()
                 .Count();
 
+            // Teoretsko radno vreme: broj radnih dana * 7.25h
+            double totalWorkingHours = totalPlannedDays * 7.25;
+
             int daysWithRealization = allRealizations
                 .Select(r => r.RealizationDate)
                 .Distinct()
@@ -281,7 +290,7 @@ namespace IDAProject.Web.Api.Repositories
             {
                 TotalWorkingDays = totalPlannedDays,
                 DaysWithRealization = daysWithRealization,
-                TotalWorkHours = Math.Round(totalDuration, 2), // sada ukupno sati realizacija
+                TotalWorkHours = Math.Round(totalWorkingHours, 2), // <-- promenjeno
                 TotalLoggedHours = totalLoggedHours,
                 PlannedCount = Math.Round(plannedDuration, 2),
                 UnplannedCount = Math.Round(unplannedDuration, 2),
@@ -395,6 +404,9 @@ namespace IDAProject.Web.Api.Repositories
                 .Distinct()
                 .Count();
 
+            // Teoretsko radno vreme: broj radnih dana * 7.25h
+            double totalWorkingHours = totalPlannedDays * 7.25;
+
             int daysWithRealization = allRealizations
                 .Select(r => r.RealizationDate)
                 .Distinct()
@@ -435,7 +447,7 @@ namespace IDAProject.Web.Api.Repositories
             {
                 TotalWorkingDays = totalPlannedDays,
                 DaysWithRealization = daysWithRealization,
-                TotalWorkHours = Math.Round(totalDuration, 2),
+                TotalWorkHours = Math.Round(totalWorkingHours, 2),  // <-- promenjeno
                 TotalLoggedHours = totalLoggedHours,
                 PlannedCount = Math.Round(plannedDuration, 2),
                 UnplannedCount = Math.Round(unplannedDuration, 2),

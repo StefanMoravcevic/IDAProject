@@ -43,6 +43,8 @@ public partial class TasksRealization
 
     public DateTime? RealizationDate { get; set; }
 
+    public string? GoogleEventId { get; set; }
+
     public virtual ActivityType? ActivityType { get; set; }
 
     public virtual AspNetUser? DeletedByNavigation { get; set; }

@@ -25,11 +25,19 @@ namespace IDAProject.Web.Models.Dto.TasksRealizationComments
         {
             get { return DisplayFormatHelpers.FormatDateTime(CreatedAt); }
         }
+        public string CreatedAtFormattedForComment
+        {
+            get { return DisplayFormatHelpers.FormatDate(CreatedAt); }
+        }
         public string RealizationDateFormatted
         {
             get { return DisplayFormatHelpers.FormatDateTime(RealizationDate); }
         }
-
+        public string RealizationDateFormattedForComment
+        {
+            get { return DisplayFormatHelpers.FormatDate(RealizationDate); }
+        }
+            
         #endregion
     }
 }

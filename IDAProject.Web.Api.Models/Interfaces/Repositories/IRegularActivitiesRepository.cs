@@ -10,5 +10,6 @@ namespace IDAProject.Web.Api.Models.Interfaces.Repositories
         Task<int> SaveRegularActivityAsync(SaveRegularActivityRequestModel requestModel);
         Task<List<RegularActivityDto>> SearchRegularActivitiesAsync(SearchRegularActivitiesParams searchParams);
         Task DeleteRegularActivityAsync(int id, int? userId);
+        Task<int> GetOrCreateMeetingActivityId(int userId);
     }
 }

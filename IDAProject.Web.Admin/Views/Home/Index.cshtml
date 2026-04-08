@@ -179,6 +179,11 @@
         width: 70px;
     }
 
+    .scrollable-x {
+        overflow-x: auto; /* horizontalni scroll kad sadržaj izlazi */
+        width: 100%; /* zauzima širinu roditelja */
+    }
+
     .col-order {
         width: 50px;
     }
@@ -358,49 +363,53 @@
         <!-- COLLAPSE BODY -->
         <div id="dashboardCollapse" class="collapse show">
             <div class="card-body">
-
                 <div class="row g-3">
 
-                    <!-- Leva kolona -->
-                    <div class="col-md-2">
+                    <!-- Leva kolona: Bookmarked employees -->
+                    <div class="col-12 col-md-2">
                         <div class="card p-3 h-100">
-                            @* <h5 class="card-title">@localizer["Bookmarked employees"]</h5> *@
                             <div id="trackedEmployeesList"></div>
                         </div>
                     </div>
 
-                    <!-- Desna kolona -->
-                    <div class="col-md-10">
+                    <!-- Desna kolona: Planned/Realized -->
+                    <div class="col-12 col-md-10">
                         <div class="card p-3 h-100">
                             <h5 class="card-title">
                                 @localizer["Planned/Realized for today"] - @Model.Today
                             </h5>
 
                             <div class="row g-3">
-                                <div class="col-12 col-md-5" style="border-right:2px solid #e9ecef;" id="plan">
-                                    <div id="plannedTablesContainer"></div>
-                                    <div id="plannedChartsContainer"
-                                         class="d-flex justify-content-center align-items-center"
-                                         style="max-height:320px;">
-                                        <canvas id="planPieChart" style="max-width:320px;"></canvas>
+
+                                <!-- Plan -->
+                                <div class="col-12 col-md-5">
+                                    <div class="scrollable-x" style="border-right:2px solid #e9ecef;">
+                                        <div id="plannedTablesContainer"></div>
+                                        <div id="plannedChartsContainer"
+                                             class="d-flex justify-content-center align-items-center"
+                                             style="max-height:320px;">
+                                            <canvas id="planPieChart" style="max-width:320px;"></canvas>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-md-7" id="realization">
-                                    <div id="realizedTablesContainer"></div>
-                                    <div id="realizedChartsContainer"
-                                         class="d-flex justify-content-center align-items-center"
-                                         style="max-height:320px;">
-                                        <canvas id="realizationPieChart" style="max-width:320px;"></canvas>
+                                <!-- Realization -->
+                                <div class="col-12 col-md-7">
+                                    <div class="scrollable-x">
+                                        <div id="realizedTablesContainer"></div>
+                                        <div id="realizedChartsContainer"
+                                             class="d-flex justify-content-center align-items-center"
+                                             style="max-height:320px;">
+                                            <canvas id="realizationPieChart" style="max-width:320px;"></canvas>
+                                        </div>
                                     </div>
                                 </div>
+
                             </div>
-
                         </div>
                     </div>
 
                 </div>
-
             </div>
         </div>
 
@@ -430,7 +439,9 @@
                     </div>
                     <div class="col-md-8 ps-3">
                         <h6>@localizer["Realization statistics"]</h6>
-                        <div id="realizationStatisticContainer"></div>
+                        <div class="scrollable-x">
+                            <div id="realizationStatisticContainer"></div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -49,7 +49,7 @@ namespace IDAProject.Web.Api.Repositories
                 }
                 if (searchParams.EmployeeId.HasValue)
                 {
-                    query = query.Where(x => x.TaskRealization.TasksPlanning.User.EmployeeId == searchParams.EmployeeId);
+                    query = query.Where(x => x.TaskRealization.User.EmployeeId == searchParams.EmployeeId);
                 }
             }
 
@@ -64,14 +64,14 @@ namespace IDAProject.Web.Api.Repositories
                 Username = a.User.Employee.Name + " " + a.User.Employee.Surname,
                 ParentTaskRealizationCommentId = a.ParentTaskRealizationCommentId,
                 DisplayTask =
-        a.TaskRealization.TasksPlanning.ProjectId != null && a.TaskRealization.TasksPlanning.TaskId != null
-            ? a.TaskRealization.TasksPlanning.Project.Description + " - " + a.TaskRealization.TasksPlanning.Task.Name
-            : a.TaskRealization.TasksPlanning.TaskId != null
-                ? a.TaskRealization.TasksPlanning.Task.Name
-                : a.TaskRealization.TasksPlanning.RegularActivityId != null
-                    ? a.TaskRealization.TasksPlanning.RegularActivity.Name
+        a.TaskRealization.ProjectId != null && a.TaskRealization.IdaTaskId != null
+            ? a.TaskRealization.Project.Description + " - " + a.TaskRealization.IdaTask.Name
+            : a.TaskRealization.IdaTaskId != null
+                ? a.TaskRealization.IdaTask.Name
+                : a.TaskRealization.RegularActivityId != null
+                    ? a.TaskRealization.RegularActivity.Name
                     : "",
-                Activity = a.TaskRealization.TasksPlanning.ActivityName,
+                Activity = a.TaskRealization.Activity,
                 HiddenFromHomePage = a.HiddenFromHomePage,
                 EmployeeId = a.User.EmployeeId,
                 RealizationDate = a.TaskRealization.RealizationDate

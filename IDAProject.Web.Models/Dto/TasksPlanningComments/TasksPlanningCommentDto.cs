@@ -26,9 +26,17 @@ namespace IDAProject.Web.Models.Dto.TasksPlanningComments
         {
             get { return DisplayFormatHelpers.FormatDateTime(CreatedAt); }
         }
+        public string CreatedAtFormattedForComment
+        {
+            get { return DisplayFormatHelpers.FormatDate(CreatedAt); }
+        }
         public string PlanDateFormatted
         {
             get { return DisplayFormatHelpers.FormatDateTime(PlanDate); }
+        }
+        public string PlanDateFormattedForComment
+        {
+            get { return DisplayFormatHelpers.FormatDate(PlanDate); }
         }
 
         #endregion

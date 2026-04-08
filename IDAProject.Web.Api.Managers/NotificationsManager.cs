@@ -343,20 +343,23 @@ namespace IDAProject.Web.Api.Managers
                 return result;
             }
 
-            var textTitle = $"Novi komentar na vaš plan za {comment.PlanDateFormatted}";
-
+            var textTitle = $"Novi komentar na vaš plan za {comment.PlanDateFormattedForComment}";
             var mailTo = employee.Email;
 
+            // --- HTML telo emaila ---
             var templateBody = $@"
-                <p>Poštovani/na,</p>
-                <p>Obaveštavamo vas da je zaposleni <strong>{comment.Username}</strong> uneo komentar na vaš plan za dan <strong>{comment.PlanDateFormatted}</strong> ({comment.CreatedAtFormatted}).</p>
+<p>Poštovani/na,</p>
+<p>Obaveštavamo vas da je zaposleni <strong>{comment.Username}</strong> uneo komentar na vaš plan za dan <strong>{comment.PlanDateFormattedForComment}</strong>.</p>
 
-                <p><strong>Zadatak:</strong> {comment.DisplayTask}<br/>
-                <strong>Aktivnost:</strong> {comment.Activity}</p>
+<p><strong>Zadatak:</strong> {comment.DisplayTask}<br/>
+<strong>Aktivnost:</strong> {comment.Activity}</p>
 
-                <p><strong>Tekst komentara:</strong></p>
-                <div style='padding:10px; background-color:#f8f9fa; border-left:4px solid #0d6efd; border-radius:4px;'>{comment.Comment}</div>
-                ";
+<p><strong>Tekst komentara:</strong></p>
+<div style='padding:10px; background-color:#f8f9fa; border-left:4px solid #0d6efd; border-radius:4px;'>
+    {comment.Comment}
+    <div style='margin-top:5px; font-size:0.85em; color:#6c757d;'>Komentar dodan: {comment.CreatedAtFormatted}</div>
+</div>
+";
 
             try
             {
@@ -408,20 +411,24 @@ namespace IDAProject.Web.Api.Managers
                 return result;
             }
 
-            var textTitle = $"Novi komentar na vašu realizaciju za {comment.RealizationDateFormatted}";
+            var textTitle = $"Novi komentar na vašu realizaciju za {comment.RealizationDateFormattedForComment}";
 
             var mailTo = employee.Email;
 
+            // --- HTML telo emaila ---
             var templateBody = $@"
-                <p>Poštovani/na,</p>
-                <p>Obaveštavamo vas da je zaposleni <strong>{comment.Username}</strong> uneo komentar na vašu realizaciju za dan <strong>{comment.RealizationDateFormatted}</strong> ({comment.CreatedAtFormatted}).</p>
+<p>Poštovani/na,</p>
+<p>Obaveštavamo vas da je zaposleni <strong>{comment.Username}</strong> uneo komentar na vašu realizaciju za dan <strong>{comment.RealizationDateFormattedForComment}</strong>.</p>
 
-                <p><strong>Zadatak:</strong> {comment.DisplayTask}<br/>
-                <strong>Aktivnost:</strong> {comment.Activity}</p>
+<p><strong>Zadatak:</strong> {comment.DisplayTask}<br/>
+<strong>Aktivnost:</strong> {comment.Activity}</p>
 
-                <p><strong>Tekst komentara:</strong></p>
-                <div style='padding:10px; background-color:#f8f9fa; border-left:4px solid #0d6efd; border-radius:4px;'>{comment.Comment}</div>
-                ";
+<p><strong>Tekst komentara:</strong></p>
+<div style='padding:10px; background-color:#f8f9fa; border-left:4px solid #0d6efd; border-radius:4px;'>
+    {comment.Comment}
+    <div style='margin-top:5px; font-size:0.85em; color:#6c757d;'>Komentar dodan: {comment.CreatedAtFormatted}</div>
+</div>
+";
 
             try
             {

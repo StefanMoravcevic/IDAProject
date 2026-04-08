@@ -14,6 +14,7 @@ namespace IDAProject.Web.Models.RequestModels.TasksRealizations
         public int? UserId { get; set; }
         public string? StartDate { get; set; }  // dd.MM.yyyy
         public string? EndDate { get; set; }    // dd.MM.yyyy
+        public string? GoogleEventId { get; set; }    // dd.MM.yyyy
         //<<SearchParams>>
     }
 }
