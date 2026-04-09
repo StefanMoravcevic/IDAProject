@@ -91,7 +91,16 @@ namespace IDAProject.Web.Admin.Controllers
             var user = GetCurrentUser();
             requestModel.UserId = user.Id;
             requestModel.CreatedDate = DateTime.Now;
-            var responseModel = await _TasksRealizationsManager.SaveTasksRealizationAsync(requestModel);
+            if (requestModel.TasksPlanningId > 0)
+            {
+                var planNo = (await _tasksPlanningsManager.GetTasksPlanningByIdAsync(requestModel.TasksPlanningId.Value)).Payload.PlanNo;
+                requestModel.PlanNo = planNo;
+            }
+            else
+            {
+                requestModel.PlanNo = 0;
+            }
+                var responseModel = await _TasksRealizationsManager.SaveTasksRealizationAsync(requestModel);
             if (responseModel.Valid)
             {
                 if (requestModel.Finished)

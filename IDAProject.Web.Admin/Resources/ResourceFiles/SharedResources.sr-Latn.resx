@@ -150,8 +150,14 @@
   <data name="Add new choise" xml:space="preserve">
     <value>Dodaj novi izbor</value>
   </data>
+  <data name="Add photo" xml:space="preserve">
+    <value>Dodaj sliku</value>
+  </data>
   <data name="Add project task" xml:space="preserve">
     <value>Dodaj projektni zadatak</value>
+  </data>
+  <data name="Add realization" xml:space="preserve">
+    <value>Dodaj realizaciju</value>
   </data>
   <data name="Add regular activity" xml:space="preserve">
     <value>Dodaj redovnu aktivnost</value>
@@ -419,6 +425,9 @@
   </data>
   <data name="Employee" xml:space="preserve">
     <value>Radnik</value>
+  </data>
+  <data name="Employee Basic Info" xml:space="preserve">
+    <value>Osnovne informacije o zaposlenom</value>
   </data>
   <data name="Employee goals" xml:space="preserve">
     <value>Ciljevi zaposlenih</value>
@@ -912,6 +921,9 @@
   <data name="Plan statistics" xml:space="preserve">
     <value>Statistika planiranja</value>
   </data>
+  <data name="Plan statuses" xml:space="preserve">
+    <value>Statusi</value>
+  </data>
   <data name="Planned" xml:space="preserve">
     <value>Ukupno planirano</value>
   </data>
@@ -1325,6 +1337,9 @@
   </data>
   <data name="Year" xml:space="preserve">
     <value>Godina</value>
+  </data>
+  <data name="Years" xml:space="preserve">
+    <value>Godine</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Da</value>

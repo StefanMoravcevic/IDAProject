@@ -1,10 +1,12 @@
 ﻿using IDAProject.Web.Api.Managers;
 using IDAProject.Web.Api.Models.Interfaces.Managers;
 using IDAProject.Web.Models.Dto.Employees;
+using IDAProject.Web.Models.Dto.Google;
 using IDAProject.Web.Models.Dto.IdaTasks;
 using IDAProject.Web.Models.General;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace IDAProject.Web.Api.Controllers
 {
@@ -12,17 +14,18 @@ namespace IDAProject.Web.Api.Controllers
     public class GoogleController : Controller
     {
         private IGoogleManager _googleManager;
+        private readonly GoogleSettings _googleSettings;
 
-        public GoogleController(IGoogleManager googleManager)
+        public GoogleController(IGoogleManager googleManager, IOptions<GoogleSettings> googleSettings)
         {
             _googleManager = googleManager;
+            _googleSettings = googleSettings.Value;
         }
 
         [HttpGet("getOAuthUrl/{employeeId}")]
         public IActionResult GetOAuthUrl(int employeeId)
         {
-            var redirectUri = "http://localhost:5169/api/google/callback";
-            var url = _googleManager.GetOAuthUrl(redirectUri, employeeId);
+            var url = _googleManager.GetOAuthUrl(_googleSettings.CallbackUrl, employeeId);
             var response = new ResponseModel<string>
             {
                 Valid = true,
@@ -33,8 +36,8 @@ namespace IDAProject.Web.Api.Controllers
         [HttpGet("handleOAuthCallbackAsync/{code}/{state}/{url}")]
         public async Task<IActionResult> HandleOAuthCallbackAsync(string code, string state, string url)
         {
-            var result = new EmployeeDto();
-            result = await _googleManager.HandleOAuthCallbackAsync(code, state, url);
+            // Možeš url ignorisati i koristiti iz settings:
+            var result = await _googleManager.HandleOAuthCallbackAsync(code, state, _googleSettings.CallbackUrl);
             return Json(result);
         }
 
@@ -53,22 +56,24 @@ namespace IDAProject.Web.Api.Controllers
 
             try
             {
+                // koristi callback URL iz appsettings
                 var employee = await _googleManager.HandleOAuthCallbackAsync(
                     code,
                     state,
-                    "http://localhost:5169/api/google/callback"
+                    _googleSettings.CallbackUrl
                 );
 
-                return Content(@"
+                // koristi front-end URL iz appsettings
+                return Content($@"
 <html>
 <head>
     <title>Google povezivanje</title>
 
     <!-- Auto redirect posle 3 sekunde -->
-    <meta http-equiv='refresh' content='3;url=https://localhost:7136/' />
+    <meta http-equiv='refresh' content='3;url={_googleSettings.FrontEndUrl}' />
 
     <style>
-        body {
+        body {{
             margin: 0;
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #4CAF50, #2E7D32);
@@ -76,9 +81,8 @@ namespace IDAProject.Web.Api.Controllers
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .card {
+        }}
+        .card {{
             background: #fff;
             padding: 40px;
             border-radius: 12px;
@@ -86,24 +90,11 @@ namespace IDAProject.Web.Api.Controllers
             text-align: center;
             max-width: 420px;
             animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .icon {
-            font-size: 60px;
-            margin-bottom: 15px;
-        }
-
-        h2 {
-            margin: 10px 0;
-            color: #333;
-        }
-
-        p {
-            color: #666;
-            margin-bottom: 25px;
-        }
-
-        a.button {
+        }}
+        .icon {{ font-size: 60px; margin-bottom: 15px; }}
+        h2 {{ margin: 10px 0; color: #333; }}
+        p {{ color: #666; margin-bottom: 25px; }}
+        a.button {{
             display: inline-block;
             padding: 12px 25px;
             background: #4CAF50;
@@ -112,25 +103,17 @@ namespace IDAProject.Web.Api.Controllers
             border-radius: 8px;
             font-weight: bold;
             transition: 0.3s;
-        }
-
-        a.button:hover {
-            background: #388E3C;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        }}
+        a.button:hover {{ background: #388E3C; }}
+        @keyframes fadeIn {{ from {{ opacity:0; transform:translateY(10px); }} to {{ opacity:1; transform:translateY(0); }} }}
     </style>
 </head>
-
 <body>
     <div class='card'>
         <div class='icon'>✅</div>
         <h2>Uspešno povezano</h2>
         <p>Vaš Google nalog je uspešno povezan.<br/>Bićete preusmereni za par sekundi...</p>
-        <a class='button' href='https://localhost:7136/'>Idi odmah</a>
+        <a class='button' href='{_googleSettings.FrontEndUrl}'>Idi odmah</a>
     </div>
 </body>
 </html>
@@ -152,7 +135,6 @@ namespace IDAProject.Web.Api.Controllers
             align-items: center;
             justify-content: center;
         }}
-
         .card {{
             background: white;
             padding: 30px;
@@ -160,15 +142,8 @@ namespace IDAProject.Web.Api.Controllers
             text-align: center;
             max-width: 400px;
         }}
-
-        h2 {{
-            color: #d32f2f;
-        }}
-
-        p {{
-            color: #555;
-        }}
-
+        h2 {{ color: #d32f2f; }}
+        p {{ color: #555; }}
         a {{
             display: inline-block;
             margin-top: 15px;
@@ -180,12 +155,11 @@ namespace IDAProject.Web.Api.Controllers
         }}
     </style>
 </head>
-
 <body>
     <div class='card'>
         <h2>❌ Došlo je do greške</h2>
         <p>{ex.Message}</p>
-        <a href='https://localhost:7136/'>Nazad na login</a>
+        <a href='{_googleSettings.FrontEndUrl}'>Nazad na login</a>
     </div>
 </body>
 </html>

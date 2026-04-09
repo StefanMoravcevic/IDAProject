@@ -27,15 +27,15 @@
 }
 <style>
 	.slika {
-		max-width: 240px;
-		max-height: 240px;
+		max-width: 200px;
+		max-height: 100px;
 	}
 </style>
-<div class="row">
+@* <div class="row">
 	<div class="col-md-12">
 		<partial name="EmployeeContextOptionsPartial" />
 	</div>
-</div>
+</div> *@
 <div class="card">
 	<div class="card-body">
 		<div class="panel panel-primary">
@@ -47,18 +47,21 @@
 								<div class="card-header border-bottom">
 									<h4 class="mb-0">@localizer["Employee Basic Info"]</h4>
 									<tms-input type="Hidden" name="Id" id="empId" value="@employee.Id" />
+									<tms-input type="Hidden" name="GoogleEmail" id="GoogleEmail" value="@employee.GoogleEmail" />
+									<tms-input type="Hidden" name="GoogleAccessToken" id="GoogleAccessTokenId" value="@employee.GoogleAccessToken" />
+									<tms-input type="Hidden" name="GoogleRefreshToken" id="GoogleRefreshTokenId" value="@employee.GoogleRefreshToken" />
 								</div>
 								<div class="card-body p-0 task-edit-main">
 									<div class="row p-5 border-bottom">
-										<div class="col-sm-12 col-md-6 col-xl-3">
+										@* <div class="col-sm-12 col-md-6 col-xl-3">
 											<tms-input type="Text" name="EmployeeNumber" id="empEmployeeNumber" value="@employee.EmployeeNumber" label="@localizer["EmployeeNumber"]:" required="true" placeholder="@localizer["Enter EmployeeNumber"]..." />
-										</div>
+										</div> *@
 										<div class="col-sm-12 col-md-6 col-xl-3">
 											<tms-input type="Text" name="Name" id="empName" value="@employee.Name" label="@localizer["First name"]:" required="true" placeholder="@localizer["Enter first name"]..." />
 										</div>
-										<div class="col-sm-12 col-md-6 col-xl-3">
+										@* <div class="col-sm-12 col-md-6 col-xl-3">
 											<tms-input type="Text" name="MiddleName" id="empMiddleName" value="@employee.MiddleName!" label="@localizer["Middle name"]:" placeholder="@localizer["Enter middle name"]..." />
-										</div>
+										</div> *@
 										<div class="col-sm-12 col-md-6 col-xl-3">
 											<tms-input type="Text" name="Surname" id="empSurname" value="@employee.Surname" required="true" label="@localizer["Surname"]:" placeholder="@localizer["Enter last name"]..." />
 										</div>
@@ -103,7 +106,7 @@
 									<h4 class="mb-0">@localizer["Photo"]</h4>
 								</div>
 								<div class="card-body p-0 task-edit-main">
-									<div class="row p-5 border-botto">
+									<div class="row p-5 border-bottom">
 										<div class="d-flex flex-column align-items-center">
 											<img id="Photo" src="@employee.Photo" alt="@localizer["Photo"]" class="slika" />
 											<button class="btn btn-primary mt-3" id="buttonChooseFile" onclick="document.getElementById('fileInput').click()" style="width: 100%;">
@@ -152,9 +155,9 @@
 									<div class="row p-5 border-bottom ">
 										<div class="col-sm-12">
 											<div class="row">
-												<div class="col-sm-12 col-md-6 col-xl-4">
+												@* <div class="col-sm-12 col-md-6 col-xl-4">
 													<tms-input type="Text" name="BankAccount" id="empBankAccount" value="@employee.BankAccount!" label="@localizer["PersonalBankAccount"]:" placeholder="@localizer["Enter personal bank account number"]..." />
-												</div>
+												</div> *@
 												<div class="col-sm-12 col-md-6 col-xl-4">
 													<tms-select name="CompanyId" id="empCompanyId" options="@Model.Companies" selected-option="@employee.CompanyId" label="@localizer["Company"]:" empty-option-text="@localizer["Select company"]..." />
 												</div>

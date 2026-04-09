@@ -20,6 +20,7 @@
 	var date = Model.NextDay; // tvoj datum
 	var danUNedelji = date.Value.ToString("dddd", new System.Globalization.CultureInfo("sr-Latn-RS"));
 	var datumFormatirano = date.Value.ToString("dd.MM.yyyy");
+	var urlLogout = Url.RouteUrl(RouteNames.Accounts_Logout);
 
 }
 <style>
@@ -94,7 +95,7 @@
 	#manualTable select.form-select {
 		width: 100%;
 	}
-
+	
 	.col-from, .col-to {
 		width: 70px;
 	}
@@ -126,6 +127,9 @@
 		td input[name="Report"]:focus {
 			height: 75px; /* povećava se visina na fokus */
 		}
+	.google-event-row {
+		background-color: #ccffff !important; /* svetloplava, možeš promeniti boju po želji */
+	}
 
 
 </style>
@@ -146,6 +150,23 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@localizer["Cancel"]</button>
 				<button type="button" class="btn btn-primary" id="modalSaveRow">@localizer["Save"]</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="addRealizedRowModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">@localizer["Add realization"]</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<!-- Dinamički popunjavamo sa JS -->
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@localizer["Cancel"]</button>
+				<button type="button" class="btn btn-primary" id="modalSaveRealizationRow">@localizer["Save"]</button>
 			</div>
 		</div>
 	</div>
@@ -178,7 +199,18 @@
 					{
 						<p class="text-muted">@localizer["No image available"]</p>
 					}
-
+					<div class="d-flex flex-column gap-2">
+						<a href="@urlLogout" class="btn btn-sm btn-danger fw-semibold">
+							@localizer["Log out"]
+						</a>
+						<a href="/Home/Instructions" class="btn btn-sm btn-danger fw-semibold">
+							@localizer["Manual"]
+						</a>
+						<button type="button" class="btn btn-sm btn-danger fw-semibold" id="btnAddPhoto">
+							@localizer["Add photo"]
+						</button>
+						<input type="file" id="inputPhotoFile" style="display:none" accept="image/*">
+					</div>
 				</div>
 
 			</div>
@@ -190,7 +222,7 @@
 
 			<div class="card shadow-lg border-0 rounded-3 flex-fill h-100">
 
-				<div class="card-header bg-primary text-white fw-bold d-flex flex-wrap justify-content-between align-items-center">
+				<div class="card-header btn-danger text-white fw-bold d-flex flex-wrap justify-content-between align-items-center">
 
 					<div class="d-flex align-items-center gap-2">
 						<span id="planDayDisplay">📅 @localizer["Plans for day"] - @danUNedelji – @datumFormatirano</span>
@@ -242,10 +274,10 @@
 					</div>
 
 
-					<button class="btn btn-success btn-sm px-3 mt-2 align-self-start"
+					<button class="btn btn-danger btn-sm px-3 mt-2 align-self-start"
 							id="btnAddRow">
 
-						➕ @localizer["Add row"]
+						 @localizer["Add row"]
 
 					</button>
 
@@ -265,7 +297,7 @@
 
 		<div class="card-header fw-bold"
 			 id="activityHeader"
-			 style="background-color:#fabb3e;color:white;cursor:pointer;">
+			 style="background-color:#F2220F;color:white;cursor:pointer;">
 
 			📝 @localizer["Activities"]
 
@@ -285,7 +317,7 @@
 						🔄 @localizer["Plan new day"]
 					</button> *@
 
-					<button class="btn btn-primary btn-sm"
+					<button class="btn btn-danger btn-sm"
 							id="btnEnterAbsence">
 						📊 @localizer["Enter absence"]
 					</button>
@@ -295,17 +327,17 @@
 				<!-- RIGHT BUTTONS -->
 				<div class="d-flex flex-wrap gap-2 ms-sm-auto">
 
-					<button class="btn btn-primary btn-sm"
+					<button class="btn btn-danger btn-sm"
 							id="btnAddTask">
-						➕ @localizer["Add task"]
+						 @localizer["Add task"]
 					</button>
 
-					<button class="btn btn-primary btn-sm"
+					<button class="btn btn-danger btn-sm"
 							id="btnAddProjectTask">
 						📁 @localizer["Add project task"]
 					</button>
 
-					<button class="btn btn-primary btn-sm"
+					<button class="btn btn-danger btn-sm"
 							id="btnAddRegularActivity">
 						🔁 @localizer["Add regular activity"]
 					</button>
@@ -329,16 +361,16 @@
 						<table class="table table-modern"id="plannedTable">
 
 							<thead>
-								<tr>
+								<tr class="text-center">
 
-									<th class="col-activity">@localizer["Your task"]</th>
-									<th class="col-activity">@localizer["Activity"]</th>
-									<th class="col-from">@localizer["Time from"]</th>
-									<th class="col-to">@localizer["Time to"]</th>
-									<th class="col-duration">@localizer["Duration"]</th>
-									<th class="col-status">@localizer["Status"]</th>
-									<th class="col-order">@localizer["Id"]</th>
-									<th style="width:30px;">@localizer["Finished"]</th>
+									<th class="col-activity" style="background-color:#f2b141; color:white;">@localizer["Your task"]</th>
+									<th class="col-activity" style="background-color:#f2b141; color:white;">@localizer["Activity"]</th>
+									<th class="col-from" style="background-color:#f2b141; color:white;">@localizer["Time from"]</th>
+									<th class="col-to" style="background-color:#f2b141; color:white;">@localizer["Time to"]</th>
+									<th class="col-duration" style="background-color:#f2b141; color:white;">@localizer["Duration"]</th>
+									<th class="col-status" style="background-color:#f2b141; color:white;">@localizer["Status"]</th>
+									<th class="col-order" style="background-color:#f2b141; color:white;">@localizer["Id"]</th>
+									<th style="width:30px; background-color:#f2b141; color:white;">@localizer["Finished"]</th>
 
 								</tr>
 							</thead>
@@ -380,48 +412,48 @@
 
 							<thead class="table-light">
 
-								<tr>
+								<tr class="text-center">
 
-									<th class="col-order">@localizer["Id"]</th>
+									<th style="background-color:#f2b141; color:white;" class="col-order">@localizer["Id"]</th>
 
-									<th class="col-activityType col-activity">
+									<th style="background-color:#f2b141; color:white;" class="col-activityType col-activity">
 										@localizer["Activity type"]
 									</th>
 
-									<th class="col-taskName col-activity">
+									<th style="background-color:#f2b141; color:white;" class="col-taskName col-activity">
 										@localizer["Task"]
 									</th>
 
 									<th class="col-project col-activity"
-										style="display:none;">
+										style="display:none; background-color:#f2b141; color:white;">
 										@localizer["Project"]
 									</th>
 
 									<th class="col-task"
-										style="display:none;">
+										style="display:none;background-color:#f2b141; color:white;">
 										@localizer["Task"]
 									</th>
 
 									<th class="col-regular"
-										style="display:none;">
+										style="display:none;background-color:#f2b141; color:white;">
 										@localizer["Regular activity"]
 									</th>
 
-									<th>@localizer["Activity"]</th>
+									<th style="background-color:#f2b141; color:white;">@localizer["Activity"]</th>
 
 									
 
-									<th>@localizer["Report"]</th>
+									<th style="background-color:#f2b141; color:white;">@localizer["Report"]</th>
 
-									<th class="col-from">@localizer["Time from"]</th>
-									<th class="col-to">@localizer["Time to"]</th>
+									<th style="background-color:#f2b141; color:white;" class="col-from">@localizer["Time from"]</th>
+									<th style="background-color:#f2b141; color:white;" class="col-to">@localizer["Time to"]</th>
 
-									<th class="col-duration">@localizer["Duration"]</th>
+									<th style="background-color:#f2b141; color:white;" class="col-duration">@localizer["Duration"]</th>
 
-									<th style="width:30px;">@localizer["Finished"]</th>
+									<th style="width:30px;background-color:#f2b141; color:white;">@localizer["Finished"]</th>
 
 									<th class="col-actions"
-										style="display:none;">
+										style="display:none;background-color:#f2b141; color:white;">
 										@localizer["Actions"]
 									</th>
 
@@ -436,10 +468,10 @@
 					</div>
 
 
-					<button class="btn btn-primary btn-sm mt-2"
+					<button class="btn btn-danger btn-sm mt-2"
 							id="btnAddRealRow">
 
-						➕ @localizer["Add row"]
+						 @localizer["Add row"]
 
 					</button>
 
@@ -624,16 +656,120 @@
 			}
 
 			// === automatsko računanje trajanja ===
-			$(document)
-				.off("change.modalDuration")
-				.on("change.modalDuration", "input[name='TimeFromFormatted'], input[name='TimeToFormatted']", function() {
-					let from = modalBody.find("input[name='TimeFromFormatted']").val();
-					let to = modalBody.find("input[name='TimeToFormatted']").val();
-					modalBody.find("input[name='DurationFormatted']").val(calculateModalDuration(from, to));
-				});
+			$(document).on("change", "input[name='TimeFromFormatted'], input[name='TimeToFormatted']", function () {
+
+				let $input = $(this);
+				let $container;
+
+				// Desktop red
+				if ($input.closest("tr").length) {
+					$container = $input.closest("tr");
+				}
+				// Modal #addRowModal
+				else if ($input.closest("#addRowModal").length) {
+					$container = $input.closest(".modal-body");
+				}
+				// Modal #addRealizedRowModal
+				else if ($input.closest("#addRealizedRowModal").length) {
+					$container = $input.closest(".modal-body");
+				}
+
+				if (!$container) return;
+
+				// Uzmi vrednosti iz inputa
+				let from = $container.find("input[name='TimeFromFormatted']").val();
+				let to = $container.find("input[name='TimeToFormatted']").val();
+
+				// Postavi Duration
+				$container.find("input[name='DurationFormatted']").val(calculateModalDuration(from, to));
+
+			});
 
 			// === prikaži modal ===
 			$("#addRowModal").modal("show");
+		}
+				function openAddRealRowModal(planItem = null) {
+
+			let modalBody = $("#addRealizedRowModal .modal-body");
+			modalBody.empty();
+
+			let commonFields = `
+				<div class="mb-3">
+					<label>@localizer["Activity"]</label>
+					<textarea class="form-control" name="Activity"></textarea>
+				</div>
+
+				<div class="mb-3">
+					<label>@localizer["Report"]</label>
+					<textarea class="form-control" name="Report"></textarea>
+				</div>
+
+				<div class="mb-3">
+					<label>@localizer["Time from"]</label>
+					<input type="text"
+						   class="form-control timepicker from-time"
+						   name="TimeFromFormatted">
+				</div>
+
+				<div class="mb-3">
+					<label>@localizer["Time to"]</label>
+					<input type="text"
+						   class="form-control timepicker to-time"
+						   name="TimeToFormatted">
+				</div>
+
+				<div class="mb-3">
+					<label>@localizer["Duration"]</label>
+					<input type="text"
+						   class="form-control duration"
+						   name="DurationFormatted"
+						   readonly>
+				</div>
+
+				<div class="form-check mb-3">
+					<input class="form-check-input"
+						   type="checkbox"
+						   name="Finished"
+						   value="true">
+					<label class="form-check-label">
+						@localizer["Finished"]
+					</label>
+				</div>
+			`;
+
+			// Plan No dropdown
+			modalBody.append(`
+				<div class="mb-3">
+					<label>@localizer["Plan no"]</label>
+					<select class="form-select plan-no" name="TasksPlanningId">
+						<option value="">@localizer["Select plan no"]</option>
+						${plannedTasks.map(x =>
+							`<option value="${x.Value}">${x.Description}</option>`
+						).join('')}
+					</select>
+				</div>
+			`);
+
+			// Activity type dropdown
+			modalBody.append(`
+				<div class="mb-3">
+					<label>@localizer["Activity type"]</label>
+					<select class="form-select activity-type" name="ActivityTypeId">
+						<option value="">@localizer["Select activity type"]</option>
+						<option value="1">@localizer["Project"]</option>
+						<option value="2">@localizer["Task"]</option>
+						<option value="3">@localizer["Regular activity"]</option>
+					</select>
+				</div>
+			`);
+
+			// Container za dinamička polja
+			modalBody.append(`<div id="realActivityDynamicFields"></div>`);
+			modalBody.append(commonFields);
+
+			initTimePickers(modalBody);
+
+			$("#addRealizedRowModal").modal("show");
 		}
 
 			function searchTaskPlanningsNumbersForRealization() {
@@ -792,7 +928,7 @@
 				});
 			}
 
-			function searchNotFinishedProjectTasksByProjectId(projectId) {
+			function searchNotFinishedProjectTasksByProjectId(projectId, container) {
 				$.ajax({
 					url: "@Url.RouteUrl(RouteNames.IdaTasks_Search)",
 					method: "POST",
@@ -800,10 +936,9 @@
 						isCompleted: false,
 						hasProject: true,
 						projectId: projectId,
-						userId : '@Model.User.Id'
+						userId: '@Model.User.Id'
 					},
 					success: function (data) {
-
 						// Očisti JS niz
 						projectTasks.length = 0;
 
@@ -815,11 +950,17 @@
 							});
 						});
 
+						// Pronađi select unutar container-a
+						let select = container.find("select[name='TaskId'], select[name='IdaTaskId']");
+						if (!select.length) {
+							console.warn("Select za taskove nije pronađen u container-u");
+							return;
+						}
+
 						// Očisti dropdown
-						const select = $("#SelectActivityTypeProjectId"); // zameni sa pravim ID-jem tvog <select>
 						select.empty();
 
-						// Dodaj default opciju (opciono)
+						// Dodaj default opciju
 						select.append('<option value="">@localizer["Select task"]...</option>');
 
 						// Dodaj nove opcije
@@ -833,46 +974,51 @@
 				});
 			}
 
-			function searchNotFinishedProjectTasksRealizationByProjectId(projectId) {
-				$.ajax({
-					url: "@Url.RouteUrl(RouteNames.IdaTasks_Search)",
-					method: "POST",
-					data: {
-						isCompleted: false,
-						hasProject: true,
-						projectId: projectId,
-						userId : '@Model.User.Id'
-					},
-					success: function (data) {
+					function searchNotFinishedProjectTasksRealizationByProjectId(projectId, container) {
+			$.ajax({
+				url: "@Url.RouteUrl(RouteNames.IdaTasks_Search)",
+				method: "POST",
+				data: {
+					isCompleted: false,
+					hasProject: true,
+					projectId: projectId,
+					userId: '@Model.User.Id'
+				},
+				success: function (data) {
+					// Očisti JS niz
+					projectTasks.length = 0;
 
-						// Očisti JS niz
-						projectTasks.length = 0;
-
-						// Popuni niz sa novim podacima
-						data.forEach(item => {
-							projectTasks.push({
-								Value: item.id,
-								Description: item.name
-							});
+					// Popuni niz sa novim podacima
+					data.forEach(item => {
+						projectTasks.push({
+							Value: item.id,
+							Description: item.name
 						});
+					});
 
-						// Očisti dropdown
-						const select = $("#SelectRealizationProjectTaskId"); // zameni sa pravim ID-jem tvog <select>
-						select.empty();
-
-						// Dodaj default opciju (opciono)
-						select.append('<option value="">@localizer["Select task"]...</option>');
-
-						// Dodaj nove opcije
-						projectTasks.forEach(task => {
-							select.append(`<option value="${task.Value}">${task.Description}</option>`);
-						});
-					},
-					error: function (err) {
-						console.log(err);
+					// Pronađi select unutar container-a
+					let select = container.find("select[name='IdaTaskId']");
+					if (!select.length) {
+						console.warn("Select za taskove nije pronađen u container-u");
+						return;
 					}
-				});
-			}
+
+					// Očisti dropdown
+					select.empty();
+
+					// Dodaj default opciju
+					select.append('<option value="">@localizer["Select task"]...</option>');
+
+					// Dodaj nove opcije
+					projectTasks.forEach(task => {
+						select.append(`<option value="${task.Value}">${task.Description}</option>`);
+					});
+				},
+				error: function (err) {
+					console.log(err);
+				}
+			});
+		}
 		function loadTasksForManualTable() {
 
 			let mode = $("#activityMode").val();
@@ -1797,65 +1943,67 @@
 					}
 				});
 			}
-					
-			function searchTaskRealizationPopulateTable() {
 
-					$.ajax({
-						url: "@Url.RouteUrl(RouteNames.TasksRealizations_Search)",
-						method: "POST",
-						data: {
-							realizationDate: "@Model.Today",
-							userId: "@Model.User.Id"
-						},
-						success: function (data) {
+		function searchTaskRealizationPopulateTable() {
 
-							let tbody = $("#realizedTable tbody");
-							tbody.empty();
-							let stats = {};
-							// sakrij kolone koje služe samo za unos
-							$(".col-project, .col-task, .col-regular, .col-activityType").hide();
-							$(".col-taskName").show(); // prikaži TaskName
-							$(".col-actions").hide(); // prikaži TaskName
+			$.ajax({
+				url: "@Url.RouteUrl(RouteNames.TasksRealizations_Search)",
+				method: "POST",
+				data: {
+					realizationDate: "@Model.Today",
+					userId: "@Model.User.Id"
+				},
+				success: function (data) {
 
-							$.each(data, function (index, item) {
+					let tbody = $("#realizedTable tbody");
+					tbody.empty();
+					let stats = {};
+					$(".col-project, .col-task, .col-regular, .col-activityType").hide();
+					$(".col-taskName").show();
+					$(".col-actions").hide();
 
-								let finishedIcon = '';
-								if (item.isFinished === null) finishedIcon = '-';
-								else if (item.isFinished === true) finishedIcon = '<span style="color:green; font-weight:bold;">✔</span>';
-								else finishedIcon = '<span style="color:red; font-weight:bold;">✖</span>';
+					$.each(data, function (index, item) {
 
-								// dodajemo novu kolonu sa ikonicom olovke
-								let editIcon = `<td class="text-center">
-													<i class="fa fa-pencil edit-task" style="cursor:pointer;" title="@localizer["Edit realization"]"></i>
-												</td>`;
+						let finishedIcon = '';
+						if (item.isFinished === null) finishedIcon = '-';
+						else if (item.isFinished === true) finishedIcon = '<span style="color:green; font-weight:bold;">✔</span>';
+						else finishedIcon = '<span style="color:red; font-weight:bold;">✖</span>';
 
-								let row = `
-								<tr data-id="${item.id}" class="tooltip-target">
+						let rowClass = item.googleEventId ? 'google-event-row' : '';
+						let googleLink = item.googleEventLink ?? '';
 
-									<td>${item.planNo ?? ""}</td>
-									<td>${item.displayTask ?? ""}</td>
-									<td>${item.activity ?? ""}</td>
-									
-									<td>${item.report ?? ""}</td>
-									<td>${item.timeFromFormattedForTable ?? ""}</td>
-									<td>${item.timeToFormattedForTable ?? ""}</td>
-									<td>${item.durationFormattedForTable ?? ""}</td>
-									<td class="text-center">${finishedIcon}</td>
+						let row = `
+						<tr data-id="${item.id}" class="tooltip-target ${rowClass}" data-google-link="${googleLink}">
+							<td>${item.planNo ?? ""}</td>
+							<td>${item.displayTask ?? ""}</td>
+							<td>${item.activity ?? ""}</td>
+							<td>${item.report ?? ""}</td>
+							<td>${item.timeFromFormattedForTable ?? ""}</td>
+							<td>${item.timeToFormattedForTable ?? ""}</td>
+							<td>${item.durationFormattedForTable ?? ""}</td>
+							<td class="text-center">${finishedIcon}</td>
+						</tr>`;
 
+						tbody.append(row);
 
-								</tr>`;
+						let type = item.activityType ?? "Unknown";
+						stats[type] = (stats[type] || 0) + 1;
+					});
 
-								tbody.append(row);
-								let type = item.activityType ?? "Unknown";
-								stats[type] = (stats[type] || 0) + 1;
-							});
-							renderRealizationPieChart(stats);
-						},
-						error: function (err) {
-							console.log(err);
+					renderRealizationPieChart(stats);
+
+					$("#realizedTable tbody tr.google-event-row").off("click").on("click", function () {
+						const link = $(this).data("google-link");
+						if (link) {
+							window.open(link, "_blank");
 						}
 					});
+				},
+				error: function (err) {
+					console.log(err);
 				}
+			});
+		}
 
 			  $(document).ready(function () {
 				$(document).on("blur", "#planDate", function () {
@@ -2091,6 +2239,10 @@
 
 			$("#btnAddRealRow").click(function () {
 
+				if ($(window).width() < 768) {
+					openAddRealRowModal();
+					return;
+				}
 				// sakrij display task kolonu
 				$(".col-taskName").hide();
 				$(".col-actions").show();
@@ -2190,61 +2342,99 @@
 				initTimePickers(newRow);
 			});
 			$(document).on("change", ".plan-no", function () {
-				let planNo = $(this).val();
-				let row = $(this).closest("tr");
 
+				let planNo = $(this).val();
 				if (!planNo) return;
 
+				// 🔥 Detekcija konteksta
+				let container;
+
+				if ($(this).closest("tr").length) {
+					// desktop tabela
+					container = $(this).closest("tr");
+				} else {
+					// modal
+					container = $("#addRealRowModal .modal-body");
+				}
+
 				$.ajax({
-					url: '@Url.RouteUrl(RouteNames.TasksPlannings_GetById, new {id = "111"})'.replace("111", planNo),
+					url: '@Url.RouteUrl(RouteNames.TasksPlannings_GetById, new { id = "111" })'.replace("111", planNo),
 					method: 'GET',
 					success: function (res) {
+
 						if (!res) return;
 
-						// Popuni activity type
-						let activityTypeSelect = row.find("select[name='ActivityTypeId']");
-						activityTypeSelect.val(res.activityTypeId);
-									// Prikazi/sakrij kolone
-						updateColumnsByActivityType(res.activityTypeId, row);
-						// Reset zavisne dropdownove
-						row.find("select[name='IdaTaskId'], select[name='ProjectId'], select[name='RegularActivityId']").val("");
+						// ========================
+						// Activity type
+						// ========================
+						let activityTypeSelect = container.find("select[name='ActivityTypeId']");
+						activityTypeSelect.val(res.activityTypeId).trigger("change");
 
-						// Popuni dropdownove zavisno od tipa
+						// Reset dropdownove
+						container.find("select[name='IdaTaskId'], select[name='ProjectId'], select[name='RegularActivityId']").val("");
+
+						// ========================
+						// Popunjavanje po tipu
+						// ========================
 						if (res.activityTypeId == 1) {
-							row.find("select[name='ProjectId']").val(res.projectId);
-							row.find("select[name='IdaTaskId']").val(res.taskId);
+							container.find("select[name='ProjectId']").val(res.projectId);
+							container.find("select[name='IdaTaskId']").val(res.taskId);
 						}
 						else if (res.activityTypeId == 2) {
-							row.find("select[name='IdaTaskId']").val(res.taskId);
+							container.find("select[name='IdaTaskId']").val(res.taskId);
 						}
 						else if (res.activityTypeId == 3) {
-							let regularSelect = row.find("select[name='RegularActivityId']");
-							regularSelect.val(res.regularActivityId); // int, OK
-							regularSelect.trigger("change"); // ponekad je potrebno da select "osveži" UI
+							container.find("select[name='RegularActivityId']")
+								.val(res.regularActivityId)
+								.trigger("change");
 						}
 
-						// // Ostala polja
-						row.find("input[name='Activity']").val(res.activityName);
-						// row.find("input[name='TimeFromFormatted']").val(res.timeFrom);
-						// row.find("input[name='TimeToFormatted']").val(res.timeTo);
-						// row.find("input[name='DurationFormatted']").val(res.duration);
+						// ========================
+						// Ostala polja
+						// ========================
+						container.find("textarea[name='Activity']").val(res.activityName);
 
-			
+						// Ako bude trebalo:
+						// container.find("input[name='TimeFromFormatted']").val(res.timeFrom);
+						// container.find("input[name='TimeToFormatted']").val(res.timeTo);
 					}
 				});
 			});
 
 			$(document).on("change", "select[name='ActivityTypeId']", function() {
 				let activityTypeId = $(this).val();
-				let row = $(this).closest("tr");
+				let container;
 
-				updateColumnsByActivityType(activityTypeId, row);
+				if ($(this).closest("tr").length) {
+					// Desktop tabela
+					container = $(this).closest("tr");
+					updateColumnsByActivityType(activityTypeId, container);
+				} else if ($(this).closest("#addRealizedRowModal").length) {
+					// Modal
+					container = $("#realActivityDynamicFields"); // ili .modal-body ako hoćeš sve
+					updateColumnsByActivityTypeModal(activityTypeId, container);
+				}
 			});
 
 			$(document).on("change", "select[name='ProjectId']", function() {
 				let projectId = $(this).val();
-				searchNotFinishedProjectTasksByProjectId(projectId);
-				searchNotFinishedProjectTasksRealizationByProjectId(projectId);
+				let container;
+
+				if ($(this).closest("tr").length) {
+					// desktop red
+					container = $(this).closest("tr");
+				} else if ($(this).closest("#addRealizedRowModal").length) {
+					// modal
+					container = $("#realActivityDynamicFields"); // ili .modal-body ako hoćeš sve
+				} else {
+					container = $(this).parent(); // fallback
+				}
+
+				if (!projectId) return;
+
+				// Pozovi obe funkcije sa container-om
+				searchNotFinishedProjectTasksByProjectId(projectId, container);
+				searchNotFinishedProjectTasksRealizationByProjectId(projectId, container);
 			});
 			$(document).on("click", ".saveRealRow", function () {
 
@@ -2360,6 +2550,210 @@
 				});
 			});
 
+			$(document).on("change", ".activity-type", function () {
+
+				let mode = $(this).val();
+				let container = $("#realActivityDynamicFields");
+				container.empty();
+
+				if (mode == 1) {
+					container.html(`
+						<div class="mb-3">
+							<label>@localizer["Project"]</label>
+							<select class="form-select" name="ProjectId">
+								<option value="">@localizer["Select project"]</option>
+								@foreach (var p in Model.Projects)
+								{
+										<option value="@p.Value">@p.Description</option>
+								}
+							</select>
+						</div>
+						<div class="mb-3">
+							<label>@localizer["Task"]</label>
+							<select class="form-select" name="IdaTaskId">
+								<option value="">Select task</option>
+								${tasks.map(x =>
+									`<option value="${x.Value}">${x.Description}</option>`
+								).join('')}
+							</select>
+						</div>
+					`);
+				}
+				else if (mode == 2) {
+					container.html(`
+						<div class="mb-3">
+							<label>@localizer["Task"]</label>
+							<select class="form-select" name="IdaTaskId">
+								<option value="">Select task</option>
+								${tasks.map(x =>
+									`<option value="${x.Value}">${x.Description}</option>`
+								).join('')}
+							</select>
+						</div>
+					`);
+				}
+				else if (mode == 3) {
+					container.html(`
+						<div class="mb-3">
+							<label>@localizer["Regular activity"]</label>
+							<select class="form-select" name="RegularActivityId">
+								<option value="">@localizer["Select regular activity"]</option>
+								@foreach (var r in Model.RegularActivities)
+								{
+										<option value="@r.Value">@r.Description</option>
+								}
+							</select>
+						</div>
+					`);
+				}
+			});
+
+			$(document).on("change", "#addRealizedRowModal .plan-no", function () {
+				let planNo = $(this).val();
+				if (!planNo) return;
+
+				let modalBody = $("#addRealizedRowModal .modal-body");
+
+				$.ajax({
+					url: '@Url.RouteUrl(RouteNames.TasksPlannings_GetById, new { id = "111" })'.replace("111", planNo),
+					method: 'GET',
+					success: function (res) {
+						if (!res) return;
+
+						// Popuni Activity Type
+						let activityTypeSelect = modalBody.find("select[name='ActivityTypeId']");
+						activityTypeSelect.val(res.activityTypeId).trigger("change"); // trigger da okine updateColumnsByActivityTypeModal
+
+						// Reset zavisne dropdownove
+						modalBody.find("select[name='ProjectId'], select[name='IdaTaskId'], select[name='RegularActivityId']").val("");
+
+						// Popuni dropdownove po tipu
+						if (res.activityTypeId == 1) {
+							modalBody.find("select[name='ProjectId']").val(res.projectId);
+							modalBody.find("select[name='IdaTaskId']").val(res.taskId);
+						} else if (res.activityTypeId == 2) {
+							modalBody.find("select[name='IdaTaskId']").val(res.taskId);
+						} else if (res.activityTypeId == 3) {
+							modalBody.find("select[name='RegularActivityId']").val(res.regularActivityId);
+						}
+
+						// Ostala polja
+						modalBody.find("textarea[name='Activity']").val(res.activityName);
+						modalBody.find("textarea[name='Report']").val(res.report || "");
+						// modalBody.find("input[name='TimeFromFormatted']").val(res.timeFrom);
+						// modalBody.find("input[name='TimeToFormatted']").val(res.timeTo);
+						// modalBody.find("input[name='DurationFormatted']").val(res.duration);
+					}
+				});
+			});
+
+
+			function updateColumnsByActivityTypeModal(activityTypeId, modalBody) {
+				modalBody.find("div.col-project, div.col-task, div.col-regular").hide();
+
+				if (activityTypeId == 1) {
+					modalBody.find("select[name='ProjectId'], select[name='IdaTaskId']").val("");
+					modalBody.find("div.col-project, div.col-task").show();
+
+					let taskSelect = modalBody.find("select[name='IdaTaskId']");
+					let options = `<option value="">@localizer["Select task"]</option>` +
+						projectTasks.map(x => `<option value="${x.Value}">${x.Description}</option>`).join('');
+					taskSelect.html(options);
+
+				} else if (activityTypeId == 2) {
+					modalBody.find("select[name='IdaTaskId']").val("");
+					modalBody.find("div.col-task").show();
+
+					let taskSelect = modalBody.find("select[name='IdaTaskId']");
+					let options = `<option value="">@localizer["Select task"]</option>` +
+						tasks.map(x => `<option value="${x.Value}">${x.Description}</option>`).join('');
+					taskSelect.html(options);
+
+				} else if (activityTypeId == 3) { 
+					modalBody.find("select[name='RegularActivityId']").val("");
+					modalBody.find("div.col-regular").show();
+				}
+			}
+				$("#addRealizedRowModal").on("shown.bs.modal", function () {
+				let modalBody = $(this).find(".modal-body");
+
+				modalBody.off("change.duration").on("change.duration", "input[name='TimeFromFormatted'], input[name='TimeToFormatted']", function () {
+					let from = modalBody.find("input[name='TimeFromFormatted']").val();
+					let to = modalBody.find("input[name='TimeToFormatted']").val();
+					modalBody.find("input[name='DurationFormatted']").val(calculateModalDuration(from, to));
+				});
+			});
+
+			$(document).on("click", "#modalSaveRealizationRow", function () {
+
+				let modalBody = $("#addRealizedRowModal .modal-body");
+				let data = serializeJSON(modalBody);
+
+
+				let button = $(this);
+				button.prop("disabled", true);
+
+				$.ajax({
+					url: "@Url.RouteUrl(RouteNames.TasksRealizations_Save)", // ista ruta kao desktop
+					method: "POST",
+					data: data,
+					success: function (response) {
+						// Refresh svih tabela kao kod desktop verzije
+						searchTaskPlanningsPopulateTable();
+						searchTaskRealizationPopulateTable();
+						searchTaskPlanningsNumbersForRealization();
+						searchNotFinishedTasks();
+						searchNotFinishedProjectTasks();
+
+						// Prikaz poruke
+						handleActionResponseMessage(
+							response,
+							function () { },
+							'@localizer["Error"]',
+							'@localizer["SavedMsg"]'
+						);
+
+						// Zatvori modal nakon uspešnog snimanja
+						$("#addRealizedRowModal").modal("hide");
+						button.prop("disabled", false);
+					},
+					error: function () {
+						alert("Error saving row");
+						button.prop("disabled", false);
+					}
+				});
+			});
+
+			$('#btnAddPhoto').click(function () {
+				$('#inputPhotoFile').click();
+			});
+
+			$('#inputPhotoFile').change(function () {
+				var file = this.files[0];
+				if (!file) return;
+
+				var formData = new FormData();
+				formData.append("employeeId", @Model.User.EmployeeId);
+				formData.append("PhotoFile", file);
+
+				$.ajax({
+					url: '@Url.RouteUrl(RouteNames.Employees_SavePhoto)',
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function (response) {
+						if (response.valid) {
+							location.reload();
+						} else {
+							alert('Greška: ' + response.message);
+						}
+					},
+					error: function () {
+						alert('Greška pri uploadu fajla.');
+					}
+				});
+			});
 		});
 	</script>
 }

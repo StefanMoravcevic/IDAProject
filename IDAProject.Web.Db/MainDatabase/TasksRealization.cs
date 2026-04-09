@@ -45,6 +45,8 @@ public partial class TasksRealization
 
     public string? GoogleEventId { get; set; }
 
+    public string? GoogleEventLink { get; set; }
+
     public virtual ActivityType? ActivityType { get; set; }
 
     public virtual AspNetUser? DeletedByNavigation { get; set; }

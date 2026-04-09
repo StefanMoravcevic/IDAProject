@@ -24,6 +24,7 @@ namespace IDAProject.Web.Models.Dto.TasksRealizations
         public Boolean Finished { get; set; }
         public int? PlanNo { get; set; }        
         public int? UserId { get; set; }
+        public string? GoogleEventLink { get; set; }
         public string? GoogleEventId { get; set; }
         public string? TimeFromFormatted { get; set; }
         public string? TimeToFormatted { get; set; }

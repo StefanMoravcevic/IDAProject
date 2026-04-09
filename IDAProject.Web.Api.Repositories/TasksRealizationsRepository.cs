@@ -115,7 +115,8 @@ namespace IDAProject.Web.Api.Repositories
     a.Finished != null
         ? a.Finished
         : (bool?)null,
-                GoogleEventId = a.GoogleEventId
+                GoogleEventId = a.GoogleEventId,
+                GoogleEventLink = a.GoogleEventLink
 
 
             }).ToListAsync();

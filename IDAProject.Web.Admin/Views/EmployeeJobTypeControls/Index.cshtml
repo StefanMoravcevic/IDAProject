@@ -15,7 +15,15 @@
     var localizedPagination = @Html.Raw(Json.Serialize(new PaginationLocalizerModel(localizer)));
     var urlDelete = Url.RouteUrl(RouteNames.EmployeeJobTypeControls_Delete, new { id = 111 });
 }
-
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-header border-bottom">
+                <h4 class="mb-0">@localizer["IDA view configuration"]</h4>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12">
         <partial name="ContextOptionsPartial" model="@Model" />

@@ -96,6 +96,7 @@
         public const string Employees_View = "Employees_View";
         public const string Employees_OrgUnitsByCompany = "Employees_OrgUnitsByCompany";
         public const string Employees_Details = "Employees_Details";
+        public const string Employees_SavePhoto = "Employees_SavePhoto";
         public const string Employees_SearchPaged = "Employees_SearchPaged";
 
         public const string Employees_Messages_List = "Employees_Messages_List";

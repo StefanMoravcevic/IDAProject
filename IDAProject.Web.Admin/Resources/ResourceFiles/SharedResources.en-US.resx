@@ -1322,4 +1322,19 @@
   <data name="Search for task name" xml:space="preserve">
     <value>Search for task name</value>
   </data>
+  <data name="Add realization" xml:space="preserve">
+    <value>Add realization</value>
+  </data>
+  <data name="Employee Basic Info" xml:space="preserve">
+    <value>Employee Basic Info</value>
+  </data>
+  <data name="Plan statuses" xml:space="preserve">
+    <value>Plan statuses</value>
+  </data>
+  <data name="Years" xml:space="preserve">
+    <value>Years</value>
+  </data>
+  <data name="Add photo" xml:space="preserve">
+    <value>Add photo</value>
+  </data>
 </root>

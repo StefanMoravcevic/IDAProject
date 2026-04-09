@@ -11,6 +11,7 @@ using IDAProject.Web.Models.RequestModels.Messages;
 using Microsoft.Extensions.Localization;
 using IDAProject.Web.Admin.Managers.Attributes;
 using System.Text.RegularExpressions;
+using IDAProject.Web.Models.General;
 
 namespace IDAProject.Web.Admin.Controllers
 {
@@ -243,6 +244,37 @@ namespace IDAProject.Web.Admin.Controllers
         {
             var response = await _employeesManager.GetPreviousRowAsync(currentId);
             return Json(response);
+        }
+
+        [HttpPost("savePhoto", Name = RouteNames.Employees_SavePhoto)]
+        public async Task<IActionResult> SaveEmployeePhotoAsync(int employeeId, IFormFile PhotoFile)
+        {
+            var result = new ResponseModelBase();
+            if (PhotoFile == null || PhotoFile.Length == 0)
+                return BadRequest(new { Valid = false, Message = "Nijedna slika nije poslata." });
+
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(PhotoFile.FileName);
+            var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
+
+            using (var stream = new FileStream(savePath, FileMode.Create))
+            {
+                await PhotoFile.CopyToAsync(stream);
+            }
+
+            var employee = await _employeesManager.GetEmployeeByIdAsync(employeeId);
+            if (employee == null)
+                return NotFound(new { Valid = false, Message = "Zaposleni nije pronađen." });
+
+            employee.Payload.Photo = "/images/" + fileName;
+            var updateResponse = await _employeesManager.SaveEmployeeAsync(employee.Payload);
+
+            if (updateResponse.Valid)
+            {
+                result.Valid = true;
+                return Json(result);
+            }
+
+            return Json(result);
         }
 
         #region Employee documents

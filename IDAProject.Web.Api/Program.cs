@@ -19,6 +19,7 @@ using IDAProject.Web.Api.Models.Common;
 using IDAProject.Web.Db.MainDatabase;
 using IDAProject.Web.Models.General;
 using IDAProject.Web.Api;
+using IDAProject.Web.Models.Dto.Google;
 var builder = WebApplication.CreateBuilder(args);
 
 var loggerOptions = new ConfigurationReaderOptions();
@@ -167,6 +168,9 @@ builder.Services.Configure<EmailQueueSettings>(emailQueueSection);
 
 var firebaseSection = configuration.GetSection("Firebase");
 builder.Services.Configure<FirebaseSettings>(firebaseSection);
+
+var googleSection = configuration.GetSection("GoogleSettings");
+builder.Services.Configure<GoogleSettings>(googleSection);
 
 var binPath = AppDomain.CurrentDomain.BaseDirectory;
 //var keyPath = Path.Combine(binPath, "Firebase", "key.json");

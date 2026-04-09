@@ -254,7 +254,7 @@
             <!-- CARD -->
             <div class="card p-3 text-center">
                 <div class="d-flex justify-content-center mb-3">
-                    <img src="@Model.EmployeePhoto"
+                    <img id="employeePhoto" src="@Model.EmployeePhoto"
                          alt="Profilna slika"
                          class="img-fluid rounded-circle"
                          style="width: 150px; height: 150px;" />
@@ -267,6 +267,10 @@
                     <a href="/Home/Instructions" class="btn btn-sm btn-danger fw-semibold">
                         @localizer["Manual"]
                     </a>
+                    <button type="button" class="btn btn-sm btn-danger fw-semibold" id="btnAddPhoto">
+                        @localizer["Add photo"]
+                    </button>
+                    <input type="file" id="inputPhotoFile" style="display:none" accept="image/*">
                 </div>
             </div>
 
@@ -341,11 +345,11 @@
 </div>
 
 <div class="container-fluid mt-1">
-    <div class="card" style="border:2px solid #FA690C !important;">
+    <div class="card" style="border:2px solid #F2220F !important;">
 
         <!-- HEADER (klik za collapse) -->
         <div class="card-header d-flex justify-content-between align-items-center"
-             style="cursor:pointer; background-color:#FA690C; color:white;"
+             style="cursor:pointer; background-color:#F2220F; color:white;"
              data-bs-toggle="collapse"
              data-bs-target="#dashboardCollapse"
              aria-expanded="true"
@@ -544,11 +548,11 @@
         <div class="table-responsive">
             <table class="table table-sm table-hover table-striped align-middle mb-0">
                 <thead class="table-light">
-                    <tr>
-                        <th>@localizer["Employee"]</th>
-                        <th>@localizer["Date from"]</th>
-                        <th>@localizer["Date to"]</th>
-                        <th>@localizer["Note"]</th>
+                    <tr class="text-center">
+                        <th style="background-color:#f2b141; color:white;">@localizer["Employee"]</th>
+                        <th style="background-color:#f2b141; color:white;">@localizer["Date from"]</th>
+                        <th style="background-color:#f2b141; color:white;">@localizer["Date to"]</th>
+                        <th style="background-color:#f2b141; color:white;">@localizer["Note"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -648,9 +652,9 @@
                     <table class="table table-bordered table-striped mb-2 shadow-sm">
                         <thead class="table-light">
                             <tr class="text-center">
-                                <th style="background-color:#e07b00; color:white;">@localizer["Planned on time"]</th>
-                                <th style="background-color:#e07b00; color:white;">@localizer["Planned"]</th>
-                                <th style="background-color:#e07b00; color:white;">@localizer["Planned % from sum"]</th>
+                                <th style="background-color:#f2b141; color:white;">@localizer["Planned on time"]</th>
+                                <th style="background-color:#f2b141; color:white;">@localizer["Planned"]</th>
+                                <th style="background-color:#f2b141; color:white;">@localizer["Planned % from sum"]</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -686,15 +690,15 @@
                     <table class="table table-bordered table-striped mb-2 shadow-sm">
                         <thead class="table-light text-center">
                             <tr>
-                                <th style="background-color:#e07b00; color:white;">@localizer["Total working days"]</th>
-                                <th style="background-color:#e07b00; color:white;">@localizer["Days with realization"]</th>
-                                <th style="background-color:#e07b00; color:white;">@localizer["Total work hours"]</th>
-                                <th style="background-color:#e07b00; color:white;">@localizer["Total logged hours"]</th>
-                                <th style="background-color:#e07b00; color:white;">@localizer["Planned"]</th>
-                                <th style="background-color:#e07b00; color:white;">@localizer["Unplanned"]</th>
-                                <th style="background-color:#e07b00; color:white;">@localizer["Projects"]</th>
-                                <th style="background-color:#e07b00; color:white;">@localizer["Tasks"]</th>
-                                <th style="background-color:#e07b00; color:white;">@localizer["Regular"]</th>
+                                <th style="background-color:#f2b141; color:white;">@localizer["Total working days"]</th>
+                                <th style="background-color:#f2b141; color:white;">@localizer["Days with realization"]</th>
+                                <th style="background-color:#f2b141; color:white;">@localizer["Total work hours"]</th>
+                                <th style="background-color:#f2b141; color:white;">@localizer["Total logged hours"]</th>
+                                <th style="background-color:#f2b141; color:white;">@localizer["Planned"]</th>
+                                <th style="background-color:#f2b141; color:white;">@localizer["Unplanned"]</th>
+                                <th style="background-color:#f2b141; color:white;">@localizer["Projects"]</th>
+                                <th style="background-color:#f2b141; color:white;">@localizer["Tasks"]</th>
+                                <th style="background-color:#f2b141; color:white;">@localizer["Regular"]</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1260,6 +1264,37 @@
                 },
                 error: function (err) {
                     console.error("Greška pri uklanjanju:", err);
+                }
+            });
+        });
+
+        $('#btnAddPhoto').click(function () {
+            $('#inputPhotoFile').click();
+        });
+
+        $('#inputPhotoFile').change(function () {
+            var file = this.files[0];
+            if (!file) return;
+
+            var formData = new FormData();
+            formData.append("employeeId", @Model.EmployeeId);
+            formData.append("PhotoFile", file);
+
+            $.ajax({
+                url: '@Url.RouteUrl(RouteNames.Employees_SavePhoto)', 
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.valid) {
+                        location.reload();
+                    } else {
+                        alert('Greška: ' + response.message);
+                    }
+                },
+                error: function () {
+                    alert('Greška pri uploadu fajla.');
                 }
             });
         });

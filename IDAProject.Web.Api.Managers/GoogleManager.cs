@@ -123,164 +123,187 @@ namespace IDAProject.Web.Api.Managers
         }
 
         public async Task SyncFutureEventsForEmployeeAsync(int employeeId)
+{
+    var employee = await _employeeRepo.GetEmployeeByIdAsync(employeeId);
+
+    if (string.IsNullOrEmpty(employee.GoogleRefreshToken))
+        throw new Exception("RefreshToken nedostaje, korisnik mora ponovo autorizovati aplikaciju.");
+
+    var flow = new GoogleAuthorizationCodeFlow(
+        new GoogleAuthorizationCodeFlow.Initializer
         {
-            var employee = await _employeeRepo.GetEmployeeByIdAsync(employeeId);
+            REMOVED_SECRETs = new REMOVED_SECRETs
+            {
+                REMOVED_SECRET = REMOVED_SECRET,
+                REMOVED_SECRET = REMOVED_SECRET
+            },
+            Scopes = new[] { CalendarService.Scope.Calendar }
+        });
 
-            if (string.IsNullOrEmpty(employee.GoogleRefreshToken))
-                throw new Exception("RefreshToken nedostaje, korisnik mora ponovo autorizovati aplikaciju.");
+    var token = new TokenResponse
+    {
+        AccessToken = employee.GoogleAccessToken,
+        RefreshToken = employee.GoogleRefreshToken
+    };
 
-            // Google OAuth flow
-            var flow = new GoogleAuthorizationCodeFlow(
-                new GoogleAuthorizationCodeFlow.Initializer
+    var credential = new UserCredential(flow, employeeId.ToString(), token);
+    await credential.RefreshTokenAsync(CancellationToken.None);
+
+    var service = new CalendarService(new BaseClientService.Initializer
+    {
+        HttpClientInitializer = credential,
+        ApplicationName = "IDAProject"
+    });
+
+    var nowUtc = DateTime.UtcNow;
+
+    var request = service.Events.List("primary");
+    request.TimeMin = nowUtc;
+    request.TimeMax = nowUtc.AddDays(7);
+    request.SingleEvents = true;
+    request.OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime;
+
+    var events = await request.ExecuteAsync();
+
+    var regularActivityCache = new Dictionary<int, int>();
+    var today = DateTime.Today;
+
+    foreach (var ev in events.Items)
+    {
+        var attendees = ev.Attendees?.Select(a => a.Email).ToList() ?? new List<string>();
+        if (!attendees.Any())
+            attendees.Add(employee.GoogleEmail);
+
+        // Generisanje ispravnog Google event linka
+        string encodedEventId = Convert.ToBase64String(
+                                    System.Text.Encoding.UTF8.GetBytes(ev.Id))
+                                    .Replace('+', '-')
+                                    .Replace('/', '_')
+                                    .TrimEnd('=');
+        string googleEventLink = $"https://www.google.com/calendar/event?eid={encodedEventId}";
+
+        foreach (var email in attendees)
+        {
+            var empList = await _employeeRepo.SearchEmployeesAsync(
+                new Web.Models.RequestModels.Employees.SearchEmployeesParams { Email = email });
+
+            if (empList == null) continue;
+
+            var employeeData = empList.FirstOrDefault();
+            if (employeeData == null || !employeeData.UserId.HasValue) continue;
+
+            var start = ev.Start.DateTime ?? DateTime.Parse(ev.Start.Date);
+            var end = ev.End.DateTime ?? DateTime.Parse(ev.End.Date);
+            var created = ev.Created?.Date;
+
+            var timeFrom = TimeOnly.FromDateTime(start);
+            var timeTo = TimeOnly.FromDateTime(end);
+            var duration = TimeOnly.FromTimeSpan(end - start);
+
+            try
+            {
+                if (!regularActivityCache.ContainsKey(employeeData.UserId.Value))
                 {
-                    REMOVED_SECRETs = new REMOVED_SECRETs
-                    {
-                        REMOVED_SECRET = REMOVED_SECRET,
-                        REMOVED_SECRET = REMOVED_SECRET
-                    },
-                    Scopes = new[] { CalendarService.Scope.Calendar }
-                });
+                    var id = await _regularActivitiesRepository
+                        .GetOrCreateMeetingActivityId(employeeData.UserId.Value);
 
-            var token = new TokenResponse
-            {
-                AccessToken = employee.GoogleAccessToken,
-                RefreshToken = employee.GoogleRefreshToken
-            };
+                    regularActivityCache[employeeData.UserId.Value] = id;
+                }
 
-            var credential = new UserCredential(flow, employeeId.ToString(), token);
-            await credential.RefreshTokenAsync(CancellationToken.None);
+                var regularActivityId = regularActivityCache[employeeData.UserId.Value];
 
-            var service = new CalendarService(new BaseClientService.Initializer
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = "IDAProject"
-            });
+                bool isCreatedToday = created.HasValue && created.Value.Date == today;
+                bool isStartToday = start.Date == today;
+                bool isEndToday = end.Date == today;
 
-            var request = service.Events.List("primary");
-            request.TimeMin = DateTime.UtcNow;
-            request.TimeMax = DateTime.UtcNow.AddDays(7);
-            request.SingleEvents = true;
-            request.OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime;
-
-            var events = await request.ExecuteAsync();
-
-            var regularActivityCache = new Dictionary<int, int>();
-
-            foreach (var ev in events.Items)
-            {
-                var attendees = ev.Attendees?.Select(a => a.Email).ToList() ?? new List<string>();
-
-                if (!attendees.Any())
-                    attendees.Add(employee.GoogleEmail);
-
-                foreach (var email in attendees)
+                // ================= REALIZACIJA =================
+                if (isCreatedToday && isStartToday && isEndToday)
                 {
-                    var empList = await _employeeRepo.SearchEmployeesAsync(
-                        new Web.Models.RequestModels.Employees.SearchEmployeesParams { Email = email });
+                    var existsRealization =
+                        await _tasksRealizationsRepository.SearchTasksRealizationsAsync(
+                            new Web.Models.RequestModels.TasksRealizations.SearchTasksRealizationsParams
+                            {
+                                GoogleEventId = ev.Id,
+                                UserId = employeeData.UserId
+                            });
 
-                    if (empList == null) continue;
-                    var employeeData = empList.FirstOrDefault();
-                    if (employeeData == null) continue;
+                    if (existsRealization.Count > 0)
+                        continue;
 
-                    var start = ev.Start.DateTime ?? DateTime.Parse(ev.Start.Date);
-                    var end = ev.End.DateTime ?? DateTime.Parse(ev.End.Date);
-
-                    var timeFrom = TimeOnly.FromDateTime(start);
-                    var timeTo = TimeOnly.FromDateTime(end);
-                    var duration = TimeOnly.FromTimeSpan(end - start);
-
-                    try
-                    {
-                        // Dobij RegularActivityId (cache)
-                        if (!regularActivityCache.ContainsKey(employeeData.UserId.Value))
+                    await _tasksRealizationsRepository.SaveTasksRealizationAsync(
+                        new Web.Models.Dto.TasksRealizations.SaveTasksRealizationRequestModel
                         {
-                            var id = await _regularActivitiesRepository.GetOrCreateMeetingActivityId(employeeData.UserId.Value);
-                            regularActivityCache[employeeData.UserId.Value] = id;
-                        }
-                        var regularActivityId = regularActivityCache[employeeData.UserId.Value];
+                            UserId = employeeData.UserId,
+                            CreatedDate = DateTime.Now,
+                            ActivityTypeId = 3,
+                            Activity = ev.Summary,
+                            TimeFrom = timeFrom,
+                            TimeTo = timeTo,
+                            Duration = duration,
+                            RegularActivityId = regularActivityId,
+                            RealizationDate = start.Date,
+                            GoogleEventId = ev.Id,
+                            GoogleEventLink = ev.HtmlLink, // <- ceo link
+                            PlanNo = 0,
+                            Finished = true,
+                        });
+                }
+                else
+                {
+                    // ================= PLAN =================
+                    var plansForDate =
+                        await _tasksPlanningsRepository.SearchTasksPlanningsAsync(
+                            new Web.Models.RequestModels.TasksPlannings.SearchTasksPlanningsParams
+                            {
+                                PlanDate = start.Date.ToString("dd.MM.yyyy"),
+                                EmployeeId = employeeData.Id
+                            });
 
-                        var nowUtc = DateTime.UtcNow;
+                    var lastPlanNo = plansForDate
+                        .Where(p => p.EmployeeId == employeeData.Id &&
+                                    p.PlanDate == start.Date)
+                        .OrderByDescending(p => p.PlanNo)
+                        .Select(p => p.PlanNo)
+                        .FirstOrDefault();
 
-                        if (end <= nowUtc || start.Date == nowUtc.Date)
+                    int newPlanNo = (lastPlanNo ?? 0) + 1;
+
+                    var existsPlan = plansForDate
+                        .Any(p => p.GoogleEventId == ev.Id &&
+                                  p.UserId == employeeData.UserId);
+
+                    if (existsPlan)
+                        continue;
+
+                    await _tasksPlanningsRepository.SaveTasksPlanningAsync(
+                        new Web.Models.Dto.TasksPlannings.SaveTasksPlanningRequestModel
                         {
-                            // REALIZACIJA
-                            var existsRealization = await _tasksRealizationsRepository.SearchTasksRealizationsAsync(
-                                new Web.Models.RequestModels.TasksRealizations.SearchTasksRealizationsParams
-                                {
-                                    GoogleEventId = ev.Id,
-                                    UserId = employee.UserId
-                                });
+                            UserId = employeeData.UserId,
+                            EmployeeId = employeeData.Id,
+                            CreatedAt = DateTime.Now,
+                            ActivityTypeId = 3,
+                            ActivityName = ev.Summary,
+                            PlanStatusId = 1,
+                            TimeFrom = timeFrom,
+                            TimeTo = timeTo,
+                            Duration = duration,
+                            RegularActivityId = regularActivityId,
+                            PlanNo = newPlanNo,
+                            PlanDate = start.Date,
+                            GoogleEventId = ev.Id,
 
-                            if (existsRealization.Count > 0) continue;
-
-                            await _tasksRealizationsRepository.SaveTasksRealizationAsync(
-                                new Web.Models.Dto.TasksRealizations.SaveTasksRealizationRequestModel
-                                {
-                                    UserId = employeeData.UserId,
-                                    CreatedDate = DateTime.Now,
-                                    ActivityTypeId = 3,
-                                    Activity = ev.Summary,
-                                    TimeFrom = timeFrom,
-                                    TimeTo = timeTo,
-                                    Duration = duration,
-                                    RegularActivityId = regularActivityId,
-                                    RealizationDate = start.Date,
-                                    GoogleEventId = ev.Id,
-                                    PlanNo = 0,
-                                    Finished = true
-                                });
-                        }
-                        else
-                        {
-                            // PLAN
-                            var plansForDate = await _tasksPlanningsRepository.SearchTasksPlanningsAsync(
-                                new Web.Models.RequestModels.TasksPlannings.SearchTasksPlanningsParams
-                                {
-                                    PlanDate = start.Date.ToString("dd.MM.yyyy"),
-                                    EmployeeId = employeeData.Id
-                                });
-
-                            var lastPlanNo = plansForDate
-                                .Where(p => p.EmployeeId == employeeData.Id && p.PlanDate == start.Date)
-                                .OrderByDescending(p => p.PlanNo)
-                                .Select(p => p.PlanNo)
-                                .FirstOrDefault();
-
-                            int newPlanNo = (lastPlanNo ?? 0) + 1;
-
-                            var existsPlan = plansForDate
-                                .Any(p => p.GoogleEventId == ev.Id && p.UserId == employee.UserId);
-
-                            if (existsPlan) continue;
-
-                            await _tasksPlanningsRepository.SaveTasksPlanningAsync(
-                                new Web.Models.Dto.TasksPlannings.SaveTasksPlanningRequestModel
-                                {
-                                    UserId = employeeData.UserId,
-                                    EmployeeId = employeeData.Id,
-                                    CreatedAt = DateTime.Now,
-                                    ActivityTypeId = 3,
-                                    ActivityName = ev.Summary,
-                                    PlanStatusId = 1,
-                                    TimeFrom = timeFrom,
-                                    TimeTo = timeTo,
-                                    Duration = duration,
-                                    RegularActivityId = regularActivityId,
-                                    PlanNo = newPlanNo,
-                                    PlanDate = start.Date,
-                                    GoogleEventId = ev.Id
-                                });
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("GRESKA:");
-                        Console.WriteLine(ex.Message);
-                        Console.WriteLine(ex.InnerException?.Message);
-                        throw;
-                    }
+                        });
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GRESKA:");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException?.Message);
+                throw;
+            }
         }
+    }
+}
     }
 }

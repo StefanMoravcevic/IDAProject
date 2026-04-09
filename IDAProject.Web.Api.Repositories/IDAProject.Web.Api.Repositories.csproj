@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Remove="FebiItemsRepository.cs" />
+    <Compile Remove="MasterDataProviders\MeasureUnitsMasterDataProvider.cs" />
     <Compile Remove="MessagesRepository.cs" />
     <Compile Remove="OrderHeaderArchivesRepository.cs" />
     <Compile Remove="OrderHeadersRepository.cs" />

@@ -1377,4 +1377,19 @@
   <data name="Search for task name" xml:space="preserve">
     <value>Претражите по имену пројекта</value>
   </data>
+  <data name="Add realization" xml:space="preserve">
+    <value>Додај реализацију</value>
+  </data>
+  <data name="Employee Basic Info" xml:space="preserve">
+    <value>Основне информације о запосленом</value>
+  </data>
+  <data name="Plan statuses" xml:space="preserve">
+    <value>Статуси</value>
+  </data>
+  <data name="Years" xml:space="preserve">
+    <value>Године</value>
+  </data>
+  <data name="Add photo" xml:space="preserve">
+    <value>Додај слику</value>
+  </data>
 </root>
