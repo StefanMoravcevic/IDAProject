@@ -81,6 +81,12 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.GoogleEventId == searchParams.GoogleEventId);
                 }
+
+                if (searchParams.EmployeeId.HasValue)
+                {
+
+                    query = query.Where(x => x.User.EmployeeId == searchParams.EmployeeId);
+                }
             }
 
             result = await query.OrderBy(x => x.TimeFrom).Select(a => new TasksRealizationDto
@@ -96,7 +102,7 @@ namespace IDAProject.Web.Api.Repositories
                 ProjectId  = a.ProjectId,
                 RegularActivityId = a.RegularActivityId,
                 Report = a.Report,
-                Employee = a.TasksPlanning.Employee.Name + " " + a.TasksPlanning.Employee.Surname,
+                Employee = a.User.Employee.Name + " " + a.User.Employee.Surname,
                 TasksPlanningId = a.TasksPlanningId,
                 TimeFrom  = a.TimeFrom,
                 TimeTo = a.TimeTo,

@@ -18694,7 +18694,8 @@ img {
     background-attachment: fixed !important;
     height: 100%;
     width: 100%;
-    background: url("../images/ALPACK.png");
+    background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), /* tamnjenje */
+    url("../images/ALPACK.png");
     background-repeat: no-repeat;
     background-size: cover;
     display: inline-table;

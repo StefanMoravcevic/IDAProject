@@ -1047,7 +1047,8 @@
 				method: "POST",
 				data: {
 					activityTypeId: mode,
-					planDate: date
+					planDate: date,
+					userId : @Model.User.Id
 				},
 				success: function (tasks) {
 
@@ -1884,65 +1885,62 @@
 
 		function searchTaskPlanningsPopulateTable() {
 
-				$.ajax({
-					url: "@Url.RouteUrl(RouteNames.TasksPlannings_Search)",
-					method: "POST",
-					data: {
-						planDate: "@Model.Today",
-						userId: "@Model.User.Id"
-					},
-					success: function (data) {
+			$.ajax({
+				url: "@Url.RouteUrl(RouteNames.TasksPlannings_Search)",
+				method: "POST",
+				data: {
+					planDate: "@Model.Today",
+					userId: "@Model.User.Id"
+				},
+				success: function (data) {
 
-						let tbody = $("#plannedTable tbody");
-						tbody.empty();
+					let tbody = $("#plannedTable tbody");
+					tbody.empty();
 
-						let stats = {};
+					let stats = {};
 
-						$.each(data, function (index, item) {
+					$.each(data, function (index, item) {
 
-							// ===== FINISHED IKONICA =====
-							let finishedIcon = '';
+						let finishedIcon = '';
+						if (item.isFinished === null) finishedIcon = '-';
+						else if (item.isFinished === true) finishedIcon = '<span style="color:green; font-weight:bold;">✔</span>';
+						else finishedIcon = '<span style="color:red; font-weight:bold;">✖</span>';
 
-							if (item.isFinished === null) {
-								finishedIcon = '-';
-							}
-							else if (item.isFinished === true) {
-								finishedIcon = '<span style="color:green; font-weight:bold;">✔</span>';
-							}
-							else {
-								finishedIcon = '<span style="color:red; font-weight:bold;">✖</span>';
-							}
+						let rowClass = item.googleEventId ? 'google-event-row' : '';
+						let googleLink = item.googleEventLink ?? '';
 
-							let row = `
-							<tr data-id="${item.id}" class="tooltip-target">
-								<td>${item.displayTask ?? ""}</td>
-								<td>${item.activityName ?? ""}</td>
-								<td>${item.timeFromFormatted}</td>
-								<td>${item.timeToFormatted}</td>
-								<td>${item.durationFormatted ?? ""}</td>
-								<td>${item.planStatus}</td>
-								<td>${item.planNo ?? ""}</td>
-								<td class="text-center">${finishedIcon}</td>
-							</tr>`;
+						let row = `
+						<tr data-id="${item.id}" class="tooltip-target ${rowClass}" data-google-link="${googleLink}">
+							<td>${item.displayTask ?? ""}</td>
+							<td>${item.activityName ?? ""}</td>
+							<td>${item.timeFromFormatted}</td>
+							<td>${item.timeToFormatted}</td>
+							<td>${item.durationFormatted ?? ""}</td>
+							<td>${item.planStatus}</td>
+							<td>${item.planNo ?? ""}</td>
+							<td class="text-center">${finishedIcon}</td>
+						</tr>`;
 
-							tbody.append(row);
+						tbody.append(row);
 
-							// ===== STATS ZA PIE =====
-							let type = item.activityTypeName ?? "Unknown";
-							stats[type] = (stats[type] || 0) + 1;
-						});
+						let type = item.activityTypeName ?? "Unknown";
+						stats[type] = (stats[type] || 0) + 1;
+					});
 
-						// ===== NE TREBA BOOTSTRAP TOOLTIP RESET =====
-						// (ako koristiš custom tooltip)
+					renderPlanPieChart(stats);
 
-						// ===== RENDER PIE CHART =====
-						renderPlanPieChart(stats);
-					},
-					error: function (err) {
-						console.log(err);
-					}
-				});
-			}
+					$("#plannedTable tbody tr.google-event-row").off("click").on("click", function () {
+						const link = $(this).data("google-link");
+						if (link) {
+							window.open(link, "_blank");
+						}
+					});
+				},
+				error: function (err) {
+					console.log(err);
+				}
+			});
+		}
 
 		function searchTaskRealizationPopulateTable() {
 

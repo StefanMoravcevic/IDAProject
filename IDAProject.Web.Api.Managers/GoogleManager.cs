@@ -174,13 +174,6 @@ namespace IDAProject.Web.Api.Managers
         if (!attendees.Any())
             attendees.Add(employee.GoogleEmail);
 
-        // Generisanje ispravnog Google event linka
-        string encodedEventId = Convert.ToBase64String(
-                                    System.Text.Encoding.UTF8.GetBytes(ev.Id))
-                                    .Replace('+', '-')
-                                    .Replace('/', '_')
-                                    .TrimEnd('=');
-        string googleEventLink = $"https://www.google.com/calendar/event?eid={encodedEventId}";
 
         foreach (var email in attendees)
         {
@@ -243,36 +236,38 @@ namespace IDAProject.Web.Api.Managers
                             RegularActivityId = regularActivityId,
                             RealizationDate = start.Date,
                             GoogleEventId = ev.Id,
-                            GoogleEventLink = ev.HtmlLink, // <- ceo link
+                            GoogleEventLink = ev.HtmlLink,
                             PlanNo = 0,
                             Finished = true,
                         });
                 }
                 else
                 {
-                    // ================= PLAN =================
                     var plansForDate =
                         await _tasksPlanningsRepository.SearchTasksPlanningsAsync(
                             new Web.Models.RequestModels.TasksPlannings.SearchTasksPlanningsParams
                             {
                                 PlanDate = start.Date.ToString("dd.MM.yyyy"),
-                                EmployeeId = employeeData.Id
+                                UserId = employeeData.UserId
                             });
 
                     var lastPlanNo = plansForDate
                         .Where(p => p.EmployeeId == employeeData.Id &&
-                                    p.PlanDate == start.Date)
+                                    p.PlanDate.Value.Date == start.Date)
                         .OrderByDescending(p => p.PlanNo)
                         .Select(p => p.PlanNo)
                         .FirstOrDefault();
 
                     int newPlanNo = (lastPlanNo ?? 0) + 1;
 
-                    var existsPlan = plansForDate
-                        .Any(p => p.GoogleEventId == ev.Id &&
-                                  p.UserId == employeeData.UserId);
+                    var existsPlan = await _tasksPlanningsRepository.SearchTasksPlanningsAsync(
+                            new Web.Models.RequestModels.TasksPlannings.SearchTasksPlanningsParams
+                            {
+                               GoogleEventId = ev.Id,
+                                UserId = employeeData.UserId
+                            });
 
-                    if (existsPlan)
+                            if (existsPlan.Count > 0)
                         continue;
 
                     await _tasksPlanningsRepository.SaveTasksPlanningAsync(
@@ -291,6 +286,7 @@ namespace IDAProject.Web.Api.Managers
                             PlanNo = newPlanNo,
                             PlanDate = start.Date,
                             GoogleEventId = ev.Id,
+                            GoogleEventLink = ev.HtmlLink
 
                         });
                 }

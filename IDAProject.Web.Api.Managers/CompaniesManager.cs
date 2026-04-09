@@ -18,8 +18,6 @@ namespace IDAProject.Web.Api.Managers
             _logger = logger;
             _companiesRepository = companiesRepository;
         }
-
-
         public async Task<ResponseModelList<CompanyDto>> SearchCompaniesAsync(SearchCompaniesParams searchParams)
         {
             var result = new ResponseModelList<CompanyDto>();

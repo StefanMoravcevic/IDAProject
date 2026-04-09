@@ -20,13 +20,15 @@ namespace IDAProject.Web.Admin.Controllers
         private readonly IIdaTasksManager _idaTasksManager;
         private readonly ITasksPlanningsManager _tasksPlanningsManager;
         private readonly IEmployeesManager _employeesManager;
-        public IDAController(ILogger<IDAController> logger, IAccountManager accountManager, IConfiguration configuration, IMasterDataManager masterDataManager, IIdaTasksManager idaTasksManager, IEmployeesManager employeesManager, ITasksPlanningsManager tasksPlanningsManager) : base(accountManager, logger)
+        private readonly IRegularActivitiesManager _regularActivitiesManager;
+        public IDAController(ILogger<IDAController> logger, IAccountManager accountManager, IConfiguration configuration, IMasterDataManager masterDataManager, IIdaTasksManager idaTasksManager, IEmployeesManager employeesManager, ITasksPlanningsManager tasksPlanningsManager, IRegularActivitiesManager regularActivitiesManager) : base(accountManager, logger)
         {
             _configuration = configuration;
             _masterDataManager = masterDataManager;
             _idaTasksManager = idaTasksManager;
             _employeesManager = employeesManager;
             _tasksPlanningsManager = tasksPlanningsManager;
+            _regularActivitiesManager = regularActivitiesManager;
         }
 
 
@@ -69,7 +71,13 @@ namespace IDAProject.Web.Admin.Controllers
             viewModel.ProjectTasks = await _idaTasksManager.GetUncompletedTasks(true, user.Id);
             viewModel.ActivityTypes = await _masterDataManager.GetSelectOptionsByTableAsync("ActivityTypes", "Name");
             viewModel.PlanStatuses = await _masterDataManager.GetSelectOptionsByTableAsync("PlanStatuses", "Name");
-            viewModel.RegularActivities = await _masterDataManager.GetSelectOptionsByTableAsync("RegularActivities", "Name");
+            var regularActivities = await _regularActivitiesManager.SearchRegularActivitiesAsync(new Web.Models.RequestModels.RegularActivities.SearchRegularActivitiesParams { UserId = user.Id });
+            var regularActivitiesList = regularActivities.Payload.Select(x => new GenericSelectOption
+            {
+                Value = x.Id,
+                Description = x.Name
+            });
+            viewModel.RegularActivities = regularActivitiesList;
             viewModel.User = user;
             var employeePhoto = (await _employeesManager.GetEmployeeByIdAsync(user.EmployeeId)).Payload.Photo;
             viewModel.ImageSource = employeePhoto;

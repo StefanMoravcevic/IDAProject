@@ -23,6 +23,7 @@ public Int32? PlanNo { get; set; }
 public Int32? PlanStatusId { get; set; }
 public Int32? EmployeeId { get; set; }
 public DateTime? CreatedAt { get; set; }
+        public string? GoogleEventLink { get; set; }
         public string? GoogleEventId { get; set; }
 
         public DateTime? PlanDate { get; set; }

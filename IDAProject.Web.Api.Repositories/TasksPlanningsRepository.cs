@@ -140,7 +140,8 @@ namespace IDAProject.Web.Api.Repositories
                     : "",
                 IsFinished = a.TasksRealizations.FirstOrDefault().Finished,
                 PlanDate = a.PlanDate,
-                GoogleEventId = a.GoogleEventId
+                GoogleEventId = a.GoogleEventId,
+                GoogleEventLink = a.GoogleEventLink
 
 
             }).ToListAsync();
