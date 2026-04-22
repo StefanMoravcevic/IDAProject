@@ -1392,4 +1392,52 @@
   <data name="Add photo" xml:space="preserve">
     <value>Додај слику</value>
   </data>
+  <data name="Are you sure you want to remove employee" xml:space="preserve">
+    <value>Да ли сте сигурни да желите да склоните означеног запосленог</value>
+  </data>
+  <data name="DeletedMsg" xml:space="preserve">
+    <value>Успешно сте обрисали слог</value>
+  </data>
+  <data name="Drag and Drop your files here" xml:space="preserve">
+    <value>Превуците или кликните за учитавање документа</value>
+  </data>
+  <data name="Enter name to show" xml:space="preserve">
+    <value>Унесите име за приказ</value>
+  </data>
+  <data name="Group level" xml:space="preserve">
+    <value>На нивоу групе</value>
+  </data>
+  <data name="Is group absence" xml:space="preserve">
+    <value>Одсуство за групу запослених</value>
+  </data>
+  <data name="My plan comments" xml:space="preserve">
+    <value>Моји коментари на планове</value>
+  </data>
+  <data name="My realization comments" xml:space="preserve">
+    <value>Моји коментари на реализацију</value>
+  </data>
+  <data name="Name to show" xml:space="preserve">
+    <value>Име за приказ</value>
+  </data>
+  <data name="Project tasks" xml:space="preserve">
+    <value>Пројектни задаци</value>
+  </data>
+  <data name="Shift work" xml:space="preserve">
+    <value>Рад у сменама</value>
+  </data>
+  <data name="Shifts" xml:space="preserve">
+    <value>Смена</value>
+  </data>
+  <data name="Succesfully removed" xml:space="preserve">
+    <value>Успешно уклоњено</value>
+  </data>
+  <data name="Total realization work hours" xml:space="preserve">
+    <value>Радно време са реализацијом</value>
+  </data>
+  <data name="Yes, hide" xml:space="preserve">
+    <value>Да, уклони</value>
+  </data>
+  <data name="Sectors" xml:space="preserve">
+    <value>Сектори</value>
+  </data>
 </root>

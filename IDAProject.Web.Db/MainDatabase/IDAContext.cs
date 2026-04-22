@@ -142,6 +142,7 @@ public partial class IdaContext : DbContext
     public virtual DbSet<Set> Sets { get; set; }
 
     public virtual DbSet<State> States { get; set; }
+    public virtual DbSet<Shift> Shifts { get; set; }
 
     public virtual DbSet<State1> States1 { get; set; }
 
@@ -720,13 +721,16 @@ public partial class IdaContext : DbContext
                 .HasForeignKey(d => d.DeletedBy)
                 .HasConstraintName("FK_EmployeeJobTypeControls_AspNetUsers");
 
-            entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeJobTypeControls)
-                .HasForeignKey(d => d.EmployeeId)
-                .HasConstraintName("FK_EmployeeJobTypeControls_Employees");
-
             entity.HasOne(d => d.JobType).WithMany(p => p.EmployeeJobTypeControls)
                 .HasForeignKey(d => d.JobTypeId)
                 .HasConstraintName("FK_EmployeeJobTypeControls_JobTypes");
+
+            entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeJobTypeControlEmployees)
+                .HasForeignKey(d => d.EmployeeId)
+                .HasConstraintName("FK_EmployeeJobTypeControls_Employees");
+            entity.HasOne(d => d.EmployeeToSee).WithMany(p => p.EmployeeJobTypeControlEmployeeToSees)
+                .HasForeignKey(d => d.EmployeeToSeeId)
+                .HasConstraintName("FK_EmployeeJobTypeControls_Employees1");
         });
 
         modelBuilder.Entity<EmployeeViewTracking>(entity =>

@@ -94,16 +94,29 @@ namespace IDAProject.Web.Admin.Controllers
         }
 
         [HttpPost("hide", Name = RouteNames.TasksRealizationComments_Hide)]
-        public async Task<IActionResult> HideTasksRealizationCommentAsync(SaveTasksRealizationCommentRequestModel requestModel)
+        public async Task<IActionResult> HideTasksRealizationCommentAsync(
+    SaveTasksRealizationCommentRequestModel requestModel)
         {
             var user = GetCurrentUser();
-            var comment = await _TasksRealizationCommentsManager.GetTasksRealizationCommentByIdAsync(requestModel.Id);
-            comment.Payload.HiddenFromHomePage = true;
-            var responseModel = await _TasksRealizationCommentsManager.SaveTasksRealizationCommentAsync(comment.Payload);
-            if (responseModel.Valid)
+
+            var comment = await _TasksRealizationCommentsManager
+                .GetTasksRealizationCommentByIdAsync(requestModel.Id);
+
+            if (!comment.Valid || comment.Payload == null)
+                return Json(comment);
+
+            if (comment.Payload.UserId == user.Id)
             {
-                responseModel.Message = Url.RouteUrl(RouteNames.TasksPlanningComments_List, new { Id = "111" })!;
+                comment.Payload.HiddenFromHomePageAuthor = true;
             }
+            else
+            {
+                comment.Payload.HiddenFromHomePage = true;
+            }
+
+            var responseModel = await _TasksRealizationCommentsManager
+                .SaveTasksRealizationCommentAsync(comment.Payload);
+
             return Json(responseModel);
         }
     }

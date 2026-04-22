@@ -21,42 +21,106 @@
 							<h4 class="mb-0">@localizer["Absence basic info"]</h4>
 							<tms-input type="Hidden" name="Id" id="absenceId" value="@absence.Id" />
 						</div>
-						<div class="card-body p-0 task-edit-main">
-							<div class="row p-5 border-bottom">
-								<div class="col-sm-12 col-md-6 col-xl-3">
-									<tms-select name="AbsenceTypeId"
-												id="AbsenceTypeId"
-												options="@Model.AbsenceTypes"
-												selected-option="@absence.AbsenceTypeId"
-												label="@localizer["Absence type"]:"
-												empty-option-text="@localizer["Select absence type"]..." />
-								</div>
-								<div class="col-sm-12 col-md-6 col-xl-3">
-									<tms-select name="JobTypeId"
-												id="JobTypeId"
-												options="@Model.JobTypes"
-												selected-option="@absence.JobTypeId"
-												label="@localizer["Group"]:"
-												empty-option-text="@localizer["Select group"]..." />
-								</div>
-								
-								<div class="col-sm-12 col-md-4 col-xl-3">
-									<tms-input type="Date" name="DateFrom" id="DateFromId" value="@absence.DateFrom!" label="@localizer["Date from"]" placeholder="@localizer["Enter date from"]" />
-								</div>
-								<div class="col-sm-12 col-md-4 col-xl-3">
-									<tms-input type="Date" name="DateTo" id="DateToId" value="@absence.DateTo!" label="@localizer["Date to"]" placeholder="@localizer["Enter date to"]" />
-								</div>
-	
-								<div class="col-sm-12 col-md-12 col-xl-12 col-lg-12">
-									<div class="form-group">
-										<label class="form-label text-muted" for="Comment">@localizer["Description"]:</label>
-										<div class="input-group">
-											<textarea name="Comment" class="form-control text-dark" id="NoteId" style="height:120px;">@absence.Comment</textarea>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+                        <div class="card-body p-0 task-edit-main">
+
+                            <!-- TOGGLE -->
+                            <div class="row p-4 border-bottom ms-2">
+                                <div class="col-12 mb-2">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="isGroupAbsence">
+                                        <label class="form-check-label" for="isGroupAbsence">
+                                            @localizer["Is group absence"]
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- GORNJI BLOK -->
+                            <div class="row p-4 border-bottom">
+
+                                <div class="col-sm-12 col-md-6 col-xl-3">
+                                    <tms-select name="AbsenceTypeId"
+                                                id="AbsenceTypeId"
+                                                options="@Model.AbsenceTypes"
+                                                selected-option="@absence.AbsenceTypeId"
+                                                label="@localizer["Absence type"]:"
+                                                empty-option-text="@localizer["Select absence type"]..." />
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-xl-3" id="employeeSelectWrapper">
+                                    <tms-select name="EmployeeId"
+                                                id="EmployeeId"
+                                                options="@Model.Employees"
+                                                selected-option="@absence.EmployeeId"
+                                                label="@localizer["Employee"]:"
+                                                empty-option-text="@localizer["Select employee"]..." />
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-xl-3" id="groupSelectWrapper">
+                                    <tms-select name="JobTypeId"
+                                                id="JobTypeId"
+                                                options="@Model.JobTypes"
+                                                selected-option="@absence.JobTypeId"
+                                                label="@localizer["Group"]:"
+                                                empty-option-text="@localizer["Select group"]..." />
+                                </div>
+
+                            </div>
+
+                            <!-- DATUM + VREME -->
+                            <div class="row p-4 border-bottom">
+
+                                <div class="col-sm-12 col-md-3">
+                                    <tms-input type="Date"
+                                               name="DateFrom"
+                                               id="DateFromId"
+                                               value="@absence.DateFrom!"
+                                               label="@localizer["Date from"]" />
+                                </div>
+
+                                <div class="col-sm-12 col-md-3">
+                                    <tms-input type="Date"
+                                               name="DateTo"
+                                               id="DateToId"
+                                               value="@absence.DateTo!"
+                                               label="@localizer["Date to"]" />
+                                </div>
+
+                                <div class="col-sm-12 col-md-3">
+                                    <tms-input type="Text"
+                                               name="TimeFromFormatted"
+                                               id="TimeFromFormattedId"
+                                               value="@absence.TimeFrom"
+                                               label="@localizer["Time from"]" />
+                                </div>
+
+                                <div class="col-sm-12 col-md-3">
+                                    <tms-input type="Text"
+                                               name="TimeToFormatted"
+                                               id="TimeToFormattedId"
+                                               value="@absence.TimeTo"
+                                               label="@localizer["Time to"]" />
+                                </div>
+
+                            </div>
+
+                            <!-- OPIS -->
+                            <div class="row p-4">
+
+                                <div class="col-12">
+                                    <label class="form-label text-muted">
+                                        @localizer["Description"]:
+                                    </label>
+
+                                    <textarea name="Comment"
+                                              class="form-control text-dark"
+                                              id="NoteId"
+                                              style="height:120px;">@absence.Comment</textarea>
+                                </div>
+
+                            </div>
+
+                        </div>
 					</div>
 				</div>
 			</div>
@@ -81,9 +145,27 @@
 	<script type="text/javascript" src="~/lib/select2/select2.min.js"></script>
 
 	<script type="text/javascript">
+        function toggleAbsenceMode() {
+
+            if ($('#isGroupAbsence').is(':checked')) {
+
+                // GROUP MODE
+                $('#groupSelectWrapper').show();
+                $('#employeeSelectWrapper').hide();
+
+            } else {
+
+                // EMPLOYEE MODE
+                $('#groupSelectWrapper').hide();
+                $('#employeeSelectWrapper').show();
+            }
+        }
 
 		$(document).ready(function () {
-
+            $("#absenceContainer input[type='text'][data-date='auto']").each(function (_, datePickerElement) {
+                initDefaultDatePicker(datePickerElement);
+            });
+            toggleAbsenceMode();
 			$("#buttonSave").click(function () {
 				var $inputsContainer = $("#absenceContainer");
 
@@ -106,6 +188,32 @@
 			$("#buttonCancel").click(function () {
 				document.location = '@urlListNotification';
 			});
+
+            $('#isGroupAbsence').on('change', function () {
+                toggleAbsenceMode();
+            });
+
+            $("#AbsenceTypeId").select2({});
+            $("#EmployeeId").select2({});
+
+           new AirDatepicker($("#TimeFromFormattedId")[0], {
+                            timepicker: true,
+                            onlyTimepicker: true,
+                            timeFormat: 'HH:mm',
+                            autoClose: true,
+                            buttons: false,
+                            minutesStep: 5,
+           });
+           new AirDatepicker($("#TimeToFormattedId")[0], {
+                            timepicker: true,
+                            onlyTimepicker: true,
+                            timeFormat: 'HH:mm',
+                            autoClose: true,
+                            buttons: false,
+                            minutesStep: 5,
+           });
+
+
 		});
 	</script>
 }

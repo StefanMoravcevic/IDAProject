@@ -25,6 +25,7 @@
     <Compile Remove="Models\ViewModels\Printers\**" />
     <Compile Remove="Models\ViewModels\Reports\**" />
     <Compile Remove="Models\ViewModels\ScannedLines\**" />
+    <Compile Remove="Models\ViewModels\Shifts\**" />
     <Compile Remove="Models\ViewModels\Statements\**" />
     <Compile Remove="obj\Release\**" />
     <Compile Remove="Views\FebiItems\**" />
@@ -51,6 +52,7 @@
     <Content Remove="Models\ViewModels\Printers\**" />
     <Content Remove="Models\ViewModels\Reports\**" />
     <Content Remove="Models\ViewModels\ScannedLines\**" />
+    <Content Remove="Models\ViewModels\Shifts\**" />
     <Content Remove="Models\ViewModels\Statements\**" />
     <Content Remove="obj\Release\**" />
     <Content Remove="Views\FebiItems\**" />
@@ -77,6 +79,7 @@
     <EmbeddedResource Remove="Models\ViewModels\Printers\**" />
     <EmbeddedResource Remove="Models\ViewModels\Reports\**" />
     <EmbeddedResource Remove="Models\ViewModels\ScannedLines\**" />
+    <EmbeddedResource Remove="Models\ViewModels\Shifts\**" />
     <EmbeddedResource Remove="Models\ViewModels\Statements\**" />
     <EmbeddedResource Remove="obj\Release\**" />
     <EmbeddedResource Remove="Views\FebiItems\**" />
@@ -103,6 +106,7 @@
     <None Remove="Models\ViewModels\Printers\**" />
     <None Remove="Models\ViewModels\Reports\**" />
     <None Remove="Models\ViewModels\ScannedLines\**" />
+    <None Remove="Models\ViewModels\Shifts\**" />
     <None Remove="Models\ViewModels\Statements\**" />
     <None Remove="obj\Release\**" />
     <None Remove="Views\FebiItems\**" />
@@ -126,6 +130,7 @@
     <Compile Remove="Controllers\PeriodsController.cs" />
     <Compile Remove="Controllers\PrintersController.cs" />
     <Compile Remove="Controllers\ScannedLinesController.cs" />
+    <Compile Remove="Controllers\ShiftsController.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -122,14 +122,16 @@ namespace IDAProject.Web.Api.Repositories
 
             // 1?? Prvo u?itamo iz baze sve zapise koji zadovoljavaju filter
             var employeeTrackings = await _dbContext.EmployeeViewTrackings
-                .Where(ev => bookmarkedEmployeeIds.Contains(ev.ViewedEmployeeId.Value) && !ev.IsDeleted)
-                .Where(ev => !_dbContext.TasksPlannings
-                    .Any(tp => tp.User.EmployeeId == ev.ViewedEmployeeId
-                               && tp.PlanDate.HasValue
-                               && tp.PlanDate.Value.Date == nextWorkingDay
-                               && !tp.IsDeleted))
-                .Include(ev => ev.ViewedEmployee) // obavezno Include za navigaciono svojstvo
-                .ToListAsync();
+    .Where(ev => bookmarkedEmployeeIds.Contains(ev.ViewedEmployeeId.Value) && !ev.IsDeleted)
+    .Where(ev => !_dbContext.TasksPlannings
+        .Any(tp => tp.User.EmployeeId == ev.ViewedEmployeeId
+                   && tp.PlanDate.HasValue
+                   && tp.PlanDate.Value.Date == nextWorkingDay
+                   && !tp.IsDeleted
+                   && !(tp.ActivityTypeId == 3
+                        && tp.RegularActivity.Name == "Obaveštavanje")))
+    .Include(ev => ev.ViewedEmployee)
+    .ToListAsync();
 
             // 2?? Grupisanje po ViewedEmployeeId da uklonimo duplikate
             var distinctEmployees = employeeTrackings

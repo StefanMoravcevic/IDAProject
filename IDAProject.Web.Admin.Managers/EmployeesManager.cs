@@ -184,6 +184,22 @@ namespace IDAProject.Web.Admin.Managers
             return result;
         }
 
+        public async Task<IEnumerable<ISelectOption>> GetAllowedEmployeesAsSelectOptionsAsync(SearchEmployeesParams searchParams)
+        {
+            var employeesResponse = await SearchEmployeesAsync(searchParams);
+            var employeesList = employeesResponse.Payload.OrderBy(x => x.Name).ThenBy(y => y.Surname);
+
+            var result = employeesList.Select(x => new GenericSelectOption
+            {
+                Value = x.Id,
+                Description = string.IsNullOrEmpty(x.EmployeeNumber)
+                    ? $"{x.Name} {x.MiddleName} {x.Surname}"
+                    : $"{x.Name} {x.MiddleName} {x.Surname}"
+            });
+
+            return result;
+        }
+
 
 
 

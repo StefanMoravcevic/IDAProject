@@ -84,6 +84,7 @@ namespace IDAProject.Web.Admin.Controllers
             var viewModel = new EmployeeAbsencesEditViewModel();
             viewModel.AbsenceTypes = await _masterDataManager.GetSelectOptionsByTableAsync("AbsenceTypes", "Name");
             viewModel.JobTypes = await _masterDataManager.GetSelectOptionsByTableAsync("JobTypes", "Name");
+            viewModel.Employees = await _employeesManager.GetEmployeesAsSelectOptionsAsync();
             viewModel.User = GetCurrentUser();
             return View("EditEmployeeAbsence", viewModel);
         }
@@ -96,13 +97,13 @@ namespace IDAProject.Web.Admin.Controllers
             var EmployeeAbsenceResponse = await _EmployeeAbsencesManager.GetEmployeeAbsenceByIdAsync(id);
             viewModel.AbsenceTypes = await _masterDataManager.GetSelectOptionsByTableAsync("AbsenceTypes", "Name");
             viewModel.JobTypes = await _masterDataManager.GetSelectOptionsByTableAsync("JobTypes", "Name");
+            viewModel.Employees = await _employeesManager.GetEmployeesAsSelectOptionsAsync();
             viewModel.Absence = EmployeeAbsenceResponse.Payload!;
             viewModel.User = GetCurrentUser();
 
             return View("EditEmployeeAbsence", viewModel);
         }
 
-        //controller method for saving EmployeeAbsence
         [HttpPost("save", Name = RouteNames.EmployeeAbsences_Save)]
         public async Task<IActionResult> SaveEmployeeAbsenceAsync(SaveEmployeeAbsenceRequestModel requestModel)
         {
@@ -116,7 +117,7 @@ namespace IDAProject.Web.Admin.Controllers
             return Json(responseModel);
         }
 
-        [HttpPost("delete/{id}", Name = RouteNames.EmployeeAbsences_Delete)]
+        [HttpDelete("delete/{id}", Name = RouteNames.EmployeeAbsences_Delete)]
         public async Task<IActionResult> DeleteEmployeeAbsenceAsync(int id)
         {
             var user = GetCurrentUser();

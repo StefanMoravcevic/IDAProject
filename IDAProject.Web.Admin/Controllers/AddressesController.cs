@@ -69,6 +69,9 @@ namespace IDAProject.Web.Admin.Controllers
                 case AddressTypes.BenefitUserAddress:
                     viewModel.Address.BenefitUserId = Id;
                     break;
+                case AddressTypes.EmployeeAddress:
+                    viewModel.Address.EmployeeId = Id;
+                    break;
 
             }
             viewModel.Cities = await _masterDataManager.GetSelectOptionsByTableAsync("Cities", "Name");

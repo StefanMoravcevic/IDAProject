@@ -165,12 +165,13 @@ namespace IDAProject.Web.Api.Repositories
 
             // ============================
             // PLANOVI
-            // ============================
             var plannedPlans = await _dbContext.TasksPlannings
                 .Where(x => x.EmployeeId == employeeId
                          && x.PlanDate >= from
                          && x.PlanDate < to
-                         && !x.IsDeleted)
+                         && !x.IsDeleted
+                         && !(x.ActivityTypeId == 3
+                              && x.RegularActivity.Name == "Obaveštavanje"))
                 .Select(x => new { x.Id, x.PlanDate })
                 .ToListAsync();
 
@@ -180,11 +181,13 @@ namespace IDAProject.Web.Api.Repositories
             // REALIZACIJE
             // ============================
             var allRealizations = await _dbContext.TasksRealizations
-                .Where(x => x.User.EmployeeId == employeeId
-                         && x.RealizationDate >= from
-                         && x.RealizationDate < to
-                         && !x.IsDeleted)
-                .ToListAsync();
+    .Where(x => x.User.EmployeeId == employeeId
+             && x.RealizationDate >= from
+             && x.RealizationDate < to
+             && !x.IsDeleted
+             && !(x.ActivityTypeId == 3
+                  && x.RegularActivity.Name == "Obaveštavanje"))
+    .ToListAsync();
 
             // ============================
             // TRAJANJE U SATIMA
@@ -255,23 +258,25 @@ namespace IDAProject.Web.Api.Repositories
                 .Count();
 
             // Teoretsko radno vreme: broj radnih dana * 7.25h
-            double totalWorkingHours = totalPlannedDays * 7.25;
+            double totalWorkingHours = totalPlannedDays * 7.5;
 
             int daysWithRealization = allRealizations
                 .Select(r => r.RealizationDate)
                 .Distinct()
                 .Count();
 
+            double totalWorkingRealizationHours = daysWithRealization * 7.5;
+
             // ============================
             // USER LOGS
-            // ============================
             var userLogs = await _dbContext.UserLogs
                 .Where(l => l.AspNetUser.EmployeeId == employeeId
                          && l.LoginDateTime < to
-                         && (l.LogoutDateTime == null || l.LogoutDateTime > from))
+                         && l.LogoutDateTime != null
+                         && l.LogoutDateTime > from)
                 .ToListAsync();
 
-            double totalLoggedHours = 0;
+            TimeSpan totalLoggedTime = TimeSpan.Zero;
 
             foreach (var log in userLogs)
             {
@@ -279,16 +284,14 @@ namespace IDAProject.Web.Api.Repositories
                     continue;
 
                 var login = log.LoginDateTime.Value;
-                var logout = log.LogoutDateTime ?? DateTime.Now;
+                var logout = log.LogoutDateTime ?? to;
 
                 var start = login < from ? from : login;
                 var end = logout > to ? to : logout;
 
                 if (end > start)
-                    totalLoggedHours += (end - start).TotalHours;
+                    totalLoggedTime += (end - start);
             }
-
-            totalLoggedHours = Math.Round(totalLoggedHours, 2);
 
             // ============================
             // RETURN DTO
@@ -298,7 +301,9 @@ namespace IDAProject.Web.Api.Repositories
                 TotalWorkingDays = totalPlannedDays,
                 DaysWithRealization = daysWithRealization,
                 TotalWorkHours = Math.Round(totalWorkingHours, 2), // <-- promenjeno
-                TotalLoggedHours = totalLoggedHours,
+                TotalRealizationWorkHours = Math.Round(totalWorkingRealizationHours, 2), // <-- promenjeno
+                TotalLoggedTimeFormatted =
+    $"{(int)totalLoggedTime.TotalHours}h {totalLoggedTime.Minutes}min",
                 PlannedCount = Math.Round(plannedDuration, 2),
                 UnplannedCount = Math.Round(unplannedDuration, 2),
                 PlannedPercentage = plannedPercentage,
@@ -327,7 +332,9 @@ namespace IDAProject.Web.Api.Repositories
                 .Where(x => x.EmployeeId == employeeId
                          && x.PlanDate >= fromDate
                          && x.PlanDate < toDate
-                         && !x.IsDeleted)
+                         && !x.IsDeleted
+                         && !(x.ActivityTypeId == 3
+                              && x.RegularActivity.Name == "Obaveštavanje"))
                 .Select(x => new { x.Id, x.PlanDate })
                 .ToListAsync();
 
@@ -340,12 +347,11 @@ namespace IDAProject.Web.Api.Repositories
                 .Where(x => x.User.EmployeeId == employeeId
                          && x.RealizationDate >= fromDate
                          && x.RealizationDate < toDate
-                         && !x.IsDeleted)
+                         && !x.IsDeleted
+                         && !(x.ActivityTypeId == 3
+                              && x.RegularActivity.Name == "Obaveštavanje"))
                 .ToListAsync();
 
-            // ============================
-            // TRAJANJE U SATIMA
-            // ============================
             double plannedDuration = 0;
             double unplannedDuration = 0;
 
@@ -358,15 +364,16 @@ namespace IDAProject.Web.Api.Repositories
                 if (!r.Duration.HasValue)
                     continue;
 
-                double durationHours = r.Duration.Value.Hour + r.Duration.Value.Minute / 60.0 + r.Duration.Value.Second / 3600.0;
+                double durationHours =
+                    r.Duration.Value.Hour +
+                    r.Duration.Value.Minute / 60.0 +
+                    r.Duration.Value.Second / 3600.0;
 
-                // Planned / Unplanned
                 if (r.TasksPlanningId.HasValue && plannedPlanIds.Contains(r.TasksPlanningId.Value))
                     plannedDuration += durationHours;
                 else
                     unplannedDuration += durationHours;
 
-                // Activity Type
                 switch (r.ActivityTypeId)
                 {
                     case 1:
@@ -411,41 +418,41 @@ namespace IDAProject.Web.Api.Repositories
                 .Distinct()
                 .Count();
 
-            // Teoretsko radno vreme: broj radnih dana * 7.25h
-            double totalWorkingHours = totalPlannedDays * 7.25;
+            double totalWorkingHours = totalPlannedDays * 7.5;
 
             int daysWithRealization = allRealizations
                 .Select(r => r.RealizationDate)
                 .Distinct()
                 .Count();
 
+            double totalWorkingRealizationHours = daysWithRealization * 7.5;
+
             // ============================
-            // USER LOGS
+            // USER LOGS (ONLY CLOSED LOGINS)
             // ============================
             var userLogs = await _dbContext.UserLogs
                 .Where(l => l.AspNetUser.EmployeeId == employeeId
                          && l.LoginDateTime < toDate
-                         && (l.LogoutDateTime == null || l.LogoutDateTime > fromDate))
+                         && l.LogoutDateTime != null   // 🔥 IZBACUJE OPEN LOGINOVE
+                         && l.LogoutDateTime > fromDate)
                 .ToListAsync();
 
-            double totalLoggedHours = 0;
+            TimeSpan totalLoggedTime = TimeSpan.Zero;
 
             foreach (var log in userLogs)
             {
-                if (!log.LoginDateTime.HasValue)
+                if (!log.LoginDateTime.HasValue || !log.LogoutDateTime.HasValue)
                     continue;
 
                 var login = log.LoginDateTime.Value;
-                var logout = log.LogoutDateTime ?? DateTime.Now;
+                var logout = log.LogoutDateTime.Value;
 
                 var start = login < fromDate ? fromDate : login;
                 var end = logout > toDate ? toDate : logout;
 
                 if (end > start)
-                    totalLoggedHours += (end - start).TotalHours;
+                    totalLoggedTime += (end - start);
             }
-
-            totalLoggedHours = Math.Round(totalLoggedHours, 2);
 
             // ============================
             // RETURN DTO
@@ -454,16 +461,22 @@ namespace IDAProject.Web.Api.Repositories
             {
                 TotalWorkingDays = totalPlannedDays,
                 DaysWithRealization = daysWithRealization,
-                TotalWorkHours = Math.Round(totalWorkingHours, 2),  // <-- promenjeno
-                TotalLoggedHours = totalLoggedHours,
+                TotalWorkHours = Math.Round(totalWorkingHours, 2),
+                TotalRealizationWorkHours = Math.Round(totalWorkingRealizationHours, 2),
+                TotalLoggedTimeFormatted =
+                    $"{(int)totalLoggedTime.TotalHours}h {totalLoggedTime.Minutes}min",
+
                 PlannedCount = Math.Round(plannedDuration, 2),
                 UnplannedCount = Math.Round(unplannedDuration, 2),
                 PlannedPercentage = plannedPercentage,
                 UnplannedPercentage = unplannedPercentage,
+
                 ProjectCount = Math.Round(projectDuration, 2),
                 ProjectPercentage = projectPercentage,
+
                 TaskCount = Math.Round(taskDuration, 2),
                 TaskPercentage = taskPercentage,
+
                 RegularCount = Math.Round(regularDuration, 2),
                 RegularPercentage = regularPercentage
             };

@@ -47,9 +47,17 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.HiddenFromHomePage == searchParams.HideFromHomePage);
                 }
+                if (searchParams.HideFromHomePageAuthor.HasValue)
+                {
+                    query = query.Where(x => x.HiddenFromHomePageAuthor == searchParams.HideFromHomePageAuthor);
+                }
                 if (searchParams.EmployeeId.HasValue)
                 {
                     query = query.Where(x => x.TaskRealization.User.EmployeeId == searchParams.EmployeeId);
+                }
+                if (searchParams.EnteredUserId.HasValue)
+                {
+                    query = query.Where(x => x.UserId == searchParams.EnteredUserId);
                 }
             }
 
@@ -74,7 +82,10 @@ namespace IDAProject.Web.Api.Repositories
                 Activity = a.TaskRealization.Activity,
                 HiddenFromHomePage = a.HiddenFromHomePage,
                 EmployeeId = a.User.EmployeeId,
-                RealizationDate = a.TaskRealization.RealizationDate
+                RealizationDate = a.TaskRealization.RealizationDate,
+                EnteredUsername = a.TaskRealization.User.Employee.Name + " " + a.TaskRealization.User.Employee.Surname,
+                EnteredPhoto = a.TaskRealization.User.Employee.Photo,
+                HiddenFromHomePageAuthor = a.HiddenFromHomePageAuthor
 
             }).ToListAsync();
             return result;

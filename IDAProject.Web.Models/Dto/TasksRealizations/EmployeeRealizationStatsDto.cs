@@ -18,6 +18,7 @@ namespace IDAProject.Web.Models.Dto.TasksRealizations
         public double RegularCount { get; set; }
 
         public double TotalWorkHours { get; set; }
+        public double TotalRealizationWorkHours { get; set; }
 
         public double TotalLoggedHours { get; set; }
 
@@ -31,5 +32,6 @@ namespace IDAProject.Web.Models.Dto.TasksRealizations
         public decimal ProjectPercentage { get; set; }
         public decimal TaskPercentage { get; set; }
         public decimal RegularPercentage { get; set; }
+        public string TotalLoggedTimeFormatted { get; set; }
     }
 }

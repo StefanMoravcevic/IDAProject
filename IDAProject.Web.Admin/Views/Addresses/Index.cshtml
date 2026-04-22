@@ -84,6 +84,9 @@
                 break;
             case @AddressTypes.BenefitUserAddress:
                 data = { BenefitUserId: id };
+                break
+            case @AddressTypes.EmployeeAddress:
+                data = { EmployeeId: id };
                 break;
             default:
                 console.error('Invalid addressTypeId');

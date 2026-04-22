@@ -17,7 +17,8 @@ namespace IDAProject.Web.Admin.Models.ViewModels.EmployeeJobTypeControls
             {
                 new ColumnDefinition("Id", _localizer["Id"]) { HeaderStyle = "width:40px;" },
                 new ColumnDefinition("Employee", _localizer["Employee"]),
-                new ColumnDefinition("JobType", _localizer["Group"])
+                new ColumnDefinition("JobType", _localizer["Group"]),
+                new ColumnDefinition("EmployeeToSee", _localizer["Employee"])
             };
         }
 

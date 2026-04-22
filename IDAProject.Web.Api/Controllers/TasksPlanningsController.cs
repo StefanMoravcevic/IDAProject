@@ -67,6 +67,6 @@ namespace IDAProject.Web.Api.Controllers
 
             var response = await _TasksPlanningsManager.SaveTasksPlanningAsync(requestModel);
             return response;
-        }
+            }
     }
 }

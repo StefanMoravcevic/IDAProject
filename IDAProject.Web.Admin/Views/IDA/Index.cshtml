@@ -5,6 +5,7 @@
 @using IDAProject.Web.Models.RequestModels.MasterData;
 @using IDAProject.Web.Helpers;
 @using IDAProject.Web.Admin.Models.TagHelpers;
+@using IDAProject.Web.Models.General.Enums;
 @using IDAProject.Web.Admin.Models.TagHelpers.Base;
 @using IDAProject.Web.Admin.TagHelpers.Base;
 @inject IStringLocalizer<SharedResources> localizer
@@ -145,7 +146,6 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<!-- Dinamički popunjavamo sa JS -->
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@localizer["Cancel"]</button>
@@ -162,7 +162,6 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<!-- Dinamički popunjavamo sa JS -->
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@localizer["Cancel"]</button>
@@ -171,15 +170,119 @@
 		</div>
 	</div>
 </div>
+<div class="container-fluid mt-1">
+
+	<div class="card shadow-sm border-0 mb-2">
+		<div class="card-body py-2 d-flex align-items-center justify-content-between">
+
+			<h4 class="mb-0 fw-bold text-danger">
+				<i class="fa fa-calendar-check-o me-2"></i>
+				@localizer["IDA"]
+			</h4>
+
+		</div>
+	</div>
+
+</div>
 <div class="container-fluid mt-1 min-vh-100 d-flex flex-column">
 
-	<!-- ========================= -->
-	<!-- GORNJI DEO -->
-	<!-- ========================= -->
 	<div class="row g-2 align-items-stretch">
 
-		<!-- SLIKA -->
-		<div class="col-12 col-lg-2 d-flex">
+		<!-- LEVO: PLAN / TABELA (10 kolona) -->
+		<div class="col-12 col-lg-10 d-flex">
+
+			<div class="card shadow-lg border-0 rounded-3 flex-fill h-100">
+
+				<div class="card-header btn-danger text-white fw-bold d-flex flex-wrap align-items-center gap-3 justify-content-between">
+
+					<!-- LEFT: Datum -->
+					<div class="d-flex align-items-center gap-2">
+						<span id="planDayDisplay">
+							📅 @localizer["Plans for day"] - @danUNedelji – @datumFormatirano
+						</span>
+
+						<tms-input type="Date"
+								   id="planDate"
+								   class="form-control form-control-sm w-auto"
+								   value="@Model.NextDay" />
+					</div>
+
+					@if(Model.ShiftWork){
+						<div class="d-flex align-items-center gap-3 flex-wrap">
+
+							<span class="fw-bold text-white">
+								@localizer["Shifts"]:
+							</span>
+
+							@foreach (var shift in Model.Shifts)
+							{
+								<div class="form-check form-check-inline m-0">
+									<input class="form-check-input"
+										   type="radio"
+										   name="SelectedShiftId"
+										   id="shift_@shift.Value"
+										   value="@shift.Value" />
+
+									<label class="form-check-label text-white fw-bold"
+										   for="shift_@shift.Value">
+										@shift.Description
+									</label>
+								</div>
+							}
+
+						</div>
+					}
+
+					<!-- RIGHT: Activity type -->
+					<select id="activityMode"
+							name="ActivityTypePlanId"
+							class="form-select form-select-sm w-auto">
+
+						<option value="">
+							@localizer["Select activity type"]
+						</option>
+
+						<option value="1">@localizer["Project"]</option>
+						<option value="2">@localizer["Task"]</option>
+						<option value="3">@localizer["Regular activity"]</option>
+
+					</select>
+
+				</div>
+				<div class="card-body p-3 d-flex flex-column">
+
+					<div class="table-responsive flex-grow-1" style="overflow-x:auto !important;">
+
+						<table class="table table-hover table-bordered align-middle" id="manualTable">
+
+							<thead id="dynamicTableHead" class="table-light">
+								<tr>
+									<th class="text-center text-muted">
+										@localizer["Select activity type to generate table"]
+									</th>
+								</tr>
+							</thead>
+
+							<tbody></tbody>
+
+						</table>
+
+					</div>
+
+					<button class="btn btn-danger btn-sm px-3 mt-2 align-self-start"
+							id="btnAddRow">
+						@localizer["Add row"]
+					</button>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<!-- DESNO: SLIKA + DUGMIĆI (2 kolone) -->
+		<div class="col-12 col-lg-2 d-none-new d-lg-flex">
+
 			<div class="card shadow-sm mb-3 flex-fill h-100">
 
 				<div class="card-header bg-light fw-bold">
@@ -199,87 +302,22 @@
 					{
 						<p class="text-muted">@localizer["No image available"]</p>
 					}
-					<div class="d-flex flex-column gap-2">
+
+					<div class="d-flex flex-column gap-2 mt-2">
 						<a href="@urlLogout" class="btn btn-sm btn-danger fw-semibold">
 							@localizer["Log out"]
 						</a>
-						<a href="/Home/Instructions" class="btn btn-sm btn-danger fw-semibold">
+
+						<a href="~/manuals/IDA Korisničko uputstvo v1.docx" class="btn btn-sm btn-danger fw-semibold">
 							@localizer["Manual"]
 						</a>
+
 						<button type="button" class="btn btn-sm btn-danger fw-semibold" id="btnAddPhoto">
 							@localizer["Add photo"]
 						</button>
+
 						<input type="file" id="inputPhotoFile" style="display:none" accept="image/*">
 					</div>
-				</div>
-
-			</div>
-		</div>
-
-
-		<!-- PLAN TABELA -->
-		<div class="col-12 col-lg-10 d-flex">
-
-			<div class="card shadow-lg border-0 rounded-3 flex-fill h-100">
-
-				<div class="card-header btn-danger text-white fw-bold d-flex flex-wrap justify-content-between align-items-center">
-
-					<div class="d-flex align-items-center gap-2">
-						<span id="planDayDisplay">📅 @localizer["Plans for day"] - @danUNedelji – @datumFormatirano</span>
-
-						<tms-input type="Date"
-								   id="planDate"
-								   class="form-control form-control-sm w-auto"
-								   value="@Model.NextDay" />
-					</div>
-
-					<select id="activityMode"
-							name="ActivityTypePlanId"
-							class="form-select form-select-sm w-auto mt-2 mt-lg-0">
-
-						<option value="">
-							@localizer["Select activity type"]
-						</option>
-
-						<option value="1">@localizer["Project"]</option>
-						<option value="2">@localizer["Task"]</option>
-						<option value="3">@localizer["Regular activity"]</option>
-
-					</select>
-
-				</div>
-
-
-				<div class="card-body p-3 d-flex flex-column">
-
-					<div class="table-responsive flex-grow-1"  style="overflow-x:auto !important;">
-
-						<table class="table table-hover table-bordered align-middle"
-							   id="manualTable">
-
-							<thead id="dynamicTableHead" class="table-light">
-
-								<tr>
-									<th class="text-center text-muted">
-										@localizer["Select activity type to generate table"]
-									</th>
-								</tr>
-
-							</thead>
-
-							<tbody></tbody>
-
-						</table>
-
-					</div>
-
-
-					<button class="btn btn-danger btn-sm px-3 mt-2 align-self-start"
-							id="btnAddRow">
-
-						 @localizer["Add row"]
-
-					</button>
 
 				</div>
 
@@ -290,9 +328,6 @@
 	</div>
 
 
-	<!-- ========================= -->
-	<!-- ACTIVITIES -->
-	<!-- ========================= -->
 	<div class="card shadow-sm mt-3 flex-grow-1 d-flex flex-column">
 
 		<div class="card-header fw-bold"
@@ -317,11 +352,13 @@
 						🔄 @localizer["Plan new day"]
 					</button> *@
 
-					<button class="btn btn-danger btn-sm"
-							id="btnEnterAbsence">
-						📊 @localizer["Enter absence"]
-					</button>
-
+					@if(Model.User.Roles.Contains(AspNetRoles.Odsustva.ToString()))
+					{
+						<button class="btn btn-danger btn-sm"
+								id="btnEnterAbsence">
+							📊 @localizer["Enter absence"]
+						</button>
+					}
 				</div>
 
 				<!-- RIGHT BUTTONS -->
@@ -1018,6 +1055,23 @@
 					console.log(err);
 				}
 			});
+		}
+		function saveDefaultShift()
+		{
+			const selectedDate = $("#planDate").val();
+
+				if (!selectedDate)
+					return;
+
+				$.ajax({
+					url: "@Url.RouteUrl(RouteNames.TasksPlannings_CreateByDefaultShift)",
+					method: "POST",
+					data: {
+						date: selectedDate
+					},
+					success: function (response) {
+					}
+				});
 		}
 		function loadTasksForManualTable() {
 
@@ -2004,27 +2058,37 @@
 		}
 
 			  $(document).ready(function () {
+				if(!@Json.Serialize(Model.ShiftWork))
+				{
+					saveDefaultShift();
+				}
 				$(document).on("blur", "#planDate", function () {
-					const dateValue = $(this).val(); // npr. "30.03.2026"
-					if (!dateValue) return;
+						const dateValue = $(this).val();
+						if (!dateValue) return;
 
-					// Parse dd.MM.yyyy
-					const parts = dateValue.split(".");
-					if (parts.length !== 3) return;
+						const parts = dateValue.split(".");
+						if (parts.length !== 3) return;
 
-					const dateObj = new Date(parts[2], parts[1]-1, parts[0]); // yyyy, month-1, dd
+						const dateObj = new Date(parts[2], parts[1] - 1, parts[0]);
 
-					const dan = daniUNedelji[dateObj.getDay()];
+						const dan = daniUNedelji[dateObj.getDay()];
 
-					// Formatiramo datum
-					const formattedDate = `${("0"+dateObj.getDate()).slice(-2)}.${("0"+(dateObj.getMonth()+1)).slice(-2)}.${dateObj.getFullYear()}`;
+						const formattedDate = `${("0" + dateObj.getDate()).slice(-2)}.${("0" + (dateObj.getMonth() + 1)).slice(-2)}.${dateObj.getFullYear()}`;
 
-					// Prikaži u span/div
-					$("#planDayDisplay").text(`📅 Planiranje za dan - ${dan} – ${formattedDate}`);
+						$("#planDayDisplay").text(`📅 Planiranje za dan - ${dan} – ${formattedDate}`);
 
-					// Pozovi funkciju za učitavanje tabela
-					loadTasksForManualTable();
-				});
+						// današnji datum (bez vremena)
+						const today = new Date();
+						today.setHours(0, 0, 0, 0);
+
+						dateObj.setHours(0, 0, 0, 0);
+
+						if (!@Json.Serialize(Model.ShiftWork) && dateObj > today) {
+							saveDefaultShift();
+						}
+
+						loadTasksForManualTable();
+					});
 				  $(document).on("blur", ".from-time, .to-time", function () {
 					calculateRowDuration($(this).closest("tr"));
 				  });
@@ -2749,6 +2813,40 @@
 					},
 					error: function () {
 						alert('Greška pri uploadu fajla.');
+					}
+				});
+			});
+
+			$(document).on("change", "#planDate, input[name='SelectedShiftId']", function () {
+
+				const selectedDate = $("#planDate").val();
+				const selectedShiftId = $("input[name='SelectedShiftId']:checked").val();
+				debugger
+				if (!selectedDate || !selectedShiftId)
+					return;
+
+				const parts = selectedDate.split(".");
+				if (parts.length !== 3) return;
+
+				const dateObj = new Date(parts[2], parts[1] - 1, parts[0]);
+
+				// današnji datum (bez vremena)
+				const today = new Date();
+				today.setHours(0, 0, 0, 0);
+				dateObj.setHours(0, 0, 0, 0);
+
+				// samo ako je datum u budućnosti
+				if (dateObj <= today)
+					return;
+
+				$.ajax({
+					url: "@Url.RouteUrl(RouteNames.TasksPlannings_CreateByShift)",
+					method: "POST",
+					data: {
+						date: selectedDate,
+						shiftId: selectedShiftId
+					},
+					success: function (response) {
 					}
 				});
 			});

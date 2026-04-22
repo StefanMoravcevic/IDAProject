@@ -59,9 +59,9 @@
 										<div class="col-sm-12 col-md-6 col-xl-3">
 											<tms-input type="Text" name="Name" id="empName" value="@employee.Name" label="@localizer["First name"]:" required="true" placeholder="@localizer["Enter first name"]..." />
 										</div>
-										@* <div class="col-sm-12 col-md-6 col-xl-3">
-											<tms-input type="Text" name="MiddleName" id="empMiddleName" value="@employee.MiddleName!" label="@localizer["Middle name"]:" placeholder="@localizer["Enter middle name"]..." />
-										</div> *@
+										<div class="col-sm-12 col-md-6 col-xl-3">
+											<tms-input type="Text" name="MiddleName" id="empMiddleName" value="@employee.MiddleName!" label="@localizer["Name to show"]:" placeholder="@localizer["Enter name to show"]..." />
+										</div>
 										<div class="col-sm-12 col-md-6 col-xl-3">
 											<tms-input type="Text" name="Surname" id="empSurname" value="@employee.Surname" required="true" label="@localizer["Surname"]:" placeholder="@localizer["Enter last name"]..." />
 										</div>
@@ -93,6 +93,15 @@
 												<div class="d-flex align-items-center mt-3">
 													<tms-input type="Radio" name="Blocked" id="empBlockedYes" value="true" label="@localizer["Yes"]" checked="!@employee.Blocked" classes="me-5" />
 													<tms-input type="Radio" name="Blocked" id="empBlockedNo" value="false" label="@localizer["No"]" checked="!@employee.Blocked == false" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-12 col-md-6 col-xl-3">
+											<div class="form-group">
+												<label class="form-label text-muted">@localizer["Shift work"]?</label>
+												<div class="d-flex align-items-center mt-3">
+													<tms-input type="Radio" name="ShiftWork" id="ShiftWorkYes" value="true" label="@localizer["Yes"]" checked="@employee.ShiftWork" classes="me-5" />
+													<tms-input type="Radio" name="ShiftWork" id="ShiftWorkNo" value="false" label="@localizer["No"]" checked="@employee.ShiftWork == false" />
 												</div>
 											</div>
 										</div>

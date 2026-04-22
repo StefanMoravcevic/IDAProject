@@ -89,6 +89,8 @@ public partial class Employee
 
     public string? GoogleRefreshToken { get; set; }
 
+    public bool ShiftWork { get; set; }
+
     public virtual ICollection<AspNetUser> AspNetUsers { get; set; } = new List<AspNetUser>();
 
     public virtual City? City { get; set; }
@@ -101,7 +103,9 @@ public partial class Employee
 
     public virtual ICollection<EmployeeGoal> EmployeeGoals { get; set; } = new List<EmployeeGoal>();
 
-    public virtual ICollection<EmployeeJobTypeControl> EmployeeJobTypeControls { get; set; } = new List<EmployeeJobTypeControl>();
+    public virtual ICollection<EmployeeJobTypeControl> EmployeeJobTypeControlEmployeeToSees { get; set; } = new List<EmployeeJobTypeControl>();
+
+    public virtual ICollection<EmployeeJobTypeControl> EmployeeJobTypeControlEmployees { get; set; } = new List<EmployeeJobTypeControl>();
 
     public virtual ICollection<EmployeeViewTracking> EmployeeViewTrackingViewedEmployees { get; set; } = new List<EmployeeViewTracking>();
 

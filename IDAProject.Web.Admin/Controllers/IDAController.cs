@@ -7,7 +7,11 @@ using IDAProject.Web.Admin.Models.ViewModels;
 using IDAProject.Web.Admin.Models.ViewModels.IDA;
 using IDAProject.Web.Models.General;
 using IDAProject.Web.Models.General.Enums;
+using IDAProject.Web.Models.RequestModels.EmployeeJobTypeControls;
+using IDAProject.Web.Models.RequestModels.Employees;
+using IDAProject.Web.Models.RequestModels.TasksPlannings;
 using Microsoft.AspNetCore.Mvc;
+using NPOI.OpenXmlFormats.Dml.Diagram;
 
 namespace IDAProject.Web.Admin.Controllers
 {
@@ -17,11 +21,13 @@ namespace IDAProject.Web.Admin.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IMasterDataManager _masterDataManager;
+        private readonly IEmployeeJobTypeControlsManager _employeeJobTypeControlsManager;
         private readonly IIdaTasksManager _idaTasksManager;
         private readonly ITasksPlanningsManager _tasksPlanningsManager;
+        private readonly IShiftsManager _shiftsManager;
         private readonly IEmployeesManager _employeesManager;
         private readonly IRegularActivitiesManager _regularActivitiesManager;
-        public IDAController(ILogger<IDAController> logger, IAccountManager accountManager, IConfiguration configuration, IMasterDataManager masterDataManager, IIdaTasksManager idaTasksManager, IEmployeesManager employeesManager, ITasksPlanningsManager tasksPlanningsManager, IRegularActivitiesManager regularActivitiesManager) : base(accountManager, logger)
+        public IDAController(ILogger<IDAController> logger, IAccountManager accountManager, IConfiguration configuration, IMasterDataManager masterDataManager, IIdaTasksManager idaTasksManager, IEmployeesManager employeesManager, ITasksPlanningsManager tasksPlanningsManager, IRegularActivitiesManager regularActivitiesManager, IEmployeeJobTypeControlsManager employeeJobTypeControlsManager, IShiftsManager shiftsManager) : base(accountManager, logger)
         {
             _configuration = configuration;
             _masterDataManager = masterDataManager;
@@ -29,6 +35,8 @@ namespace IDAProject.Web.Admin.Controllers
             _employeesManager = employeesManager;
             _tasksPlanningsManager = tasksPlanningsManager;
             _regularActivitiesManager = regularActivitiesManager;
+            _employeeJobTypeControlsManager = employeeJobTypeControlsManager;
+            _shiftsManager = shiftsManager;
         }
 
 
@@ -47,6 +55,17 @@ namespace IDAProject.Web.Admin.Controllers
         Finished = false
     }
 );
+
+            var shifts = await _shiftsManager.SearchShiftsAsync(new Web.Models.RequestModels.Shifts.SearchShiftsParams { });
+
+            var shiftsToShow = shifts.Payload.Where(x => x.ShiftNo != 0).Select(x => new GenericSelectOption
+            {
+                Value = x.Id,
+                Description = x.ShiftNo.ToString()
+            }).ToList();
+
+
+            viewModel.Shifts = shiftsToShow;
 
             // Napravi listu sa stvarnim planovima
             var taskPlanningsList = taskPlannings.Payload
@@ -80,6 +99,7 @@ namespace IDAProject.Web.Admin.Controllers
             viewModel.RegularActivities = regularActivitiesList;
             viewModel.User = user;
             var employeePhoto = (await _employeesManager.GetEmployeeByIdAsync(user.EmployeeId)).Payload.Photo;
+            viewModel.ShiftWork = (await _employeesManager.GetEmployeeByIdAsync(user.EmployeeId)).Payload.ShiftWork;
             viewModel.ImageSource = employeePhoto;
             viewModel.TodayForActivityTable = DateTime.Now.Date.ToString("dd.MM.yyyy");
             var nextDay = DateTime.Now.Date.AddDays(1);
@@ -263,45 +283,97 @@ namespace IDAProject.Web.Admin.Controllers
         {
             var viewModel = new IDAViewModel();
             var user = GetCurrentUser();
-            var today = DateTime.Now.Date.ToString("dd.MM.yyyy");
-            var taskPlannings = await _tasksPlanningsManager.SearchTasksPlanningsAsync(
-    new Web.Models.RequestModels.TasksPlannings.SearchTasksPlanningsParams
-    {
-        UserId = user.Id,
-        CreatedDate = today,
-        Finished = false
-    }
-);
 
-            // Napravi listu sa stvarnim planovima
+            var today = DateTime.Now.Date.ToString("dd.MM.yyyy");
+
+            // 1️⃣ Task plannings
+            var taskPlannings = await _tasksPlanningsManager.SearchTasksPlanningsAsync(
+                new SearchTasksPlanningsParams
+                {
+                    UserId = user.Id,
+                    CreatedDate = today,
+                    Finished = false
+                });
+
             var taskPlanningsList = taskPlannings.Payload
                 .Select(x => new GenericSelectOption
                 {
                     Value = x.Id,
-                    Description = x.PlanNo.Value.ToString() ?? ""
+                    Description = x.PlanNo?.ToString() ?? ""
                 })
                 .ToList();
 
-            // Dodaj opciju sa 0 na kraj    
             taskPlanningsList.Add(new GenericSelectOption
             {
                 Value = 0,
-                Description = "0" // tekst koji želiš
+                Description = "0"
             });
 
-            // Postavi svojstvo na novu listu
             viewModel.TaskPlannings = taskPlanningsList;
-            viewModel.Projects = await _masterDataManager.GetSelectOptionsByTableAsync("Projects", "Description");
-            viewModel.Tasks = await _masterDataManager.GetSelectOptionsByTableAsync("IdaTasks", "Name");
-            viewModel.ProjectTasks = await _idaTasksManager.GetUncompletedTasks(true, user.Id);
-            viewModel.ActivityTypes = await _masterDataManager.GetSelectOptionsByTableAsync("ActivityTypes", "Name");
-            viewModel.PlanStatuses = await _masterDataManager.GetSelectOptionsByTableAsync("PlanStatuses", "Name");
-            viewModel.RegularActivities = await _masterDataManager.GetSelectOptionsByTableAsync("RegularActivities", "Name");
+
+            // 2️⃣ Static podaci
+            viewModel.Projects = await _masterDataManager
+                .GetSelectOptionsByTableAsync("Projects", "Description");
+
+            viewModel.Tasks = await _masterDataManager
+                .GetSelectOptionsByTableAsync("IdaTasks", "Name");
+
+            viewModel.ProjectTasks = await _idaTasksManager
+                .GetUncompletedTasks(true, user.Id);
+
+            viewModel.ActivityTypes = await _masterDataManager
+                .GetSelectOptionsByTableAsync("ActivityTypes", "Name");
+
+            viewModel.PlanStatuses = await _masterDataManager
+                .GetSelectOptionsByTableAsync("PlanStatuses", "Name");
+
+            viewModel.RegularActivities = await _masterDataManager
+                .GetSelectOptionsByTableAsync("RegularActivities", "Name");
+
+            // 3️⃣ User info
             viewModel.User = user;
-            var employeePhoto = (await _employeesManager.GetEmployeeByIdAsync(user.EmployeeId)).Payload.Photo;
+
+            var employeePhoto = (await _employeesManager
+                .GetEmployeeByIdAsync(user.EmployeeId))
+                .Payload?.Photo;
+
             viewModel.ImageSource = employeePhoto;
-            viewModel.Today = DateTime.Now.Date.ToString("dd.MM.yyyy");
-            viewModel.Employees = await _employeesManager.GetEmployeesAsSelectOptionsAsync();
+            viewModel.Today = today;
+
+            // 4️⃣ 🔥 DOZVOLE (job types + employees)
+            var controls = await _employeeJobTypeControlsManager
+                .SearchEmployeeJobTypeControlsAsync(
+                    new SearchEmployeeJobTypeControlsParams
+                    {
+                        EmployeeId = user.EmployeeId
+                    });
+
+            var allowedEmployeeIds = controls.Payload
+                .Where(x => x.EmployeeToSeeId.HasValue)
+                .Select(x => x.EmployeeToSeeId.Value)
+                .Distinct()
+                .ToList();
+
+            var allowedJobTypeIds = controls.Payload
+                .Where(x => x.JobTypeId.HasValue)
+                .Select(x => x.JobTypeId.Value)
+                .Distinct()
+                .ToList();
+
+            // (opciono) vidi sebe
+            if (!allowedEmployeeIds.Contains(user.EmployeeId))
+            {
+                allowedEmployeeIds.Add(user.EmployeeId);
+            }
+
+            // 5️⃣ 🔥 FILTERED employees
+            viewModel.Employees = await _employeesManager
+                .GetAllowedEmployeesAsSelectOptionsAsync(new SearchEmployeesParams
+                {
+                    Employees = allowedEmployeeIds,
+                    JobTypes = allowedJobTypeIds
+                });
+
             return View("IDAProjectsAndTasksView", viewModel);
         }
     }

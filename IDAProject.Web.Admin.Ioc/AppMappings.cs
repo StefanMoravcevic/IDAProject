@@ -43,6 +43,7 @@ namespace IDAProject.Web.Admin.Ioc
             serviceCollection.AddScoped<IEmployeeJobTypeControlsManager, EmployeeJobTypeControlsManager>();
             serviceCollection.AddScoped<IEmployeeGoalsManager, EmployeeGoalsManager>();
             serviceCollection.AddScoped<IProjectsManager, ProjectsManager>();
+            serviceCollection.AddScoped<IShiftsManager, ShiftsManager>();
 
             serviceCollection.AddScoped<AuthorizationService>();
             serviceCollection.AddScoped<AuthorizationHelpers>();

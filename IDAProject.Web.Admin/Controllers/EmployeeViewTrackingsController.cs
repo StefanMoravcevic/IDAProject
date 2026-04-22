@@ -85,6 +85,18 @@ namespace IDAProject.Web.Admin.Controllers
             }
             return Json(responseModel);
         }
+        [HttpPost("saveChecked", Name = RouteNames.EmployeeViewTrackings_SaveChecked)]
+        public async Task<IActionResult> SaveCheckedEmployeeViewTrackingAsync([FromBody] SaveEmployeeViewTrackingRequestModel requestModel)
+        {
+            var user = GetCurrentUser();
+            requestModel.ViewerEmployeeId = user.EmployeeId;
+            var responseModel = await _EmployeeViewTrackingsManager.SaveEmployeeViewTrackingAsync(requestModel);
+            if (responseModel.Valid)
+            {
+                responseModel.Message = Url.RouteUrl(RouteNames.EmployeeViewTrackings_List, new { Id = "111" })!;
+            }
+            return Json(responseModel);
+        }
 
         [HttpPost("delete/{id}", Name = RouteNames.EmployeeViewTrackings_Delete)]
         public async Task<IActionResult> DeleteEmployeeViewTrackingAsync(int id)
@@ -106,6 +118,23 @@ namespace IDAProject.Web.Admin.Controllers
             view.Payload.HideFromHomePage = true;
             view.Payload.ViewedUntil = DateTime.Now;
             var responseModel = await _EmployeeViewTrackingsManager.SaveEmployeeViewTrackingAsync(view.Payload);
+            if (responseModel.Valid)
+            {
+                responseModel.Message = Url.RouteUrl(RouteNames.EmployeeViewTrackings_List, new { Id = "111" })!;
+            }
+            return Json(responseModel);
+        }
+
+        [HttpGet("update/{id}", Name = RouteNames.EmployeeViewTrackings_Update)]
+        public async Task<IActionResult> UpdateEmployeeViewTrackingAsync(int id)
+        {
+            var user = GetCurrentUser();
+            var existing = await _EmployeeViewTrackingsManager.GetEmployeeViewTrackingByIdAsync(id);
+            if(existing.Payload != null)
+            {
+                existing.Payload.ViewedFrom = DateTime.Now;
+            }
+            var responseModel = await _EmployeeViewTrackingsManager.SaveEmployeeViewTrackingAsync(existing.Payload);
             if (responseModel.Valid)
             {
                 responseModel.Message = Url.RouteUrl(RouteNames.EmployeeViewTrackings_List, new { Id = "111" })!;

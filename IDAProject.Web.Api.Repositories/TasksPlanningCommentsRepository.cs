@@ -53,6 +53,14 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.HiddenFromHomePage == searchParams.HideFromHomePage);
                 }
+                if (searchParams.HideFromHomePageAuthor.HasValue)
+                {
+                    query = query.Where(x => x.HiddenFromHomePageAuthor == searchParams.HideFromHomePageAuthor);
+                }
+                if(searchParams.EnteredUserId.HasValue)
+                {
+                    query = query.Where(x => x.UserId == searchParams.EnteredUserId);
+                }
 
             }
 
@@ -77,7 +85,10 @@ namespace IDAProject.Web.Api.Repositories
                 Activity = a.TaskPlanning.ActivityName,
                 HiddenFromHomePage =a .HiddenFromHomePage,
                 EmployeeId = a.TaskPlanning.Employee.Id,
-                PlanDate = a.TaskPlanning.PlanDate
+                PlanDate = a.TaskPlanning.PlanDate,
+                EnteredUsername = a.TaskPlanning.Employee.Name + " " + a.TaskPlanning.Employee.Surname,
+                EnteredPhoto = a.TaskPlanning.Employee.Photo,
+                HiddenFromHomePageAuthor = a .HiddenFromHomePageAuthor
 
             }).ToListAsync();
             return result;  

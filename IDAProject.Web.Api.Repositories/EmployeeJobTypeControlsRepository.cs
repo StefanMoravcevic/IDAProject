@@ -55,7 +55,9 @@ namespace IDAProject.Web.Api.Repositories
                 EmployeeId = a.EmployeeId,
                 JobTypeId = a.JobTypeId,
                 Employee = a.Employee.Name + " " + a.Employee.Surname,
-                JobType = a.JobType.Name
+                JobType = a.JobType.Name,
+                EmployeeToSeeId = a.EmployeeToSeeId,
+                EmployeeToSee = a.EmployeeToSee.Name + " " + a.EmployeeToSee.Surname
 
             }).ToListAsync();
             return result;

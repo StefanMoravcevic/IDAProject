@@ -21,6 +21,16 @@
 							<h4 class="mb-0">@localizer["Employe job type control basic info"]</h4>
 							<tms-input type="Hidden" name="Id" id="controlId" value="@control.Id" />
 						</div>
+						<div class="row p-4 border-bottom ms-2">
+							<div class="col-12 mb-2">
+								<div class="form-check form-switch">
+									<input class="form-check-input" type="checkbox" id="isGroupAbsence">
+									<label class="form-check-label" for="isGroupAbsence">
+										@localizer["Group level"]
+									</label>
+								</div>
+							</div>
+						</div>
 						<div class="card-body p-0 task-edit-main">
 							<div class="row p-5 border-bottom">
 								<div class="col-sm-12 col-md-6 col-xl-3">
@@ -31,13 +41,21 @@
 												label="@localizer["Employee"]:"
 												empty-option-text="@localizer["Select employee"]..." />
 								</div>
-								<div class="col-sm-12 col-md-6 col-xl-3">
+								<div class="col-sm-12 col-md-6 col-xl-3" id="groupSelectWrapper">
 									<tms-select name="JobTypeId"
 												id="JobTypeId"
 												options="@Model.JobTypes"
 												selected-option="@control.JobTypeId"
 												label="@localizer["Group"]:"
 												empty-option-text="@localizer["Select group"]..." />
+								</div>
+								<div class="col-sm-12 col-md-6 col-xl-3" id="employeeSelectWrapper">
+									<tms-select name="EmployeeToSeeId"
+												id="EmployeeToSeeId"
+												options="@Model.Employees"
+												selected-option="@control.EmployeeToSeeId"
+												label="@localizer["Employee"]:"
+												empty-option-text="@localizer["Select employee"]..." />
 								</div>
 							</div>
 						</div>
@@ -66,12 +84,29 @@
 
 	<script type="text/javascript">
 
+		 function toggleAbsenceMode() {
+
+			if ($('#isGroupAbsence').is(':checked')) {
+
+				// GROUP MODE
+				$('#groupSelectWrapper').show();
+				$('#employeeSelectWrapper').hide();
+
+			} else {
+
+				// EMPLOYEE MODE
+				$('#groupSelectWrapper').hide();
+				$('#employeeSelectWrapper').show();
+			}
+		}
+
+
 		$(document).ready(function () {;
 			if (@Model.ReadOnly == 1) {
 				$("#controlContainer :input").prop("disabled", true);
 				$("#buttonSave").prop("disabled", true);
 			}
-
+			toggleAbsenceMode();
 			$("#buttonSave").click(function () {
 				var $inputsContainer = $("#controlContainer");
 
@@ -97,6 +132,10 @@
 
 			$("#EmployeeId").select2({});
 			$("#JobTypeId").select2({});
+			$("#EmployeeToSeeId").select2({});
+			$('#isGroupAbsence').on('change', function () {
+				toggleAbsenceMode();
+			});
 		});
 	</script>
 }

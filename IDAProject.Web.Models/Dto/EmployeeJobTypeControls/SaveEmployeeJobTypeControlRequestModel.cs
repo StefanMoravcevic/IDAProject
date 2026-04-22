@@ -11,6 +11,8 @@ namespace IDAProject.Web.Models.Dto.EmployeeJobTypeControls
         public Int32 Id { get; set; }
 public Int32? EmployeeId { get; set; }
 public Int32? JobTypeId { get; set; }
+        public int? EmployeeToSeeId { get; set; }
+
 
     }
 }

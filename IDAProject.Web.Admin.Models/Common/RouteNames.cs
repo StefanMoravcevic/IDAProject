@@ -163,8 +163,10 @@
         public const string EmployeeViewTrackings_New = "EmployeeViewTrackings_New";
         public const string EmployeeViewTrackings_Edit = "EmployeeViewTrackings_Edit";
         public const string EmployeeViewTrackings_Save = "EmployeeViewTrackings_Save";
+        public const string EmployeeViewTrackings_SaveChecked = "EmployeeViewTrackings_SaveChecked";
         public const string EmployeeViewTrackings_Delete = "EmployeeViewTrackings_Delete";
         public const string EmployeeViewTrackings_Hide = "EmployeeViewTrackings_Hide";
+        public const string EmployeeViewTrackings_Update = "EmployeeViewTrackings_Update";
 
         public const string IdaTasks_List = "IdaTasks_List";
         public const string IdaTasks_Search = "IdaTasks_Search";
@@ -193,6 +195,8 @@
         public const string TasksPlannings_New = "TasksPlannings_New";
         public const string TasksPlannings_Edit = "TasksPlannings_Edit";
         public const string TasksPlannings_Save = "TasksPlannings_Save";
+        public const string TasksPlannings_CreateByShift = "TasksPlannings_CreateByShift";
+        public const string TasksPlannings_CreateByDefaultShift = "TasksPlannings_CreateByDefaultShift";
         public const string TasksPlannings_Delete = "TasksPlannings_Delete";
         public const string TasksPlannings_GetById = "TasksPlannings_GetById";
         public const string TasksPlannings_GetStatsByEmployeeId = "TasksPlannings_GetStatsByEmployeeId";

@@ -6,6 +6,7 @@ namespace IDAProject.Web.Models.RequestModels.Employees
         public SearchEmployeesParams()
         {
             JobTypes = new List<int>();
+            Employees = new List<int>();
         }
 
         public SearchEmployeesParams(int jobType) : this()
@@ -21,7 +22,8 @@ namespace IDAProject.Web.Models.RequestModels.Employees
         public int? CommpanyId { get; set; }
 		public int? OrgUnitId { get; set; }
 
-		public List<int> JobTypes { get; set; }
+		public List<int>? JobTypes { get; set; }
+		public List<int>? Employees { get; set; }
         public int? JobTypeId { get; set; }
     }
 }

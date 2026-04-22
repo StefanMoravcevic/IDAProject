@@ -1337,4 +1337,52 @@
   <data name="Add photo" xml:space="preserve">
     <value>Add photo</value>
   </data>
+  <data name="Are you sure you want to remove employee" xml:space="preserve">
+    <value>Are you sure you want to remove employee</value>
+  </data>
+  <data name="Group level" xml:space="preserve">
+    <value>Group level</value>
+  </data>
+  <data name="Is group absence" xml:space="preserve">
+    <value>Is group absence</value>
+  </data>
+  <data name="My plan comments" xml:space="preserve">
+    <value>My plan comments</value>
+  </data>
+  <data name="My realization comments" xml:space="preserve">
+    <value>My realization comments</value>
+  </data>
+  <data name="Shifts" xml:space="preserve">
+    <value>Shifts</value>
+  </data>
+  <data name="Succesfully removed" xml:space="preserve">
+    <value>Succesfully removed</value>
+  </data>
+  <data name="Yes, hide" xml:space="preserve">
+    <value>Yes, hide</value>
+  </data>
+  <data name="DeletedMsg" xml:space="preserve">
+    <value>DeletedMsg</value>
+  </data>
+  <data name="Drag and Drop your files here" xml:space="preserve">
+    <value>Drag and Drop your files here</value>
+  </data>
+  <data name="Enter name to show" xml:space="preserve">
+    <value>Enter name to show</value>
+  </data>
+  <data name="Name to show" xml:space="preserve">
+    <value>Name to show</value>
+  </data>
+  <data name="Project tasks" xml:space="preserve">
+    <value>Project tasks</value>
+  </data>
+  <data name="Shift work" xml:space="preserve">
+    <value>Shift work</value>
+  </data>
+  <data name="Total realization work hours" xml:space="preserve">
+    <value>Total realization work hours</value>
+  </data>
+  <data name="Sectors" xml:space="preserve">
+    <value>Sectors</value>
+  </data>
 </root>

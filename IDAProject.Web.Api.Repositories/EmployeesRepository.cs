@@ -69,10 +69,25 @@ namespace IDAProject.Web.Api.Repositories
             }
             else
             {
-                if (searchParams.JobTypes.Any())
+                if (searchParams.JobTypes.Any() || searchParams.Employees.Any())
                 {
-                    query = query.Where(x => x.JobTypeId > 0 && searchParams.JobTypes.Contains(x.JobTypeId.Value));
+                    query = query.Where(x =>
+                        (searchParams.JobTypes.Any() &&
+                         x.JobTypeId.HasValue &&
+                         searchParams.JobTypes.Contains(x.JobTypeId.Value))
+                        ||
+                        (searchParams.Employees.Any() &&
+                         searchParams.Employees.Contains(x.Id))
+                    );
                 }
+                //if (searchParams.JobTypes.Any())
+                //{
+                //    query = query.Where(x => x.JobTypeId > 0 && searchParams.JobTypes.Contains(x.JobTypeId.Value));
+                //}
+                //if (searchParams.Employees.Any())
+                //{
+                //    query = query.Where(x => x.Id > 0 && searchParams.Employees.Contains(x.Id));
+                //}
                 if (searchParams.JobTypeId.HasValue && searchParams.JobTypeId > 0)
                 {
                     query = query.Where(x => x.JobTypeId == searchParams.JobTypeId);
@@ -183,7 +198,8 @@ namespace IDAProject.Web.Api.Repositories
                                 UserId = emp.AspNetUsers.FirstOrDefault().Id,
                                 GoogleAccessToken = emp.GoogleAccessToken,
                                 GoogleRefreshToken = emp.GoogleRefreshToken,
-                                GoogleEmail = emp.GoogleEmail
+                                GoogleEmail = emp.GoogleEmail,
+                                ShiftWork = emp.ShiftWork
 
                             }).ToListAsync();
 

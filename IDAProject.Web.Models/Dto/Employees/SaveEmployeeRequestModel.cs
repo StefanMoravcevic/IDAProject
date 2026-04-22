@@ -43,5 +43,7 @@
         public string? GoogleEmail { get; set; }
         public string? GoogleAccessToken { get; set; }
         public string? GoogleRefreshToken { get; set; }
+
+        public bool ShiftWork { get; set; }
     }
 }

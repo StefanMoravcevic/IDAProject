@@ -59,6 +59,20 @@
         background-color: #fff7f0;
     }
 </style>
+<div class="container-fluid mt-1">
+
+    <div class="card shadow-sm border-0 mb-2">
+        <div class="card-body py-2 d-flex align-items-center justify-content-between">
+
+            <h4 class="mb-0 fw-bold text-danger">
+                <i class="fa fa-folder-open me-2"></i>
+                @localizer["Projects and tasks view"]
+            </h4>
+
+        </div>
+    </div>
+
+</div>
 <div class="container-fluid mt-4">
     <div class="row">
 
@@ -343,7 +357,7 @@
                                tbody.append(row);
                            });
                        } else {
-                           tbody.append('<tr><td colspan="2" class="text-center">Nema zadataka</td></tr>');
+                           tbody.append('<tr><td colspan="3" class="text-center">Nema zadataka</td></tr>');
                        }
                    },
                    error: function(err) {
@@ -375,7 +389,7 @@
                                tbody.append(row);
                            });
                        } else {
-                           tbody.append('<tr><td colspan="3" class="text-center">Nema projektnih zadataka</td></tr>');
+                           tbody.append('<tr><td colspan="4" class="text-center">Nema projektnih zadataka</td></tr>');
                        }
                    },
                    error: function(err) {

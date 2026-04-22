@@ -20,6 +20,7 @@ namespace IDAProject.Web.Admin.Models.Interfaces.Managers
         Task<ResponseModelBase> DeleteEmployeeAsync(int id, int userId);
 
         Task<IEnumerable<ISelectOption>> GetDriversAsSelectOptionsAsync();
+        Task<IEnumerable<ISelectOption>> GetAllowedEmployeesAsSelectOptionsAsync(SearchEmployeesParams searchParams);
 
         Task<IEnumerable<ISelectOption>> GetEmployeesAsSelectOptionsByJobIdAsync(int jobType);
 

@@ -103,7 +103,6 @@ namespace IDAProject.Web.Admin.Controllers
 
 
 
-                    // Ako korisnik već ima token, ide u Home
                     return RedirectToAction("PostLogin", "Accounts");
                 }
 
@@ -165,13 +164,7 @@ namespace IDAProject.Web.Admin.Controllers
                     WindowsUserName = lastLoginSession.WindowsUserName
                 });
             }
-            Response.Cookies.Delete(Constants.AdminCookieToken, new CookieOptions
-            {
-                Path = "/",
-                HttpOnly = true,
-                Secure = true, // Match the original cookie settings
-                SameSite = SameSiteMode.Strict
-            });
+            Response.Cookies.Delete(Constants.AdminCookieToken);
             SignOut(CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");

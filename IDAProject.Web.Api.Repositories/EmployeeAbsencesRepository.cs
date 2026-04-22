@@ -41,6 +41,15 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.EmployeeId == searchParams.EmployeeId);
                 }
+                if (searchParams.JobTypes != null && searchParams.JobTypes.Any())
+                {
+                    query = query.Where(x => x.JobTypeId > 0 && searchParams.JobTypes.Contains(x.JobTypeId.Value));
+                }
+
+                if (searchParams.Employees != null && searchParams.Employees.Any())
+                {
+                    query = query.Where(x => x.Employee.Id > 0 && searchParams.Employees.Contains(x.Employee.Id));
+                }
 
                 if (searchParams.JobTypeId.HasValue)
                 {

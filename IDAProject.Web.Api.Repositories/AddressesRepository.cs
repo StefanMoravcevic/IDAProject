@@ -50,6 +50,10 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.BenefitUserId! == searchParams.BenefitUserId);
                 }
+                if (searchParams.EmployeeId > 0)
+                {
+                    query = query.Where(x => x.EmployeeId! == searchParams.EmployeeId);
+                }
                 if (searchParams.PartnerId > 0)
                 {
                     query = query.Where(x => x.PartnerId! == searchParams.PartnerId);

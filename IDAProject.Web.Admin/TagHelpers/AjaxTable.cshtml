@@ -163,8 +163,9 @@
 
             var tableElement = document.getElementById('@Model.Id');
             var columnIndex = $(this).closest("th").index();
+            var tableId = '@Model.Id';
 
-            sortAjaxTable(columnIndex, tableElement);
+            sortAjaxTable(columnIndex, tableElement, tableId);
             $('#rows-count-@Model.Id').click();
         });
 

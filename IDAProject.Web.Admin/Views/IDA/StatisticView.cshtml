@@ -106,6 +106,20 @@
 </style>
 <div class="container-fluid mt-1">
 
+    <div class="card shadow-sm border-0 mb-2">
+        <div class="card-body py-2 d-flex align-items-center justify-content-between">
+
+            <h4 class="mb-0 fw-bold text-danger">
+                <i class="fa fa-bar-chart me-2"></i>
+                @localizer["Statistic"]
+            </h4>
+
+        </div>
+    </div>
+
+</div>
+<div class="container-fluid mt-1">
+
     <div class="row g-2">
 
         <!-- LEVI DEO: EMPLOYEES MATRIX -->
@@ -214,19 +228,33 @@
 
 	<script type="text/javascript">
         function loadEmployeesMatrix() {
-            const currentEmployeeId = @Model.User.EmployeeId;
-                $.ajax({
-                        url: "@Url.RouteUrl(RouteNames.Employees_Search)",
-                        method: "POST",
-                        data: {},
-                        success: function(employeesData) {
-                            buildEmployeesMatrix(employeesData);
-                        },
-                        error: function() {
-                            console.error("Greška pri učitavanju zaposlenih");
-                        }
-                    });      
-        }
+             const currentEmployeeId = @Model.User.EmployeeId;
+
+             $.ajax({
+                 url: "@Url.RouteUrl(RouteNames.EmployeeJobTypeControls_Search)",
+                 method: "POST",
+                 data: { employeeId: currentEmployeeId },
+                 success: function(jobTypeControls) {
+                     const allowedJobTypeIds = jobTypeControls.map(j => j.jobTypeId);
+                     const allowedEmployeeIds = jobTypeControls.map(j => j.employeeToSeeId);
+
+                     $.ajax({
+                         url: "@Url.RouteUrl(RouteNames.Employees_Search)",
+                         method: "POST",
+                         data: { jobTypes : allowedJobTypeIds, employees : allowedEmployeeIds },
+                         success: function(employeesData) {
+                             buildEmployeesMatrix(employeesData);
+                         },
+                         error: function() {
+                             console.error("Greška pri učitavanju zaposlenih");
+                         }
+                     });
+                 },
+                 error: function() {
+                     console.error("Greška pri učitavanju job type kontrole");
+                 }
+             });
+         }
         function buildEmployeesMatrix(data) {
             let html = "";
             let groups = {};
@@ -332,6 +360,7 @@
                                     <th style="background-color:#f2b141; color:white;">@localizer["Total working days"]</th>
                                     <th style="background-color:#f2b141; color:white;">@localizer["Days with realization"]</th>
                                     <th style="background-color:#f2b141; color:white;">@localizer["Total work hours"]</th>
+                                    <th style="background-color:#f2b141; color:white;">@localizer["Total realization work hours"]</th>
                                     <th style="background-color:#f2b141; color:white;">@localizer["Total logged hours"]</th>
                                     <th style="background-color:#f2b141; color:white;">@localizer["Planned"]</th>
                                     <th style="background-color:#f2b141; color:white;">@localizer["Unplanned"]</th>
@@ -345,7 +374,8 @@
                                     <td class="fw-bold">${stats.totalWorkingDays}</td>
                                     <td class="fw-bold">${stats.daysWithRealization}</td>
                                     <td class="fw-bold">${stats.totalWorkHours}</td>
-                                    <td class="fw-bold">${stats.totalLoggedHours}</td>
+                                    <td class="fw-bold">${stats.totalRealizationWorkHours}</td>
+                                    <td class="fw-bold">${stats.totalLoggedTimeFormatted}</td>
                                     <td class="fw-bold">${stats.plannedCount} (${stats.plannedPercentage}%)</td>
                                     <td class="fw-bold">${stats.unplannedCount} (${stats.unplannedPercentage}%)</td>
                                     <td class="fw-bold">${stats.projectCount} (${stats.projectPercentage}%)</td>
@@ -412,9 +442,36 @@
                     method: 'POST',
                     data: { id: selectedEmployeeId },
                     success: function(result) {
+
+                        if (!result || !result.length) return;
+
                         selectedUserId = result[0].userId;
+
                         if (result[0].photo) {
                             $("#employeePhoto").attr('src', result[0].photo);
+                        }
+
+                        // 🔥 AUTOMATSKI RELOAD AKO JE NEKI PERIOD SELEKTOVAN
+                        let $selectedMonth = $('.month-button.selected');
+
+                        if ($selectedMonth.length) {
+
+                            let start, end;
+
+                            if ($selectedMonth.attr('id') === 'previousMonth') {
+                                start = moment().subtract(1, 'months').startOf('month').format('YYYY-MM-DD');
+                                end = moment().subtract(1, 'months').endOf('month').format('YYYY-MM-DD');
+                            }
+                            else if ($selectedMonth.attr('id') === 'currentMonth') {
+                                start = moment().startOf('month').format('YYYY-MM-DD');
+                                end = moment().endOf('month').format('YYYY-MM-DD');
+                            }
+                            else {
+                                return; // ako je custom search ili ništa nije selektovano
+                            }
+
+                            loadPlanStatistics(selectedEmployeeId, start, end);
+                            loadRealizationStatistics(selectedEmployeeId, start, end);
                         }
                     },
                     error: function(err) {
@@ -424,27 +481,48 @@
 
             });
 
-            $('#previousMonth').click(function() {
+            $('#previousMonth').click(function () {
+
+                const isSelected = $(this).hasClass('selected');
+
+                $('.month-button').removeClass('selected');
+
+                if (isSelected) {
+                    // 🔴 odselektovan → očisti sve i izađi
+                    $('#planStatisticContainer').empty();
+                    $('#realizationStatisticContainer').empty();
+                    return;
+                }
+
+                $(this).addClass('selected');
+
                 let start = moment().subtract(1, 'months').startOf('month').format('YYYY-MM-DD');
                 let end = moment().subtract(1, 'months').endOf('month').format('YYYY-MM-DD');
 
                 loadPlanStatistics(selectedEmployeeId, start, end);
                 loadRealizationStatistics(selectedEmployeeId, start, end);
-
-                // Oznaci dugme kao selektovano
-                $('.month-button').removeClass('selected'); // ukloni sa svih
-                $(this).addClass('selected');               // dodaj na kliknuto
             });
 
-            $('#currentMonth').click(function() {
+            $('#currentMonth').click(function () {
+
+                const isSelected = $(this).hasClass('selected');
+
+                $('.month-button').removeClass('selected');
+
+                if (isSelected) {
+                    // 🔴 odselektovan → očisti UI
+                    $('#planStatisticContainer').empty();
+                    $('#realizationStatisticContainer').empty();
+                    return;
+                }
+
+                $(this).addClass('selected');
+
                 let start = moment().startOf('month').format('YYYY-MM-DD');
                 let end = moment().endOf('month').format('YYYY-MM-DD');
 
                 loadPlanStatistics(selectedEmployeeId, start, end);
                 loadRealizationStatistics(selectedEmployeeId, start, end);
-
-                $('.month-button').removeClass('selected');
-                $(this).addClass('selected');
             });
 
             $('#searchByDate').click(function() {

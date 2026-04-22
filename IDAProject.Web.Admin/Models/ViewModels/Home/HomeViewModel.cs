@@ -18,6 +18,7 @@ namespace IDAProject.Web.Admin.Models.ViewModels.Home
         public int? EmployeeId { get; set; }
         public int? EmployeeJobTypeId { get; set; }
         public string? Today { get; set; }
+        public string? ShowName { get; set; }
         public DateTime? TodayDate { get; set; }
     }
 }

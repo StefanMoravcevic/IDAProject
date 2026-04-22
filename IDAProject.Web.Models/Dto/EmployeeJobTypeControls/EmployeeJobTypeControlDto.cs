@@ -15,6 +15,7 @@ namespace IDAProject.Web.Models.Dto.EmployeeJobTypeControls
 
         public string? Employee { get; set; }
         public string? JobType { get; set; }
+        public string? EmployeeToSee { get; set; }
 
         #endregion
     }

@@ -17,9 +17,13 @@ public partial class EmployeeJobTypeControl
 
     public int? JobTypeId { get; set; }
 
+    public int? EmployeeToSeeId { get; set; }
+
     public virtual AspNetUser? DeletedByNavigation { get; set; }
 
     public virtual Employee? Employee { get; set; }
+
+    public virtual Employee? EmployeeToSee { get; set; }
 
     public virtual JobType? JobType { get; set; }
 }

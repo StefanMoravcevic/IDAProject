@@ -41,6 +41,10 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.UserId == searchParams.UserId);
                 }
+                if (!string.IsNullOrEmpty(searchParams.Name))
+                {
+                    query = query.Where(x => x.Name == searchParams.Name);
+                }
             }
 
             result = await query.Select(a => new RegularActivityDto

@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="MainDatabase\Ida2Context.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="appsettingsDB.json" />
   </ItemGroup>
 

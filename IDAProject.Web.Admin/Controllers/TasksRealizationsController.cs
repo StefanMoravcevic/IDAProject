@@ -100,7 +100,7 @@ namespace IDAProject.Web.Admin.Controllers
             {
                 requestModel.PlanNo = 0;
             }
-                var responseModel = await _TasksRealizationsManager.SaveTasksRealizationAsync(requestModel);
+            var responseModel = await _TasksRealizationsManager.SaveTasksRealizationAsync(requestModel);
             if (responseModel.Valid)
             {
                 if (requestModel.Finished)

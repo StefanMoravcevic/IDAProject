@@ -14,6 +14,9 @@ namespace IDAProject.Web.Models.RequestModels.EmployeeAbsences
         public int? AbsenceTypeId { get; set; }
         public DateTime? Date { get; set; }
         public bool? IsFromHomePage { get; set; }
+
+        public List<int>? JobTypes { get; set; }
+        public List<int>? Employees { get; set; }
         //<<SearchParams>>
     }
 }

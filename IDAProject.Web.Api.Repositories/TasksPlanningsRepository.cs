@@ -42,6 +42,10 @@ namespace IDAProject.Web.Api.Repositories
                 {
                     query = query.Where(x => x.ActivityTypeId == searchParams.ActivityTypeId);
                 }
+                if (searchParams.RegularActivityId.HasValue)
+                {
+                    query = query.Where(x => x.RegularActivityId == searchParams.RegularActivityId);
+                }
                 if (!string.IsNullOrEmpty(searchParams.CreatedDate))
                 {
                     if (DateTime.TryParseExact(searchParams.CreatedDate,
@@ -183,11 +187,13 @@ namespace IDAProject.Web.Api.Repositories
             var from = to.AddDays(-30);
 
             var plans = await _dbContext.TasksPlannings
-                .Where(x => x.EmployeeId == employeeId
-                         && x.PlanDate >= from
-                         && x.PlanDate < to
-                         && !x.IsDeleted)
-                .ToListAsync();
+      .Where(x => x.EmployeeId == employeeId
+               && x.PlanDate >= from
+               && x.PlanDate < to
+               && !x.IsDeleted
+               && !(x.ActivityTypeId == 3
+                    && x.RegularActivity.Name == "Obaveštavanje"))
+      .ToListAsync();
 
             var groupedByDay = plans
                 .GroupBy(x => x.PlanDate.Value.Date);
@@ -212,7 +218,7 @@ namespace IDAProject.Web.Api.Repositories
                     return x.CreatedAt <= deadline;
                 });
 
-                if ((decimal)totalHours >= 7.25m && allCreatedBeforeDeadline)
+                if ((decimal)totalHours >= 7.5m && allCreatedBeforeDeadline)
                 {
                     plannedOnTimeDays++;
                 }
@@ -237,11 +243,13 @@ namespace IDAProject.Web.Api.Repositories
         public async Task<EmployeePlanningStatsDto> GetStatsGeneric(int employeeId, DateTime? from, DateTime? to)
         {
             var plans = await _dbContext.TasksPlannings
-        .Where(x => x.EmployeeId == employeeId
-                 && x.PlanDate >= from
-                 && x.PlanDate < to
-                 && !x.IsDeleted)
-        .ToListAsync();
+    .Where(x => x.EmployeeId == employeeId
+             && x.PlanDate >= from
+             && x.PlanDate < to
+             && !x.IsDeleted
+             && !(x.ActivityTypeId == 3
+                  && x.RegularActivity.Name == "Obaveštavanje"))
+    .ToListAsync();
 
             var groupedByDay = plans
                 .GroupBy(x => x.PlanDate.Value.Date);
@@ -266,7 +274,7 @@ namespace IDAProject.Web.Api.Repositories
                     return x.CreatedAt <= deadline;
                 });
 
-                if ((decimal)totalHours >= 7.25m && allCreatedBeforeDeadline)
+                if ((decimal)totalHours >= 7.5m && allCreatedBeforeDeadline)
                 {
                     plannedOnTimeDays++;
                 }

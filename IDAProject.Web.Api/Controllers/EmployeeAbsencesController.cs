@@ -49,7 +49,6 @@ namespace IDAProject.Web.Api.Controllers
             if (TimeOnly.TryParse(requestModel.TimeToFormatted, out var tt))
                 requestModel.TimeTo = tt;
 
-            // 🔴 ADMIN MODE
             if (requestModel.IsFromAdmin == true && requestModel.JobTypeId.HasValue)
             {
                 var employees = await _employeesManager.SearchEmployeesAsync(new Web.Models.RequestModels.Employees.SearchEmployeesParams { JobTypeId = requestModel.JobTypeId });

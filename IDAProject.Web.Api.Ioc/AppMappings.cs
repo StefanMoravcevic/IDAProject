@@ -63,6 +63,7 @@ namespace IDAProject.Web.Api.Ioc
             serviceCollection.AddScoped<IEmployeeJobTypeControlsRepository, EmployeeJobTypeControlsRepository>();
             serviceCollection.AddScoped<IEmployeeGoalsRepository, EmployeeGoalsRepository>();
             serviceCollection.AddScoped<IProjectsRepository, ProjectsRepository>();
+            serviceCollection.AddScoped<IShiftsRepository,ShiftsRepository>();
 
    
             serviceCollection.AddSingleton<IMasterDataProvidersFactory, MasterDataProvidersFactory>();            
@@ -97,6 +98,7 @@ namespace IDAProject.Web.Api.Ioc
             serviceCollection.AddScoped<IEmployeeGoalsManager, EmployeeGoalsManager>();
             serviceCollection.AddScoped<IEmployeeAbsencesManager, EmployeeAbsencesManager>();
             serviceCollection.AddScoped<IProjectsManager, ProjectsManager>();
+            serviceCollection.AddScoped<IShiftsManager, ShiftsManager>();
         }
 
         private static void MapReports(IServiceCollection serviceCollection)

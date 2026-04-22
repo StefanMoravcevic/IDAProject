@@ -25,6 +25,8 @@ public partial class TasksPlanningComment
 
     public bool HiddenFromHomePage { get; set; }
 
+    public bool HiddenFromHomePageAuthor { get; set; }
+
     public virtual AspNetUser? DeletedByNavigation { get; set; }
 
     public virtual ICollection<TasksPlanningComment> InverseParentTaskPlanningComment { get; set; } = new List<TasksPlanningComment>();

@@ -12,6 +12,7 @@ namespace IDAProject.Web.Models.RequestModels.Addresses
         public int? BenefitUserId { get; set; }
         public int? PartnerId { get; set; }
         public int? CompanyId { get; set; }
+        public int? EmployeeId { get; set; }
         public string? Keyword { get; set; }
     }
 }

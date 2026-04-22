@@ -65,7 +65,9 @@ body {
 .number-font {
     font-weight: 600;
 }
-
+.d-none-new {
+    display: none;
+}
 [tabindex="-1"]:focus {
     outline: 0 !important;
 }

@@ -24,6 +24,7 @@
                             <tms-input type="Hidden" name="CompanyId" id="CompanyId" value="Model.Address.CompanyId" />
                             <tms-input type="Hidden" name="PartnerId" id="PartnerId" value="Model.Address.PartnerId" />
                             <tms-input type="Hidden" name="BenefitUserId" id="BenefitUserId" value="Model.Address.BenefitUserId" />
+                            <tms-input type="Hidden" name="EmployeeId" id="EmployeeId" value="Model.Address.EmployeeId" />
                         </div>
                         <div class="card-body p-0 task-edit-main">
                             <div class="row p-5 border-bottom">
@@ -72,6 +73,7 @@
                 var companyId = $("#CompanyId").val();
                 var partnerId = $("#PartnerId").val();
                 var benefitUserId = $("#BenefitUserId").val();
+                var employeeId = $("#EmployeeId").val();
                 var addressTypeId;
                 var id;
                 if (companyId) {
@@ -81,6 +83,10 @@
                 else if (partnerId) {
                     addressTypeId = @AddressTypes.PartnerAddress;
                     id = partnerId;
+                }
+                else if (employeeId) {
+                    addressTypeId = @AddressTypes.EmployeeAddress;
+                    id = employeeId;
                 }
                 else if (benefitUserId) {
                     addressTypeId = @AddressTypes.BenefitUserAddress;

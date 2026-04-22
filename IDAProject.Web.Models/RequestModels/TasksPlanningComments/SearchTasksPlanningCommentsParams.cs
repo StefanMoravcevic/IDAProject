@@ -11,8 +11,10 @@ namespace IDAProject.Web.Models.RequestModels.TasksPlanningComments
         public int? Id { get; set; }
         public int? PlanId { get; set; }
         public int? UserId { get; set; }
+        public int? EnteredUserId { get; set; }
         public int? EmployeeId { get; set; }
         public bool? HideFromHomePage { get; set; }
+        public bool? HideFromHomePageAuthor { get; set; }
         //<<SearchParams>>
     }
 }

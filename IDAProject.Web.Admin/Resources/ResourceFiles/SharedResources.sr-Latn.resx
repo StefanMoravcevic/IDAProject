@@ -201,6 +201,9 @@
   <data name="ApprovalNumber" xml:space="preserve">
     <value>Broj odobrenja</value>
   </data>
+  <data name="Are you sure you want to remove employee" xml:space="preserve">
+    <value>Da li ste sigurni da želite da sklonite zaposlenog sa liste označenih</value>
+  </data>
   <data name="Assign" xml:space="preserve">
     <value>Dodeli</value>
   </data>
@@ -372,6 +375,9 @@
   <data name="DeleteConfirmation" xml:space="preserve">
     <value>Da, obriši.</value>
   </data>
+  <data name="DeletedMsg" xml:space="preserve">
+    <value>Uspešno ste obrisali slog</value>
+  </data>
   <data name="DeleteQuestion" xml:space="preserve">
     <value>Da li ste sigurni da želite da obrišete?</value>
   </data>
@@ -395,6 +401,9 @@
   </data>
   <data name="DownloadFileName" xml:space="preserve">
     <value>Ime fajla</value>
+  </data>
+  <data name="Drag and Drop your files here" xml:space="preserve">
+    <value>Prevucite ili kliknite za učitavanje dokumenta</value>
   </data>
   <data name="Due Date" xml:space="preserve">
     <value>Rok</value>
@@ -494,6 +503,9 @@
   </data>
   <data name="Enter name" xml:space="preserve">
     <value>Unesite ulicu</value>
+  </data>
+  <data name="Enter name to show" xml:space="preserve">
+    <value>Unesite ime za prikaz</value>
   </data>
   <data name="Enter new project task" xml:space="preserve">
     <value>Unesite novi projektni zadatak</value>
@@ -642,6 +654,9 @@
   <data name="Group" xml:space="preserve">
     <value>Grupa</value>
   </data>
+  <data name="Group level" xml:space="preserve">
+    <value>Na nivou grupe</value>
+  </data>
   <data name="Groups" xml:space="preserve">
     <value>Grupe</value>
   </data>
@@ -692,6 +707,9 @@
   </data>
   <data name="IP address" xml:space="preserve">
     <value>IP adresa</value>
+  </data>
+  <data name="Is group absence" xml:space="preserve">
+    <value>Odsustvo za grupu zaposlenih</value>
   </data>
   <data name="IsCompleted" xml:space="preserve">
     <value>Završen</value>
@@ -771,6 +789,12 @@
   <data name="My finished tasks" xml:space="preserve">
     <value>Moji rešeni zadaci</value>
   </data>
+  <data name="My plan comments" xml:space="preserve">
+    <value>Moji komentari na planove</value>
+  </data>
+  <data name="My realization comments" xml:space="preserve">
+    <value>Moji komentari na realizaciju</value>
+  </data>
   <data name="My unfinished project tasks" xml:space="preserve">
     <value>Moji nerešeni projektni zadaci</value>
   </data>
@@ -779,6 +803,9 @@
   </data>
   <data name="Name" xml:space="preserve">
     <value>Ime</value>
+  </data>
+  <data name="Name to show" xml:space="preserve">
+    <value>Ime za prikaz</value>
   </data>
   <data name="NewPassword" xml:space="preserve">
     <value>Nova šifra</value>
@@ -904,7 +931,7 @@
     <value>Slika</value>
   </data>
   <data name="Plan comments" xml:space="preserve">
-    <value>Komentari plana</value>
+    <value>Komentari na moje planove</value>
   </data>
   <data name="Plan date" xml:space="preserve">
     <value>Datum plana</value>
@@ -978,6 +1005,9 @@
   <data name="Project task" xml:space="preserve">
     <value>Projektni zadatak</value>
   </data>
+  <data name="Project tasks" xml:space="preserve">
+    <value>Projektni zadaci</value>
+  </data>
   <data name="Project tasks list" xml:space="preserve">
     <value>Lista projektnih zadataka</value>
   </data>
@@ -994,7 +1024,8 @@
     <value>Količina</value>
   </data>
   <data name="Realization comments" xml:space="preserve">
-    <value>Komentari realizacije</value>
+    <value>Komentari na moje realizacije</value>
+    <comment>s</comment>
   </data>
   <data name="Realization date" xml:space="preserve">
     <value>Datum realizacije</value>
@@ -1100,6 +1131,9 @@
   </data>
   <data name="Search for task name" xml:space="preserve">
     <value>Pretražite po imenu projekta</value>
+  </data>
+  <data name="Sectors" xml:space="preserve">
+    <value>Sektori</value>
   </data>
   <data name="Segment" xml:space="preserve">
     <value>Segment</value>
@@ -1209,6 +1243,12 @@
   <data name="SelectInstallmentApprovalNumber" xml:space="preserve">
     <value>Izaberi broj odobrenja rate</value>
   </data>
+  <data name="Shift work" xml:space="preserve">
+    <value>Rad u smenama</value>
+  </data>
+  <data name="Shifts" xml:space="preserve">
+    <value>Smena</value>
+  </data>
   <data name="ShippingControllDashboard" xml:space="preserve">
     <value>Status otpreme</value>
   </data>
@@ -1235,6 +1275,9 @@
   </data>
   <data name="Stuff" xml:space="preserve">
     <value>Zaposleni</value>
+  </data>
+  <data name="Succesfully removed" xml:space="preserve">
+    <value>Uspešno uklonjeno</value>
   </data>
   <data name="Surname" xml:space="preserve">
     <value>Prezime</value>
@@ -1274,6 +1317,9 @@
   </data>
   <data name="Total logged hours" xml:space="preserve">
     <value>Ukupno ulogovanih sati</value>
+  </data>
+  <data name="Total realization work hours" xml:space="preserve">
+    <value>Radno vreme sa realizacijom</value>
   </data>
   <data name="Total work hours" xml:space="preserve">
     <value>Radno vreme</value>
@@ -1343,6 +1389,9 @@
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Da</value>
+  </data>
+  <data name="Yes, hide" xml:space="preserve">
+    <value>Da, ukloni</value>
   </data>
   <data name="Your task" xml:space="preserve">
     <value>Tvoj zadatak</value>

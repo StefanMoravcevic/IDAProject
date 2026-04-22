@@ -15,6 +15,7 @@ public Int32? TaskPlanningId { get; set; }
 public DateTime? CreatedAt { get; set; }
         public int? ParentTaskPlanningCommentId { get; set; }
         public bool HiddenFromHomePage { get; set; }
+        public bool HiddenFromHomePageAuthor { get; set; }
 
     }
 }

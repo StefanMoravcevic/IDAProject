@@ -7,6 +7,7 @@
         Referent = 2,
         CEO = 3,
         Accounting = 4,
-        Skeniranje = 5
+        Skeniranje = 5,
+        Odsustva = 6
     }
 }

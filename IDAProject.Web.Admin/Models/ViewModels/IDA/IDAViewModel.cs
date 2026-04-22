@@ -15,6 +15,7 @@ namespace IDAProject.Web.Admin.Models.ViewModels.IDA
             RegularActivities = new List<GenericSelectOption>();
             TaskPlannings = new List<GenericSelectOption>();
             Employees = new List<GenericSelectOption>();
+            Shifts = new List<GenericSelectOption>();
         }
 
         public IEnumerable<ISelectOption> Projects { get; set; }
@@ -25,9 +26,11 @@ namespace IDAProject.Web.Admin.Models.ViewModels.IDA
         public IEnumerable<ISelectOption> RegularActivities { get; set; }
         public IEnumerable<ISelectOption> TaskPlannings { get; set; }
         public IEnumerable<ISelectOption> Employees { get; set; }
+        public IEnumerable<ISelectOption> Shifts { get; set; }
         public string? Today { get; set; }
         public string? TodayForActivityTable { get; set; }
         public string? ImageSource { get; set; }
+        public bool ShiftWork { get; set; }
         public DateTime? NextDay { get; set; }
     }
 }

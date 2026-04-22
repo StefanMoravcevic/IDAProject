@@ -55,6 +55,7 @@ namespace IDAProject.Web.Admin.Controllers
             viewModel.User = user;
             var employeePhoto = (await _employeesManager.GetEmployeeByIdAsync(user.EmployeeId)).Payload.Photo;
             var employeeJobTypeId = (await _employeesManager.GetEmployeeByIdAsync(user.EmployeeId)).Payload.JobTypeId;
+            viewModel.ShowName = (await _employeesManager.GetEmployeeByIdAsync(user.EmployeeId)).Payload.MiddleName;
             viewModel.EmployeePhoto = employeePhoto;
             viewModel.EmployeeId = user.EmployeeId;
             viewModel.EmployeeJobTypeId = employeeJobTypeId;

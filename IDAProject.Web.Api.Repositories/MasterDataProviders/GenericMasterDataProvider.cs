@@ -29,14 +29,15 @@ namespace IDAProject.Web.Api.Repositories.MasterDataProviders
             _entityTypes = new List<IEntityType>();
             _supportedTables = new List<MasterDataTableInfo>()
             {
-                new MasterDataTableInfo("Sectors","Groups"),
+                new MasterDataTableInfo("Sectors","Sectors"),
                 new MasterDataTableInfo("ActivityTypes","Activity types"),
-                new MasterDataTableInfo("Projects","Projects"),
-                new MasterDataTableInfo("IdaTasks","Tasks"),
+                //new MasterDataTableInfo("Projects","Projects"),
+                //new MasterDataTableInfo("IdaTasks","Tasks"),
                 new MasterDataTableInfo("PlanStatuses","Plan statuses"),
-                new MasterDataTableInfo("RegularActivities","Regular activities"),
+                //new MasterDataTableInfo("RegularActivities","Regular activities"),
                 new MasterDataTableInfo("AbsenceTypes","Absence type"),
-                new MasterDataTableInfo("Years","Years")
+                new MasterDataTableInfo("Years","Years"),
+                new MasterDataTableInfo("JobTypes","Groups")
    
             };
         }

@@ -67,6 +67,10 @@ namespace IDAProject.Web.Api.Controllers
                 }
 
             }
+            else
+            {
+                requestModel.RealizationDate = DateTime.Now;
+            }
             if (TimeOnly.TryParse(requestModel.TimeFromFormatted, out var tf))
                 requestModel.TimeFrom = tf;
 

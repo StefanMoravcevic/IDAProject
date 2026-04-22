@@ -65,7 +65,7 @@ builder.Services.AddCors(options =>
                 .AllowAnyMethod();
         });
 });
-
+    
 
 // For Identity
 var identityBuilder = builder.Services.AddIdentity<AppIdentityUser, AppIdentityRole>();
