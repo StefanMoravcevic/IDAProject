@@ -18,4 +18,5 @@ public partial class Sector
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 
     public virtual ICollection<UserNotification> UserNotifications { get; set; } = new List<UserNotification>();
+    public virtual ICollection<JobType> JobTypes { get; set; } = new List<JobType>();
 }

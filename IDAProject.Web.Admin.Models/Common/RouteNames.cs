@@ -75,6 +75,8 @@
         public const string Home_Dashboard = "Home_Dashboard";
         public const string Home_ChooseApp = "Home_ChooseApp";
         public const string Home_Privacy = "Home_Privacy";
+        public const string Home_Terms = "Home_Terms";
+        public const string Home_GoogleIndex = "Home_GoogleIndex";
 
         public const string MasterData_List = "MasterData_List";
         public const string MasterData_New = "MasterData_New";

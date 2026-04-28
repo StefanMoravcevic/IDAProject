@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@using IDAProject.Web.Admin.Models.Common;
+@using IDAProject.Web.Models.RequestModels.MasterData;
+@using IDAProject.Web.Helpers;
+@using IDAProject.Web.Admin.Models.TagHelpers;
+@using IDAProject.Web.Models.General.Enums;
+@using IDAProject.Web.Admin.Models.TagHelpers.Base;
+@using IDAProject.Web.Admin.TagHelpers.Base;
+@inject IStringLocalizer<SharedResources> localizer
+@{
+    ViewData["Title"] = "IDA Nova";
+    Layout = "_LayoutPublic";
+}
+
+<div class="container mt-5">
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+
+            <h2>IDA Nova</h2>
+
+            <p>
+                IDA Nova is an internal enterprise system used for employee planning,
+                task allocation, and execution tracking within organizations.
+            </p>
+
+            <h5>Purpose of data access</h5>
+            <p>
+                This application may request access to user data (such as calendar data)
+                in order to schedule, manage, and track organizational activities.
+                Data is used only for operational purposes within the system.
+            </p>
+
+            <h5>Features</h5>
+            <ul>
+                <li>Employee scheduling and planning</li>
+                <li>Task assignment and tracking</li>
+                <li>Integration with Google services (if enabled)</li>
+            </ul>
+
+            <p>
+                Read our
+                <a href="@Url.RouteUrl(RouteNames.Home_Privacy)">Privacy Policy</a>
+                for more details.
+            </p>
+
+        </div>
+    </div>
+
+</div>

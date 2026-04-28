@@ -99,6 +99,7 @@ namespace IDAProject.Web.Api.Controllers
 
             if (identityResult.Succeeded)
             {
+                await _notificationsManager.SendUserCreatedEmail(requestModel.Email, requestModel.Password, requestModel.UserName);
                 var user = await _userManager.FindByNameAsync(requestModel.UserName);
                 await _userManager.AddToRolesAsync(user, requestModel.Roles);
 

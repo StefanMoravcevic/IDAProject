@@ -1385,4 +1385,22 @@
   <data name="Sectors" xml:space="preserve">
     <value>Sectors</value>
   </data>
+  <data name="Enter house phone number" xml:space="preserve">
+    <value>Enter house phone number</value>
+  </data>
+  <data name="HousePhone" xml:space="preserve">
+    <value>HousePhone</value>
+  </data>
+  <data name="Sector" xml:space="preserve">
+    <value>Sector</value>
+  </data>
+  <data name="Select sector" xml:space="preserve">
+    <value>Select sector</value>
+  </data>
+  <data name="The role has been assigned successfuly" xml:space="preserve">
+    <value>The role has been assigned successfuly</value>
+  </data>
+  <data name="User has been saved" xml:space="preserve">
+    <value>User has been saved</value>
+  </data>
 </root>

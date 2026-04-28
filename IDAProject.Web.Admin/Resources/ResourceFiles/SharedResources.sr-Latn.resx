@@ -492,6 +492,9 @@
   <data name="Enter first name" xml:space="preserve">
     <value>Unesite ime</value>
   </data>
+  <data name="Enter house phone number" xml:space="preserve">
+    <value>Unesite broj kućnog telefona</value>
+  </data>
   <data name="Enter last name" xml:space="preserve">
     <value>Unesite prezime</value>
   </data>
@@ -668,6 +671,9 @@
   </data>
   <data name="Home page" xml:space="preserve">
     <value>Početna strana</value>
+  </data>
+  <data name="HousePhone" xml:space="preserve">
+    <value>Broj kućnog telefona</value>
   </data>
   <data name="IDA View" xml:space="preserve">
     <value>Pregled IDA</value>
@@ -1132,6 +1138,9 @@
   <data name="Search for task name" xml:space="preserve">
     <value>Pretražite po imenu projekta</value>
   </data>
+  <data name="Sector" xml:space="preserve">
+    <value>Sektor</value>
+  </data>
   <data name="Sectors" xml:space="preserve">
     <value>Sektori</value>
   </data>
@@ -1212,6 +1221,9 @@
   </data>
   <data name="Select regular activity" xml:space="preserve">
     <value>Izaberite redovnu aktivnost</value>
+  </data>
+  <data name="Select sector" xml:space="preserve">
+    <value>Izaberite sektor</value>
   </data>
   <data name="Select segment" xml:space="preserve">
     <value>Izaberite segment</value>
@@ -1297,6 +1309,9 @@
   <data name="Tasks list" xml:space="preserve">
     <value>Lista zadataka</value>
   </data>
+  <data name="The role has been assigned successfuly" xml:space="preserve">
+    <value>Rola uspešno dodeljena</value>
+  </data>
   <data name="TickerMessage" xml:space="preserve">
     <value>Poruka za slajder</value>
   </data>
@@ -1347,6 +1362,9 @@
   </data>
   <data name="Uploaded date" xml:space="preserve">
     <value>Datum postavljanja</value>
+  </data>
+  <data name="User has been saved" xml:space="preserve">
+    <value>Korisnički nalog uspešno kreiran</value>
   </data>
   <data name="User notification basic info" xml:space="preserve">
     <value>Osnovne informacije o obaveštenju korisnicima</value>

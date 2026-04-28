@@ -10,6 +10,7 @@
 @{
     var visibilityInputsSelector = $"#{Model.TableWrapperId} div[data-visibility-options='{Model.Id}'] input[type='checkbox']";
     var tableBodySelector = $"#{Model.Id} tbody";
+    var localizedPagination = @Html.Raw(Json.Serialize(new PaginationLocalizerModel(localizer)));
 }
 
 <div id="@Model.TableWrapperId" class="dataTables_wrapper no-footer">
@@ -154,6 +155,7 @@
         $('#rows-count-@Model.Id').click(function(){
             var pageSize = getPageSize('@Model.Id');
             renderPagingPanel('@Model.Id', pageSize, 1);
+            debugger
 
             $('@Html.Raw(tableBodySelector) tr').addClass("hidden-row");
             $('@Html.Raw(tableBodySelector) tr').slice(0, pageSize).removeClass("hidden-row");
@@ -170,16 +172,27 @@
         });
 
         $('#paging-@Model.Id').on('click', 'a[data-index]', function() {
+           var pageSize = getPageSize('@Model.Id');
+           var pageIndex = parseInt($(this).data('index'), 10);
 
-            var pageSize = getPageSize('@Model.Id');
-            var pageIndex = parseInt($(this).data('index'),10);
-            renderPagingPanel('@Model.Id', pageSize, pageIndex);
+           var $table = $('#@Model.Id');
+           var $tbody = $table.find('tbody');
 
-            var startIndex = (pageIndex - 1) * pageSize;
-            var endIndex = startIndex + pageSize;
+           // Proveri da li je filter primenjen
+           var filteredRows = $tbody.find('tr.filtered-visible');
+           var rows = filteredRows.length ? filteredRows : $tbody.find('tr');
 
-            $('@Html.Raw(tableBodySelector) tr').addClass("hidden-row");
-            $('@Html.Raw(tableBodySelector) tr').slice(startIndex, endIndex).removeClass("hidden-row");
+           var startIndex = (pageIndex - 1) * pageSize;
+           var endIndex = startIndex + pageSize;
+
+           // Sakrij sve redove
+           rows.addClass("hidden-row");
+
+           // Prikazi samo redove za trenutnu stranu
+           rows.slice(startIndex, endIndex).removeClass("hidden-row");
+
+           // Osvezi paging info sa ispravnim brojem redova
+           renderPagingPanel('@Model.Id', pageSize, pageIndex, @localizedPagination, rows.length);
         });
 
 

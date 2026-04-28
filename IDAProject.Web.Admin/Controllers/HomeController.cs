@@ -1,18 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using IDAProject.Web.Admin.Managers;
+using IDAProject.Web.Admin.Managers.Attributes;
 using IDAProject.Web.Admin.Models;
 using IDAProject.Web.Admin.Models.Common;
 using IDAProject.Web.Admin.Models.Interfaces.Managers;
+using IDAProject.Web.Admin.Models.ViewModels;
 using IDAProject.Web.Admin.Models.ViewModels.Home;
 using IDAProject.Web.Models.Common;
-using IDAProject.Web.Models.General.Enums;
 using IDAProject.Web.Models.General;
-using Newtonsoft.Json;
+using IDAProject.Web.Models.General.Enums;
 using IDAProject.Web.Models.RequestModels.ExchangeRates;
-using IDAProject.Web.Admin.Models.ViewModels;
-using IDAProject.Web.Admin.Managers.Attributes;
-using IDAProject.Web.Admin.Managers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Newtonsoft.Json;
 
 namespace IDAProject.Web.Admin.Controllers
 {
@@ -79,12 +80,33 @@ namespace IDAProject.Web.Admin.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         [HttpGet("privacy", Name = RouteNames.Home_Privacy)]
         public IActionResult Privacy()
         {
             var viewModel = new NavigationBaseViewModel();
-            var user = GetCurrentUser();
-            viewModel.User = user;
+            //var user = GetCurrentUser();
+            //viewModel.User = user;
+            return View(viewModel);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("terms", Name = RouteNames.Home_Terms)]
+        public IActionResult Terms()
+        {
+            var viewModel = new NavigationBaseViewModel();
+            //var user = GetCurrentUser();
+            //viewModel.User = user;
+            return View(viewModel);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("googleIndex", Name = RouteNames.Home_GoogleIndex)]
+        public IActionResult GoogleIndex()
+        {
+            var viewModel = new NavigationBaseViewModel();
+            //var user = GetCurrentUser();
+            //viewModel.User = user;
             return View(viewModel);
         }
 

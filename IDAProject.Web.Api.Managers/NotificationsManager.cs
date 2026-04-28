@@ -452,5 +452,51 @@ namespace IDAProject.Web.Api.Managers
 
             return result;
         }
+
+        public async Task<ResponseModelBase> SendUserCreatedEmail(string email, string password, string username)
+        {
+            var result = new ResponseModelBase();
+
+            var body = $@"
+            Poštovani/a,
+
+            Kreiran Vam je nalog na aplikaciji IDA.
+
+            Link za pristup aplikaciji je: https://ida.alpackgroup.com/
+
+            Kredencijali za pristup aplikaciji:
+
+            Korisničko ime: {username}
+            Lozinka: {password}
+
+            Ukoliko imate bilo kakvih pitanja možete se obratiti na mejl adresu hr@alpackgroup.com.
+
+            Srdačan pozdrav.
+            ";
+
+            try
+            {
+                await _queueRepository.AddEmailQueueAsync(
+                    "Kreiranje korisničkog naloga na IDA aplikaciji",
+                    email,
+                    _emailQueueSettings.From,
+                    body,
+                    false
+                );
+
+                result.Valid = true;
+                result.Message = "Email obaveštenje uspešno stavljeno u queue.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Greška prilikom dodavanja emaila u queue");
+                result.Valid = false;
+                result.Message = "Došlo je do greške prilikom dodavanja emaila u queue.";
+            }
+
+            return result;
+
+
+        }
     }
-}
+}   

@@ -20,7 +20,7 @@ namespace IDAProject.Web.Admin.Models.ViewModels
             set { _navMenuOptionSelector = value; }
         }
 
-        public UserAccount User
+        public UserAccount? User
         {
             get { return _userAccount!; }
             set { _userAccount = value; }

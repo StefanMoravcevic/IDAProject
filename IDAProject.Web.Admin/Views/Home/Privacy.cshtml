@@ -1,6 +1,52 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
+    Layout = "_LayoutPublic";
 }
-<h1>@ViewData["Title"]</h1>
+<div class="container mt-4">
 
-<p>Use this page to detail your site's privacy policy.</p>
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <h1 class="card-title mb-4">Privacy Policy</h1>
+
+            <p>
+                This application integrates with Google Calendar API to retrieve calendar events from users’ Google accounts.
+            </p>
+
+            <p>
+                The application uses this data to display and manage scheduled meetings and planned activities within the platform.
+            </p>
+
+            <p>
+                We only store minimal reference data such as Google Calendar Event IDs and event links in order to prevent duplication and maintain synchronization between Google Calendar and our system.
+            </p>
+
+            <p>
+                We do not store full event details beyond what is necessary for synchronization purposes.
+            </p>
+
+            <p>
+                No Google Calendar data is shared with third parties, sold, or used for advertising or analytics purposes.
+            </p>
+
+            <p>
+                All data retrieved from Google Calendar is used strictly for providing the core functionality of the application.
+            </p>
+
+            <h5 class="mt-4">Google API Usage</h5>
+            <p>
+                This application uses Google Calendar API and complies with Google API Services User Data Policy.
+            </p>
+
+            <h5 class="mt-4">Contact</h5>
+            <p>
+                If you have any questions, contact:
+                <a href="mailto:stefan02.moravcevic@gmail.com">
+                    stefan02.moravcevic@gmail.com
+                </a>
+            </p>
+
+        </div>
+    </div>
+
+</div>

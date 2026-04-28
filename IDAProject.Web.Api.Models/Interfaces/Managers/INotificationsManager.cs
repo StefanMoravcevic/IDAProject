@@ -14,6 +14,7 @@ namespace IDAProject.Web.Api.Models.Interfaces.Managers
         Task<ResponseModelBase> SendCommentRealizationNotification(int? taskRealizationCommentId);
         Task<ResponseModelBase> SendResetPasswordRequest(RegisterModel requestModel);
         Task<ResponseModelBase> SendAdminResetPassword(string pass, string userName, string mailTo, string textTitle);
+        Task<ResponseModelBase> SendUserCreatedEmail(string email, string password, string username);
 
     }
 }

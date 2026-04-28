@@ -1440,4 +1440,22 @@
   <data name="Sectors" xml:space="preserve">
     <value>Сектори</value>
   </data>
+  <data name="Enter house phone number" xml:space="preserve">
+    <value>Унесите број кућног телефона</value>
+  </data>
+  <data name="HousePhone" xml:space="preserve">
+    <value>Број кућног телефона</value>
+  </data>
+  <data name="Sector" xml:space="preserve">
+    <value>Сектор</value>
+  </data>
+  <data name="Select sector" xml:space="preserve">
+    <value>Изаберите сектор</value>
+  </data>
+  <data name="The role has been assigned successfuly" xml:space="preserve">
+    <value>Рола успешно додељена</value>
+  </data>
+  <data name="User has been saved" xml:space="preserve">
+    <value>Кориснички налог успешно креиран</value>
+  </data>
 </root>

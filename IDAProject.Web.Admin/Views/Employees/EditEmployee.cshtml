@@ -53,9 +53,9 @@
 								</div>
 								<div class="card-body p-0 task-edit-main">
 									<div class="row p-5 border-bottom">
-										@* <div class="col-sm-12 col-md-6 col-xl-3">
+										<div class="col-sm-12 col-md-6 col-xl-3">
 											<tms-input type="Text" name="EmployeeNumber" id="empEmployeeNumber" value="@employee.EmployeeNumber" label="@localizer["EmployeeNumber"]:" required="true" placeholder="@localizer["Enter EmployeeNumber"]..." />
-										</div> *@
+										</div>
 										<div class="col-sm-12 col-md-6 col-xl-3">
 											<tms-input type="Text" name="Name" id="empName" value="@employee.Name" label="@localizer["First name"]:" required="true" placeholder="@localizer["Enter first name"]..." />
 										</div>
@@ -69,10 +69,10 @@
 											<tms-select name="GenderId" id="empGenderId" options="@Model.Genders" selected-option="@employee.GenderId" label="@localizer["Gender"]:" empty-option-text="@localizer["Select gender"]..." />
 										</div> *@
 										<div class="col-sm-12 col-md-6 col-xl-3">
-											<tms-select name="SectorId" id="SectorId" options="@Model.Sectors" selected-option="@employee.SectorId" label="@localizer["Group"]:" empty-option-text="@localizer["Select group"]..." />
+											<tms-select name="SectorId" id="SectorId" options="@Model.Sectors" selected-option="@employee.SectorId" label="@localizer["Sector"]:" empty-option-text="@localizer["Select sector"]..." />
 										</div>
 										<div class="col-sm-12 col-md-6 col-xl-3">
-											<tms-select name="JobTypeId" id="empJobTypeId" options="@Model.JobTypes" selected-option="@employee.JobTypeId" label="@localizer["JobType"]:" empty-option-text="@localizer["Select job type"]..." />
+											<tms-select name="JobTypeId" id="empJobTypeId" options="@Model.JobTypes" selected-option="@employee.JobTypeId" label="@localizer["Group"]:" empty-option-text="@localizer["Select group"]..." />
 										</div>
 										<div class="col-sm-12 col-md-12 col-xl-6">
 											<tms-input type="Email" name="Email" id="empEmail" value="@employee.Email" label="@localizer["E-mail"]:" placeholder="@localizer["Enter e-mail address"]..." />
@@ -170,9 +170,9 @@
 												<div class="col-sm-12 col-md-6 col-xl-4">
 													<tms-select name="CompanyId" id="empCompanyId" options="@Model.Companies" selected-option="@employee.CompanyId" label="@localizer["Company"]:" empty-option-text="@localizer["Select company"]..." />
 												</div>
-												<div class="col-sm-12 col-md-6 col-xl-4">
+												@* <div class="col-sm-12 col-md-6 col-xl-4">
 													<tms-select name="OrgUnitId" id="empOrgUnitId" options="@Model.OrgUnits" selected-option="@employee.OrgUnitId" label="@localizer["OrgUnit"]:" empty-option-text="@localizer["Select org unit"]..." />
-												</div>
+												</div> *@
 											</div>
 										</div>
 									</div>
@@ -190,8 +190,8 @@
 										<div class="col-sm-12 col-md-12 col-xl-3">
 											<tms-input type="Date" name="BirthDate" id="empBirthDate" value="@employee.BirthDate!" label="@localizer["Date of birth"]:" placeholder="@localizer["Enter birth date"]..." />
 										</div>
-										<div class="col-sm-12 col-md-12 col-xl-3">
-											<tms-input type="Text" name="BirthPlace" id="empBirthPlace" value="@employee.BirthPlace!" label="@localizer["BirthPlace"]:" placeholder="@localizer["Enter birth place"]..." />
+										<div class="col-sm-12 col-md-6 col-xl-3">
+											<tms-input type="Text" name="HousePhoneNumber" id="empHousePhoneNumber" value="@employee.HousePhoneNumber!" label="@localizer["HousePhone"]:" placeholder="@localizer["Enter house phone number"]..." />
 										</div>
 @* 										<div class="col-sm-12 col-md-12 col-xl-3">
 											<tms-input type="Text" name="Citizenship" id="empCitizenship" value="@employee.Citizenship!" label="@localizer["Citizenship"]:" placeholder="@localizer["Enter citizenship"]..." />

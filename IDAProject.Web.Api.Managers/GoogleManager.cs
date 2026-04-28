@@ -26,6 +26,8 @@ namespace IDAProject.Web.Api.Managers
         private readonly ITasksRealizationsRepository _tasksRealizationsRepository;
         private readonly string REMOVED_SECRET = "REMOVED_SECRET";
         private readonly string REMOVED_SECRET = "REMOVED_SECRET";
+        //private readonly string REMOVED_SECRET = "464015627423-td17g6h3oo7nc751bkld0883ms5kb1vt.apps.googleusercontent.com";
+        //private readonly string REMOVED_SECRET = "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";
 
         public GoogleManager(IEmployeesRepository repo, ITasksPlanningsRepository tasksPlanningsRepository, IRegularActivitiesRepository regularActivitiesRepository, ITasksRealizationsRepository tasksRealizationsRepository)
         {
@@ -124,7 +126,8 @@ namespace IDAProject.Web.Api.Managers
 
             public async Task SyncFutureEventsForEmployeeAsync(int employeeId)
     {
-        var employee = await _employeeRepo.GetEmployeeByIdAsync(employeeId);
+        
+                var employee = await _employeeRepo.GetEmployeeByIdAsync(employeeId);
 
         if (string.IsNullOrEmpty(employee.GoogleRefreshToken))
             throw new Exception("RefreshToken nedostaje, korisnik mora ponovo autorizovati aplikaciju.");

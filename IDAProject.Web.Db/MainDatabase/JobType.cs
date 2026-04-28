@@ -14,8 +14,10 @@ public partial class JobType
     public DateTime? DeletedDate { get; set; }
 
     public int? DeletedBy { get; set; }
+    public int? SectorId { get; set; }
 
     public virtual AspNetUser? DeletedByNavigation { get; set; }
+    public virtual Sector? Sector { get; set; }
 
     public virtual ICollection<EmployeeAbsence> EmployeeAbsences { get; set; } = new List<EmployeeAbsence>();
 
