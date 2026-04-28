@@ -10,5 +10,7 @@ namespace IDAProject.Web.Models.Dto.Google
     {
         public string? CallbackUrl { get; set; }
         public string? FrontEndUrl { get; set; }
+        public string? REMOVED_SECRET { get; set; }
+        public string? REMOVED_SECRET { get; set; }
     }
 }

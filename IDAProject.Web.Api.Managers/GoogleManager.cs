@@ -14,7 +14,9 @@ using IDAProject.Web.Api.Models.Interfaces.Repositories;
 using IDAProject.Web.Api.Repositories;
 using IDAProject.Web.Db.MainDatabase;
 using IDAProject.Web.Models.Dto.Employees;
+using IDAProject.Web.Models.Dto.Google;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace IDAProject.Web.Api.Managers
 {
@@ -23,18 +25,16 @@ namespace IDAProject.Web.Api.Managers
         private readonly IEmployeesRepository _employeeRepo;
         private readonly IRegularActivitiesRepository _regularActivitiesRepository;
         private readonly ITasksPlanningsRepository _tasksPlanningsRepository;
+        private readonly GoogleSettings _googleSettings;
         private readonly ITasksRealizationsRepository _tasksRealizationsRepository;
-        private readonly string REMOVED_SECRET = "REMOVED_SECRET";
-        private readonly string REMOVED_SECRET = "REMOVED_SECRET";
-        //private readonly string REMOVED_SECRET = "464015627423-td17g6h3oo7nc751bkld0883ms5kb1vt.apps.googleusercontent.com";
-        //private readonly string REMOVED_SECRET = "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";
 
-        public GoogleManager(IEmployeesRepository repo, ITasksPlanningsRepository tasksPlanningsRepository, IRegularActivitiesRepository regularActivitiesRepository, ITasksRealizationsRepository tasksRealizationsRepository)
+        public GoogleManager(IEmployeesRepository repo, ITasksPlanningsRepository tasksPlanningsRepository, IRegularActivitiesRepository regularActivitiesRepository, ITasksRealizationsRepository tasksRealizationsRepository, IOptions<GoogleSettings> googleSettings)
         {
             _employeeRepo = repo;
             _tasksPlanningsRepository = tasksPlanningsRepository;
             _regularActivitiesRepository = regularActivitiesRepository;
             _tasksRealizationsRepository = tasksRealizationsRepository;
+            _googleSettings = googleSettings.Value;
         }
 
         public string GetOAuthUrl(string redirectUri, int employeeId)
@@ -44,8 +44,8 @@ namespace IDAProject.Web.Api.Managers
                 {
                     REMOVED_SECRETs = new REMOVED_SECRETs
                     {
-                        REMOVED_SECRET = REMOVED_SECRET,
-                        REMOVED_SECRET = REMOVED_SECRET
+                        REMOVED_SECRET = _googleSettings.REMOVED_SECRET,
+                        REMOVED_SECRET = _googleSettings.REMOVED_SECRET
                     },
                     Scopes = new[]
                     {
@@ -74,8 +74,8 @@ namespace IDAProject.Web.Api.Managers
                 {
                     REMOVED_SECRETs = new REMOVED_SECRETs
                     {
-                        REMOVED_SECRET = REMOVED_SECRET,
-                        REMOVED_SECRET = REMOVED_SECRET
+                        REMOVED_SECRET = _googleSettings.REMOVED_SECRET,
+                        REMOVED_SECRET = _googleSettings.REMOVED_SECRET
                     },
                     Scopes = new[]
                     {
@@ -137,8 +137,8 @@ namespace IDAProject.Web.Api.Managers
             {
                 REMOVED_SECRETs = new REMOVED_SECRETs
                 {
-                    REMOVED_SECRET = REMOVED_SECRET,
-                    REMOVED_SECRET = REMOVED_SECRET
+                    REMOVED_SECRET = _googleSettings.REMOVED_SECRET,
+                    REMOVED_SECRET = _googleSettings.REMOVED_SECRET
                 },
                 Scopes = new[] { CalendarService.Scope.Calendar }
             });
