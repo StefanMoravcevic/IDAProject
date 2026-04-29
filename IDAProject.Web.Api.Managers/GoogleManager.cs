@@ -42,10 +42,10 @@ namespace IDAProject.Web.Api.Managers
             var flow = new GoogleAuthorizationCodeFlow(
                 new GoogleAuthorizationCodeFlow.Initializer
                 {
-                    REMOVED_SECRETs = new REMOVED_SECRETs
+                    ClientSecrets = new Google.Apis.Auth.OAuth2.ClientSecrets
                     {
-                        REMOVED_SECRET = _googleSettings.REMOVED_SECRET,
-                        REMOVED_SECRET = _googleSettings.REMOVED_SECRET
+                        ClientId = _googleSettings.ClientId,
+                        ClientSecret = _googleSettings.ClientSecret
                     },
                     Scopes = new[]
                     {
@@ -72,10 +72,10 @@ namespace IDAProject.Web.Api.Managers
             var flow = new GoogleAuthorizationCodeFlow(
                 new GoogleAuthorizationCodeFlow.Initializer
                 {
-                    REMOVED_SECRETs = new REMOVED_SECRETs
+                    ClientSecrets = new Google.Apis.Auth.OAuth2.ClientSecrets
                     {
-                        REMOVED_SECRET = _googleSettings.REMOVED_SECRET,
-                        REMOVED_SECRET = _googleSettings.REMOVED_SECRET
+                        ClientId = _googleSettings.ClientId,
+                        ClientSecret = _googleSettings.ClientSecret
                     },
                     Scopes = new[]
                     {
@@ -135,10 +135,10 @@ namespace IDAProject.Web.Api.Managers
         var flow = new GoogleAuthorizationCodeFlow(
             new GoogleAuthorizationCodeFlow.Initializer
             {
-                REMOVED_SECRETs = new REMOVED_SECRETs
+                ClientSecrets = new Google.Apis.Auth.OAuth2.ClientSecrets
                 {
-                    REMOVED_SECRET = _googleSettings.REMOVED_SECRET,
-                    REMOVED_SECRET = _googleSettings.REMOVED_SECRET
+                    ClientId = _googleSettings.ClientId,
+                    ClientSecret = _googleSettings.ClientSecret
                 },
                 Scopes = new[] { CalendarService.Scope.Calendar }
             });
