@@ -29,7 +29,7 @@ namespace IDAProject.Web.Api.Controllers
             var response = new ResponseModel<string>
             {
                 Valid = true,
-                Payload = url
+                Payload = url   
             };
             return Ok(response);
         }
