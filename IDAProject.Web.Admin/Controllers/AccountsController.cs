@@ -84,7 +84,6 @@ namespace IDAProject.Web.Admin.Controllers
                 var tokenResponse = await _accountManager.GenerateTokenAsync(model);
                 if (tokenResponse.Valid)
                 {
-                    // Postavljanje JWT cookie
                     var tokenCookie = Request.Cookies[Constants.AdminCookieToken];
                     var cookieOptions = new CookieOptions
                     {
@@ -94,7 +93,6 @@ namespace IDAProject.Web.Admin.Controllers
                     };
                     if (tokenCookie != null) Response.Cookies.Delete(Constants.AdminCookieToken);
                     Response.Cookies.Append(Constants.AdminCookieToken, tokenResponse.Payload!, cookieOptions);
-
                     saveModel = await LogLoginDetails(HttpContext, model.Username);
                     var user = _accountManager.GetUserFromJwt(tokenResponse.Payload!);
                     saveModel.Note = "Successfull login";
@@ -106,7 +104,6 @@ namespace IDAProject.Web.Admin.Controllers
                     return RedirectToAction("PostLogin", "Accounts");
                 }
 
-                // Login nije uspeo
                 saveModel = await LogLoginDetails(HttpContext, model.Username);
                 saveModel.Note = "Unsuccessfull login! - " + NotificationType.Error + "/" + tokenResponse.Message;
                 await _userManager.SaveUserLogAsync(saveModel);

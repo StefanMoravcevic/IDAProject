@@ -284,6 +284,7 @@ namespace IDAProject.Web.Api.Controllers
 
         #region UserLog
 
+        [AllowAnonymous]
         [HttpPost("saveUserLog")]
         public async Task<ResponseModel<int>> SaveUserLogAsync(SaveUserLogRequestModel requestModel)
         {
