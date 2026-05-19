@@ -38,6 +38,14 @@ namespace IDAProject.Web.Api.Repositories
             }
             else
             {
+                if (searchParams.ViewerEmployeeId.HasValue)
+                {
+                    query = query.Where(x => x.ViewerEmployeeId == searchParams.ViewerEmployeeId);
+                }
+                if (searchParams.ViewedEmployeeId.HasValue)
+                {
+                    query = query.Where(x => x.ViewedEmployeeId == searchParams.ViewedEmployeeId);
+                }
                 if (searchParams.EmployeeId.HasValue)
                 {
                     query = query.Where(x => x.ViewerEmployeeId == searchParams.EmployeeId);

@@ -208,9 +208,14 @@ namespace IDAProject.Web.Api.Managers
 
                 var timeFrom = TimeOnly.FromDateTime(start);
                 var timeTo = TimeOnly.FromDateTime(end);
-                var duration = TimeOnly.FromTimeSpan(end - start);
+                    var diff = end - start;
 
-                try
+                    if (diff >= TimeSpan.FromDays(1))
+                        diff = TimeSpan.FromHours(23).Add(TimeSpan.FromMinutes(59));
+
+                    var duration = TimeOnly.FromTimeSpan(diff);
+
+                    try
                 {
                     if (!regularActivityCache.ContainsKey(employeeData.UserId.Value))
                     {

@@ -129,6 +129,11 @@
 					@localizer["Stuff"]
 				</div>
 				<div class="card-body p-2" style="max-height:650px; overflow-y:auto; background-color:#FFFCF5;">
+					<tms-input type="Text"
+						   name="Keyword"
+						   id="employeeKeyword"
+						   class="form-control form-control-sm mb-2 w-100"
+						   placeholder="@localizer["Search employee"]..." />
 					<div id="employeesMatrix">
 						<!-- AJAX puni -->
 					</div>
@@ -159,20 +164,25 @@
 
 								<!-- PRETHODNI DAN -->
 								<div class="col-xl-2 col-md-3">
+									<button class="btn btn-outline-primary w-100 btn-sm" id="today">
+										@localizer["Today"]
+									</button>
+								</div>
+								<div class="col-xl-3 col-md-3">
 									<button class="btn btn-outline-primary w-100 btn-sm" id="prevDay">
 										@localizer["Previous day"]
 									</button>
 								</div>
 
 								<!-- TEKUCA NEDELJA -->
-								<div class="col-xl-2 col-md-3">
+								<div class="col-xl-3 col-md-3">
 									<button class="btn btn-outline-primary w-100 btn-sm" id="currentWeek">
 										@localizer["Current week"]
 									</button>
 								</div>
 
 								<!-- PRETHODNA NEDELJA -->
-								<div class="col-xl-2 col-md-3">
+								<div class="col-xl-3 col-md-3">
 									<button class="btn btn-outline-primary w-100 btn-sm" id="prevWeek">
 										@localizer["Previous week"]
 									</button>
@@ -414,7 +424,7 @@
 						 let row = `
 							 <tr data-id="${item.id}">
 								 <td>${item.displayTask ?? ""}</td>
-								 <td>${item.planNo ?? ""}</td>
+								 <td>${item.planNo == 0 ? "+" : (item.planNo ?? "")}</td>
 								 <td>${item.activity ?? ""}</td>
 								 <td>${item.timeFromFormattedForTable ?? ""}</td>
 								 <td>${item.timeToFormattedForTable ?? ""}</td>
@@ -437,34 +447,64 @@
 				 error: function(err) { console.log(err); }
 			 });
 		 }
+		
 		 function loadEmployeesMatrix() {
-			 const currentEmployeeId = @Model.User.EmployeeId;
 
-			 $.ajax({
-				 url: "@Url.RouteUrl(RouteNames.EmployeeJobTypeControls_Search)",
-				 method: "POST",
-				 data: { employeeId: currentEmployeeId },
-				 success: function(jobTypeControls) {
-					 const allowedJobTypeIds = jobTypeControls.map(j => j.jobTypeId);
-					 const allowedEmployeeIds = jobTypeControls.map(j => j.employeeToSeeId);
+			const currentEmployeeId = @Model.User.EmployeeId;
 
-					 $.ajax({
-						 url: "@Url.RouteUrl(RouteNames.Employees_Search)",
-						 method: "POST",
-						 data: { jobTypes : allowedJobTypeIds, employees : allowedEmployeeIds },
-						 success: function(employeesData) {
-							 buildEmployeesMatrix(employeesData);
-						 },
-						 error: function() {
-							 console.error("Greška pri učitavanju zaposlenih");
-						 }
-					 });
-				 },
-				 error: function() {
-					 console.error("Greška pri učitavanju job type kontrole");
-				 }
-			 });
-		 }
+			$.ajax({
+				url: "@Url.RouteUrl(RouteNames.EmployeeJobTypeControls_Search)",
+				method: "POST",
+				data: { employeeId: currentEmployeeId },
+				success: function(jobTypeControls) {
+
+					const allowedJobTypeIds = jobTypeControls.map(j => j.jobTypeId);
+					const allowedEmployeeIds = jobTypeControls.map(j => j.employeeToSeeId);
+
+					$.ajax({
+						url: "@Url.RouteUrl(RouteNames.Employees_Search)",
+						method: "POST",
+						data: {
+							jobTypes: allowedJobTypeIds,
+							employees: allowedEmployeeIds
+						},
+						success: function(employeesData) {
+
+							$.ajax({
+								url: "@Url.RouteUrl(RouteNames.EmployeeViewTrackings_Search)",
+								method: "POST",
+								data: {
+									viewerEmployeeId: currentEmployeeId,
+									isBookmarked: true,
+									HideFromHomePage : false,
+								},
+								success: function(trackingData) {
+									debugger
+									const bookmarkedIds = trackingData.map(x => x.viewedEmployeeId);
+
+									buildEmployeesMatrix(employeesData);
+
+									bookmarkedIds.forEach(function(id) {
+										$(`.employee-checkbox[data-id='${id}']`)
+											.prop('checked', true);
+									});
+								},
+								error: function() {
+									console.error("Greška pri učitavanju tracking podataka");
+								}
+							});
+
+						},
+						error: function() {
+							console.error("Greška pri učitavanju zaposlenih");
+						}
+					});
+				},
+				error: function() {
+					console.error("Greška pri učitavanju job type kontrole");
+				}
+			});
+		}
 		 function renderPlanPieChart(stats, canvasId) {
 			 const ctx = document.getElementById(canvasId)?.getContext('2d');
 			 if (!ctx) return; // Ako element ne postoji, izlazi
@@ -567,41 +607,49 @@
 		 }
 
 		 // Helper: računa start i end date po periodu
-		 function getDateRange(period) {
-			 const today = new Date();
-			 let startDate = new Date();
-			 let endDate = new Date();
+		function getDateRange(period) {
+			const today = new Date();
+			let startDate = new Date();
+			let endDate = new Date();
 
-			 switch(period) {
-				 case 'prevDay':
-					 startDate.setDate(today.getDate() - 1);
-					 endDate.setDate(today.getDate() - 1);
-					 break;
+			switch (period) {
 
-				 case 'currentWeek':
-					 let day = today.getDay(); // 0 = nedelja
-					 let diff = today.getDate() - day + (day === 0 ? -6 : 1); // ponedeljak
-					 startDate.setDate(diff);
-					 endDate.setDate(diff + 6); // nedelja
-					 break;
+				case 'today':
+					startDate = new Date(today);
+					endDate = new Date(today);
+					break;
 
-				 case 'prevWeek':
-					 let day2 = today.getDay();
-					 let diff2 = today.getDate() - day2 - 6; // ponedeljak prošle nedelje
-					 startDate.setDate(diff2);
-					 endDate.setDate(diff2 + 6); // nedelja prošle nedelje
-					 break;
+				case 'prevDay':
+					startDate.setDate(today.getDate() - 1);
+					endDate.setDate(today.getDate() - 1);
+					break;
 
-				 default:
-					 startDate = today;
-					 endDate = today;
-			 }
+				case 'currentWeek':
+					let day = today.getDay(); // 0 = nedelja
+					let diff = today.getDate() - day + (day === 0 ? -6 : 1);
 
-			 return {
-				 startDate: formatDate(startDate),
-				 endDate: formatDate(endDate)
-			 };
-		 }
+					startDate.setDate(diff);
+					endDate.setDate(diff + 6);
+					break;
+
+				case 'prevWeek':
+					let day2 = today.getDay();
+					let diff2 = today.getDate() - day2 - 6;
+
+					startDate.setDate(diff2);
+					endDate.setDate(diff2 + 6);
+					break;
+
+				default:
+					startDate = today;
+					endDate = today;
+			}
+
+			return {
+				startDate: formatDate(startDate),
+				endDate: formatDate(endDate)
+			};
+		}
 		 function buildEmployeesMatrix(data) {
 			 let html = "";
 			 let groups = {};
@@ -646,7 +694,7 @@
 
 			 $("#employeesMatrix").html(html);
 		 }
-				 function loadEmployeeTables(period, customStart, customEnd) {
+		function loadEmployeeTables(period, customStart, customEnd) {
 			 if (!selectedUserId) {
 				 Swal.fire({
 					 icon: 'warning',
@@ -1073,7 +1121,7 @@
 				data: JSON.stringify(payload)
 			});
 		});
-			 const periodButtons = ['#prevDay', '#currentWeek', '#prevWeek'];
+			 const periodButtons = ['#prevDay', '#currentWeek', '#prevWeek', '#today'];
 
 			 periodButtons.forEach(selector => {
 				 $(selector).click(function () {
@@ -1321,37 +1369,92 @@
 					 });
 				 });
 
-				 $(document).on('change', '.employee-checkbox', function() {
-					 var checkbox = $(this);
-					 var viewedEmployeeId = checkbox.data('id');
-					 var isChecked = checkbox.is(':checked');
+				$(document).on('change', '.employee-checkbox', function () {
+					var checkbox = $(this);
+					var viewedEmployeeId = checkbox.data('id');
+					var isChecked = checkbox.is(':checked');
 
-					 var payload = {
-						 ViewerEmployeeId: null,
-						 IsBookmarked : true,
-						 ViewedEmployeeId: viewedEmployeeId,
-						 ViewedFrom: null,
-						 ViewedUntil: !isChecked ? new Date() : null,
-						 HideFromHomePage : false
-					 };
+					var payload = {
+						ViewerEmployeeId: null,
+						IsBookmarked: true,
+						ViewedEmployeeId: viewedEmployeeId,
+						ViewedFrom: null,
+						ViewedUntil: !isChecked ? new Date() : null,
+						HideFromHomePage: false
+					};
 
-					 $.ajax({
-						 url: '@Url.RouteUrl(RouteNames.EmployeeViewTrackings_SaveChecked)',
-						 method: 'POST',
-						 contentType: 'application/json',
-						 data: JSON.stringify(payload),
-						 success: function(response) {
-							 if (response.valid) {
-								 console.log('Evidencija sačuvana:', payload);
-							 } else {
-								 console.error('Greška pri čuvanju:', response.message);
-							 }
-						 },
-						 error: function(err) {
-							 console.error('Greška u AJAX pozivu:', err);
-						 }
-					 });
-				 });
+					$.ajax({
+						url: '@Url.RouteUrl(RouteNames.EmployeeViewTrackings_SaveChecked)',
+						method: 'POST',
+						contentType: 'application/json',
+						data: JSON.stringify(payload),
+						success: function (response) {
+
+							if (response.valid) {
+								console.log('Evidencija sačuvana:', payload);
+							}
+							else {
+								// VRATI checkbox u prethodno stanje (bitno UX)
+								checkbox.prop('checked', !isChecked);
+
+								Swal.fire({
+									icon: 'error',
+									title: 'Greška',
+									text: response.message
+								});
+
+								console.error('Greška pri čuvanju:', response.message);
+							}
+						},
+						error: function (err) {
+							// fallback za server/network error
+							checkbox.prop('checked', !isChecked);
+
+							Swal.fire({
+								icon: 'error',
+								title: 'Greška',
+								text: 'Došlo je do greške u server komunikaciji.'
+							});
+
+							console.error('Greška u AJAX pozivu:', err);
+						}
+					});
+				});
+
+				$(document).on("blur", "#employeeKeyword", function () {
+
+					const keyword = $(this).val();
+
+					const currentEmployeeId = @Model.User.EmployeeId;
+
+					$.ajax({
+						url: "@Url.RouteUrl(RouteNames.EmployeeJobTypeControls_Search)",
+						method: "POST",
+						data: {
+							employeeId: currentEmployeeId,
+							keyword: keyword
+						},
+						success: function (jobTypeControls) {
+
+							const allowedJobTypeIds = jobTypeControls.map(j => j.jobTypeId);
+							const allowedEmployeeIds = jobTypeControls.map(j => j.employeeToSeeId);
+
+							$.ajax({
+								url: "@Url.RouteUrl(RouteNames.Employees_Search)",
+								method: "POST",
+								data: {
+									jobTypes: allowedJobTypeIds,
+									employees: allowedEmployeeIds,
+									keyword: keyword 
+								},
+								success: function (employeesData) {
+									buildEmployeesMatrix(employeesData);
+								}
+							});
+
+						}
+					});
+			});
 
 		 });
 	</script>

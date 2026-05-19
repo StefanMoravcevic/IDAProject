@@ -108,7 +108,14 @@ namespace IDAProject.Web.Admin.Controllers
         public async Task<IActionResult> SaveEmployeeAbsenceAsync(SaveEmployeeAbsenceRequestModel requestModel)
         {
             var user = GetCurrentUser();
-            requestModel.EmployeeId = user.EmployeeId;
+            if (requestModel.EmployeeId.HasValue)
+            {
+                requestModel.EmployeeId = requestModel.EmployeeId;
+            }
+            else
+            {
+                requestModel.EmployeeId = user.EmployeeId;
+            }
             var responseModel = await _EmployeeAbsencesManager.SaveEmployeeAbsenceAsync(requestModel);
             if (responseModel.Valid)
             {

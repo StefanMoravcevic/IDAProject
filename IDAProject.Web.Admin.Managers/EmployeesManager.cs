@@ -106,9 +106,7 @@ namespace IDAProject.Web.Admin.Managers
             var result = employeesList.Select(x => new GenericSelectOption
             {
                 Value = x.Id,
-                Description = string.IsNullOrEmpty(x.EmployeeNumber)
-                    ? $"{x.Name} {x.MiddleName} {x.Surname}"
-                    : $"{x.Name} {x.MiddleName} {x.Surname}"
+                Description = x.Name + " " + x.Surname
             });
 
             return result;

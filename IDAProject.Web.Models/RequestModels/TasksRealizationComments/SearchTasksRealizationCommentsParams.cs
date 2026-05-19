@@ -12,6 +12,7 @@ namespace IDAProject.Web.Models.RequestModels.TasksRealizationComments
         public int? RealizationId { get; set; }
         public int? EmployeeId { get; set; }
         public int? EnteredUserId { get; set; }
+        public int? ParentCommentId { get; set; }
         public bool? HideFromHomePage { get; set; }
         public bool? HideFromHomePageAuthor { get; set; }
         //<<SearchParams>>

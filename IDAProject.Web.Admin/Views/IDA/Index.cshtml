@@ -105,16 +105,47 @@
 		width: 70px;
 	}
 
-	.col-order {
-		width: 50px;
+ 	.col-order {
+		width: 40px;
 	}
-	.col-actions {
-		width: 50px;
+
+	.col-actionsManual {
+		width: 100px;
 	}
+
+	.col-statusManual {
+		width:90px;
+	}
+	/* 
+	
 
 	.col-status {
 		width: 85px;
 	}
+	.col-activity {
+		width: 90px;
+	}
+
+	.col-activityDescription {
+		width: 90px;
+	}
+
+	.col-regular-activity {
+		width: 90px;
+	}
+
+	.col-task {
+		width: 90px;
+	}
+
+	.col-project {
+		width: 90px;
+	}
+	.col-type {
+		width: 90px;
+	}
+
+
 
 
 	/* Osnovna visina inputa */
@@ -134,6 +165,55 @@
 
 
 </style>
+<div class="modal fade" id="commentsModal" tabindex="-1" aria-labelledby="commentsModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header bg-primary text-white">
+				<h5 class="modal-title" id="commentsModalLabel">@localizer["Comment plan"]</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<div id="planInfo" class="mb-3 p-2"></div>
+				<div id="commentsContainer"></div>
+
+				<hr>
+				<div class="mb-3">
+					<label for="newCommentText" class="form-label">@localizer["Leave comment"]</label>
+					<textarea class="form-control" id="newCommentText" rows="2"></textarea>
+				</div>
+
+				<button type="button" class="btn btn-primary" id="saveCommentBtn">@localizer["Save"]</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="realizationCommentsModal" tabindex="-1" aria-labelledby="realizationCommentsModal" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header bg-primary text-white">
+				<h5 class="modal-title" id="commentsModalLabel">@localizer["Comment realization"]</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<div id="realizationInfo" class="mb-3 p-2"></div>
+				<div id="relizationCommentsContainer">
+				</div>
+
+				<hr>
+				<div class="mb-3">
+					<label for="newRealizationText" class="form-label">@localizer["Leave comment"]</label>
+					<textarea class="form-control" id="newRealizationText" rows="2"></textarea>
+				</div>
+
+				<button type="button" class="btn btn-primary" id="saveRelizationCommentBtn">@localizer["Save"]</button>
+			</div>
+
+		</div>
+	</div>
+</div>
 <tms-modal id="editAbsenceModal" title="@localizer["Absences"]" save-button="false" modal-size="@ModalSize.Large" />
 <tms-modal id="editIdaTasksModal" title="@localizer["Tasks"]" save-button="false" modal-size="@ModalSize.Default" />
 <tms-modal id="editIdaProjectTasksModal" title="@localizer["Project tasks"]" save-button="false" modal-size="@ModalSize.Default" />
@@ -234,19 +314,7 @@
 					}
 
 					<!-- RIGHT: Activity type -->
-					<select id="activityMode"
-							name="ActivityTypePlanId"
-							class="form-select form-select-sm w-auto">
-
-						<option value="">
-							@localizer["Select activity type"]
-						</option>
-
-						<option value="1">@localizer["Project"]</option>
-						<option value="2">@localizer["Task"]</option>
-						<option value="3">@localizer["Regular activity"]</option>
-
-					</select>
+					
 
 				</div>
 				<div class="card-body p-3 d-flex flex-column">
@@ -257,9 +325,15 @@
 
 							<thead id="dynamicTableHead" class="table-light">
 								<tr>
-									<th class="text-center text-muted">
-										@localizer["Select activity type to generate table"]
-									</th>
+									<th class="col-type">@localizer["Activity type"]</th>
+									<th class="">@localizer["Task"]</th>
+									<th class="col-activity">@localizer["Description"]</th>
+									<th class="col-from">@localizer["Time from"]</th>
+									<th class="col-to">@localizer["Time to"]</th>
+									<th class="col-duration">@localizer["Duration"]</th>
+									<th class="col-order">@localizer["Id"]</th>
+									<th class="col-statusManual">@localizer["Status"]</th>
+									<th class="col-actionsManual">@localizer["Actions"]</th>
 								</tr>
 							</thead>
 
@@ -294,8 +368,8 @@
 					@if (!string.IsNullOrEmpty(Model.ImageSource))
 					{
 						<img src="@Model.ImageSource"
-							 class="img-fluid rounded"
-							 style="max-height:150px;"
+							 class=""
+							 style="width:150px; height:150px; object-fit: contain;"
 							 alt="Task image" />
 					}
 					else
@@ -384,7 +458,7 @@
 			</div>
 
 
-			<div class="row g-3">
+			<div class="row g-3" id="activitiesContainer">
 
 				<!-- PLAN -->
 				<div class="col-12 col-xl-5">
@@ -401,13 +475,14 @@
 								<tr class="text-center">
 
 									<th class="col-activity" style="background-color:#f2b141; color:white;">@localizer["Your task"]</th>
-									<th class="col-activity" style="background-color:#f2b141; color:white;">@localizer["Activity"]</th>
+									<th class="col-activityDescription" style="background-color:#f2b141; color:white;">@localizer["Description"]</th>
 									<th class="col-from" style="background-color:#f2b141; color:white;">@localizer["Time from"]</th>
 									<th class="col-to" style="background-color:#f2b141; color:white;">@localizer["Time to"]</th>
 									<th class="col-duration" style="background-color:#f2b141; color:white;">@localizer["Duration"]</th>
 									<th class="col-status" style="background-color:#f2b141; color:white;">@localizer["Status"]</th>
 									<th class="col-order" style="background-color:#f2b141; color:white;">@localizer["Id"]</th>
 									<th style="width:30px; background-color:#f2b141; color:white;">@localizer["Finished"]</th>
+									<th style="width:30px; background-color:#f2b141; color:white;">@localizer["Comments"]</th>
 
 								</tr>
 							</thead>
@@ -476,7 +551,7 @@
 										@localizer["Regular activity"]
 									</th>
 
-									<th style="background-color:#f2b141; color:white;">@localizer["Activity"]</th>
+									<th style="background-color:#f2b141; color:white;">@localizer["Description"]</th>
 
 									
 
@@ -493,6 +568,7 @@
 										style="display:none;background-color:#f2b141; color:white;">
 										@localizer["Actions"]
 									</th>
+									<th style="width:30px; background-color:#f2b141; color:white;">@localizer["Comments"]</th>
 
 								</tr>
 
@@ -556,175 +632,322 @@
 
 			const daniUNedelji = ["Nedelja", "Ponedeljak", "Utorak", "Sreda", "Četvrtak", "Petak", "Subota"];
 
-		function openAddRowModal(mode, item = null) {
+		function openAddRowModal(item = null) {
 
 			let modalBody = $("#addRowModal .modal-body");
+
 			modalBody.empty();
 
-			let commonFields = `
-				<div class="mb-3">
-					<label>@localizer["Activity"]</label>
-					<input type="text" class="form-control"
-						   name="ActivityName"
-						   placeholder="@localizer["Activity"]">
-				</div>
+			let html = `
 
+				<!-- ACTIVITY TYPE -->
 				<div class="mb-3">
-					<label>@localizer["Time from"]</label>
-					<input type="text"
-						   class="form-control timepicker from-time"
-						   name="TimeFromFormatted">
-				</div>
 
-				<div class="mb-3">
-					<label>@localizer["Time to"]</label>
-					<input type="text"
-						   class="form-control timepicker to-time"
-						   name="TimeToFormatted">
-				</div>
+					<label>@localizer["Activity type"]</label>
 
-				<div class="mb-3">
-					<label>@localizer["Duration"]</label>
-					<input type="text"
-						   class="form-control duration"
-						   name="DurationFormatted"
-						   readonly>
-				</div>
-
-				<div class="mb-3">
-					<label>@localizer["Id"]</label>
-					<input type="number"
-						   class="form-control"
-						   name="PlanNo"
-						   readonly>
-				</div>
-
-				<div class="mb-3">
-					<label>@localizer["Status"]</label>
 					<select class="form-select"
-							name="PlanStatusId">
-						@foreach (var s in Model.PlanStatuses)
-						{
-									<option value="@s.Value">@s.Description</option>
-						}
+							name="ActivityTypeId" 
+							id="modalActivityType">
+
+						<option value="">
+							@localizer["Select activity type"]
+						</option>
+
+						<option value="1">
+							@localizer["Project activity"]
+						</option>
+
+						<option value="2">
+							@localizer["Task"]
+						</option>
+
+						<option value="3">
+							@localizer["Regular activity"]
+						</option>
+
 					</select>
+
+				</div>
+
+				<!-- DYNAMIC PART -->
+				<div id="modalDynamicFields"></div>
+
+				<!-- COMMON FIELDS -->
+				<div id="modalCommonFields">
+
+					<div class="mb-3">
+						<label>@localizer["Activity"]</label>
+
+						<input type="text"
+							   class="form-control"
+							   name="ActivityName">
+					</div>
+
+					<div class="mb-3">
+						<label>@localizer["Time from"]</label>
+
+						<input type="text"
+							   class="form-control timepicker from-time"
+							   name="TimeFromFormatted">
+					</div>
+
+					<div class="mb-3">
+						<label>@localizer["Time to"]</label>
+
+						<input type="text"
+							   class="form-control timepicker to-time"
+							   name="TimeToFormatted">
+					</div>
+
+					<div class="mb-3">
+						<label>@localizer["Duration"]</label>
+
+						<input type="text"
+							   class="form-control duration"
+							   name="DurationFormatted"
+							   readonly>
+					</div>
+
+					<div class="mb-3">
+						<label>@localizer["Plan No"]</label>
+
+						<input type="number"
+							   class="form-control"
+							   name="PlanNo"
+							   readonly>
+					</div>
+
+					<div class="mb-3">
+						<label>@localizer["Status"]</label>
+
+						<select class="form-select"
+								name="PlanStatusId">
+
+							@foreach (var s in Model.PlanStatuses)
+							{
+									<option value="@s.Value">
+										@s.Description
+									</option>
+							}
+
+						</select>
+					</div>
+
 				</div>
 			`;
 
-			// === generi HTML polja po tipu aktivnosti ===
-			if (mode === "1" || mode === 1) {
-				modalBody.html(`
-					<div class="mb-3">
-						<label>@localizer["Project"]</label>
-						<select class="form-select" name="ProjectId">
-							<option value="">@localizer["Select project"]</option>
-							@foreach (var p in Model.Projects)
-							{
-									<option value="@p.Value">@p.Description</option>
-							}
-						</select>
-					</div>
-					<div class="mb-3">
-						<label>@localizer["Task"]</label>
-						<select class="form-select" name="TaskId">
-							<option value="">@localizer["Select task"]</option>
-							${projectTasks.map(x => `<option value="${x.Value}">${x.Description}</option>`).join('')}
-						</select>
-					</div>
-					${commonFields}
-				`);
-			} else if (mode === "2" || mode === 2) {
-				modalBody.html(`
-					<div class="mb-3">
-						<label>@localizer["Task"]</label>
-						<select class="form-select" name="TaskId">
-							<option value="">@localizer["Select task"]</option>
-							${tasks.map(x => `<option value="${x.Value}">${x.Description}</option>`).join('')}
-						</select>
-					</div>
-					${commonFields}
-				`);
-			} else if (mode === "3" || mode === 3) {
-				modalBody.html(`
-					<div class="mb-3">
-						<label>@localizer["Regular activity"]</label>
-						<select class="form-select" name="RegularActivityId">
-							<option value="">@localizer["Select regular activity"]</option>
-							@foreach (var r in Model.RegularActivities)
-							{
-									<option value="@r.Value">@r.Description</option>
-							}
-						</select>
-					</div>
-					${commonFields}
-				`);
-			}
+			modalBody.html(html);
 
 			initTimePickers(modalBody);
 
-			// === default vrednosti ===
+				if (item) {
+
+			$("#addRowModal").attr("data-edit-id", item.id);
+
+			$("#modalActivityType").val(item.activityTypeId);
+
+			renderModalDynamicFields(item.activityTypeId, item);
+
+			modalBody.find("input[name='ActivityName']")
+					 .val(item.activityName);
+
+			modalBody.find("input[name='TimeFromFormatted']")
+					 .val(item.timeFromFormatted);
+
+			modalBody.find("input[name='TimeToFormatted']")
+					 .val(item.timeToFormatted);
+
+			modalBody.find("input[name='DurationFormatted']")
+					 .val(item.durationFormatted);
+
+			modalBody.find("input[name='PlanNo']")
+					 .val(item.planNo);
+
+			modalBody.find("select[name='PlanStatusId']")
+					 .val(item.planStatusId);
+		}
+		else {
+
+			$("#addRowModal").removeAttr("data-edit-id");
+
 			modalBody.find("select[name='PlanStatusId']").val("1");
-			getLastPlanNo(function(lastNo) {
-				modalBody.find("input[name='PlanNo']").val(lastNo + 1);
+
+			getLastPlanNo(function (lastNo) {
+
+				modalBody.find("input[name='PlanNo']")
+						 .val(lastNo + 1);
 			});
+		}
+					$(document).on("change", "input[name='TimeFromFormatted'], input[name='TimeToFormatted']", function () {
 
-			// === ako postoji item, popuni polja ===
-			if (item) {
-				if (mode === "1" || mode === 1) {
-					modalBody.find("select[name='ProjectId']").val(item.projectId);
-					modalBody.find("select[name='TaskId']").val(item.taskId);
-				} else if (mode === "2" || mode === 2) {
-					modalBody.find("select[name='TaskId']").val(item.taskId);
-				} else if (mode === "3" || mode === 3) {
-					modalBody.find("select[name='RegularActivityId']").val(item.regularActivityId);
-				}
+			let $input = $(this);
+			let $container = null;
 
-				modalBody.find("input[name='ActivityName']").val(item.activityName);
-				modalBody.find("input[name='TimeFromFormatted']").val(item.timeFromFormatted);
-				modalBody.find("input[name='TimeToFormatted']").val(item.timeToFormatted);
-				modalBody.find("input[name='DurationFormatted']").val(item.durationFormatted);
-				modalBody.find("input[name='PlanNo']").val(item.planNo);
-				modalBody.find("select[name='PlanStatusId']").val(item.planStatusId);
-
-				// Sačuvaj ID za save
-				$("#addRowModal").attr("data-edit-id", item.id);
-			} else {
-				$("#addRowModal").removeAttr("data-edit-id");
+			if ($input.closest("tr").length) {
+				$container = $input.closest("tr");
+			}
+			else if ($input.closest("#addRowModal").length) {
+				$container = $input.closest(".modal-body");
+			}
+			else if ($input.closest("#addRealizedRowModal").length) {
+				$container = $input.closest(".modal-body");
 			}
 
-			// === automatsko računanje trajanja ===
-			$(document).on("change", "input[name='TimeFromFormatted'], input[name='TimeToFormatted']", function () {
+			if (!$container || !$container.length) {
+				return;
+			}
 
-				let $input = $(this);
-				let $container;
+			let from = $container.find("input[name='TimeFromFormatted']").val();
+			let to = $container.find("input[name='TimeToFormatted']").val();
 
-				// Desktop red
-				if ($input.closest("tr").length) {
-					$container = $input.closest("tr");
-				}
-				// Modal #addRowModal
-				else if ($input.closest("#addRowModal").length) {
-					$container = $input.closest(".modal-body");
-				}
-				// Modal #addRealizedRowModal
-				else if ($input.closest("#addRealizedRowModal").length) {
-					$container = $input.closest(".modal-body");
-				}
+			$container.find("input[name='DurationFormatted']")
+					  .val(calculateModalDuration(from, to));
+		});
 
-				if (!$container) return;
-
-				// Uzmi vrednosti iz inputa
-				let from = $container.find("input[name='TimeFromFormatted']").val();
-				let to = $container.find("input[name='TimeToFormatted']").val();
-
-				// Postavi Duration
-				$container.find("input[name='DurationFormatted']").val(calculateModalDuration(from, to));
-
-			});
-
-			// === prikaži modal ===
 			$("#addRowModal").modal("show");
 		}
+
+				function renderModalDynamicFields(mode, item = null) {
+
+			let container = $("#modalDynamicFields");
+
+			let html = "";
+
+			// ================= MODE 1 =================
+			if (mode == "1") {
+
+				html = `
+				<div class="mb-3">
+
+					<label>@localizer["Project"]</label>
+
+					<select class="form-select"
+							name="ProjectId">
+
+						<option value="">
+							@localizer["Select project"]
+						</option>
+
+						@foreach (var p in Model.Projects)
+						{
+								<option value="@p.Value">
+									@p.Description
+								</option>
+						}
+
+					</select>
+
+				</div>
+
+				<div class="mb-3">
+
+					<label>@localizer["Task"]</label>
+
+					<select class="form-select"
+							name="TaskId">
+
+						<option value="">
+							@localizer["Select task"]
+						</option>
+
+						${projectTasks.map(x =>
+							`<option value="${x.Value}">
+								${x.Description}
+							</option>`
+						).join('')}
+
+					</select>
+
+				</div>`;
+			}
+
+			// ================= MODE 2 =================
+			if (mode == "2") {
+
+				html = `
+				<div class="mb-3">
+
+					<label>@localizer["Task"]</label>
+
+					<select class="form-select"
+							name="TaskId">
+
+						<option value="">
+							@localizer["Select task"]
+						</option>
+
+						${tasks.map(x =>
+							`<option value="${x.Value}">
+								${x.Description}
+							</option>`
+						).join('')}
+
+					</select>
+
+				</div>`;
+			}
+
+			// ================= MODE 3 =================
+			if (mode == "3") {
+
+				html = `
+				<div class="mb-3">
+
+					<label>@localizer["Regular activity"]</label>
+
+					<select class="form-select"
+							name="RegularActivityId">
+
+						<option value="">
+							@localizer["Select regular activity"]
+						</option>
+
+						@foreach (var r in Model.RegularActivities)
+						{
+								<option value="@r.Value">
+									@r.Description
+								</option>
+						}
+
+					</select>
+
+				</div>`;
+			}
+
+			container.html(html);
+
+			// EDIT VALUES
+			if (item) {
+
+				if (mode == "1") {
+
+					container.find("select[name='ProjectId']")
+							 .val(item.projectId);
+
+					container.find("select[name='TaskId']")
+							 .val(item.taskId);
+				}
+
+				if (mode == "2") {
+
+					container.find("select[name='TaskId']")
+							 .val(item.taskId);
+				}
+
+				if (mode == "3") {
+
+					container.find("select[name='RegularActivityId']")
+							 .val(item.regularActivityId);
+				}
+			}
+		}
+
+				$(document).on("change", "#modalActivityType", function () {
+
+			let mode = $(this).val();
+
+			renderModalDynamicFields(mode);
+		});
 				function openAddRealRowModal(planItem = null) {
 
 			let modalBody = $("#addRealizedRowModal .modal-body");
@@ -1073,36 +1296,51 @@
 					}
 				});
 		}
+		
+		function hasEmptyRow() {
+
+			let hasEmpty = false;
+
+			$("#manualTable tbody tr").each(function () {
+
+				let mode = $(this).find(".activity-mode").val();
+
+				if (!mode) {
+					hasEmpty = true;
+					return false;
+				}
+			});
+
+			return hasEmpty;
+		}
 		function loadTasksForManualTable() {
 
-			let mode = $("#activityMode").val();
 			let date = $("#planDate").val();
 
-			if (!mode || !date) {
+			if (!date) {
 				return;
 			}
 
 			let parts = date.split(".");
-			let selectedDate = new Date(parts[2], parts[1]-1, parts[0]);
+			let selectedDate = new Date(parts[2], parts[1] - 1, parts[0]);
 
 			let today = new Date();
 			today.setHours(0,0,0,0);
 
 			let allowEdit = selectedDate > today;
 
-			if (allowEdit) {
-				$("#btnAddRow").show();
-			} else {
-				$("#btnAddRow").hide();
-			}
+			// if (allowEdit) {
+			// 	$("#btnAddRow").show();
+			// } else {
+			// 	$("#btnAddRow").hide();
+			// }
 
 			$.ajax({
 				url: "@Url.RouteUrl(RouteNames.TasksPlannings_Search)",
 				method: "POST",
 				data: {
-					activityTypeId: mode,
 					planDate: date,
-					userId : @Model.User.Id
+					userId: @Model.User.Id
 				},
 				success: function (tasks) {
 
@@ -1112,66 +1350,81 @@
 					tasks.forEach(function (task) {
 
 						let editBtn = allowEdit
-							? `<button class="btn btn-sm btn-primary editTaskBtn"><i class="fa fa-pencil"></i></button>`
-							: `<button class="btn btn-sm btn-primary" disabled><i class="fa fa-pencil"></i></button>`;
+							? `
+								<button class="btn btn-sm btn-primary editTaskBtn">
+									<i class="fa fa-pencil"></i>
+								</button>
 
-						let rowHtml = "";
+								<button class="btn btn-sm btn-danger deleteTaskBtn">
+									<i class="fa fa-trash"></i>
+								</button>
+							  `
+							: `
+								<button class="btn btn-sm btn-primary" disabled>
+									<i class="fa fa-pencil"></i>
+								</button>
 
-						if (mode === "1") {
-							rowHtml = `
-								<tr data-id="${task.id}">
-									<td class="col-project">${task.project}</td>
-									<td class="col-task">${task.task}</td>
-									<td class="col-activity">${task.activityName}</td>
-									<td class="col-from">${task.timeFromFormatted}</td>
-									<td class="col-to">${task.timeToFormatted}</td>
-									<td class="col-duration">${task.durationFormatted}</td>
-									<td class="col-order">${task.planNo}</td>
-									<td class="col-status">${task.planStatus}</td>
-									<td class="col-actions">
-										${editBtn}
-									</td>
-								</tr>
-							`;
-						}
+								<button class="btn btn-sm btn-danger" disabled>
+									<i class="fa fa-trash"></i>
+								</button>
+							  `;
 
-						if (mode === "2") {
-							rowHtml = `
-								<tr data-id="${task.id}">
-									<td class="col-task">${task.task}</td>
-									<td class="col-activity">${task.activityName}</td>
-									<td class="col-from">${task.timeFromFormatted}</td>
-									<td class="col-to">${task.timeToFormatted}</td>
-									<td class="col-duration">${task.durationFormatted}</td>
-									<td class="col-order">${task.planNo}</td>
-									<td class="col-status">${task.planStatus}</td>
-									<td class="col-actions">
-										${editBtn}
-									</td>
-								</tr>
-							`;
-						}
 
-						if (mode === "3") {
-							rowHtml = `
-								<tr data-id="${task.id}">
-									<td class="col-regular-activity">${task.regularActivity}</td>
-									<td class="col-activity">${task.activityName}</td>
-									<td class="col-from">${task.timeFromFormatted}</td>
-									<td class="col-to">${task.timeToFormatted}</td>
-									<td class="col-duration">${task.durationFormatted}</td>
-									<td class="col-order">${task.planNo}</td>
-									<td class="col-status">${task.planStatus}</td>
-									<td class="col-actions">
-										${editBtn}
-									</td>
-								</tr>
-							`;
-						}
+						let rowHtml = `
+							<tr data-id="${task.id}">
+
+								<td class="">
+									${task.activityTypeName}
+								</td>
+
+								<td class="">
+									${task.displayTask ?? ""}
+								</td>
+
+								<td class="">
+									${task.activityName ?? ""}
+								</td>
+
+								<td class="">
+									${task.timeFromFormatted}
+								</td>
+
+								<td class="">
+									${task.timeToFormatted}
+								</td>
+
+								<td class="">
+									${task.durationFormatted}
+								</td>
+
+								<td class="">
+									${task.planNo ?? ""}
+								</td>
+
+								<td class="">
+									${task.planStatus ?? ""}
+								</td>
+
+								<td class="">
+									${editBtn}
+								</td>
+
+							</tr>
+						`;
 
 						tbody.append(rowHtml);
+		
 
 					});
+					if ($(window).width() < 768)
+					 {
+						$("#btnAddRow").show();
+					 }
+					 else
+					 {
+						$("#btnAddRow").hide();
+						addEmptyRow();
+					 }
 
 				},
 				error: function (err) {
@@ -1179,216 +1432,402 @@
 				}
 			});
 		}
-		$("#activityMode").change(function () {
+		// $("#activityMode").change(function () {
 
-			let mode = $(this).val();
-			let thead = $("#dynamicTableHead");
-			let tbody = $("#manualTable tbody");
+		// 	let mode = $(this).val();
+		// 	let thead = $("#dynamicTableHead");
+		// 	let tbody = $("#manualTable tbody");
 
-			thead.empty();
-			tbody.empty();
+		// 	thead.empty();
+		// 	tbody.empty();
 
-			if (!mode) {
-				thead.append(`
-					<tr>
-						<th class="text-center text-muted">
-							@localizer["Select activity type to generate table"]
-						</th>
-					</tr>
-				`);
-				return;
-			}
+		// 	if (!mode) {
+		// 		thead.append(`
+		// 			<tr>
+		// 				<th class="text-center text-muted">
+		// 					@localizer["Select activity type to generate table"]
+		// 				</th>
+		// 			</tr>
+		// 		`);
+		// 		return;
+		// 	}
 
-			if (mode === "1") {
-				thead.append(`
-					<tr>
-						<th class="col-project">@localizer["Project"]</th>
-						<th class="col-task">@localizer["Task"]</th>
-						<th class="col-activity">@localizer["Activity"]</th>
-						<th class="col-from">@localizer["From"]</th>
-						<th class="col-to">@localizer["to"]</th>
-						<th class="col-duration">@localizer["Duration"]</th>
-						<th class="col-order">@localizer["Order number"]</th>
-						<th class="col-status">@localizer["Status"]</th>
-						<th class="col-actions">@localizer["Actions"]</th>
-					</tr>
-				`);
-			}
+		// 	if (mode === "1") {
+		// 		thead.append(`
+		// 			<tr>
+		// 				<th class="col-project">@localizer["Project"]</th>
+		// 				<th class="col-task">@localizer["Task"]</th>
+		// 				<th class="col-activity">@localizer["Activity"]</th>
+		// 				<th class="col-from">@localizer["From"]</th>
+		// 				<th class="col-to">@localizer["to"]</th>
+		// 				<th class="col-duration">@localizer["Duration"]</th>
+		// 				<th class="col-order">@localizer["Order number"]</th>
+		// 				<th class="col-status">@localizer["Status"]</th>
+		// 				<th class="col-actions">@localizer["Actions"]</th>
+		// 			</tr>
+		// 		`);
+		// 	}
 
-			if (mode === "2") {
-				thead.append(`
-					<tr>
-						<th class="col-task">@localizer["Task"]</th>
-						<th class="col-activity">@localizer["Activity"]</th>
-						<th class="col-from">@localizer["From"]</th>
-						<th class="col-to">@localizer["to"]</th>
-						<th class="col-duration">@localizer["Duration"]</th>
-						<th class="col-order">@localizer["Order number"]</th>
-						<th class="col-status">@localizer["Status"]</th>
-						<th class="col-actions">@localizer["Actions"]</th>
-					</tr>
-				`);
-			}
+		// 	if (mode === "2") {
+		// 		thead.append(`
+		// 			<tr>
+		// 				<th class="col-task">@localizer["Task"]</th>
+		// 				<th class="col-activity">@localizer["Activity"]</th>
+		// 				<th class="col-from">@localizer["From"]</th>
+		// 				<th class="col-to">@localizer["to"]</th>
+		// 				<th class="col-duration">@localizer["Duration"]</th>
+		// 				<th class="col-order">@localizer["Order number"]</th>
+		// 				<th class="col-status">@localizer["Status"]</th>
+		// 				<th class="col-actions">@localizer["Actions"]</th>
+		// 			</tr>
+		// 		`);
+		// 	}
 
-			if (mode === "3") {
-				thead.append(`
-					<tr>
-						<th class="col-regular-activity">@localizer["Regular activity"]</th>
-						<th class="col-activity">@localizer["Activity"]</th>
-						<th class="col-from">@localizer["From"]</th>
-						<th class="col-to">@localizer["to"]</th>
-						<th class="col-duration">@localizer["Duration"]</th>
-						<th class="col-order">@localizer["Order number"]</th>
-						<th class="col-status">@localizer["Status"]</th>
-						<th class="col-actions">@localizer["Actions"]</th>
-					</tr>
-				`);
-			}
+		// 	if (mode === "3") {
+		// 		thead.append(`
+		// 			<tr>
+		// 				<th class="col-regular-activity">@localizer["Regular activity"]</th>
+		// 				<th class="col-activity">@localizer["Activity"]</th>
+		// 				<th class="col-from">@localizer["From"]</th>
+		// 				<th class="col-to">@localizer["to"]</th>
+		// 				<th class="col-duration">@localizer["Duration"]</th>
+		// 				<th class="col-order">@localizer["Order number"]</th>
+		// 				<th class="col-status">@localizer["Status"]</th>
+		// 				<th class="col-actions">@localizer["Actions"]</th>
+		// 			</tr>
+		// 		`);
+		// 	}
 
-			loadTasksForManualTable();
-		});
+		// 	loadTasksForManualTable();
+		// });
+
+
 
 		$("#btnAddRow").click(function () {
-			let mode = $("#activityMode").val();
 
-			if (!mode) {
-				Swal.fire({
-					icon: 'warning',
-					title: '@localizer["Select activity type first"]',
-					confirmButtonText: '@localizer["OK"]'
-				});
-				return;
-			}
-
-			// ✅ Ako je mobilni uređaj, otvori modal i izađi
+			// Mobilni / tablet
 			if ($(window).width() < 768) {
-				openAddRowModal(mode);
+
+				openAddRowModal();
+
 				return;
 			}
 
-			// ===================== Desktop logika =====================
+		});
+
+		function addEmptyRow() {
+
 			let tbody = $("#manualTable tbody");
-			let newRowHtml = "";
 
-			// ================= MODE 1 =================
-			if (mode === "1") {
-				newRowHtml = `
-				<tr>
-					<td>
-						<select class="form-select form-select-sm" name="ProjectId">
-							<option value="">@localizer["Select project"]</option>
-							@foreach (var p in Model.Projects)
-							{
-									<option value="@p.Value">@p.Description</option>
-							}
-						</select>
-					</td>
-					<td>
-						<select class="form-select form-select-sm" name="TaskId" id="SelectActivityTypeProjectId">
-							<option value="">@localizer["Select task"]</option>
-							${projectTasks.map(x => `<option value="${x.Value}">${x.Description}</option>`).join('')}
-						</select>
-					</td>
-					<td>
-						<input class="form-control form-control-sm" name="ActivityName" placeholder="@localizer["Activity"]">
-					</td>
-					<td><input type="text" class="form-control form-control-sm from-time timepicker" name="TimeFromFormatted"></td>
-					<td><input type="text" class="form-control form-control-sm to-time timepicker" name="TimeToFormatted"></td>
-					<td><input class="form-control form-control-sm duration" readonly name="DurationFormatted"></td>
-					<td><input type="number" class="form-control form-control-sm" name="PlanNo" readonly></td>
-					<td>
-						<select class="form-select form-select-sm" name="PlanStatusId">
-							<option value="">@localizer["Select status"]</option>
-							@foreach (var s in Model.PlanStatuses)
-							{
-									<option value="@s.Value">@s.Description</option>
-							}
-						</select>
-					</td>
-					<td class="text-center">
-						<button type="button" class="btn btn-sm btn-success saveRow">💾</button>
-					</td>
-				</tr>`;
-			}
+			let html = `
+			<tr>
 
-			// ================= MODE 2 =================
-			if (mode === "2") {
-				newRowHtml = `
-				<tr>
-					<td>
-						<select class="form-select form-select-sm" name="TaskId" id="TaskId">
-							<option value="">@localizer["Select task"]</option>
-							${tasks.map(x => `<option value="${x.Value}">${x.Description}</option>`).join('')}
-						</select>
-					</td>
-					<td>
-						<input class="form-control form-control-sm" name="ActivityName" placeholder="@localizer["Activity"]">
-					</td>
-					<td><input type="text" class="form-control form-control-sm from-time timepicker" name="TimeFromFormatted"></td>
-					<td><input type="text" class="form-control form-control-sm to-time timepicker" name="TimeToFormatted"></td>
-					<td><input class="form-control form-control-sm duration" readonly name="DurationFormatted"></td>
-					<td><input type="number" class="form-control form-control-sm" name="PlanNo" readonly></td>
-					<td>
-						<select class="form-select form-select-sm" name="PlanStatusId">
-							<option value="">@localizer["Select status"]</option>
-							@foreach (var s in Model.PlanStatuses)
-							{
-									<option value="@s.Value">@s.Description</option>
-							}
-						</select>
-					</td>
-					<td class="text-center">
-						<button type="button" class="btn btn-sm btn-success saveRow">💾</button>
-					</td>
-				</tr>`;
-			}
+				<!-- Activity mode -->
+				<td>
+					<select id="activityMode"
+							name="ActivityTypePlanId"
+							class="form-select form-select-sm w-auto">
 
-			// ================= MODE 3 =================
-			if (mode === "3") {
-				newRowHtml = `
-				<tr>
-					<td>
-						<select class="form-select form-select-sm" name="RegularActivityId" id="RegularActivityId">
-							<option value="">@localizer["Select regular activity"]</option>
-							@foreach (var r in Model.RegularActivities)
-							{
-									<option value="@r.Value">@r.Description</option>
-							}
-						</select>
-					</td>
-					<td>
-						<input class="form-control form-control-sm" name="ActivityName" placeholder="@localizer["Activity"]">
-					</td>
-					<td><input type="text" class="form-control form-control-sm from-time timepicker" name="TimeFromFormatted"></td>
-					<td><input type="text" class="form-control form-control-sm to-time timepicker" name="TimeToFormatted"></td>
-					<td><input class="form-control form-control-sm duration" readonly name="DurationFormatted"></td>
-					<td><input type="number" class="form-control form-control-sm" name="PlanNo" readonly></td>
-					<td>
-						<select class="form-select form-select-sm" name="PlanStatusId">
-							<option value="">@localizer["Select status"]</option>
-							@foreach (var s in Model.PlanStatuses)
-							{
-									<option value="@s.Value">@s.Description</option>
-							}
-						</select>
-					</td>
-					<td class="text-center">
-						<button type="button" class="btn btn-sm btn-success saveRow">💾</button>
-					</td>
-				</tr>`;
-			}
+						<option value="">
+							@localizer["Select activity type"]
+						</option>
 
-			// ✅ Append red u tabelu
-			tbody.append(newRowHtml);
+						<option value="1">@localizer["Project"]</option>
+						<option value="2">@localizer["Task"]</option>
+						<option value="3">@localizer["Regular activity"]</option>
 
-			// ✅ Init timepickere i redni broj
+					</select>
+				</td>
+
+				<!-- Dynamic first column -->
+				<td class="dynamic-first-column"></td>
+
+				<!-- Activity -->
+				<td>
+					<input class="form-control form-control-sm"
+						   name="ActivityName"
+						   placeholder="@localizer["Activity"]">
+				</td>
+
+				<!-- From -->
+				<td>
+					<input type="text"
+						   class="form-control form-control-sm from-time timepicker"
+						   name="TimeFromFormatted">
+				</td>
+
+				<!-- To -->
+				<td>
+					<input type="text"
+						   class="form-control form-control-sm to-time timepicker"
+						   name="TimeToFormatted">
+				</td>
+
+				<!-- Duration -->
+				<td>
+					<input class="form-control form-control-sm duration"
+						   readonly
+						   name="DurationFormatted">
+				</td>
+
+				<!-- Plan No -->
+				<td>
+					<input type="number"
+						   class="form-control form-control-sm"
+						   name="PlanNo"
+						   readonly>
+				</td>
+
+				<!-- Status -->
+				<td>
+					<select class="form-select form-select-sm"
+							name="PlanStatusId">
+
+						<option value="">@localizer["Select status"]</option>
+
+						@foreach (var s in Model.PlanStatuses)
+						{
+								<option value="@s.Value">@s.Description</option>
+						}
+
+					</select>
+				</td>
+
+				<!-- Save -->
+				<td class="text-center">
+					<button type="button"
+							class="btn btn-sm btn-success saveRow">
+						💾
+					</button>
+				</td>
+
+			</tr>`;
+
+			tbody.append(html);
+
 			let newRow = tbody.find("tr:last");
+
 			initTimePickers(newRow);
+
 			newRow.find("select[name='PlanStatusId']").val("1");
+
 			getLastPlanNo(function (lastNo) {
 				newRow.find("input[name='PlanNo']").val(lastNo + 1);
 			});
-		});
+		}
+
+							function loadComments(planId) {
+			 const container = $('#commentsContainer');
+			 container.empty();
+
+			 $.ajax({
+				 url: '@Url.RouteUrl(RouteNames.TasksPlanningComments_Search)',
+				 method: 'POST',
+				 data: { planId: planId },
+				 success: function(comments) {
+					 if (comments.length === 0) {
+						 container.html('<p>@localizer["No comments yet"]</p>');
+					 } else {
+						 // Prvo filtriramo root komentare
+						 comments.filter(c => !c.parentTaskPlanningCommentId).forEach(c => {
+							 appendCommentRecursive(c, comments, container, 0);
+						 });
+					 }
+				 },
+				 error: function(err) {
+					 console.error(err);
+				 }
+			 });
+		 }
+		 
+		 function setPlanInfo(plan) {
+			 const infoContainer = $('#planInfo');
+			 infoContainer.empty();
+
+			 const html = `
+				 <div class="mb-3 p-2 border rounded" style="background-color: #f9f9f9;">
+					 <div class="d-flex align-items-center mb-1">
+						 <i class="fa fa-clipboard me-2" style="width: 20px;"></i>
+						 <span class="fw-bold me-1">@localizer["Task"]:</span>
+						 <span>${plan.displayTask || '-'}</span>
+					 </div>
+					 <div class="d-flex align-items-center mb-1">
+						 <i class="fa fa-list-alt me-2" style="width: 20px;"></i>
+						 <span class="fw-bold me-1">@localizer["Activity"]:</span>
+						 <span>${plan.activityName || '-'}</span>
+					 </div>
+					 <div class="d-flex align-items-center mb-1">
+						 <i class="fa fa-user me-2" style="width: 20px;"></i>
+						 <span class="fw-bold me-1">@localizer["Employee"]:</span>
+						 <span>${plan.employee || '-'}</span>
+					 </div>
+					 <div class="d-flex align-items-center mb-1">
+						 <i class="fa fa-calendar me-2" style="width: 20px;"></i>
+						 <span class="fw-bold me-1">@localizer["Plan date"]:</span>
+						 <span>${plan.planDateFormatted || '-'}</span>
+					 </div>
+					 <div class="d-flex align-items-center mb-1">
+						 <i class="fa fa-clock-o me-2" style="width: 20px;"></i>
+						 <span class="fw-bold me-1">@localizer["Time"]:</span>
+						 <span>${plan.timeFromFormatted || '-'} - ${plan.timeToFormatted || '-'}</span>
+					 </div>
+				 </div>
+			 `;
+
+			 infoContainer.html(html);
+		 }
+		 function setRealizationInfo(plan) {
+			 const infoContainer = $('#realizationInfo');
+			 infoContainer.empty();
+
+			 const html = `
+				 <div class="mb-3 p-2 border rounded" style="background-color: #f9f9f9;">
+					 <div class="d-flex align-items-center mb-1">
+						 <i class="fa fa-clipboard me-2" style="width: 20px;"></i>
+						 <span class="fw-bold me-1">@localizer["Task"]:</span>
+						 <span>${plan.displayTask || '-'}</span>
+					 </div>
+					 <div class="d-flex align-items-center mb-1">
+						 <i class="fa fa-list-alt me-2" style="width: 20px;"></i>
+						 <span class="fw-bold me-1">@localizer["Activity"]:</span>
+						 <span>${plan.activity || '-'}</span>
+					 </div>
+					 <div class="d-flex align-items-center mb-1">
+						 <i class="fa fa-user me-2" style="width: 20px;"></i>
+						 <span class="fw-bold me-1">@localizer["Employee"]:</span>
+						 <span>${plan.employee || '-'}</span>
+					 </div>
+					 <div class="d-flex align-items-center mb-1">
+						 <i class="fa fa-calendar me-2" style="width: 20px;"></i>
+						 <span class="fw-bold me-1">@localizer["Realization date"]:</span>
+						 <span>${plan.realizationDateFormatted || '-'}</span>
+					 </div>
+					 <div class="d-flex align-items-center mb-1">
+						 <i class="fa fa-clock-o me-2" style="width: 20px;"></i>
+						 <span class="fw-bold me-1">@localizer["Time"]:</span>
+						 <span>${plan.timeFromFormattedForTable || '-'} - ${plan.timeToFormattedForTable || '-'}</span>
+					 </div>
+				 </div>
+			 `;
+
+			 infoContainer.html(html);
+		 }
+
+
+		 function renderCommentHtml(comment, level = 0) {
+			 const indent = level * 20; // 20px po nivou uvlačenja
+			 return $(`
+				 <div class="comment-item ${level > 0 ? 'reply-item' : ''}" data-comment-id="${comment.id}" style="margin-left: ${indent}px; display:none;">
+					 <div class="d-flex align-items-center mb-1">
+						 <img src="${comment.photo}" alt="Photo" class="rounded-circle me-2" width="32" height="32">
+						 <strong>${comment.username}</strong>
+					 </div>
+					 <div class="small text-muted mb-1">${formatDateTime(comment.createdAt)}</div>
+					 <div class="comment-text mb-1">${comment.comment}</div>
+					 <button class="reply-btn" data-comment-id="${comment.id}" style="
+						 display: inline-flex;
+						 align-items: center;
+						 gap: 3px;
+						 padding: 0 4px;
+						 font-size: 0.7rem;
+						 border: none;
+						 background: none;
+						 color: #0d6efd;
+						 cursor: pointer;
+					 ">
+						 <i class="fa fa-reply" style="font-size:0.75rem;"></i> @localizer["Reply"]
+					 </button>
+					 <div class="replies-container"></div>
+				 </div>
+			 `).fadeIn(300);
+		 }
+		 function appendCommentRecursive(comment, allComments, container, level) {
+			 const $comment = renderCommentHtml(comment, level);
+			 container.append($comment);
+			 const replies = allComments.filter(r => r.parentTaskPlanningCommentId === comment.id);
+			 if (replies.length) {
+				 const $repliesContainer = $comment.find('.replies-container');
+				 replies.forEach(r => {
+					 appendCommentRecursive(r, allComments, $repliesContainer, level + 1);
+				 });
+			 }
+		 }
+
+		function formatDateTime(dateTimeString) {
+			 const date = new Date(dateTimeString);
+
+			 const day = String(date.getDate()).padStart(2, '0');
+			 const month = String(date.getMonth() + 1).padStart(2, '0');
+			 const year = date.getFullYear();
+
+			 const hours = String(date.getHours()).padStart(2, '0');
+			 const minutes = String(date.getMinutes()).padStart(2, '0');
+			 const seconds = String(date.getSeconds()).padStart(2, '0');
+
+			 return `${day}.${month}.${year} ${hours}:${minutes}:${seconds}`;
+		 }
+		   function loadRealizationComments(planId) {
+			  const container = $('#relizationCommentsContainer');
+			  container.empty();
+
+			  $.ajax({
+				  url: '@Url.RouteUrl(RouteNames.TasksRealizationComments_Search)',
+				  method: 'POST',
+				  data: { realizationId: planId },
+				  success: function(comments) {
+					  if (comments.length === 0) {
+						  container.html('<p>@localizer["No comments yet"]</p>');
+					  } else {
+						  comments.filter(c => !c.parentTaskRealizationCommentId).forEach(c => {
+							  appendRealizationCommentRecursive(c, comments, container, 0);
+						  });
+					  }
+				  },
+				  error: function(err) {
+					  console.error(err);
+				  }
+			  });
+		  }
+
+		  function renderRealizationCommentHtml(comment, level = 0) {
+			  const indent = level * 20;
+			  return $(`
+				  <div class="comment-item ${level > 0 ? 'reply-item' : ''}" data-comment-id="${comment.id}" style="margin-left: ${indent}px; display:none;">
+					  <div class="d-flex align-items-center mb-1">
+						  <img src="${comment.photo}" alt="Photo" class="rounded-circle me-2" width="32" height="32">
+						  <strong>${comment.username}</strong>
+					  </div>
+					  <div class="small text-muted mb-1">${formatDateTime(comment.createdAt)}</div>
+					  <div class="comment-text mb-1">${comment.comment}</div>
+					  <button class="reply-btn" data-comment-id="${comment.id}" style="
+						  display: inline-flex;
+						  align-items: center;
+						  gap: 3px;
+						  padding: 0 4px;
+						  font-size: 0.7rem;
+						  border: none;
+						  background: none;
+						  color: #0d6efd;
+						  cursor: pointer;
+					  ">
+						  <i class="fa fa-reply" style="font-size:0.75rem;"></i> @localizer["Reply"]
+					  </button>
+					  <div class="replies-container"></div>
+				  </div>
+			  `).fadeIn(300);
+		  }
+		  function appendRealizationCommentRecursive(comment, allComments, container, level) {
+			  const $comment = renderRealizationCommentHtml(comment, level);
+			  container.append($comment);
+
+			  const replies = allComments.filter(r => r.parentTaskRealizationCommentId === comment.id);
+			  if (replies.length) {
+				  const $repliesContainer = $comment.find('.replies-container');
+				  replies.forEach(r => {
+					   appendRealizationCommentRecursive(r, allComments, $repliesContainer, level + 1); // level +1 za uvlačenje
+				  });
+			  }
+		  }
 
 		function loadRealizationForEdit(id, row) {
 
@@ -1595,129 +2034,366 @@
 					plugins: [ChartDataLabels]
 				});
 			}
-			function populateEditRow(item) {
+					function populateEditRow(item) {
 
-				let tbody = $("#manualTable tbody");
-				tbody.empty();
+			let tbody = $("#manualTable tbody");
+			tbody.empty();
 
-				let row = "";
+			let row = "";
 
-				if (item.activityTypeId == "1") {
-					row = `
-					<tr>
-						<input type="hidden" name="Id" value="${item.id}">
-						<td>
-							<select class="form-select form-select-sm" name="ProjectId">
-								<option value="${item.projectId}" selected>${item.project}</option>
-							</select>
-						</td>
-						<td>
-							<select class="form-select form-select-sm" name="TaskId">
-								<option value="${item.taskId}" selected>${item.task}</option>
-							</select>
-						</td>
-						<td>
-							<input class="form-control form-control-sm" name="ActivityName" value="${item.activityName}">
-						</td>
-						<td>
-							<input type="text" class="form-control form-control-sm from-time timepicker" name="TimeFromFormatted" value="${item.timeFromFormatted}">
-						</td>
-						<td>
-							<input type="text" class="form-control form-control-sm to-time timepicker" name="TimeToFormatted" value="${item.timeToFormatted}">
-						</td>
-						<td>
-							<input class="form-control form-control-sm duration" readonly name="DurationFormatted" value="${item.durationFormatted}">
-						</td>
-						<td>
-							<input class="form-control form-control-sm" name="PlanNo" value="${item.planNo}" readonly>
-						</td>
-						<td>
-							<select class="form-select form-select-sm" name="PlanStatusId">
-								<option value="1" ${item.planStatusId == 1 ? "selected" : ""}>Planirano</option>
-								<option value="2" ${item.planStatusId == 2 ? "selected" : ""}>Realizovano</option>
-							</select>
-						</td>
-						<td>
-							<button class="btn btn-sm btn-success saveRow">💾</button>
-						</td>
-					</tr>`;
-				}
+			// ================= MODE 1 =================
+			if (item.activityTypeId == "1") {
 
-				if (item.activityTypeId == "2") {
-					row = `
-					<tr>
-					    <input type="hidden" name="Id" value="${item.id}">
-						<td>
-							<select class="form-select form-select-sm" name="TaskId">
-								<option value="${item.taskId}" selected>${item.task}</option>
-							</select>
-						</td>
-						<td>
-							<input class="form-control form-control-sm" name="ActivityName" value="${item.activityName}">
-						</td>
-						<td>
-							<input type="text" class="form-control form-control-sm from-time timepicker" name="TimeFromFormatted" value="${item.timeFromFormatted}">
-						</td>
-						<td>
-							<input type="text" class="form-control form-control-sm to-time timepicker" name="TimeToFormatted" value="${item.timeToFormatted}">
-						</td>
-						<td>
-							<input class="form-control form-control-sm duration" readonly name="DurationFormatted" value="${item.durationFormatted}">
-						</td>
-						<td>
-							<input class="form-control form-control-sm" name="PlanNo" value="${item.planNo}" readonly>
-						</td>
-						<td>
-							<select class="form-select form-select-sm" name="PlanStatusId">
-								<option value="1" ${item.planStatusId == 1 ? "selected" : ""}>Planirano</option>
-								<option value="2" ${item.planStatusId == 2 ? "selected" : ""}>Realizovano</option>
-							</select>
-						</td>
-						<td>
-							<button class="btn btn-sm btn-success saveRow">💾</button>
-						</td>
-					</tr>`;
-				}
+				row = `
+				<tr>
 
-				if (item.activityTypeId == "3") {
-					row = `
-					<tr>
-					    <input type="hidden" name="Id" value="${item.id}">
-						<td>
-							<select class="form-select form-select-sm" name="RegularActivityId">
-								<option value="${item.regularActivityId}" selected>${item.regularActivity}</option>
-							</select>
-						</td>
-						<td>
-							<input class="form-control form-control-sm" name="ActivityName" value="${item.activityName}">
-						</td>
-						<td>
-							<input type="text" class="form-control form-control-sm from-time timepicker" name="TimeFromFormatted" value="${item.timeFromFormatted}">
-						</td>
-						<td>
-							<input type="text" class="form-control form-control-sm to-time timepicker" name="TimeToFormatted" value="${item.timeToFormatted}">
-						</td>
-						<td>
-							<input class="form-control form-control-sm duration" readonly name="DurationFormatted" value="${item.durationFormatted}">
-						</td>
-						<td>
-							<input class="form-control form-control-sm" name="PlanNo" value="${item.planNo}" readonly>
-						</td>
-						<td>
-							<select class="form-select form-select-sm" name="PlanStatusId">
-								<option value="1" ${item.planStatusId == 1 ? "selected" : ""}>Planirano</option>
-								<option value="2" ${item.planStatusId == 2 ? "selected" : ""}>Realizovano</option>
-							</select>
-						</td>
-						<td>
-							<button class="btn btn-sm btn-success saveRow">💾</button>
-						</td>
-					</tr>`;
-				}
+					<input type="hidden" name="Id" value="${item.id}">
 
-				tbody.append(row);
-				initTimePickers(tbody.find("tr:last"));
+					<!-- ACTIVITY TYPE -->
+					<td>
+						<select class="form-select form-select-sm activity-mode" id="activityMode">
+
+							<option value="">
+								@localizer["Select activity type"]
+							</option>
+
+							<option value="1" selected>
+								@localizer["Project activity"]
+							</option>
+
+							<option value="2">
+								@localizer["Task"]
+							</option>
+
+							<option value="3">
+								@localizer["Regular activity"]
+							</option>
+
+						</select>
+					</td>
+
+					<!-- PROJECT + TASK -->
+					<td>
+
+						<div class="d-flex gap-1">
+
+							<select class="form-select form-select-sm"
+									name="ProjectId">
+
+								<option value="${item.projectId}" selected>
+									${item.project}
+								</option>
+
+							</select>
+
+							<select class="form-select form-select-sm"
+									name="TaskId">
+
+								<option value="${item.taskId}" selected>
+									${item.task}
+								</option>
+
+							</select>
+
+						</div>
+
+					</td>
+
+					<!-- ACTIVITY -->
+					<td>
+						<input class="form-control form-control-sm"
+							   name="ActivityName"
+							   value="${item.activityName}">
+					</td>
+
+					<!-- FROM -->
+					<td>
+						<input type="text"
+							   class="form-control form-control-sm from-time timepicker"
+							   name="TimeFromFormatted"
+							   value="${item.timeFromFormatted}">
+					</td>
+
+					<!-- TO -->
+					<td>
+						<input type="text"
+							   class="form-control form-control-sm to-time timepicker"
+							   name="TimeToFormatted"
+							   value="${item.timeToFormatted}">
+					</td>
+
+					<!-- DURATION -->
+					<td>
+						<input class="form-control form-control-sm duration"
+							   readonly
+							   name="DurationFormatted"
+							   value="${item.durationFormatted}">
+					</td>
+
+					<!-- PLAN NO -->
+					<td>
+						<input class="form-control form-control-sm"
+							   name="PlanNo"
+							   value="${item.planNo}"
+							   readonly>
+					</td>
+
+					<!-- STATUS -->
+					<td>
+						<select class="form-select form-select-sm"
+								name="PlanStatusId">
+
+							<option value="1"
+								${item.planStatusId == 1 ? "selected" : ""}>
+								Planirano
+							</option>
+
+							<option value="2"
+								${item.planStatusId == 2 ? "selected" : ""}>
+								Realizovano
+							</option>
+
+						</select>
+					</td>
+
+					<!-- SAVE -->
+					<td>
+						<button class="btn btn-sm btn-success saveRow">
+							💾
+						</button>
+					</td>
+
+				</tr>`;
 			}
+
+			// ================= MODE 2 =================
+			if (item.activityTypeId == "2") {
+
+				row = `
+				<tr>
+
+					<input type="hidden" name="Id" value="${item.id}">
+
+					<!-- ACTIVITY TYPE -->
+					<td>
+						<select class="form-select form-select-sm activity-mode id="activityMode"">
+
+							<option value="">
+								@localizer["Select activity type"]
+							</option>
+
+							<option value="1">
+								@localizer["Project activity"]
+							</option>
+
+							<option value="2" selected>
+								@localizer["Task"]
+							</option>
+
+							<option value="3">
+								@localizer["Regular activity"]
+							</option>
+
+						</select>
+					</td>
+
+					<!-- TASK -->
+					<td>
+
+						<select class="form-select form-select-sm"
+								name="TaskId">
+
+							<option value="${item.taskId}" selected>
+								${item.task}
+							</option>
+
+						</select>
+
+					</td>
+
+					<!-- ACTIVITY -->
+					<td>
+						<input class="form-control form-control-sm"
+							   name="ActivityName"
+							   value="${item.activityName}">
+					</td>
+
+					<!-- FROM -->
+					<td>
+						<input type="text"
+							   class="form-control form-control-sm from-time timepicker"
+							   name="TimeFromFormatted"
+							   value="${item.timeFromFormatted}">
+					</td>
+
+					<!-- TO -->
+					<td>
+						<input type="text"
+							   class="form-control form-control-sm to-time timepicker"
+							   name="TimeToFormatted"
+							   value="${item.timeToFormatted}">
+					</td>
+
+					<!-- DURATION -->
+					<td>
+						<input class="form-control form-control-sm duration"
+							   readonly
+							   name="DurationFormatted"
+							   value="${item.durationFormatted}">
+					</td>
+
+					<!-- PLAN NO -->
+					<td>
+						<input class="form-control form-control-sm"
+							   name="PlanNo"
+							   value="${item.planNo}"
+							   readonly>
+					</td>
+
+					<!-- STATUS -->
+					<td>
+						<select class="form-select form-select-sm"
+								name="PlanStatusId">
+
+							<option value="1"
+								${item.planStatusId == 1 ? "selected" : ""}>
+								Planirano
+							</option>
+
+							<option value="2"
+								${item.planStatusId == 2 ? "selected" : ""}>
+								Realizovano
+							</option>
+
+						</select>
+					</td>
+
+					<!-- SAVE -->
+					<td>
+						<button class="btn btn-sm btn-success saveRow">
+							💾
+						</button>
+					</td>
+
+				</tr>`;
+			}
+
+			// ================= MODE 3 =================
+			if (item.activityTypeId == "3") {
+
+				row = `
+				<tr>
+
+					<input type="hidden" name="Id" value="${item.id}">
+
+					<!-- ACTIVITY TYPE -->
+					<td>
+						<select class="form-select form-select-sm activity-mode" id="activityMode">
+
+							<option value="">
+								@localizer["Select activity type"]
+							</option>
+
+							<option value="1">
+								@localizer["Project activity"]
+							</option>
+
+							<option value="2">
+								@localizer["Task"]
+							</option>
+
+							<option value="3" selected>
+								@localizer["Regular activity"]
+							</option>
+
+						</select>
+					</td>
+
+					<!-- REGULAR ACTIVITY -->
+					<td>
+
+						<select class="form-select form-select-sm"
+								name="RegularActivityId">
+
+							<option value="${item.regularActivityId}" selected>
+								${item.regularActivity}
+							</option>
+
+						</select>
+
+					</td>
+
+					<!-- ACTIVITY -->
+					<td>
+						<input class="form-control form-control-sm"
+							   name="ActivityName"
+							   value="${item.activityName}">
+					</td>
+
+					<!-- FROM -->
+					<td>
+						<input type="text"
+							   class="form-control form-control-sm from-time timepicker"
+							   name="TimeFromFormatted"
+							   value="${item.timeFromFormatted}">
+					</td>
+
+					<!-- TO -->
+					<td>
+						<input type="text"
+							   class="form-control form-control-sm to-time timepicker"
+							   name="TimeToFormatted"
+							   value="${item.timeToFormatted}">
+					</td>
+
+					<!-- DURATION -->
+					<td>
+						<input class="form-control form-control-sm duration"
+							   readonly
+							   name="DurationFormatted"
+							   value="${item.durationFormatted}">
+					</td>
+
+					<!-- PLAN NO -->
+					<td>
+						<input class="form-control form-control-sm"
+							   name="PlanNo"
+							   value="${item.planNo}"
+							   readonly>
+					</td>
+
+					<!-- STATUS -->
+					<td>
+						<select class="form-select form-select-sm"
+								name="PlanStatusId">
+
+							<option value="1"
+								${item.planStatusId == 1 ? "selected" : ""}>
+								Planirano
+							</option>
+
+							<option value="2"
+								${item.planStatusId == 2 ? "selected" : ""}>
+								Realizovano
+							</option>
+
+						</select>
+					</td>
+
+					<!-- SAVE -->
+					<td>
+						<button class="btn btn-sm btn-success saveRow">
+							💾
+						</button>
+					</td>
+
+				</tr>`;
+			}
+
+			tbody.append(row);
+
+			initTimePickers(tbody.find("tr:last"));
+		}
 			
 			function populateEditModal(item) {
 			// Activity type je već postavljen
@@ -1973,6 +2649,7 @@
 							<td>${item.planStatus}</td>
 							<td>${item.planNo ?? ""}</td>
 							<td class="text-center">${finishedIcon}</td>
+							<td style="text-align:center;"><i class="fa fa-comment" style="cursor:pointer;" data-type="plan"></i></td>s
 						</tr>`;
 
 						tbody.append(row);
@@ -2026,7 +2703,7 @@
 
 						let row = `
 						<tr data-id="${item.id}" class="tooltip-target ${rowClass}" data-google-link="${googleLink}">
-							<td>${item.planNo ?? ""}</td>
+							<td>${item.planNo == 0 ? "+" : (item.planNo ?? "")}</td>
 							<td>${item.displayTask ?? ""}</td>
 							<td>${item.activity ?? ""}</td>
 							<td>${item.report ?? ""}</td>
@@ -2034,6 +2711,7 @@
 							<td>${item.timeToFormattedForTable ?? ""}</td>
 							<td>${item.durationFormattedForTable ?? ""}</td>
 							<td class="text-center">${finishedIcon}</td>
+							<td style="text-align:center;"><i class="fa fa-comment" style="cursor:pointer;" data-type="realization"></i></td>
 						</tr>`;
 
 						tbody.append(row);
@@ -2062,6 +2740,7 @@
 				{
 					saveDefaultShift();
 				}
+				loadTasksForManualTable();
 				$(document).on("blur", "#planDate", function () {
 						const dateValue = $(this).val();
 						if (!dateValue) return;
@@ -2088,7 +2767,7 @@
 						}
 
 						loadTasksForManualTable();
-					});
+				  });
 				  $(document).on("blur", ".from-time, .to-time", function () {
 					calculateRowDuration($(this).closest("tr"));
 				  });
@@ -2565,7 +3244,7 @@
 
 						if ($(window).width() < 768) {
 							// mobilni: modal
-							openAddRowModal(item.activityTypeId, item);
+							openAddRowModal(item);
 						} else {
 							// desktop
 							$("#manualTable").attr("data-edit-id", item.id);
@@ -2576,11 +3255,11 @@
 			});
 
 			$(document).on("click", "#modalSaveRow", function () {
-
+				let modal = $("#addRowModal");
 				let modalBody = $("#addRowModal .modal-body");
 				let data = serializeJSON(modalBody);
-
-				data.ActivityTypeId = $("#activityMode").val();
+				data.Id = modal.attr("data-edit-id") || 0;
+				data.ActivityTypeId = $("#modalActivityType").val();
 				data.PlanDateForSave = $("#planDate").val();
 
 				let button = $(this);
@@ -2850,6 +3529,312 @@
 					}
 				});
 			});
+
+			$(document).on("click", ".deleteTaskBtn", function () {
+
+				let row = $(this).closest("tr");
+				let id = row.data("id");
+
+				Swal.fire({
+					title: 'Delete task?',
+					text: 'Are you sure you want to delete this task?',
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonText: 'Yes',
+					cancelButtonText: 'Cancel'
+				}).then((result) => {
+
+					if (result.isConfirmed) {
+
+						$.ajax({
+							url: '@Url.RouteUrl(RouteNames.TasksPlannings_Delete, new { id = "111"})'.replace("111", id),
+							type: 'POST',
+							success: function (response) {
+
+								if (response.valid) {
+
+									Swal.fire({
+										icon: 'success',
+										title: 'Deleted successfully',
+										timer: 1200,
+										showConfirmButton: false
+									});
+
+									loadTasksForManualTable();
+
+								} else {
+
+									Swal.fire({
+										icon: 'error',
+										title: response.message
+									});
+								}
+							},
+							error: function () {
+
+								Swal.fire({
+									icon: 'error',
+									title: 'Error while deleting'
+								});
+							}
+						});
+					}
+				});
+			});
+
+
+
+
+			  $(document).off('click', '#activitiesContainer td .fa-comment')
+				.on('click', '#activitiesContainer td .fa-comment', function() {
+				 const type = $(this).data('type'); // "plan" ili "realization"
+				 const id = $(this).closest('tr').data('id');
+				 if (type === "plan") {
+					 $('#commentsModal').data('plan-id', id);
+					 $('#newCommentText').val('');
+					 $.ajax({
+						 url: '@Url.RouteUrl(RouteNames.TasksPlannings_Search)',
+						 method: 'POST',
+						 data: { id: id },
+						 success: function(response) {
+							 setPlanInfo(response && response[0] ? response[0] : {});
+						 }
+					 });
+					 loadComments(id);
+					 $('#commentsModal').modal('show');
+				 } else if (type === "realization") {
+					 $('#realizationCommentsModal').data('plan-id', id);
+					 $('#newRealizationText').val('');
+					 $.ajax({
+						 url: '@Url.RouteUrl(RouteNames.TasksRealizations_Search)',
+						 method: 'POST',
+						 data: { id: id },
+						 success: function(response) {
+							 setRealizationInfo(response && response[0] ? response[0] : {});
+						 }
+					 });
+					 loadRealizationComments(id);
+					 $('#realizationCommentsModal').modal('show');
+				 }
+			 });
+
+			   $('#saveRelizationCommentBtn').click(function() {
+					 const planId = $('#realizationCommentsModal').data('plan-id');
+					 const text = $('#newRealizationText').val().trim();
+					 if(!text) return;
+
+					 $.ajax({
+						 url: '@Url.RouteUrl(RouteNames.TasksRealizationComments_Save)',
+						 method: 'POST',
+						 data: { taskRealizationId: planId, comment: text },
+						 success: function(newComment) {
+							  $('#newRealizationText').val('');
+							 loadRealizationComments(planId);
+						 },
+						 error: function(err) {
+							 console.error(err);
+						 }
+					 });
+				 });
+
+				 $(document).on('click', '.reply-btn', function() {
+					 const commentId = $(this).data('comment-id');
+					 const parentComment = $(this).closest('.comment-item');
+					 const repliesContainer = parentComment.find('> .replies-container');
+
+					 // Ako već postoji input, ne dodaj ponovo
+					 if (repliesContainer.find('.reply-input').length) return;
+
+					 const inputHtml = $(`
+						 <div class="reply-input mt-1 d-flex">
+							 <input type="text" class="form-control form-control-sm me-1" placeholder="@localizer["Type reply"]...">
+							 <button class="btn btn-sm btn-primary btn-save-reply">@localizer["Save"]</button>
+						 </div>
+					 `);
+					 repliesContainer.prepend(inputHtml);
+					 inputHtml.find('input').focus();
+				 });
+
+				 $(document).on('click', '.btn-save-reply', function() {
+					 const input = $(this).siblings('input');
+					 const text = input.val().trim();
+					 if (!text) return;
+
+					 const parentComment = $(this).closest('.comment-item');
+					 const parentId = parentComment.data('comment-id');
+					 const planId = $('#realizationCommentsModal').data('plan-id');
+
+					 $.ajax({
+						 url: '@Url.RouteUrl(RouteNames.TasksRealizationComments_Save)',
+						 method: 'POST',
+						 data: {
+							 taskRealizationId : planId,
+							 comment: text,
+							 ParentTaskRealizationCommentId: parentId
+						 },
+						 success: function(newReply) {
+							 input.closest('.reply-input').remove();
+							 loadRealizationComments(planId);
+						 },
+						 error: function(err) {
+							 console.error(err);
+						 }
+					 });
+				 });
+
+				  $('#saveCommentBtn').click(function() {
+					 const planId = $('#commentsModal').data('plan-id');
+					 const text = $('#newCommentText').val().trim();
+					 if(!text) return;
+
+					 $.ajax({
+						 url: '@Url.RouteUrl(RouteNames.TasksPlanningComments_Save)',
+						 method: 'POST',
+						 data: { taskPlanningId: planId, comment: text },
+						 success: function(newComment) {
+							 $('#newCommentText').val('');
+							 loadComments(planId);
+						 },
+						 error: function(err) {
+							 console.error(err);
+						 }
+					 });
+				 });
+
+				 $(document).on('click', '.btn-save-reply', function() {
+					 const input = $(this).siblings('input');
+					 const text = input.val().trim();
+					 if (!text) return;
+
+					 const parentComment = $(this).closest('.comment-item');
+					 const parentId = parentComment.data('comment-id');
+					 const planId = $('#commentsModal').data('plan-id');
+
+					 $.ajax({
+						 url: '@Url.RouteUrl(RouteNames.TasksPlanningComments_Save)',
+						 method: 'POST',
+						 data: {
+							 taskPlanningId: planId,
+							 comment: text,
+							 parentTaskPlanningCommentId: parentId
+						 },
+						 success: function(newReply) {
+							 // Ukloni input posle čuvanja
+							 input.closest('.reply-input').remove();
+
+							 // Ponovo učitaj sve komentare za taj plan
+							 loadComments(planId);
+						 },
+						 error: function(err) {
+							 console.error(err);
+						 }
+					 });
+			 });
+
+			$(document).on("change", "#activityMode", function () {
+
+			let mode = $(this).val();
+
+			if (!mode) {
+				return;
+			}
+
+			let row = $(this).closest("tr");
+
+			let container = row.find(".dynamic-first-column");
+
+			let html = "";
+
+			// ================= MODE 1 =================
+			if (mode === "1") {
+
+				html = `
+				<div class="d-flex gap-1">
+
+					<select class="form-select form-select-sm"
+							name="ProjectId">
+
+						<option value="">
+							@localizer["Select project"]
+						</option>
+
+						@foreach (var p in Model.Projects)
+						{
+								<option value="@p.Value">
+									@p.Description
+								</option>
+						}
+
+					</select>
+
+					<select class="form-select form-select-sm"
+							name="TaskId">
+
+						<option value="">
+							@localizer["Select task"]
+						</option>
+
+						${projectTasks.map(x =>
+							`<option value="${x.Value}">
+								${x.Description}
+							</option>`
+						).join('')}
+
+					</select>
+
+				</div>`;
+			}
+
+			// ================= MODE 2 =================
+			if (mode === "2") {
+
+				html = `
+				<select class="form-select form-select-sm"
+						name="TaskId">
+
+					<option value="">
+						@localizer["Select task"]
+					</option>
+
+					${tasks.map(x =>
+						`<option value="${x.Value}">
+							${x.Description}
+						</option>`
+					).join('')}
+
+				</select>`;
+			}
+
+			// ================= MODE 3 =================
+			if (mode === "3") {
+
+				html = `
+				<select class="form-select form-select-sm"
+						name="RegularActivityId">
+
+					<option value="">
+						@localizer["Select regular activity"]
+					</option>
+
+					@foreach (var r in Model.RegularActivities)
+					{
+							<option value="@r.Value">
+								@r.Description
+							</option>
+					}
+
+				</select>`;
+			}
+
+			container.html(html);
+
+			// // ako je poslednji red -> dodaj novi
+			let isLastRow = row.is("#manualTable tbody tr:last");
+
+			if (isLastRow && !hasEmptyRow()) {
+				addEmptyRow();
+			}
+		});
 		});
 	</script>
 }

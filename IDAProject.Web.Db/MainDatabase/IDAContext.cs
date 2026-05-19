@@ -128,6 +128,7 @@ public partial class IdaContext : DbContext
     public virtual DbSet<PlanStatus> PlanStatuses { get; set; }
 
     public virtual DbSet<Project> Projects { get; set; }
+    public virtual DbSet<ProjectEmployee> ProjectEmployees { get; set; }
 
     public virtual DbSet<RegularActivity> RegularActivities { get; set; }
 
@@ -1161,6 +1162,20 @@ public partial class IdaContext : DbContext
             entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.DeletedBy)
                 .HasConstraintName("FK_Projects_AspNetUsers");
+        });
+        modelBuilder.Entity<ProjectEmployee>(entity =>
+        {
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+ 
+
+            entity.HasOne(d => d.Project).WithMany(p => p.ProjectEmployees)
+                .HasForeignKey(d => d.ProjectId)
+                .HasConstraintName("FK_ProjectEmployees_Projects");
+
+
+            entity.HasOne(d => d.Employee).WithMany(p => p.ProjectEmployees)
+                .HasForeignKey(d => d.EmployeeId)
+                .HasConstraintName("FK_ProjectEmployees_Employees");
         });
 
         modelBuilder.Entity<RegularActivity>(entity =>

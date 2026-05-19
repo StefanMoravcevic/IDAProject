@@ -1403,4 +1403,29 @@
   <data name="User has been saved" xml:space="preserve">
     <value>User has been saved</value>
   </data>
+  <data name="Away employees" xml:space="preserve">
+    <value>Away employees</value>
+  </data>
+  <data name="Planned/Realized for day" xml:space="preserve">
+    <value>Planned/Realized for day</value>
+  </data>
+  <data name="Realized activities" xml:space="preserve">
+    <value>Realized activities</value>
+  </data>
+  <data name="Search employee" xml:space="preserve">
+    <value>Search employee</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="Add employees" xml:space="preserve">
+    <value>Add employees</value>
+  </data>
+  <data name="Enter project employee" xml:space="preserve">
+    <value>Enter project employee</value>
+    <comment>s</comment>
+  </data>
+  <data name="Project employees" xml:space="preserve">
+    <value>Project employees</value>
+  </data>
 </root>

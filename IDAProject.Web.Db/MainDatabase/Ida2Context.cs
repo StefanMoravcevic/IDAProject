@@ -129,6 +129,8 @@ public partial class Ida2Context : DbContext
 
     public virtual DbSet<Project> Projects { get; set; }
 
+    public virtual DbSet<ProjectEmployee> ProjectEmployees { get; set; }
+
     public virtual DbSet<RegularActivity> RegularActivities { get; set; }
 
     public virtual DbSet<Relationship> Relationships { get; set; }
@@ -948,6 +950,10 @@ public partial class Ida2Context : DbContext
             entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.JobTypes)
                 .HasForeignKey(d => d.DeletedBy)
                 .HasConstraintName("FK_JobTypes_AspNetUsers");
+
+            entity.HasOne(d => d.Sector).WithMany(p => p.JobTypes)
+                .HasForeignKey(d => d.SectorId)
+                .HasConstraintName("FK_JobTypes_Sectors");
         });
 
         modelBuilder.Entity<Language>(entity =>
@@ -1165,6 +1171,19 @@ public partial class Ida2Context : DbContext
                 .HasConstraintName("FK_Projects_AspNetUsers");
         });
 
+        modelBuilder.Entity<ProjectEmployee>(entity =>
+        {
+            entity.Property(e => e.DeletedDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Employee).WithMany(p => p.ProjectEmployees)
+                .HasForeignKey(d => d.EmployeeId)
+                .HasConstraintName("FK_ProjectEmployees_Employees");
+
+            entity.HasOne(d => d.Project).WithMany(p => p.ProjectEmployees)
+                .HasForeignKey(d => d.ProjectId)
+                .HasConstraintName("FK_ProjectEmployees_Projects");
+        });
+
         modelBuilder.Entity<RegularActivity>(entity =>
         {
             entity.Property(e => e.DeletedDate).HasColumnType("datetime");
@@ -1235,7 +1254,6 @@ public partial class Ida2Context : DbContext
         modelBuilder.Entity<Shift>(entity =>
         {
             entity.Property(e => e.DeletedDate).HasColumnType("datetime");
-            entity.Property(e => e.Shift1).HasColumnName("Shift");
         });
 
         modelBuilder.Entity<State>(entity =>

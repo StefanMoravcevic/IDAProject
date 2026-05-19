@@ -119,6 +119,8 @@ public partial class Employee
 
     public virtual Partner? Partner { get; set; }
 
+    public virtual ICollection<ProjectEmployee> ProjectEmployees { get; set; } = new List<ProjectEmployee>();
+
     public virtual Sector? Sector { get; set; }
 
     public virtual State? State { get; set; }

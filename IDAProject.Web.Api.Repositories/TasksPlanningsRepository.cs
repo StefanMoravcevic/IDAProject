@@ -192,7 +192,7 @@ namespace IDAProject.Web.Api.Repositories
                && x.PlanDate < to
                && !x.IsDeleted
                && !(x.ActivityTypeId == 3
-                    && x.RegularActivity.Name == "Obaveštavanje"))
+                    && x.RegularActivity.Name == "Informisanje"))
       .ToListAsync();
 
             var groupedByDay = plans
@@ -248,7 +248,7 @@ namespace IDAProject.Web.Api.Repositories
              && x.PlanDate < to
              && !x.IsDeleted
              && !(x.ActivityTypeId == 3
-                  && x.RegularActivity.Name == "Obaveštavanje"))
+                  && x.RegularActivity.Name == "Informisanje"))
     .ToListAsync();
 
             var groupedByDay = plans

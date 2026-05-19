@@ -1458,4 +1458,31 @@
   <data name="User has been saved" xml:space="preserve">
     <value>Кориснички налог успешно креиран</value>
   </data>
+  <data name="Away employees" xml:space="preserve">
+    <value>Одсутне колеге</value>
+  </data>
+  <data name="Planned activities" xml:space="preserve">
+    <value>Планиране активности</value>
+  </data>
+  <data name="Planned/Realized for day" xml:space="preserve">
+    <value>Планирано/Реализовано за дан</value>
+  </data>
+  <data name="Realized activities" xml:space="preserve">
+    <value>Реализоване активности</value>
+  </data>
+  <data name="Search employee" xml:space="preserve">
+    <value>Претражите запосленог</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>Данашњи дан</value>
+  </data>
+  <data name="Add employees" xml:space="preserve">
+    <value>Додели запослене</value>
+  </data>
+  <data name="Enter project employee" xml:space="preserve">
+    <value>Унесите запослене на пројекту</value>
+  </data>
+  <data name="Project employees" xml:space="preserve">
+    <value>Запослени на пројекту</value>
+  </data>
 </root>

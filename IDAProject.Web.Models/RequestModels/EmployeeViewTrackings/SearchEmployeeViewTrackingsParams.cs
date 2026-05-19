@@ -10,6 +10,8 @@ namespace IDAProject.Web.Models.RequestModels.EmployeeViewTrackings
     {
         public int? Id { get; set; }
         public int? EmployeeId { get; set; }
+        public int? ViewerEmployeeId { get; set; }
+        public int? ViewedEmployeeId { get; set; }
         public bool? IsBookmarked { get; set; }
         public bool? HideFromHomePage { get; set; }
         public DateTime? Date { get; set; }

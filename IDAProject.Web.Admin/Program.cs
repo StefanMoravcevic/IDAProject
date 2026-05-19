@@ -110,6 +110,28 @@ app.UseRouting();
 app.UseAuthentication();  // <--- obavezno
 app.UseAuthorization();
 
+app.Use(async (context, next) =>
+{
+    var path = context.Request.Path.Value;
+
+    // dozvoli login + static fajlove
+    if (context.Request.Path.StartsWithSegments("/Accounts"))
+    {
+        await next();
+        return;
+    }
+
+    var token = context.Request.Cookies["admin_token"];
+
+    if (string.IsNullOrEmpty(token))
+    {
+        context.Response.Redirect("/Accounts/Login");
+        return;
+    }
+
+    await next();
+});
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Accounts}/{action=Login}");

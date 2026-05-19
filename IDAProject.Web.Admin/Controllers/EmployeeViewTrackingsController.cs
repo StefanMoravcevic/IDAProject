@@ -90,7 +90,7 @@ namespace IDAProject.Web.Admin.Controllers
         {
             var user = GetCurrentUser();
             requestModel.ViewerEmployeeId = user.EmployeeId;
-            var responseModel = await _EmployeeViewTrackingsManager.SaveEmployeeViewTrackingAsync(requestModel);
+            var responseModel = await _EmployeeViewTrackingsManager.SaveEmployeeViewTrackingCheckedAsync(requestModel);
             if (responseModel.Valid)
             {
                 responseModel.Message = Url.RouteUrl(RouteNames.EmployeeViewTrackings_List, new { Id = "111" })!;

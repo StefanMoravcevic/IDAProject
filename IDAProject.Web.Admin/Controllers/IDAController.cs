@@ -27,7 +27,8 @@ namespace IDAProject.Web.Admin.Controllers
         private readonly IShiftsManager _shiftsManager;
         private readonly IEmployeesManager _employeesManager;
         private readonly IRegularActivitiesManager _regularActivitiesManager;
-        public IDAController(ILogger<IDAController> logger, IAccountManager accountManager, IConfiguration configuration, IMasterDataManager masterDataManager, IIdaTasksManager idaTasksManager, IEmployeesManager employeesManager, ITasksPlanningsManager tasksPlanningsManager, IRegularActivitiesManager regularActivitiesManager, IEmployeeJobTypeControlsManager employeeJobTypeControlsManager, IShiftsManager shiftsManager) : base(accountManager, logger)
+        private readonly IProjectEmployeesManager _projectEmployeesManager;
+        public IDAController(ILogger<IDAController> logger, IAccountManager accountManager, IConfiguration configuration, IMasterDataManager masterDataManager, IIdaTasksManager idaTasksManager, IEmployeesManager employeesManager, ITasksPlanningsManager tasksPlanningsManager, IRegularActivitiesManager regularActivitiesManager, IEmployeeJobTypeControlsManager employeeJobTypeControlsManager, IShiftsManager shiftsManager, IProjectEmployeesManager projectEmployeesManager) : base(accountManager, logger)
         {
             _configuration = configuration;
             _masterDataManager = masterDataManager;
@@ -37,9 +38,10 @@ namespace IDAProject.Web.Admin.Controllers
             _regularActivitiesManager = regularActivitiesManager;
             _employeeJobTypeControlsManager = employeeJobTypeControlsManager;
             _shiftsManager = shiftsManager;
+            _projectEmployeesManager = projectEmployeesManager;
         }
 
-
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("index", Name = RouteNames.IDA_Index)]
         public async Task<IActionResult> Index()
         {
@@ -80,12 +82,19 @@ namespace IDAProject.Web.Admin.Controllers
             taskPlanningsList.Add(new GenericSelectOption
             {
                 Value = 0,
-                Description = "0" // tekst koji želiš
+                Description = "+" // tekst koji želiš
             });
 
-            // Postavi svojstvo na novu listu
+            var assignedProjects = await _projectEmployeesManager.SearchProjectEmployeesAsync(new Web.Models.RequestModels.ProjectEmployees.SearchProjectEmployeesParams { EmployeeId = user.EmployeeId });
+            var assignedProjectsList = assignedProjects.Payload
+               .Select(x => new GenericSelectOption
+               {
+                   Value = x.Id,
+                   Description = x.Project
+               })
+               .ToList();
             viewModel.TaskPlannings = taskPlanningsList;
-            viewModel.Projects = await _masterDataManager.GetSelectOptionsByTableAsync("Projects", "Description");
+            viewModel.Projects = assignedProjectsList;
             viewModel.Tasks = await _idaTasksManager.GetUncompletedTasks(false,user.Id);
             viewModel.ProjectTasks = await _idaTasksManager.GetUncompletedTasks(true, user.Id);
             viewModel.ActivityTypes = await _masterDataManager.GetSelectOptionsByTableAsync("ActivityTypes", "Name");
@@ -114,6 +123,7 @@ namespace IDAProject.Web.Admin.Controllers
             viewModel.NextDay = nextDay;
             return View(viewModel);
         }
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("indexView", Name = RouteNames.IDA_IndexView)]
         public async Task<IActionResult> IndexView()
         {
@@ -159,6 +169,7 @@ namespace IDAProject.Web.Admin.Controllers
             viewModel.Today = DateTime.Now.Date.ToString("dd.MM.yyyy");
             return View("ViewIndex",viewModel);
         }
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("planNewDay", Name = RouteNames.IDA_PlanNewDay)]
         public async Task<IActionResult> PlanNewDay()
         {
@@ -186,7 +197,7 @@ namespace IDAProject.Web.Admin.Controllers
 
             return View("Index", viewModel);
         }
-
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("statistics", Name = RouteNames.IDA_StatisticView)]
         public async Task<IActionResult> StatisticView()
         {
@@ -232,6 +243,8 @@ namespace IDAProject.Web.Admin.Controllers
             viewModel.Today = DateTime.Now.Date.ToString("dd.MM.yyyy");
             return View("StatisticView", viewModel);
         }
+
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("IDAViewers", Name = RouteNames.IDA_Viewers)]
         public async Task<IActionResult> IDAViewersView()
         {
@@ -278,6 +291,7 @@ namespace IDAProject.Web.Admin.Controllers
             viewModel.Employees = await _employeesManager.GetEmployeesAsSelectOptionsAsync();
             return View("IDAViewersView", viewModel);
         }
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("projectsAndTasksView", Name = RouteNames.IDA_ProjectsAndTasksView)]
         public async Task<IActionResult> IdaProjectsAndTasksView()
         {
@@ -312,9 +326,27 @@ namespace IDAProject.Web.Admin.Controllers
             viewModel.TaskPlannings = taskPlanningsList;
 
             // 2️⃣ Static podaci
-            viewModel.Projects = await _masterDataManager
-                .GetSelectOptionsByTableAsync("Projects", "Description");
 
+            int? employeeIdSearch = null;
+
+            if (user.Roles.Contains(AspNetRoles.Administrator.ToString()))
+            {
+                employeeIdSearch = null;
+            }
+            else
+            {
+                employeeIdSearch = user.EmployeeId;
+            }
+            var assignedProjects = await _projectEmployeesManager.SearchProjectEmployeesAsync(new Web.Models.RequestModels.ProjectEmployees.SearchProjectEmployeesParams { EmployeeId = user.EmployeeId });
+            var assignedProjectsList = assignedProjects.Payload
+               .Select(x => new GenericSelectOption
+               {
+                   Value = x.Id,
+                   Description = x.Project
+               })
+               .ToList();
+
+            viewModel.Projects = assignedProjectsList;
             viewModel.Tasks = await _masterDataManager
                 .GetSelectOptionsByTableAsync("IdaTasks", "Name");
 

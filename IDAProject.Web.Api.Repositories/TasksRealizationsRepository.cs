@@ -171,7 +171,7 @@ namespace IDAProject.Web.Api.Repositories
                          && x.PlanDate < to
                          && !x.IsDeleted
                          && !(x.ActivityTypeId == 3
-                              && x.RegularActivity.Name == "Obaveštavanje"))
+                              && x.RegularActivity.Name == "Informisanje"))
                 .Select(x => new { x.Id, x.PlanDate })
                 .ToListAsync();
 
@@ -186,7 +186,7 @@ namespace IDAProject.Web.Api.Repositories
              && x.RealizationDate < to
              && !x.IsDeleted
              && !(x.ActivityTypeId == 3
-                  && x.RegularActivity.Name == "Obaveštavanje"))
+                  && x.RegularActivity.Name == "Informisanje"))
     .ToListAsync();
 
             // ============================
@@ -334,7 +334,7 @@ namespace IDAProject.Web.Api.Repositories
                          && x.PlanDate < toDate
                          && !x.IsDeleted
                          && !(x.ActivityTypeId == 3
-                              && x.RegularActivity.Name == "Obaveštavanje"))
+                              && x.RegularActivity.Name == "Izveštavanje"))
                 .Select(x => new { x.Id, x.PlanDate })
                 .ToListAsync();
 
@@ -349,7 +349,7 @@ namespace IDAProject.Web.Api.Repositories
                          && x.RealizationDate < toDate
                          && !x.IsDeleted
                          && !(x.ActivityTypeId == 3
-                              && x.RegularActivity.Name == "Obaveštavanje"))
+                              && x.RegularActivity.Name == "Izveštavanje"))
                 .ToListAsync();
 
             double plannedDuration = 0;

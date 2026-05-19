@@ -21,6 +21,7 @@ namespace IDAProject.Web.Models.Dto.TasksRealizationComments
         public string? DisplayTask { get; set; }
         public string? Activity { get; set; }
         public int? EmployeeId { get; set; }
+        public int? EmployeeForReplyId { get; set; }
         public DateTime? RealizationDate { get; set; }
 
         public string CreatedAtFormatted

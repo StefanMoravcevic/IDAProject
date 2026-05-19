@@ -46,5 +46,11 @@ namespace IDAProject.Web.Admin.Managers
                     bookmarkedEmployeeIds);
             return result;
         }
+
+        public async Task<ResponseModel<int>> SaveEmployeeViewTrackingCheckedAsync(SaveEmployeeViewTrackingRequestModel requestModel)
+        {
+            var result = await PostAsync<SaveEmployeeViewTrackingRequestModel, ResponseModel<int>>($"api/EmployeeViewTrackings/saveChecked", requestModel);
+            return result;
+        }
     }
 }

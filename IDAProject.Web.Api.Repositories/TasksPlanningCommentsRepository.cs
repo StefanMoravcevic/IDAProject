@@ -37,6 +37,10 @@ namespace IDAProject.Web.Api.Repositories
             }
             else
             {
+                if (searchParams.ParentCommentId.HasValue)
+                {
+                    query = query.Where(x => x.ParentTaskPlanningCommentId == searchParams.ParentCommentId);
+                }
                 if (searchParams.PlanId.HasValue)
                 {
                     query = query.Where(x => x.TaskPlanningId == searchParams.PlanId);
@@ -85,6 +89,7 @@ namespace IDAProject.Web.Api.Repositories
                 Activity = a.TaskPlanning.ActivityName,
                 HiddenFromHomePage =a .HiddenFromHomePage,
                 EmployeeId = a.TaskPlanning.Employee.Id,
+                EmployeeForReplyId = a.User.EmployeeId,
                 PlanDate = a.TaskPlanning.PlanDate,
                 EnteredUsername = a.TaskPlanning.Employee.Name + " " + a.TaskPlanning.Employee.Surname,
                 EnteredPhoto = a.TaskPlanning.Employee.Photo,

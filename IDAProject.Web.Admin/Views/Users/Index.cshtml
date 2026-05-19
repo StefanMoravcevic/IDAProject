@@ -1,11 +1,12 @@
 ﻿@model IDAProject.Web.Admin.Models.ViewModels.Users.UsersViewModel
 @using IDAProject.Web.Admin.Models.Common;
-@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
+@using IDAProject.Web.Admin.Models.TagHelpers;
 @using IDAProject.Web.Models.General;
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.AspNetCore.Http;
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
 
 @{
     ViewData["Title"] = "User accounts";
@@ -16,6 +17,9 @@
     var urlSave = Url.RouteUrl(RouteNames.User_Save);
     var urlNew = Url.RouteUrl(RouteNames.User_New);
     var urlResetPassword = Url.RouteUrl(RouteNames.Accounts_AdminResetPassword, new { userId = 111 });
+    var urlPatternIdaTasks = Url.RouteUrl(RouteNames.IdaTasks_GetByEmployeeId, new { userId = "111" });
+    var urlPatternIdaProjectTasks = Url.RouteUrl(RouteNames.IdaProjectTasks_GetByEmployeeId, new { userId = "111" });
+    var urlPatternRegularActivities = Url.RouteUrl(RouteNames.RegularActivities_GetByEmployeeId, new { userId = "111" });
     var options = new List<GenericSelectOption>();
     options.Add(new GenericSelectOption(-1, "All"));
     options.Add(new GenericSelectOption(1, "Active"));
@@ -36,6 +40,9 @@
 <tms-modal id="manageUserRoles" title="@localizer["Manage user roles"]" save-button="false" />
 <tms-modal id="manageUserOrgUnis" title="@localizer["Manage org units"]" save-button="false" />
 <tms-modal id="add/editDefaultPrinter" title="@localizer["Add/Edit default printer"]" save-button="false" />
+<tms-modal id="editIdaTasksModal" title="@localizer["Tasks"]" save-button="false" modal-size="@ModalSize.Default" />
+<tms-modal id="editIdaProjectTasksModal" title="@localizer["Project tasks"]" save-button="false" modal-size="@ModalSize.Default" />
+<tms-modal id="editRegularActivitiesModal" title="@localizer["Regular activities"]" save-button="false" modal-size="@ModalSize.Default" />
 
 <div class="row">
     <div class="col-md-12">
@@ -330,6 +337,82 @@
                 $("#showSearch").removeClass("fa-angle-up").addClass("fa-angle-down");
             });
 
+            $(document).on('click', '#addTask', function () {
+                var selectedRows = table.rows({ selected: true });
+
+                if (!selectedRows.any()) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Pažnja',
+                        text: 'Morate izabrati korisnika iz liste!',
+                        confirmButtonText: 'U redu'
+                    });
+                    return;
+                }
+
+                var id = selectedRows.data()[0][0];
+                debugger
+                $.ajax({
+                    url: '@urlPatternIdaTasks'.replace("111", id),
+                    method: 'GET',
+                    success: function (response) {
+                        $("#editIdaTasksModal .modal-body").html(response);
+                        var editModal = new bootstrap.Modal(document.getElementById('editIdaTasksModal'));
+                        editModal.show();
+                    }
+                });
+            });
+
+            $(document).on('click', '#addProjectTask', function () {
+                debugger
+                var selectedRows = table.rows({ selected: true });
+
+                if (!selectedRows.any()) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Pažnja',
+                        text: 'Morate izabrati korisnika iz liste!',
+                        confirmButtonText: 'U redu'
+                    });
+                    return;
+                }
+
+                var id = selectedRows.data()[0][0];
+                $.ajax({
+                    url: '@urlPatternIdaProjectTasks'.replace("111", id),
+                    method: 'GET',
+                    success: function (response) {
+                        $("#editIdaProjectTasksModal .modal-body").html(response);
+                        var editModal = new bootstrap.Modal(document.getElementById('editIdaProjectTasksModal'));
+                        editModal.show();
+                    }
+                });
+            });
+
+            $(document).on('click', '#addRegularActivity', function () {
+                var selectedRows = table.rows({ selected: true });
+
+                if (!selectedRows.any()) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Pažnja',
+                        text: 'Morate izabrati korisnika iz liste!',
+                        confirmButtonText: 'U redu'
+                    });
+                    return;
+                }
+
+                var id = selectedRows.data()[0][0];
+                $.ajax({
+                    url: '@urlPatternRegularActivities'.replace("111", id),
+                    method: 'GET',
+                    success: function (response) {
+                        $("#editRegularActivitiesModal .modal-body").html(response);
+                        var editModal = new bootstrap.Modal(document.getElementById('editRegularActivitiesModal'));
+                        editModal.show();
+                    }
+                });
+            });
 
         });
     </script>

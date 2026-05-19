@@ -39,6 +39,10 @@ namespace IDAProject.Web.Api.Repositories
             }
             else
             {
+                if (searchParams.ParentCommentId.HasValue)
+                {
+                    query = query.Where(x => x.ParentTaskRealizationCommentId == searchParams.ParentCommentId);
+                }
                 if (searchParams.RealizationId.HasValue)
                 {
                     query = query.Where(x => x.TaskRealizationId == searchParams.RealizationId);
@@ -79,18 +83,19 @@ namespace IDAProject.Web.Api.Repositories
                 : a.TaskRealization.RegularActivityId != null
                     ? a.TaskRealization.RegularActivity.Name
                     : "",
-                Activity = a.TaskRealization.Activity,
+                Activity = a.TaskRealization.Activity,  
                 HiddenFromHomePage = a.HiddenFromHomePage,
-                EmployeeId = a.User.EmployeeId,
+                EmployeeId = a.TaskRealization.User.EmployeeId,
                 RealizationDate = a.TaskRealization.RealizationDate,
                 EnteredUsername = a.TaskRealization.User.Employee.Name + " " + a.TaskRealization.User.Employee.Surname,
                 EnteredPhoto = a.TaskRealization.User.Employee.Photo,
+                EmployeeForReplyId = a.User.EmployeeId,
                 HiddenFromHomePageAuthor = a.HiddenFromHomePageAuthor
 
             }).ToListAsync();
             return result;
 
-        }
+        }   
 
         public async Task<int> SaveTasksRealizationCommentAsync(SaveTasksRealizationCommentRequestModel requestModel)
         {

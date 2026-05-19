@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 using System.Reflection;
 using System.Text;
@@ -9,16 +6,22 @@ using IDAProject.Web.Api.Models.Common;
 using IDAProject.Web.Api.Models.Interfaces.Managers;
 using IDAProject.Web.Api.Models.Interfaces.Repositories;
 using IDAProject.Web.Api.Repositories;
+using IDAProject.Web.Db.MainDatabase;
 using IDAProject.Web.Helpers;
 using IDAProject.Web.Models.Auth.RequestModels;
 using IDAProject.Web.Models.Dto.Documents;
 using IDAProject.Web.Models.Dto.Employees;
 using IDAProject.Web.Models.Dto.Messages;
+using IDAProject.Web.Models.Dto.TasksPlanningComments;
+using IDAProject.Web.Models.Dto.TasksRealizationComments;
 using IDAProject.Web.Models.General;
 using IDAProject.Web.Models.General.Enums;
 using IDAProject.Web.Models.RequestModels.Companies;
 using IDAProject.Web.Models.RequestModels.Employees;
 using IDAProject.Web.Models.RequestModels.Messages;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace IDAProject.Web.Api.Managers
 {
@@ -143,7 +146,6 @@ namespace IDAProject.Web.Api.Managers
             var emailTemplate = GetEmbededContentString("GenericEmailTemplate.htm");
             emailTemplate = emailTemplate.Replace("##title##", title);
             emailTemplate = emailTemplate.Replace("##company##", company.Name);
-            emailTemplate = emailTemplate.Replace("##logo##", "cid:companylogo.jpg");
             return emailTemplate;
         }
 
@@ -327,7 +329,9 @@ namespace IDAProject.Web.Api.Managers
                 return result;
             }
 
-            var comment = await _tasksPlanningCommentsRepository.GetTasksPlanningCommentByIdAsync(taskPlanCommentId.Value);
+            var comment = await _tasksPlanningCommentsRepository
+                .GetTasksPlanningCommentByIdAsync(taskPlanCommentId.Value);
+
             if (comment == null)
             {
                 result.Valid = false;
@@ -335,7 +339,37 @@ namespace IDAProject.Web.Api.Managers
                 return result;
             }
 
-            var employee = await _employeesRepository.GetEmployeeByIdAsync(comment.EmployeeId.Value);
+            // -----------------------------------
+            // 1. DETEKCIJA DA LI JE REPLY
+            // -----------------------------------
+            var isReply = comment.ParentTaskPlanningCommentId.HasValue;
+
+            TasksPlanningCommentDto parentComment = null;
+            int employeeIdToNotify;
+
+            if (isReply)
+            {
+                parentComment = await _tasksPlanningCommentsRepository
+                    .GetTasksPlanningCommentByIdAsync(comment.ParentTaskPlanningCommentId.Value);
+
+                if (parentComment == null)
+                {
+                    result.Valid = false;
+                    result.Message = "Parent komentar nije pronađen";
+                    return result;
+                }
+
+                // owner originalnog komentara prima email
+                employeeIdToNotify = parentComment.EmployeeForReplyId.Value;
+            }
+            else
+            {
+                // owner plana prima email
+                employeeIdToNotify = comment.EmployeeId.Value;
+            }
+
+            var employee = await _employeesRepository.GetEmployeeByIdAsync(employeeIdToNotify);
+
             if (employee == null)
             {
                 result.Valid = false;
@@ -343,24 +377,68 @@ namespace IDAProject.Web.Api.Managers
                 return result;
             }
 
-            var textTitle = $"Novi komentar na vaš plan za {comment.PlanDateFormattedForComment}";
+            // -----------------------------------
+            // 2. SUBJECT
+            // -----------------------------------
+            var textTitle = isReply
+                ? $"Odgovor na vaš komentar za {comment.PlanDateFormattedForComment}"
+                : $"Novi komentar na vaš plan za {comment.PlanDateFormattedForComment}";
+
             var mailTo = employee.Email;
 
-            // --- HTML telo emaila ---
-            var templateBody = $@"
-<p>Poštovani/na,</p>
-<p>Obaveštavamo vas da je zaposleni <strong>{comment.Username}</strong> uneo komentar na vaš plan za dan <strong>{comment.PlanDateFormattedForComment}</strong>.</p>
+            // -----------------------------------
+            // 3. EMAIL BODY
+            // -----------------------------------
+            string templateBody;
 
-<p><strong>Zadatak:</strong> {comment.DisplayTask}<br/>
-<strong>Aktivnost:</strong> {comment.Activity}</p>
+            if (isReply)
+            {
+                templateBody = $@"
+                <p>Poštovani/na,</p>
 
-<p><strong>Tekst komentara:</strong></p>
-<div style='padding:10px; background-color:#f8f9fa; border-left:4px solid #0d6efd; border-radius:4px;'>
-    {comment.Comment}
-    <div style='margin-top:5px; font-size:0.85em; color:#6c757d;'>Komentar dodan: {comment.CreatedAtFormatted}</div>
-</div>
-";
+                <p><strong>{comment.Username}</strong> je odgovorio na vaš komentar za plan dana <strong>{comment.PlanDateFormattedForComment}</strong>.</p>
 
+                <p><strong>Odnosi se na:</strong></p>
+                <p>
+                <strong>Zadatak:</strong> {comment.DisplayTask}<br/>
+                <strong>Aktivnost:</strong> {comment.Activity}
+                </p>
+
+                <p><strong>Originalni komentar:</strong></p>
+                <div style='padding:10px;background:#f1f3f5;border-left:4px solid #6c757d;border-radius:4px;'>
+                    {parentComment.Comment}
+                </div>
+
+                <p style='margin-top:10px;'><strong>Odgovor:</strong></p>
+                <div style='padding:10px;background:#f8f9fa;border-left:4px solid #0d6efd;border-radius:4px;'>
+                    {comment.Comment}
+                    <div style='margin-top:5px;font-size:0.85em;color:#6c757d;'>
+                        Odgovor dat: {comment.CreatedAtFormatted}
+                    </div>
+                </div>";
+            }
+            else
+            {
+                templateBody = $@"
+                <p>Poštovani/na,</p>
+
+                <p>Obaveštavamo vas da je zaposleni <strong>{comment.Username}</strong> uneo komentar na vaš plan za dan <strong>{comment.PlanDateFormattedForComment}</strong>.</p>
+
+                <p><strong>Zadatak:</strong> {comment.DisplayTask}<br/>
+                <strong>Opis:</strong> {comment.Activity}</p>
+
+                <p><strong>Tekst komentara:</strong></p>
+                <div style='padding:10px;background:#f8f9fa;border-left:4px solid #0d6efd;border-radius:4px;'>
+                    {comment.Comment}
+                    <div style='margin-top:5px;font-size:0.85em;color:#6c757d;'>
+                        Komentar dodat: {comment.CreatedAtFormatted}
+                    </div>
+                </div>";
+            }
+
+            // -----------------------------------
+            // 4. QUEUE EMAIL
+            // -----------------------------------
             try
             {
                 await _queueRepository.AddEmailQueueAsync(
@@ -372,11 +450,14 @@ namespace IDAProject.Web.Api.Managers
                 );
 
                 result.Valid = true;
-                result.Message = "Email obaveštenje uspešno stavljeno u queue.";
+                result.Message = isReply
+                    ? "Reply email uspešno stavljen u queue."
+                    : "Email obaveštenje uspešno stavljeno u queue.";
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Greška prilikom dodavanja emaila u queue");
+
                 result.Valid = false;
                 result.Message = "Došlo je do greške prilikom dodavanja emaila u queue.";
             }
@@ -395,7 +476,9 @@ namespace IDAProject.Web.Api.Managers
                 return result;
             }
 
-            var comment = await _tasksRealizationCommentsRepository.GetTasksRealizationCommentByIdAsync(taskRealizationCommentId.Value);
+            var comment = await _tasksRealizationCommentsRepository
+                .GetTasksRealizationCommentByIdAsync(taskRealizationCommentId.Value);
+
             if (comment == null)
             {
                 result.Valid = false;
@@ -403,7 +486,35 @@ namespace IDAProject.Web.Api.Managers
                 return result;
             }
 
-            var employee = await _employeesRepository.GetEmployeeByIdAsync(comment.EmployeeId.Value);
+            var isReply = comment.ParentTaskRealizationCommentId.HasValue;
+
+            TasksRealizationCommentDto parentComment = null;
+            int employeeIdToNotify;
+
+            // -----------------------------------
+            // 1. KO PRIMA EMAIL
+            // -----------------------------------
+            if (isReply)
+            {
+                parentComment = await _tasksRealizationCommentsRepository
+                    .GetTasksRealizationCommentByIdAsync(comment.ParentTaskRealizationCommentId.Value);
+
+                if (parentComment == null)
+                {
+                    result.Valid = false;
+                    result.Message = "Parent komentar nije pronađen";
+                    return result;
+                }
+
+                employeeIdToNotify = parentComment.EmployeeForReplyId.Value;
+            }
+            else
+            {
+                employeeIdToNotify = comment.EmployeeId.Value;
+            }
+
+            var employee = await _employeesRepository.GetEmployeeByIdAsync(employeeIdToNotify);
+
             if (employee == null)
             {
                 result.Valid = false;
@@ -411,25 +522,68 @@ namespace IDAProject.Web.Api.Managers
                 return result;
             }
 
-            var textTitle = $"Novi komentar na vašu realizaciju za {comment.RealizationDateFormattedForComment}";
+            // -----------------------------------
+            // 2. SUBJECT
+            // -----------------------------------
+            var textTitle = isReply
+                ? $"Odgovor na vaš komentar za realizaciju {comment.RealizationDateFormattedForComment}"
+                : $"Novi komentar na vašu realizaciju za {comment.RealizationDateFormattedForComment}";
 
             var mailTo = employee.Email;
 
-            // --- HTML telo emaila ---
-            var templateBody = $@"
+            // -----------------------------------
+            // 3. BODY
+            // -----------------------------------
+            string templateBody;
+
+            if (isReply)
+            {
+                templateBody = $@"
 <p>Poštovani/na,</p>
+
+<p><strong>{comment.Username}</strong> je odgovorio na vaš komentar za realizaciju dana <strong>{comment.RealizationDateFormattedForComment}</strong>.</p>
+
+<p><strong>Odnosi se na:</strong></p>
+<p>
+<strong>Zadatak:</strong> {comment.DisplayTask}<br/>
+<strong>Aktivnost:</strong> {comment.Activity}
+</p>
+
+<p><strong>Originalni komentar:</strong></p>
+<div style='padding:10px;background:#f1f3f5;border-left:4px solid #6c757d;border-radius:4px;'>
+    {parentComment.Comment}
+</div>
+
+<p style='margin-top:10px;'><strong>Odgovor:</strong></p>
+<div style='padding:10px;background:#f8f9fa;border-left:4px solid #0d6efd;border-radius:4px;'>
+    {comment.Comment}
+    <div style='margin-top:5px;font-size:0.85em;color:#6c757d;'>
+        Odgovor dat: {comment.CreatedAtFormatted}
+    </div>
+</div>";
+            }
+            else
+            {
+                templateBody = $@"
+<p>Poštovani/na,</p>
+
 <p>Obaveštavamo vas da je zaposleni <strong>{comment.Username}</strong> uneo komentar na vašu realizaciju za dan <strong>{comment.RealizationDateFormattedForComment}</strong>.</p>
 
 <p><strong>Zadatak:</strong> {comment.DisplayTask}<br/>
 <strong>Aktivnost:</strong> {comment.Activity}</p>
 
 <p><strong>Tekst komentara:</strong></p>
-<div style='padding:10px; background-color:#f8f9fa; border-left:4px solid #0d6efd; border-radius:4px;'>
+<div style='padding:10px;background:#f8f9fa;border-left:4px solid #0d6efd;border-radius:4px;'>
     {comment.Comment}
-    <div style='margin-top:5px; font-size:0.85em; color:#6c757d;'>Komentar dodan: {comment.CreatedAtFormatted}</div>
-</div>
-";
+    <div style='margin-top:5px;font-size:0.85em;color:#6c757d;'>
+        Komentar dodat: {comment.CreatedAtFormatted}
+    </div>
+</div>";
+            }
 
+            // -----------------------------------
+            // 4. QUEUE
+            // -----------------------------------
             try
             {
                 await _queueRepository.AddEmailQueueAsync(
@@ -441,18 +595,20 @@ namespace IDAProject.Web.Api.Managers
                 );
 
                 result.Valid = true;
-                result.Message = "Email obaveštenje uspešno stavljeno u queue.";
+                result.Message = isReply
+                    ? "Reply email uspešno stavljen u queue."
+                    : "Email obaveštenje uspešno stavljeno u queue.";
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Greška prilikom dodavanja emaila u queue");
+
                 result.Valid = false;
                 result.Message = "Došlo je do greške prilikom dodavanja emaila u queue.";
             }
 
             return result;
         }
-
         public async Task<ResponseModelBase> SendUserCreatedEmail(string email, string password, string username)
         {
             var result = new ResponseModelBase();

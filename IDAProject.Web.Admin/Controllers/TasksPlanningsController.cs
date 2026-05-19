@@ -137,7 +137,7 @@ namespace IDAProject.Web.Admin.Controllers
         }
 
         [HttpPost("delete/{id}", Name = RouteNames.TasksPlannings_Delete)]
-        public async Task<IActionResult> DeleteTasksPlanningAsync(int id)
+        public async Task<IActionResult> DeleteTasksPlanningAsync(int id)   
         {
             var user = GetCurrentUser();
             var responseModel = await _TasksPlanningsManager.DeleteTasksPlanningAsync(id, user.Id);
@@ -190,7 +190,7 @@ namespace IDAProject.Web.Admin.Controllers
                 .SearchRegularActivitiesAsync(new SearchRegularActivitiesParams
                 {
                     UserId = user.Id,
-                    Name = "Obaveštavanje"
+                    Name = "Informisanje"
                 });
 
             int regularActivityId;
@@ -203,8 +203,8 @@ namespace IDAProject.Web.Admin.Controllers
             {
                 var saveRegularActivity = new SaveRegularActivityRequestModel
                 {
-                    Description = "Obaveštavanje",
-                    Name = "Obaveštavanje",
+                    Description = "Informisanje",
+                    Name = "Informisanje",
                     UserId = user.Id
                 };
 
@@ -237,7 +237,7 @@ namespace IDAProject.Web.Admin.Controllers
 
                 PlanDate = parsedDate.Date,
 
-                ActivityName = "Obaveštavanje",
+                ActivityName = "Informisanje",
                 PlanStatusId = 2,
                 ActivityTypeId = 3,
 
@@ -257,7 +257,7 @@ namespace IDAProject.Web.Admin.Controllers
             {
                 var saveRealization = new SaveTasksRealizationRequestModel
                 {
-                    Activity = "Obaveštavanje",
+                    Activity = "Informisanje",
                     ActivityTypeId = 3,
                     CreatedDate = DateTime.Now,
                     Finished = true,
@@ -328,7 +328,7 @@ namespace IDAProject.Web.Admin.Controllers
                 .SearchRegularActivitiesAsync(new SearchRegularActivitiesParams
                 {
                     UserId = user.Id,
-                    Name = "Obaveštavanje"
+                    Name = "Informisanje"
                 });
 
             int regularActivityId;
@@ -341,8 +341,8 @@ namespace IDAProject.Web.Admin.Controllers
             {
                 var saveRegularActivity = new SaveRegularActivityRequestModel
                 {
-                    Description = "Obaveštavanje",
-                    Name = "Obaveštavanje",
+                    Description = "Informisanje",
+                    Name = "Informisanje",
                     UserId = user.Id
                 };
 
@@ -377,7 +377,7 @@ namespace IDAProject.Web.Admin.Controllers
                 EmployeeId = user.EmployeeId,
                 PlanDate = parsedDate.Date,
 
-                ActivityName = "Obaveštavanje",
+                ActivityName = "Informisanje",
                 PlanStatusId = 2,
                 ActivityTypeId = 3,
 
@@ -397,7 +397,7 @@ namespace IDAProject.Web.Admin.Controllers
             {
                 var saveRealization = new SaveTasksRealizationRequestModel
                 {
-                    Activity = "Obaveštavanje",
+                    Activity = "Informisanje",
                     ActivityTypeId = 3,
                     CreatedDate = DateTime.Now,
                     Finished = true,

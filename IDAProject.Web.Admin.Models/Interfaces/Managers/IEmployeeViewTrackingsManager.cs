@@ -11,6 +11,7 @@ namespace IDAProject.Web.Admin.Models.Interfaces.Managers
         Task<ResponseModel<EmployeeViewTrackingDto>> GetEmployeeViewTrackingByIdAsync(int id);
         Task<ResponseModelBase> DeleteEmployeeViewTrackingAsync(int id, int? userId);
         Task<ResponseModel<int>> SaveEmployeeViewTrackingAsync(SaveEmployeeViewTrackingRequestModel requestModel);
+        Task<ResponseModel<int>> SaveEmployeeViewTrackingCheckedAsync(SaveEmployeeViewTrackingRequestModel requestModel);
     }
 }
 

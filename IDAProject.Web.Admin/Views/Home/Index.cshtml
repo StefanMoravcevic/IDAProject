@@ -6,6 +6,7 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<SharedResources> localizer
+@addTagHelper IDAProject.Web.Admin.TagHelpers.*, IDAProject.Web.Admin
 
 @{
     ViewData["Title"] = "IDA Project dashboard";
@@ -274,6 +275,82 @@
     </div>
 
 </div>
+<div class="modal fade" id="repliesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Komentari plan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- THREAD LIST -->
+                <div id="repliesContainer" class="mb-3"></div>
+
+                <!-- REPLY BOX -->
+                <div class="border-top pt-3">
+
+                    <input type="hidden" id="parentCommentId" />
+                    <input type="hidden" id="taskPlanningCommentId" />
+
+                    <textarea id="replyText"
+                              class="form-control"
+                              rows="3"
+                              placeholder="Napiši odgovor..."></textarea>
+
+                    <div class="d-flex justify-content-end mt-2">
+                        <button class="btn btn-primary btn-sm" id="sendReplyBtn">
+                            Pošalji odgovor
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="repliesRealizationModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Komentari realizacija</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- THREAD LIST -->
+                <div id="repliesRealizationContainer" class="mb-3"></div>
+
+                <!-- REPLY BOX -->
+                <div class="border-top pt-3">
+
+                    <input type="hidden" id="parentRealizationCommentId" />
+                    <input type="hidden" id="taskRealizationCommentId" />
+
+                    <textarea id="replyTextRealization"
+                              class="form-control"
+                              rows="3"
+                              placeholder="Napiši odgovor..."></textarea>
+
+                    <div class="d-flex justify-content-end mt-2">
+                        <button class="btn btn-primary btn-sm" id="sendReplyRealizationBtn">
+                            Pošalji odgovor
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 <div class="container-fluid mt-1">
     <div class="row g-3">
 
@@ -298,9 +375,9 @@
             <div class="card p-3 text-center">
                 <div class="d-flex justify-content-center mb-3">
                     <img id="employeePhoto" src="@Model.EmployeePhoto"
-                         alt="Profilna slika"
-                         class="img-fluid rounded-circle"
-                         style="width: 150px; height: 150px;" />
+                         class=""
+                         style="width:150px; height:150px; object-fit: contain;"
+                         alt="Task image" />
                 </div>
 
                 <div class="d-flex flex-column gap-2">
@@ -419,15 +496,29 @@
                     <!-- Desna kolona: Planned/Realized -->
                     <div class="col-12 col-md-10">
                         <div class="card p-3 h-100">
-                            <h5 class="card-title">
-                                @localizer["Planned/Realized for today"] - @Model.Today
-                            </h5>
+                            <div class="d-flex flex-wrap gap-2">
+
+                                <h5 class="card-title mb-0">
+                                    @localizer["Planned/Realized for day"]
+                                </h5>
+
+                                <div class="d-flex align-items-center gap-2">
+
+                                    <tms-input type="Date"
+                                           id="planDatePicker"
+                                           class="form-control form-control-sm" value="@Model.TodayDate" />
+                                </div>
+
+                            </div>
 
                             <div class="row g-3">
 
                                 <!-- Plan -->
                                 <div class="col-12 col-md-5">
                                     <div class="scrollable-x" style="border-right:2px solid #e9ecef;">
+                                        <h6 class="fw-bold mb-2 text-primary">
+                                            @localizer["Planned activities"]
+                                        </h6>
                                         <div id="plannedTablesContainer"></div>
                                         <div id="plannedChartsContainer"
                                              class="d-flex justify-content-center align-items-center"
@@ -440,6 +531,9 @@
                                 <!-- Realization -->
                                 <div class="col-12 col-md-7">
                                     <div class="scrollable-x">
+                                        <h6 class="fw-bold mb-2 text-primary">
+                                            @localizer["Realized activities"]
+                                        </h6>
                                         <div id="realizedTablesContainer"></div>
                                         <div id="realizedChartsContainer"
                                              class="d-flex justify-content-center align-items-center"
@@ -516,7 +610,7 @@
             <div class="card" style="border:2px solid #eb3838 !important;">
                 <div class="card-header" style="background-color:#F2220F; color:white; font-weight:900; font-size:17px; cursor:pointer;"
                      data-bs-toggle="collapse" data-bs-target="#collapseEmployeesOnRoadTrip" aria-expanded="true" aria-controls="collapseEmployeesOnRoadTrip">
-                    @localizer["Employees on work trip"]
+                    @localizer["Away employees"]
                 </div>
                 <div id="collapseEmployeesOnRoadTrip" class="collapse show">
                     <div class="card-body p-3">
@@ -929,7 +1023,8 @@
               hideFromHomePage : false
           },
           success: function (response) {
-              renderComments(response);
+
+            renderComments(response);
           },
           error: function(err) {
               console.error("Greška pri učitavanju komentara", err);
@@ -1001,7 +1096,7 @@
 
         comments.forEach(function(c) {
                var html = `
-        <div class="comment-item mb-2 p-2" data-comment-id="${c.id}">
+        <div class="comment-item mb-2 p-2" data-comment-id="${c.id}" data-task-planning-id="${c.taskPlanningId}">
             <div class="d-flex align-items-center mb-1 justify-content-between">
                 <div class="d-flex align-items-center">
                     <img src="${c.photo}"
@@ -1011,7 +1106,23 @@
                     <span><strong>${c.username}</strong> je komentarisao/la vaš plan - ${c.displayTask}, ${c.activity}</span>
                 </div>
                 <!-- X ikonica umesto dugmeta -->
-                <span class="remove-comment-icon" title="Ukloni">&times;</span>
+                 <div class="d-flex align-items-center gap-2">
+
+            <!-- REPLY ICON -->
+            <span class="reply-comment-icon text-primary"
+                  title="Odgovori"
+                  style="cursor:pointer; font-size:18px;">
+                💬
+            </span>
+
+            <!-- DELETE -->
+            <span class="remove-comment-icon"
+                  title="Ukloni"
+                  style="cursor:pointer; font-size:18px;">
+                &times;
+            </span>
+
+        </div>
             </div>
             <small class="text-muted mb-1 d-block">${c.createdAtFormatted}</small>
             <div>${c.comment}</div>
@@ -1031,7 +1142,7 @@
 
         comments.forEach(function(c) {
             var html = `
-                <div class="comment-item-real mb-2 p-2" data-comment-id="${c.id}">
+                <div class="comment-item-real mb-2 p-2" data-comment-id="${c.id}" data-task-realization-id="${c.taskRealizationId}">
                     <div class="d-flex align-items-center mb-1 justify-content-between">
                         <div class="d-flex align-items-center">
                             <img src="${c.photo}"
@@ -1040,7 +1151,23 @@
                                  style="width: 40px; height: 40px; object-fit: cover;">
                             <span><strong>${c.username}</strong> je komentarisao/la vašu realizaciju - ${c.displayTask}, ${c.activity}</span>
                         </div>
-                       <span class="remove-comment-icon-realization" title="Ukloni">&times;</span>
+                       <div class="d-flex align-items-center gap-2">
+
+            <!-- REPLY ICON -->
+            <span class="reply-comment-icon-realization text-primary"
+                  title="Odgovori"
+                  style="cursor:pointer; font-size:18px;">
+                💬
+            </span>
+
+            <!-- DELETE -->
+            <span class="remove-comment-icon-realization"
+                  title="Ukloni"
+                  style="cursor:pointer; font-size:18px;">
+                &times;
+            </span>
+
+        </div>
                     </div>
                     <small class="text-muted mb-1 d-block">${c.createdAtFormatted}</small>
                     <div>${c.comment}</div>
@@ -1217,13 +1344,13 @@
                 plugins: [ChartDataLabels]
             });
         }
-        function loadEmployeePlannings(employeeId) {
+        function loadEmployeePlannings(employeeId, planDate) {
             $.ajax({
                 url: "@Url.RouteUrl(RouteNames.TasksPlannings_Search)",
                 method: "POST",
                 data: {
                     employeeId: employeeId,
-                    planDate: '@Model.Today'
+                    planDate: planDate
                 },
                 success: function(data) {
                     const tbodyContainer = $('#plannedTablesContainer');
@@ -1283,13 +1410,13 @@
                 }
             });
         }
-        function loadEmployeeRealizations(employeeId) {
+        function loadEmployeeRealizations(employeeId, planDate) {
             $.ajax({
                 url: "@Url.RouteUrl(RouteNames.TasksRealizations_Search)",
                 method: "POST",
                 data: {
                     employeeId: employeeId,
-                    realizationDate: '@Model.Today'
+                    realizationDate: planDate
                 },
                 success: function(data) {
                     const tbodyContainer = $('#realizedTablesContainer');
@@ -1332,7 +1459,7 @@
                                     <td>${item.timeFromFormattedForTable ?? ""}</td>
                                     <td>${item.timeToFormattedForTable ?? ""}</td>
                                     <td>${item.durationFormattedForTable ?? ""}</td>
-                                    <td>${item.planNo ?? ""}</td>
+                                    <td>${item.planNo == 0 ? "+" : (item.planNo ?? "")}</td>
                                     <td class="text-center">${finishedIcon}</td>
                                 </tr>
                             `;
@@ -1447,7 +1574,7 @@
         });
 
         $(document).on('click', '.tracked-employee', function () {
-
+            var planDate = $("#planDatePicker").val();
             var element = $(this);
             var selectedUserId = element.data('id');
             var trackingId = element.data('trackingid'); // ako ga koristiš iz liste
@@ -1477,10 +1604,15 @@
             $('#realizedTablesContainer').empty();
             $('#realizedChartsContainer').empty();
 
-            loadEmployeePlannings(selectedUserId);
-            loadEmployeeRealizations(selectedUserId);
+            loadEmployeePlannings(selectedUserId,planDate);
+            loadEmployeeRealizations(selectedUserId, planDate);
         });
+        function formatToDDMMYYYY(dateStr) {
+            if (!dateStr) return null;
 
+            const parts = dateStr.split('-'); // yyyy-MM-dd
+            return `${parts[2]}.${parts[1]}.${parts[0]}`;
+        }
         $(document).on('click', '.remove-employee', function (e) {
             e.stopPropagation();
 
@@ -1558,6 +1690,223 @@
                 },
                 error: function () {
                     alert('Greška pri uploadu fajla.');
+                }
+            });
+        });
+
+        $(document).on('blur', '#planDatePicker', function () {
+
+            var planDate = $(this).val();
+
+            var selectedUserId = $('.tracked-employee.selected-employee').data('id');
+
+            if (!selectedUserId || !planDate) return;
+
+            // reset UI
+            $('#plannedTablesContainer').empty();
+            $('#plannedChartsContainer').empty();
+            $('#realizedTablesContainer').empty();
+            $('#realizedChartsContainer').empty();
+
+            loadEmployeePlannings(selectedUserId, planDate);
+            loadEmployeeRealizations(selectedUserId, planDate);
+        });
+
+        $(document).on('click', '.reply-comment-icon', function () {
+
+            var commentId = $(this).closest('.comment-item').data('comment-id');
+            var taskPlanningCommentId = $(this).closest('.comment-item').data('task-planning-id');
+
+            $("#parentCommentId").val(commentId);
+            $("#taskPlanningCommentId").val(taskPlanningCommentId);
+
+            loadCommentReplies(commentId);
+        });
+
+        function loadCommentReplies(parentCommentId) {
+
+            $.ajax({
+                url: '@Url.RouteUrl(RouteNames.TasksPlanningComments_Search)',
+                method: 'POST',
+                data: {
+                    parentCommentId: parentCommentId
+                },
+                success: function (data) {
+
+                    renderRepliesModal(parentCommentId, data);
+                },
+                error: function (err) {
+                    console.error("Greška pri učitavanju reply-ja:", err);
+                }
+            });
+        }
+
+        function renderRepliesModal(parentId, replies) {
+
+            var container = $('#repliesContainer');
+            container.empty();
+
+            if (!replies || replies.length === 0) {
+                container.html('<p class="text-muted">Nema odgovora na ovaj komentar.</p>');
+                $('#repliesModal').modal('show');
+                return;
+            }
+
+            replies.forEach(function (r) {
+
+                var html = `
+                <div class="border rounded p-2 mb-2">
+
+                    <div class="d-flex align-items-center mb-1">
+                        <img src="${r.photo}"
+                             class="rounded-circle me-2"
+                             style="width:30px;height:30px;">
+
+                        <strong>${r.username}</strong>
+                    </div>
+
+                    <div class="text-muted small mb-1">
+                        ${r.createdAtFormatted}
+                    </div>
+
+                    <div>
+                        ${r.comment}
+                    </div>
+
+                </div>
+                `;
+
+                container.append(html);
+            });
+
+            $('#repliesModal').modal('show');
+        }
+
+        $(document).on('click', '#sendReplyBtn', function () {
+
+            var parentId = $("#parentCommentId").val();
+            var taskPlanningCommentId = $("#taskPlanningCommentId").val();
+            var text = $("#replyText").val();
+
+            if (!text) return;
+
+            $.ajax({
+                url: '@Url.RouteUrl(RouteNames.TasksPlanningComments_Save)',
+                method: 'POST',
+                data: {
+                    taskPlanningId : taskPlanningCommentId,
+                    parentTaskPlanningCommentId: parentId,
+                    comment: text,
+                    HiddenFromHomePage: false,
+                    HiddenFromHomePageAuthor: false
+                },
+                success: function (res) {
+
+                    if (res.valid) {
+                        $("#replyText").val('');
+                        loadCommentReplies(parentId);
+                    }
+                }
+            });
+        });
+
+
+
+          $(document).on('click', '.reply-comment-icon-realization', function () {
+
+            var commentId = $(this).closest('.comment-item-real').data('comment-id');
+            debugger
+            var taskRealizationCommentId = $(this).closest('.comment-item-real').data('task-realization-id');
+
+            $("#parentRealizationCommentId").val(commentId);
+            $("#taskRealizationCommentId").val(taskRealizationCommentId);
+
+            loadRealizationCommentReplies(commentId);
+        });
+
+        function loadRealizationCommentReplies(parentCommentId) {
+
+            $.ajax({
+                url: '@Url.RouteUrl(RouteNames.TasksRealizationComments_Search)',
+                method: 'POST',
+                data: {
+                    parentCommentId: parentCommentId
+                },
+                success: function (data) {
+
+                    renderRepliesRealizationModal(parentCommentId, data);
+                },
+                error: function (err) {
+                    console.error("Greška pri učitavanju reply-ja:", err);
+                }
+            });
+        }
+
+        function renderRepliesRealizationModal(parentId, replies) {
+
+            var container = $('#repliesRealizationContainer');
+            container.empty();
+
+            if (!replies || replies.length === 0) {
+                container.html('<p class="text-muted">Nema odgovora na ovaj komentar.</p>');
+                $('#repliesRealizationModal').modal('show');
+                return;
+            }
+
+            replies.forEach(function (r) {
+
+                var html = `
+                <div class="border rounded p-2 mb-2">
+
+                    <div class="d-flex align-items-center mb-1">
+                        <img src="${r.photo}"
+                             class="rounded-circle me-2"
+                             style="width:30px;height:30px;">
+
+                        <strong>${r.username}</strong>
+                    </div>
+
+                    <div class="text-muted small mb-1">
+                        ${r.createdAtFormatted}
+                    </div>
+
+                    <div>
+                        ${r.comment}
+                    </div>
+
+                </div>
+                `;
+
+                container.append(html);
+            });
+
+            $('#repliesRealizationModal').modal('show');
+        }
+
+        $(document).on('click', '#sendReplyRealizationBtn', function () {
+
+            var parentId = $("#parentRealizationCommentId").val();
+            var taskRealizationCommentId = $("#taskRealizationCommentId").val();
+            var text = $("#replyTextRealization").val();
+
+            if (!text) return;
+
+            $.ajax({
+                url: '@Url.RouteUrl(RouteNames.TasksRealizationComments_Save)',
+                method: 'POST',
+                data: {
+                    taskRealizationId : taskRealizationCommentId,
+                    parentTaskRealizationCommentId: parentId,
+                    comment: text,
+                    HiddenFromHomePage: false,
+                    HiddenFromHomePageAuthor: false
+                },
+                success: function (res) {
+
+                    if (res.valid) {
+                        $("#replyTextRealization").val('');
+                        loadRealizationCommentReplies(parentId);
+                    }
                 }
             });
         });

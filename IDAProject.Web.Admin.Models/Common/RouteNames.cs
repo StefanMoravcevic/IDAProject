@@ -152,6 +152,17 @@
         public const string EmployeeAbsences_View = "EmployeeAbsences_View";
 
 
+        public const string ProjectEmployees_List = "ProjectEmployees_List";
+        public const string ProjectEmployees_ListByProjectId = "ProjectEmployees_ListByProjectId";
+        public const string ProjectEmployees_RecordsByProjectId = "ProjectEmployees_RecordsByProjectId";
+        public const string ProjectEmployees_Search = "ProjectEmployees_Search";
+        public const string ProjectEmployees_New = "ProjectEmployees_New";
+        public const string ProjectEmployees_Edit = "ProjectEmployees_Edit";
+        public const string ProjectEmployees_Save = "ProjectEmployees_Save";
+        public const string ProjectEmployees_Delete = "ProjectEmployees_Delete";
+        public const string ProjectEmployees_View = "ProjectEmployees_View";
+
+
         public const string Projects_List = "Projects_List";
         public const string Projects_Search = "Projects_Search";
         public const string Projects_New = "Projects_New";

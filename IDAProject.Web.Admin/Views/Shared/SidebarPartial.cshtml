@@ -43,7 +43,7 @@
 	<div class="app-sidebar__overlay active" data-bs-toggle="sidebar"></div>
 	<div class="app-sidebar ps ps--active-y sidemenu-scroll">
 		<div class="side-header">
-			<a class="header-brand1" href="https://www.alpackgroup.com/">
+			<a class="header-brand1" href="#">
 				<img src="~/images/Al Pack Group 181x52.png" class="header-brand-img desktop-logo" alt="logo">
 				<img src="~/images/Al Pack Group 181x52.png" class="header-brand-img toggle-logo" alt="logo">
 				<img src="~/images/Al Pack Group 181x52.png" class="header-brand-img light-logo" alt="logo">
@@ -134,7 +134,6 @@
 							<li><a href="@Url.RouteUrl(RouteNames.EmployeeJobTypeControls_List)" class="slide-item">@localizer["IDA view configuration"]</a></li>
 							<li><a href="@Url.RouteUrl(RouteNames.EmployeeGoals_List)" class="slide-item">@localizer["Employee goals"]</a></li>
 							<li><a href="@Url.RouteUrl(RouteNames.IDA_Viewers)" class="slide-item">@localizer["IDA viewers"]</a></li>
-							<li><a href="@Url.RouteUrl(RouteNames.EmployeeAbsences_List)" class="slide-item">@localizer["Absences"]</a></li>
 						</ul>
 					</li>
 					<li class="slide">
@@ -146,6 +145,12 @@
 							<li><a href="@Url.RouteUrl(RouteNames.Employees_New)" class="slide-item">@localizer["AddNew"]</a></li>
 							<li><a href="@Url.RouteUrl(RouteNames.Employees_List)" class="slide-item">@localizer["Search"]</a></li>
 						</ul>
+					</li>
+					<li class="slide">
+						<a class="side-menu__item" data-bs-toggle="slide" href="@Url.RouteUrl(RouteNames.EmployeeAbsences_List)">
+							<i class="fa fa-calendar-times-o side-menu__icon"></i>
+							<span class="side-menu__label">@localizer["Absences"]</span><i class="angle fa fa-angle-right"></i>
+						</a>
 					</li>
 					<li class="slide">
 						<a class="side-menu__item" data-bs-toggle="slide" href="#">

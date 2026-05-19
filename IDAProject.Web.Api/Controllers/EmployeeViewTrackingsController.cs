@@ -27,7 +27,7 @@ namespace IDAProject.Web.Api.Controllers
         [HttpDelete("delete/{id}/{userId}")]
         public async Task<ResponseModelBase> DeleteEmployeeViewTrackingAsync(int id, int? userId)
         {
-            var response = await _EmployeeViewTrackingsManager.DeleteEmployeeViewTrackingAsync(id,userId);
+            var response = await _EmployeeViewTrackingsManager.DeleteEmployeeViewTrackingAsync(id, userId);
             return response;
         }
 
@@ -48,6 +48,24 @@ namespace IDAProject.Web.Api.Controllers
         public async Task<ResponseModel<int>> SaveEmployeeViewTrackingAsync(SaveEmployeeViewTrackingRequestModel requestModel)
         {
             var response = await _EmployeeViewTrackingsManager.SaveEmployeeViewTrackingAsync(requestModel);
+            return response;
+        }
+        [HttpPost("saveChecked")]
+        public async Task<ResponseModel<int>> SaveEmployeeViewTrackingBookmarkedAsync(SaveEmployeeViewTrackingRequestModel requestModel)
+        {
+            var response = new ResponseModel<int>();
+
+            var existing = await _EmployeeViewTrackingsManager.SearchEmployeeViewTrackingsAsync(new SearchEmployeeViewTrackingsParams { ViewerEmployeeId = requestModel.ViewerEmployeeId, ViewedEmployeeId = requestModel.ViewedEmployeeId, IsBookmarked = true, HideFromHomePage = false });
+            if (existing.Payload.Any())
+            {
+                response.Valid = false;
+                response.Message = "Ne mozete bookmarkovati zaposlenog jer vam je vec oznacen za pracenje!";
+            }
+            else
+            {
+                response = await _EmployeeViewTrackingsManager.SaveEmployeeViewTrackingAsync(requestModel);
+            }
+
             return response;
         }
     }

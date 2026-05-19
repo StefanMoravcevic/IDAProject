@@ -21,6 +21,7 @@ namespace IDAProject.Web.Models.Dto.TasksPlanningComments
         public string? DisplayTask { get; set; }
         public string? Activity { get; set; }
         public int? EmployeeId { get; set; }
+        public int? EmployeeForReplyId { get; set; }
         public DateTime? PlanDate { get; set; }
 
 

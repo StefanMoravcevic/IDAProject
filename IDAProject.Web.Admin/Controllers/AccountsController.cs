@@ -164,7 +164,13 @@ namespace IDAProject.Web.Admin.Controllers
                     WindowsUserName = lastLoginSession.WindowsUserName
                 });
             }
-            Response.Cookies.Delete(Constants.AdminCookieToken);
+            Response.Cookies.Delete(Constants.AdminCookieToken, new CookieOptions
+            {
+                Path = "/",
+                HttpOnly = true,
+                Secure = true, // Match the original cookie settings
+                SameSite = SameSiteMode.Strict
+            });
             SignOut(CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");

@@ -40,6 +40,7 @@ namespace IDAProject.Web.Admin.Controllers
             _employeesManager = employeesManager;
         }
 
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("index", Name = RouteNames.Home_Dashboard)]
         public async Task<IActionResult> Index()
         {

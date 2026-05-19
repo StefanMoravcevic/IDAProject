@@ -14,7 +14,9 @@
     ViewData["Title"] = $"Projects";
     var localizedPagination = @Html.Raw(Json.Serialize(new PaginationLocalizerModel(localizer)));
     var urlDelete = Url.RouteUrl(RouteNames.Projects_Delete, new { id = 111 });
+    var urlPatternProjectEmployees = Url.RouteUrl(RouteNames.ProjectEmployees_ListByProjectId, new {ProjectId = "111"});
 }
+<tms-modal id="editProjectEmployeesModal" title="@localizer["Project employees"]" save-button="false" modal-size="@ModalSize.Default" />
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="card">
@@ -94,9 +96,21 @@
                 searchProjects();
             });
 
-
-
             searchProjects();
+
+            $("#addEmployees").click(function () {
+                var selectedId = getSelectedItemId("tableProjects");
+                $.ajax({
+                    url: '@urlPatternProjectEmployees'.replace("111", selectedId),
+                    method: 'GET',
+                    success: function (response) {
+                        $("#editProjectEmployeesModal .modal-body").html(response);
+
+                        var editModal = new bootstrap.Modal(document.getElementById('editProjectEmployeesModal'));
+                        editModal.show();
+                    }
+                });
+            });
         });
     </script>
 }

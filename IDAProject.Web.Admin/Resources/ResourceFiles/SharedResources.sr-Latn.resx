@@ -147,6 +147,9 @@
   <data name="Add Activity" xml:space="preserve">
     <value>Dodaj aktivnost</value>
   </data>
+  <data name="Add employees" xml:space="preserve">
+    <value>Dodeli zaposlene</value>
+  </data>
   <data name="Add new choise" xml:space="preserve">
     <value>Dodaj novi izbor</value>
   </data>
@@ -209,6 +212,9 @@
   </data>
   <data name="Assigned features" xml:space="preserve">
     <value>Dodeljena svojstva</value>
+  </data>
+  <data name="Away employees" xml:space="preserve">
+    <value>Odsutne kolege</value>
   </data>
   <data name="BarCode" xml:space="preserve">
     <value>Bar kod</value>
@@ -530,6 +536,9 @@
   </data>
   <data name="Enter PIB" xml:space="preserve">
     <value>Unesite PIB</value>
+  </data>
+  <data name="Enter project employee" xml:space="preserve">
+    <value>Unesite zaposlene na projektu</value>
   </data>
   <data name="Enter regular activity name" xml:space="preserve">
     <value>Unesite naziv redovne aktivnosti</value>
@@ -963,8 +972,14 @@
   <data name="Planned % from sum" xml:space="preserve">
     <value>% planiranja na vreme</value>
   </data>
+  <data name="Planned activities" xml:space="preserve">
+    <value>Planirane aktivnosti</value>
+  </data>
   <data name="Planned on time" xml:space="preserve">
     <value>Planirano na vreme</value>
+  </data>
+  <data name="Planned/Realized for day" xml:space="preserve">
+    <value>Planirano/Realizovano za dan</value>
   </data>
   <data name="Planned/Realized for today" xml:space="preserve">
     <value>Planirano/Realizovano za današnji dan</value>
@@ -1008,6 +1023,9 @@
   <data name="Project basic info" xml:space="preserve">
     <value>Osnovne informacije o projektu</value>
   </data>
+  <data name="Project employees" xml:space="preserve">
+    <value>Zaposleni na projektu</value>
+  </data>
   <data name="Project task" xml:space="preserve">
     <value>Projektni zadatak</value>
   </data>
@@ -1041,6 +1059,9 @@
   </data>
   <data name="Realization statistics" xml:space="preserve">
     <value>Statistika realizacije</value>
+  </data>
+  <data name="Realized activities" xml:space="preserve">
+    <value>Realizovane aktivnosti</value>
   </data>
   <data name="Regular" xml:space="preserve">
     <value>Redovne aktivnosti</value>
@@ -1131,6 +1152,9 @@
   </data>
   <data name="Search" xml:space="preserve">
     <value>Pretraži</value>
+  </data>
+  <data name="Search employee" xml:space="preserve">
+    <value>Pretražite zaposlenog</value>
   </data>
   <data name="Search for customer order number, febi article number" xml:space="preserve">
     <value>Pretražite po broju poružbine, šifri artikla</value>
@@ -1329,6 +1353,9 @@
   </data>
   <data name="to" xml:space="preserve">
     <value>Do</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>Današnji dan</value>
   </data>
   <data name="Total logged hours" xml:space="preserve">
     <value>Ukupno ulogovanih sati</value>
